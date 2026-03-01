@@ -1,0 +1,56 @@
+{
+  "n_problems": 5,
+  "error_onset_tx_type_distribution": {
+    "cash_sale_with_cogs": 2,
+    "cash_expense": 1,
+    "prepaid_rent": 1,
+    "mixed_purchase_equipment": 1
+  },
+  "mean_onset_fraction": 0.295,
+  "error_propagation_shape": "gradual",
+  "mean_final_mae": 17099.15,
+  "mae_at_quantiles": {
+    "q0": 0.0,
+    "q25": 2242.54,
+    "q50": 4333.1,
+    "q75": 8990.08,
+    "q100": 17099.15
+  },
+  "by_level": {
+    "1": {
+      "n": 1,
+      "mean_onset_k": 5,
+      "mean_onset_fraction": 1.0,
+      "mean_final_mae": 11875.0,
+      "errors_at_first_cp": 0
+    },
+    "2": {
+      "n": 1,
+      "mean_onset_k": 3,
+      "mean_onset_fraction": 0.15,
+      "mean_final_mae": 13245.45,
+      "errors_at_first_cp": 0
+    },
+    "3": {
+      "n": 1,
+      "mean_onset_k": 3,
+      "mean_onset_fraction": 0.125,
+      "mean_final_mae": 12860.0,
+      "errors_at_first_cp": 0
+    },
+    "4": {
+      "n": 1,
+      "mean_onset_k": 7,
+      "mean_onset_fraction": 0.152,
+      "mean_final_mae": 7887.5,
+      "errors_at_first_cp": 0
+    },
+    "5": {
+      "n": 1,
+      "mean_onset_k": 4,
+      "mean_onset_fraction": 0.048,
+      "mean_final_mae": 39627.78,
+      "errors_at_first_cp": 0
+    }
+  }
+}
