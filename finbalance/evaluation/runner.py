@@ -209,6 +209,9 @@ class EvaluationRunner:
 
         metrics = evaluate_problem(problem, parsed or {})
         metrics.parse_error = parsed is None
+        if metrics.parse_error:
+            # Zero out all scores — a failed parse is a total failure, not a balanced empty sheet
+            metrics.BA = metrics.ALA = metrics.TPA = metrics.CSR = metrics.FBS = 0.0
         errors  = detect_errors(problem, parsed)
 
         if self.verbose:

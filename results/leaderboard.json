@@ -1,0 +1,18 @@
+[
+  {
+    "model": "openai/gpt-5.2",
+    "strategy": "zero_shot",
+    "FBS": 90.204,
+    "FBS_w": 90.88,
+    "BA": 0.98,
+    "ALA": 0.8267
+  },
+  {
+    "model": "openai/gpt-5.2",
+    "strategy": "cot",
+    "FBS": 90.8525,
+    "FBS_w": 91.18,
+    "BA": 1.0,
+    "ALA": 0.8127
+  }
+]

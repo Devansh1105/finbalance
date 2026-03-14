@@ -84,17 +84,25 @@ class FeatureGroup:
 @dataclass
 class ComplexityDriverReport:
     features: list[FeatureGroup] = field(default_factory=list)
+    skipped_features: list[str] = field(default_factory=list)  # features with insufficient group size
+    min_group_n: int = 0   # minimum N required in both groups for ΔFBS to be reported
 
 
 def analyze_complexity_drivers(
     problems:   list[Problem],
     metrics:    list[dict],          # list of metric dicts (from results JSON)
     error_counts: list[dict],        # list of error_categories dicts
+    min_group_n: int = 5,            # minimum problems required in BOTH groups
 ) -> ComplexityDriverReport:
     """
     For each complexity factor (cogs, mixed_funding, derived_interest, etc.)
     compare FBS / ALA / error rate on problems that HAVE the factor vs. those
     that DON'T.
+
+    min_group_n: features where either the 'with' or 'without' group has fewer
+    than this many problems are skipped — their ΔFBS estimates are unreliable
+    because the comparison group is too small to separate feature effect from
+    difficulty-level confounding.
     """
     # Collect all observed complexity factors
     all_factors: set[str] = set()
@@ -106,6 +114,8 @@ def analyze_complexity_drivers(
     metrics_by_id = {m["problem_id"]: m for m in metrics}
 
     groups: list[FeatureGroup] = []
+    skipped: list[str] = []
+
     for feature in sorted(all_factors):
         with_ids  = set()
         without_ids = set()
@@ -115,6 +125,11 @@ def analyze_complexity_drivers(
                 with_ids.add(p.problem_id)
             else:
                 without_ids.add(p.problem_id)
+
+        # Skip if either group is too small — ΔFBS would be unreliable
+        if len(with_ids) < min_group_n or len(without_ids) < min_group_n:
+            skipped.append(feature)
+            continue
 
         def _avg(ids: set, key: str) -> float:
             vals = [metrics_by_id[pid][key] for pid in ids if pid in metrics_by_id]
@@ -142,7 +157,7 @@ def analyze_complexity_drivers(
 
     # Sort by fbs_delta (most harmful feature first)
     groups.sort(key=lambda g: g.fbs_delta)
-    return ComplexityDriverReport(features=groups)
+    return ComplexityDriverReport(features=groups, skipped_features=skipped, min_group_n=min_group_n)
 
 
 # ──────────────────────────────────────────────────────────────────────────────

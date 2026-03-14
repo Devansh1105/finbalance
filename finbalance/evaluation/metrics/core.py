@@ -17,16 +17,26 @@ from typing import Optional
 from finbalance.data.schemas import BalanceSheet, IntermediateState, Problem
 
 EPSILON = 1.0          # tolerance for balance equation (1 currency unit)
-ACCOUNT_TOLERANCE_ABS  = 10.0   # ALA strict: within ±10
-ACCOUNT_TOLERANCE_PCT  = 0.01   # ALA relaxed: within ±1%
+ACCOUNT_TOLERANCE_ABS  = 10.0   # ALA absolute floor: within ±$10
+ACCOUNT_TOLERANCE_PCT  = 0.01   # ALA percentage: within ±1% of expected value
+                                  # Hybrid (default): max($10, 1% of expected)
 
-# Weights for FBS
+# Weights for FBS when all components are available (TPA requires CoT/self_refine)
 FBS_WEIGHTS = {
     "BA":  0.30,
     "ALA": 0.25,
     "TPA": 0.20,
     "CSR": 0.15,
     "NE":  0.10,
+}
+
+# Weights when TPA is unavailable (zero_shot / few_shot produce no intermediate states).
+# TPA's 0.20 weight is redistributed proportionally across the remaining components.
+FBS_WEIGHTS_NO_TPA = {
+    "BA":  0.375,   # 0.30 / 0.80
+    "ALA": 0.3125,  # 0.25 / 0.80
+    "CSR": 0.1875,  # 0.15 / 0.80
+    "NE":  0.125,   # 0.10 / 0.80
 }
 
 DIFFICULTY_WEIGHTS = {1: 0.10, 2: 0.20, 3: 0.30, 4: 0.30, 5: 0.10}
@@ -125,12 +135,17 @@ def balance_accuracy(pred_assets: float, pred_liabilities: float, pred_equity: f
 
 
 def account_level_accuracy(
-    predicted: dict, expected_bs: BalanceSheet, strict: bool = True
+    predicted: dict, expected_bs: BalanceSheet, strict: bool = False
 ) -> tuple[float, int, int]:
     """
     ALA: fraction of expected accounts predicted within tolerance.
     Returns (ALA, n_correct, n_total).
-    Tolerance: ±ACCOUNT_TOLERANCE_ABS (strict) or ±1% (relaxed).
+
+    Tolerance (default hybrid, strict=False):
+        max(ACCOUNT_TOLERANCE_ABS, expected_value * ACCOUNT_TOLERANCE_PCT)
+        i.e. max($10, 1% of expected) — scale-invariant across difficulty levels.
+
+    Strict mode (strict=True): flat ±$10 regardless of account magnitude.
     """
     expected_flat = _flat_expected(expected_bs)
     if not expected_flat:
@@ -269,20 +284,42 @@ def _normalise_account_name(name: str) -> str:
 
 
 def finbalance_score(
-    ba: float, ala: float, tpa: float, csr: float, mae: float, max_mae: float = 50_000.0
+    ba: float,
+    ala: float,
+    tpa: float,
+    csr: float,
+    mae: float,
+    max_mae: float = 50_000.0,
+    tpa_available: bool = False,
 ) -> float:
     """
     FBS: weighted aggregate on 0-100 scale.
     NE component = 1 - normalised MAE (capped at max_mae).
+
+    tpa_available: set True only when the model outputs intermediate ledger states
+                   (i.e. CoT / self_refine strategies). For zero_shot and few_shot,
+                   TPA is structurally 0, so its weight is redistributed across the
+                   remaining components (FBS_WEIGHTS_NO_TPA) to avoid systematic
+                   deflation of scores across strategies.
     """
     ne_norm = 1.0 - min(mae / max_mae, 1.0)
-    raw = (
-        FBS_WEIGHTS["BA"]  * ba
-        + FBS_WEIGHTS["ALA"] * ala
-        + FBS_WEIGHTS["TPA"] * tpa
-        + FBS_WEIGHTS["CSR"] * csr
-        + FBS_WEIGHTS["NE"]  * ne_norm
-    )
+    if tpa_available:
+        w = FBS_WEIGHTS
+        raw = (
+            w["BA"]  * ba
+            + w["ALA"] * ala
+            + w["TPA"] * tpa
+            + w["CSR"] * csr
+            + w["NE"]  * ne_norm
+        )
+    else:
+        w = FBS_WEIGHTS_NO_TPA
+        raw = (
+            w["BA"]  * ba
+            + w["ALA"] * ala
+            + w["CSR"] * csr
+            + w["NE"]  * ne_norm
+        )
     return round(raw * 100, 2)
 
 
@@ -301,7 +338,9 @@ def evaluate_problem(
     Args:
         problem:          ground-truth Problem object
         predicted:        model output as dict {assets:{}, liabilities:{}, equity:{}}
-        predicted_states: optional list of intermediate state dicts (for TPA)
+        predicted_states: optional list of intermediate state dicts (for TPA).
+                          Pass only for CoT / self_refine strategies. When None or
+                          empty, TPA weight is redistributed in FBS (see finbalance_score).
     """
     m = ProblemMetrics(problem_id=problem.problem_id, difficulty=problem.difficulty_level)
 
@@ -311,12 +350,13 @@ def evaluate_problem(
     m.equity_predicted      = round(pe, 2)
     m.assets_expected       = problem.expected.total_assets
 
+    tpa_available = bool(predicted_states)
     m.BA  = balance_accuracy(pa, pl, pe)
     m.ALA, m.n_accounts_correct, m.n_accounts_expected = account_level_accuracy(predicted, problem.expected)
     m.TPA = transaction_processing_accuracy(predicted_states or [], problem.intermediate_states)
     m.CSR, m.constraint_details = constraint_satisfaction_rate(predicted, problem.expected)
     m.MAE, m.MAPE, m.RMSE = numerical_errors(predicted, problem.expected)
-    m.FBS = finbalance_score(m.BA, m.ALA, m.TPA, m.CSR, m.MAE)
+    m.FBS = finbalance_score(m.BA, m.ALA, m.TPA, m.CSR, m.MAE, tpa_available=tpa_available)
 
     return m
 

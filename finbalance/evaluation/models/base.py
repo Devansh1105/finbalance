@@ -9,8 +9,8 @@ class ModelConfig:
     model_id:    str
     temperature: float = 0.0
     seed:        int   = 42
-    max_tokens:  int   = 2048
-    timeout:     int   = 60
+    max_tokens:  int   = 8192
+    timeout:     int   = 120
 
 
 class BaseModel(ABC):

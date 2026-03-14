@@ -33,4 +33,7 @@ class OpenRouterModel(BaseModel):
             timeout=self.config.timeout,
         )
         resp.raise_for_status()
-        return resp.json()["choices"][0]["message"]["content"].strip()
+        content = resp.json()["choices"][0]["message"]["content"]
+        if content is None:
+            raise ValueError("OpenRouter returned null content (possible content filter or empty completion)")
+        return content.strip()

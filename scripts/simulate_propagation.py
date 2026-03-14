@@ -38,6 +38,7 @@ sys.path.insert(0, str(REPO_ROOT))
 
 from finbalance.data.schemas import Problem
 from finbalance.evaluation.models.anthropic_model import AnthropicModel
+from finbalance.evaluation.models.openrouter import OpenRouterModel
 from finbalance.evaluation.models.base import ModelConfig
 from finbalance.analysis.error_propagation import (
     PropagationSimulator,
@@ -209,16 +210,20 @@ def main():
     print(f"  Running simulation on {len(selected)} problems: "
           f"{[p.problem_id for p in selected]}")
 
-    # ── build model ──
-    api_key = args.api_key or os.environ.get("ANTHROPIC_API_KEY", "")
-    if not api_key:
-        print("ERROR: set ANTHROPIC_API_KEY or pass --api-key")
-        sys.exit(1)
-
-    model = AnthropicModel(
-        ModelConfig(model_id=args.model, temperature=0),
-        api_key=api_key,
-    )
+    # ── build model (auto-detect backend: claude-* → Anthropic, else → OpenRouter) ──
+    config = ModelConfig(model_id=args.model, temperature=0)
+    if args.model.startswith("claude-"):
+        api_key = args.api_key or os.environ.get("ANTHROPIC_API_KEY", "")
+        if not api_key:
+            print("ERROR: set ANTHROPIC_API_KEY or pass --api-key")
+            sys.exit(1)
+        model = AnthropicModel(config, api_key=api_key)
+    else:
+        api_key = args.api_key or os.environ.get("OPENROUTER_API_KEY", "")
+        if not api_key:
+            print("ERROR: set OPENROUTER_API_KEY or pass --api-key")
+            sys.exit(1)
+        model = OpenRouterModel(config, api_key=api_key)
 
     # ── run simulator ──
     sim = PropagationSimulator(

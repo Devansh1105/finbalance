@@ -21,6 +21,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+# Force UTF-8 output on Windows so Unicode box-drawing chars don't crash
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 from scripts.run_evaluation import load_dataset
 from finbalance.analysis.failure_analysis import (
     FailureAnalysisReport,
