@@ -8,9 +8,9 @@
 
 > *Prepared for submission to ACL 2025.*
 
-We introduce **FinBalance**, a benchmark for evaluating large language models on the task of constructing GAAP-compliant balance sheets from sequences of double-entry journal transactions. Existing financial NLP benchmarks predominantly target question answering over pre-formed documents; FinBalance instead requires models to *generate* a structured financial statement by correctly accumulating, closing, and classifying every account across a full transaction sequence. The benchmark comprises 2,500 synthetically generated problems across five difficulty levels (L1–L5), with complexity scaled by transaction type, adjusting-entry depth, and inter-entry dependency. We evaluate on a stratified 100-problem held-out test set and report Balance Accuracy (BA), Account-Level Accuracy (ALA), and a composite FinBalance Score (FBS) with bootstrap confidence intervals.
+We introduce **FinBalance**, a benchmark for evaluating large language models on the task of constructing GAAP-compliant balance sheets from sequences of double-entry journal transactions. Existing financial NLP benchmarks predominantly target question answering over pre-formed documents; FinBalance instead requires models to *generate* a structured financial statement by correctly accumulating, closing, and classifying every account across a full transaction sequence. The benchmark comprises 2,500 synthetically generated problems across five difficulty levels (L1–L5), with complexity scaled by transaction type, adjusting-entry depth, and inter-entry dependency. We evaluate three frontier models — GPT-5.2, Gemini 3 Flash, and Llama 3.3 70B — on a stratified 100-problem held-out test set under zero-shot and chain-of-thought prompting, reporting nine metrics including Balance Accuracy (BA), Account Coverage Rate (ACR), Balance Error Magnitude (BEM), Section Placement Accuracy (SPA), Closing Entry Compliance Rate (CECR), and a composite FinBalance Score (FBS) with bootstrap confidence intervals and pairwise permutation tests.
 
-Our experiments reveal a sharp generational divide: frontier models such as GPT-5.2 achieve near-perfect balance equation satisfaction (BA = 98–100%, FBS = 90.2–90.9), while earlier models fail catastrophically (GPT-5.1 BA = 16%, Claude Haiku 3 BA = 20%). Despite this headline improvement, a systematic conceptual gap persists across all models: **Retained Earnings is omitted in 92.8% of zero-shot and 100% of chain-of-thought responses**, with Net Income hallucinated onto the balance sheet in its place — revealing that models conflate balance sheet preparation with income statement reporting. Chain-of-thought prompting achieves perfect BA (100%) and eliminates parse failures, but degrades account-level accuracy on simple problems (L1 ALA: 79.0% → 71.8%) and worsens equity arithmetic error rates (38% → 57%), suggesting that extended reasoning traces disrupt rather than support structured financial generation. Error propagation analysis on earlier models shows gradual error onset at approximately 30% through each problem, consistently triggered by COGS and depreciation transactions. FinBalance, its dataset, evaluation harness, and all model results are released publicly.
+Our experiments reveal a three-tier capability hierarchy: GPT-5.2 achieves near-perfect balance equation satisfaction (BA = 98–100%, FBS = 90.2–90.9), Gemini 3 Flash reaches moderate accuracy (BA = 73–80%, FBS = 79.0–83.5), and Llama 3.3 70B fails catastrophically (BA = 2%, FBS = 33.4). All pairwise gaps are statistically significant (p < 0.001, paired permutation test), except GPT-5.2 CoT vs. zero-shot (p = 0.53). Despite GPT-5.2's headline accuracy, a systematic conceptual gap persists across *all* models: **Retained Earnings is correctly produced in fewer than 8% of responses** (CECR: GPT-5.2 zero-shot 8%, GPT-5.2 CoT 1%, Gemini 15–17%), with Net Income hallucinated onto the balance sheet in its place — revealing that models conflate balance sheet preparation with income statement reporting. Structural analysis using ACR and BEM distinguishes two failure modes: GPT-5.2 achieves structural coverage (ACR = 86–87%) but near-zero balance equation error (BEM ≈ $0) by compensating for omitted accounts; Gemini achieves higher account coverage (ACR = 92–98%) but large residual balance errors (BEM ≈ $4,400). Chain-of-thought prompting achieves perfect BA (100%) for GPT-5.2 and eliminates parse failures, but degrades L1 account-level accuracy (ALA: 79.0% → 71.8%), raises CECR failures to 99%, and worsens equity arithmetic errors (38% → 57%). Error propagation analysis shows gradual error onset at approximately 30% through each problem, consistently triggered by COGS and depreciation transactions. FinBalance, its dataset, evaluation harness, and all model results are released publicly.
 
 ---
 
@@ -91,20 +91,36 @@ finbalance/
 │   ├── analyze_failures.py             # CLI: run failure analysis on results
 │   ├── simulate_propagation.py         # CLI: run error propagation simulation
 │   ├── run_baseline.py                  # CLI: rule-based baseline + bootstrap CIs
+│   ├── compute_extended_metrics.py      # Post-process results: add ACR, BEM, SPA, PSR, HR, CECR
+│   ├── generate_figures.py              # Generate all 8 publication figures (F1–F8)
+│   ├── permutation_tests.py             # Bootstrap CIs + pairwise permutation tests
 │   ├── _test_parser.py                  # Parser regression tests (8 cases)
 │   └── _test_saved_responses.py         # Validates saved model responses parse correctly
 │
 ├── results/
-│   ├── openai_gpt-5.2_zero_shot.json             # GPT-5.2 zero_shot (100 problems, test set)
-│   ├── openai_gpt-5.2_cot.json                   # GPT-5.2 CoT (100 problems, test set)
-│   ├── openai_gpt-5.1_zero_shot.json             # GPT-5.1 zero_shot (25 problems, preliminary)
-│   ├── anthropic_claude-haiku-4-5_zero_shot.json # Claude Haiku 4.5 zero_shot (25 problems)
-│   ├── claude-sonnet-4-6_zero_shot.json          # Claude Sonnet 4.6 zero_shot (10 problems)
-│   ├── claude-3-haiku-20240307_zero_shot.json    # Claude Haiku 3 zero_shot (25 problems)
-│   ├── failure_analysis_haiku_zero_shot.json      # Failure analysis for Haiku 3
-│   ├── propagation_haiku.json                     # Error propagation traces (5 problems)
-│   ├── propagation_haiku_summary.json             # Aggregated propagation statistics
-│   └── leaderboard.json                           # FBS-ranked leaderboard across all runs
+│   ├── openai_gpt-5.2_zero_shot.json                      # GPT-5.2 zero_shot (100 problems, test set)
+│   ├── openai_gpt-5.2_cot.json                            # GPT-5.2 CoT (100 problems, test set)
+│   ├── google_gemini-3-flash-preview_zero_shot.json       # Gemini 3 Flash zero_shot (100 problems)
+│   ├── google_gemini-3-flash-preview_cot.json             # Gemini 3 Flash CoT (100 problems)
+│   ├── meta-llama_llama-3.3-70b-instruct_zero_shot.json  # Llama 3.3 70B zero_shot (100 problems)
+│   ├── openai_gpt-5.1_zero_shot.json                      # GPT-5.1 zero_shot (25 problems, preliminary)
+│   ├── anthropic_claude-haiku-4-5_zero_shot.json          # Claude Haiku 4.5 zero_shot (25 problems)
+│   ├── claude-3-haiku-20240307_zero_shot.json             # Claude Haiku 3 zero_shot (25 problems)
+│   ├── failure_analysis_gpt52_zero_shot.json              # Failure analysis for GPT-5.2
+│   ├── propagation_haiku.json                              # Error propagation traces (5 problems)
+│   ├── propagation_haiku_summary.json                      # Aggregated propagation statistics
+│   ├── leaderboard.json                                    # Full leaderboard with extended metrics
+│   └── significance_tests.json                            # Bootstrap CIs + permutation test p-values
+│
+├── figures/
+│   ├── F1_capability_curve.png        # FBS and BA vs difficulty level (all models)
+│   ├── F2_error_composition.png       # AE/OE/CV/CO stacked bar chart
+│   ├── F3_cot_effect.png              # CoT effect: delta FBS/BA/ALA per model
+│   ├── F4_account_heatmap.png         # Account omission and arithmetic error rates by model
+│   ├── F5_bem_distribution.png        # Balance Error Magnitude box plots per model
+│   ├── F6_cot_by_difficulty.png       # CoT delta FBS per difficulty level per model
+│   ├── F7_propagation.png             # Error propagation MAE trajectory (Haiku 3, 5 problems)
+│   └── F8_dataset_complexity.png      # Transaction/account counts and feature presence by level
 │
 └── requirements.txt
 ```
@@ -140,13 +156,27 @@ finbalance/
 
 ### 3.3 Metrics
 
+#### Primary metrics
+
 | Metric | Formula | Interpretation |
 |--------|---------|----------------|
 | **BA** (Balance Accuracy) | 1 if `\|assets − (liab + equity)\| < $1`, else 0 | Binary balance equation satisfaction |
 | **ALA** (Account-Level Accuracy) | `correct_accounts / total_expected_accounts` | Correct = within max($10, 1% of expected value) — scale-invariant across difficulty levels |
-| **TPA** (Transaction Path Accuracy) | Fraction of intermediate states correctly predicted | Requires model to output per-step ledger state (CoT / self_refine only) |
+| **ACR** (Account Coverage Rate) | `\|predicted ∩ expected\| / \|expected\|` | Structural recall: presence-only, ignores values. Separates structural from numerical errors. |
+| **BEM** (Balance Error Magnitude) | `\|assets − (liabilities + equity)\|` | Continuous version of BA. Shows how wrong the sheet is in dollar terms. |
+| **SPA** (Section Placement Accuracy) | `correctly_placed / total_predicted` | Fraction of predicted accounts in the correct section (assets/liabilities/equity). Catches income-statement contamination. |
+| **PSR** (Perfect Score Rate) | 1 if FBS = 100, else 0 | Fraction of problems where the model gets everything exactly right. |
+| **CECR** (Closing Entry Compliance Rate) | 1 if Retained Earnings present and within tolerance | Formalises the closing-entry blindness finding. RE not required → trivially 1. |
+| **HR** (Hallucination Rate) | `hallucinated_accounts / predicted_accounts` | Fraction of predicted accounts not in the expected set. |
 | **CSR** (Constraint Satisfaction Rate) | Fraction of accounting constraints satisfied | Non-negativity, contra-asset rule, completeness, balance equation |
 | **FBS** (FinBalance Score) | Weighted aggregate on 0–100 scale | See below |
+
+#### Secondary / analysis metrics
+
+| Metric | Formula | Interpretation |
+|--------|---------|----------------|
+| **MAE** | Mean absolute error across expected accounts | Raw dollar error magnitude |
+| **TPA** (Transaction Path Accuracy) | Fraction of intermediate states correctly predicted | Requires per-step ledger output. Not elicited by current prompt strategies — reported as 0.0%; future work. |
 
 **FBS formula** differs by strategy because TPA requires intermediate state output:
 
@@ -367,15 +397,26 @@ All results in this section are on the **100-problem held-out test set** (`data/
 
 ### 8.1 Leaderboard
 
-| Model | Strategy | n | BA | ALA | FBS | FBS_w | 95% CI (FBS) |
-|-------|----------|---|-----|-----|-----|-------|--------------|
-| GPT-5.2 | `cot` | 100 | **100.0%** | 0.813 | **90.9** | **91.2** | [90.2, 91.5] |
-| GPT-5.2 | `zero_shot` | 100 | 98.0% | **0.827** | 90.2 | 90.9 | [87.4, 92.4] |
-| GPT-5.1 | `zero_shot` | 25* | 16.0% | 0.569 | 47.9 | — | — |
-| Claude Haiku 4.5 | `zero_shot` | 25* | 0.0% | 0.592 | 43.4 | — | — |
-| Claude Haiku 3 | `zero_shot` | 25* | 20.0% | 0.423 | 36.3 | — | — |
+All models below evaluated on `data/test.jsonl` (100 problems, 20/level, seed 42) unless noted with *.
 
-\* Preliminary results on the legacy `sample.jsonl`. Not directly comparable to the 100-problem test set.
+| Model | Strategy | n | BA | ALA | ACR | BEM | FBS | PSR | CECR | 95% CI (FBS) |
+|-------|----------|---|-----|-----|-----|-----|-----|-----|------|--------------|
+| GPT-5.2 | `cot` | 100 | **100.0%** | 0.813 | 87.0% | **$0** | **90.9** | 1.0% | 1.0% | [90.2, 91.5] |
+| GPT-5.2 | `zero_shot` | 100 | 98.0% | **0.827** | 85.9% | **$0** | 90.2 | 5.0% | 8.0% | [87.2, 92.4] |
+| Gemini 3 Flash | `cot` | 100 | 80.0% | 0.801 | 91.7% | $4,630 | 83.5 | 9.0% | 17.0% | [79.9, 86.6] |
+| Gemini 3 Flash | `zero_shot` | 100 | 73.0% | 0.719 | **98.2%** | $4,376 | 79.0 | 8.0% | 15.0% | [75.6, 82.5] |
+| Llama 3.3 70B | `zero_shot` | 100 | 2.0% | 0.390 | 74.1% | $56,856 | 33.4 | 0.0% | 1.0% | [30.1, 36.5] |
+| GPT-5.1 | `zero_shot` | 25* | 16.0% | 0.569 | — | — | 47.9 | — | — | — |
+| Claude Haiku 4.5 | `zero_shot` | 25* | 0.0% | 0.592 | — | — | 43.4 | — | — | — |
+| Claude Haiku 3 | `zero_shot` | 25* | 20.0% | 0.423 | — | — | 36.3 | — | — | — |
+| **Rule-based Oracle** | — | 100 | **100.0%** | **1.000** | **100%** | **$0** | **99.97** | **97%** | — | [100.0, 100.0] |
+
+\* Preliminary results on the legacy `sample.jsonl`. Not directly comparable.
+
+The rule-based oracle confirms **FBS ≈ 100 is achievable** — the benchmark is solvable and has a well-anchored upper bound.
+
+**Statistical significance (pairwise permutation test, n=10,000, metric=FBS):**
+All pairwise gaps are statistically significant (p < 0.001) except GPT-5.2 CoT vs. GPT-5.2 zero-shot (Δ = +0.65, p = 0.53, n.s.) and Gemini CoT vs. Gemini zero-shot (Δ = +4.4, p = 0.06, marginal).
 
 ### 8.2 GPT-5.2 — By Difficulty Level
 
@@ -450,7 +491,45 @@ CoT shifts the error distribution: fewer hallucinations but significantly more a
 
 Unlike older models where `depreciable_asset` was the largest negative driver (ΔFBS = −10.3 for Haiku 3), GPT-5.2 handles depreciation better than problems without it. This inversion suggests that GPT-5.2 has internalized the debit/credit mechanics of depreciation adjusting entries.
 
-### 8.4 Historical Baseline — Claude Haiku 3 (25-problem sample, preliminary)
+### 8.3 Gemini 3 Flash — By Difficulty Level
+
+#### Zero-shot
+
+| Level | N | BA | ALA | ACR | BEM | FBS |
+|-------|---|----|-----|-----|-----|-----|
+| L1 | 20 | 90.0% | 0.797 | 93.5% | $420 | 88.5 |
+| L2 | 20 | 65.0% | 0.795 | 98.1% | $2,090 | 79.0 |
+| L3 | 20 | 80.0% | 0.794 | 100.0% | $4,650 | 85.0 |
+| L4 | 20 | 70.0% | 0.675 | 99.3% | $1,150 | 76.1 |
+| L5 | 20 | 60.0% | 0.534 | 100.0% | $13,570 | 66.5 |
+
+#### Chain-of-Thought
+
+| Level | N | BA | ALA | ACR | BEM | FBS |
+|-------|---|----|-----|-----|-----|-----|
+| L1 | 20 | 100.0% | 0.727 | 85.8% | $0 | 89.1 |
+| L2 | 20 | 85.0% | 0.774 | 89.5% | $460 | 84.3 |
+| L3 | 20 | 85.0% | 0.864 | 93.7% | $485 | 87.8 |
+| L4 | 20 | 75.0% | 0.812 | 93.8% | $2,760 | 81.8 |
+| L5 | 20 | 55.0% | 0.827 | 95.7% | $19,445 | 74.4 |
+
+**Interpretation:** Gemini's defining failure mode is arithmetic, not structural. ACR is 93–100% (it identifies nearly all expected accounts) but BA is only 60–90% because it cannot sum them correctly. BEM rises steeply at L5 ($13k zero-shot, $19k CoT), revealing that complexity overloads the arithmetic engine rather than account recall. Notably, Gemini is the only model where CoT *reduces* ACR (98% → 92% on average) while improving BA — suggesting the reasoning trace trades off coverage for arithmetic consistency. CECR = 15–17%: Gemini attempts Retained Earnings in most problems but computes it incorrectly (75.8% arithmetic error rate on RE vs. 10.1% omission rate — the opposite of GPT-5.2's 92.8% omission pattern).
+
+### 8.4 Llama 3.3 70B — By Difficulty Level
+
+#### Zero-shot
+
+| Level | N | BA | ALA | ACR | BEM | FBS | Parse Fails |
+|-------|---|----|-----|-----|-----|-----|-------------|
+| L1 | 20 | 10.0% | 0.423 | 62.0% | $5,110 | 36.3 | 5 |
+| L2 | 20 | 0.0% | 0.471 | 66.4% | $26,054 | 33.8 | 5 |
+| L3 | 20 | 0.0% | 0.570 | 85.0% | $49,825 | 41.9 | 1 |
+| L4 | 20 | 0.0% | 0.310 | 79.9% | $55,780 | 31.9 | 2 |
+| L5 | 20 | 0.0% | 0.173 | 77.1% | $147,510 | 23.3 | 3 |
+
+**Interpretation:** Llama 3.3 70B fails catastrophically across all levels (BA = 2%, FBS = 33.4). The dominant error type is arithmetic (AE = 70.7%), with the model identifying accounts in the right category (ACR 62–85%) but producing wildly incorrect values — BEM reaches $147,510 at L5. The 16 parse failures (16%) are concentrated at L1–L2, suggesting the model also struggles to produce valid JSON for structurally simple problems. CECR = 1%: Retained Earnings is correctly handled in only 1 out of 100 problems.
+
+### 8.5 Historical Baseline — Claude Haiku 3 (25-problem sample, preliminary)
 
 Included for qualitative contrast. See commit `fd55235` for full analysis.
 
@@ -577,11 +656,23 @@ python scripts/simulate_propagation.py \
 - [x] Create standardised stratified dev/test splits (`dev.jsonl`, `test.jsonl`)
 - [x] OpenRouter backend for multi-model evaluation
 - [x] Run GPT-5.2 evaluation (zero_shot + CoT) on 100-problem test set
-- [x] Bootstrap confidence intervals on all primary metrics
+- [x] Run Gemini 3 Flash Preview (zero_shot + CoT) on 100-problem test set
+- [x] Run Llama 3.3 70B Instruct (zero_shot) on 100-problem test set
+- [x] Extended metrics: ACR, BEM, SPA, PSR, HR, CECR
+- [x] Bootstrap confidence intervals and pairwise permutation tests
 - [x] 5-dimension failure analysis module
 - [x] Error propagation simulator
-- [ ] Run GPT-5.1, Claude Sonnet, and Llama-3.3-70B on 100-problem test set
-- [ ] Few-shot and self-refine strategies on top-performing models
+- [x] Publication figures: capability curve, error composition, CoT effect
+- [ ] Llama 3.3 70B CoT evaluation
 - [ ] Rule-based and human baselines
+- [ ] Few-shot and self-refine strategies on top-performing models
 - [ ] Error propagation run for GPT-5.2 (n=3/level, checkpoint-every=2)
+- [x] Account omission heatmap (F4) — failure analysis for all 3 models
+- [x] BEM distribution (F5), CoT-by-difficulty (F6), propagation trajectory (F7), dataset profile (F8)
+- [x] Rule-based oracle baseline (FBS = 99.97, anchors upper bound)
+- [x] EPR slope computed from Haiku 3 propagation data (mean EPR = $743/checkpoint)
+- [ ] Llama 3.3 70B CoT evaluation
+- [ ] Human baseline (20 problems, 4 per level)
+- [ ] Few-shot and self-refine strategies on top-performing models
+- [ ] Error propagation run for GPT-5.2 and Gemini (n=3/level, checkpoint-every=2)
 - [ ] Investigate whether targeted prompting fixes Retained Earnings omission

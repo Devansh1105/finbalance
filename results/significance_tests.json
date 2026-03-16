@@ -1,0 +1,153 @@
+{
+  "bootstrap_cis": {
+    "Gemini3Flash-CoT": {
+      "FBS_mean": 83.47,
+      "FBS_ci": [
+        79.92,
+        86.61
+      ],
+      "BA_mean": 80.0,
+      "ALA_mean": 0.801
+    },
+    "Gemini3Flash-ZS": {
+      "FBS_mean": 79.04,
+      "FBS_ci": [
+        75.55,
+        82.46
+      ],
+      "BA_mean": 73.0,
+      "ALA_mean": 0.719
+    },
+    "Llama3.3-70B-ZS": {
+      "FBS_mean": 33.43,
+      "FBS_ci": [
+        30.1,
+        36.52
+      ],
+      "BA_mean": 2.0,
+      "ALA_mean": 0.39
+    },
+    "GPT-5.2-CoT": {
+      "FBS_mean": 90.85,
+      "FBS_ci": [
+        90.22,
+        91.48
+      ],
+      "BA_mean": 100.0,
+      "ALA_mean": 0.813
+    },
+    "GPT-5.2-ZS": {
+      "FBS_mean": 90.2,
+      "FBS_ci": [
+        87.24,
+        92.35
+      ],
+      "BA_mean": 98.0,
+      "ALA_mean": 0.827
+    }
+  },
+  "pairwise_tests": [
+    {
+      "model_a": "Gemini3Flash-CoT",
+      "model_b": "Gemini3Flash-ZS",
+      "metric": "FBS",
+      "n_shared": 100,
+      "delta": 4.4347,
+      "p_one_sided": 0.0312,
+      "p_two_sided": 0.0624,
+      "significant_0.05": false
+    },
+    {
+      "model_a": "Gemini3Flash-CoT",
+      "model_b": "Llama3.3-70B-ZS",
+      "metric": "FBS",
+      "n_shared": 100,
+      "delta": 50.0357,
+      "p_one_sided": 0.0,
+      "p_two_sided": 0.0,
+      "significant_0.05": true
+    },
+    {
+      "model_a": "Gemini3Flash-CoT",
+      "model_b": "GPT-5.2-CoT",
+      "metric": "FBS",
+      "n_shared": 100,
+      "delta": -7.3825,
+      "p_one_sided": 1.0,
+      "p_two_sided": 0.0,
+      "significant_0.05": true
+    },
+    {
+      "model_a": "Gemini3Flash-CoT",
+      "model_b": "GPT-5.2-ZS",
+      "metric": "FBS",
+      "n_shared": 100,
+      "delta": -6.734,
+      "p_one_sided": 0.9997,
+      "p_two_sided": 0.0006,
+      "significant_0.05": true
+    },
+    {
+      "model_a": "Gemini3Flash-ZS",
+      "model_b": "Llama3.3-70B-ZS",
+      "metric": "FBS",
+      "n_shared": 100,
+      "delta": 45.601,
+      "p_one_sided": 0.0,
+      "p_two_sided": 0.0,
+      "significant_0.05": true
+    },
+    {
+      "model_a": "Gemini3Flash-ZS",
+      "model_b": "GPT-5.2-CoT",
+      "metric": "FBS",
+      "n_shared": 100,
+      "delta": -11.8172,
+      "p_one_sided": 1.0,
+      "p_two_sided": 0.0,
+      "significant_0.05": true
+    },
+    {
+      "model_a": "Gemini3Flash-ZS",
+      "model_b": "GPT-5.2-ZS",
+      "metric": "FBS",
+      "n_shared": 100,
+      "delta": -11.1687,
+      "p_one_sided": 1.0,
+      "p_two_sided": 0.0,
+      "significant_0.05": true
+    },
+    {
+      "model_a": "Llama3.3-70B-ZS",
+      "model_b": "GPT-5.2-CoT",
+      "metric": "FBS",
+      "n_shared": 100,
+      "delta": -57.4182,
+      "p_one_sided": 1.0,
+      "p_two_sided": 0.0,
+      "significant_0.05": true
+    },
+    {
+      "model_a": "Llama3.3-70B-ZS",
+      "model_b": "GPT-5.2-ZS",
+      "metric": "FBS",
+      "n_shared": 100,
+      "delta": -56.7697,
+      "p_one_sided": 1.0,
+      "p_two_sided": 0.0,
+      "significant_0.05": true
+    },
+    {
+      "model_a": "GPT-5.2-CoT",
+      "model_b": "GPT-5.2-ZS",
+      "metric": "FBS",
+      "n_shared": 100,
+      "delta": 0.6485,
+      "p_one_sided": 0.2664,
+      "p_two_sided": 0.5328,
+      "significant_0.05": false
+    }
+  ],
+  "n_permutations": 10000,
+  "metric": "FBS"
+}

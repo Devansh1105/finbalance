@@ -35,7 +35,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 42800,\n    \"Equipment\": 17700,\n    \"Prepaid Rent\": 9300\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 69800\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 42800,\n    \"Equipment\": 17700,\n    \"Prepaid Rent\": 9300\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 69800\n  }\n}",
+    "ACR": 0.8,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00416",
@@ -73,7 +79,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 39800,\n    \"Equipment\": 3200,\n    \"Prepaid Rent\": 5800\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 43600,\n    \"Net Income\": 5200\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 39800,\n    \"Equipment\": 3200,\n    \"Prepaid Rent\": 5800\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 43600,\n    \"Net Income\": 5200\n  }\n}",
+    "ACR": 0.8,
+    "BEM": 0.0,
+    "SPA": 0.8,
+    "PSR": 0,
+    "HR": 0.2,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00093",
@@ -111,7 +123,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 77500,\n    \"Inventory\": 5000,\n    \"Equipment\": 17800\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 100300\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 77500,\n    \"Inventory\": 5000,\n    \"Equipment\": 17800\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 100300\n  }\n}",
+    "ACR": 0.8,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00216",
@@ -150,7 +168,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 28000,\n    \"Inventory\": 14800,\n    \"Prepaid Rent\": 8900,\n    \"Equipment\": 8600\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 59600,\n    \"Net Income\": 700\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 28000,\n    \"Inventory\": 14800,\n    \"Prepaid Rent\": 8900,\n    \"Equipment\": 8600\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 59600,\n    \"Net Income\": 700\n  }\n}",
+    "ACR": 0.8333,
+    "BEM": 0.0,
+    "SPA": 0.8333,
+    "PSR": 0,
+    "HR": 0.1667,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00480",
@@ -187,7 +211,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 9100,\n    \"Prepaid Rent\": 7600,\n    \"Inventory\": 16100\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 29600,\n    \"Net Income\": 3200\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 9100,\n    \"Prepaid Rent\": 7600,\n    \"Inventory\": 16100\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 29600,\n    \"Net Income\": 3200\n  }\n}",
+    "ACR": 0.8,
+    "BEM": 0.0,
+    "SPA": 0.8,
+    "PSR": 0,
+    "HR": 0.2,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00060",
@@ -224,7 +254,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 20200,\n    \"Prepaid Rent\": 3500,\n    \"Inventory\": 6900\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 25700,\n    \"Net Income\": 4900\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 20200,\n    \"Prepaid Rent\": 3500,\n    \"Inventory\": 6900\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 25700,\n    \"Net Income\": 4900\n  }\n}",
+    "ACR": 0.8,
+    "BEM": 0.0,
+    "SPA": 0.8,
+    "PSR": 0,
+    "HR": 0.2,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00369",
@@ -261,7 +297,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 12100,\n    \"Prepaid Rent\": 4300,\n    \"Inventory\": 10400\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 26800\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 12100,\n    \"Prepaid Rent\": 4300,\n    \"Inventory\": 10400\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 26800\n  }\n}",
+    "ACR": 0.8,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00164",
@@ -298,7 +340,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 68500,\n    \"Inventory\": 11800,\n    \"Prepaid Rent\": 5900\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 72900,\n    \"Net Income\": 13300\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 68500,\n    \"Inventory\": 11800,\n    \"Prepaid Rent\": 5900\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 72900,\n    \"Net Income\": 13300\n  }\n}",
+    "ACR": 0.8,
+    "BEM": 0.0,
+    "SPA": 0.8,
+    "PSR": 0,
+    "HR": 0.2,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00211",
@@ -337,7 +385,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 5800,\n    \"Prepaid Rent\": 7300,\n    \"Inventory\": 10300,\n    \"Equipment\": 8800\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 28000,\n    \"Net Income\": 4200\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 5800,\n    \"Prepaid Rent\": 7300,\n    \"Inventory\": 10300,\n    \"Equipment\": 8800\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 28000,\n    \"Net Income\": 4200\n  }\n}",
+    "ACR": 0.8333,
+    "BEM": 0.0,
+    "SPA": 0.8333,
+    "PSR": 0,
+    "HR": 0.1667,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00252",
@@ -375,7 +429,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 59500,\n    \"Prepaid Rent\": 4300,\n    \"Equipment\": 17100\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 54800,\n    \"Current Period Net Income\": 26100\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 59500,\n    \"Prepaid Rent\": 4300,\n    \"Equipment\": 17100\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 54800,\n    \"Current Period Net Income\": 26100\n  }\n}",
+    "ACR": 0.8,
+    "BEM": 0.0,
+    "SPA": 0.8,
+    "PSR": 0,
+    "HR": 0.2,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00444",
@@ -413,7 +473,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 9600,\n    \"Inventory\": 12600,\n    \"Equipment\": 15100\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 37300\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 9600,\n    \"Inventory\": 12600,\n    \"Equipment\": 15100\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 37300\n  }\n}",
+    "ACR": 0.8,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00321",
@@ -452,7 +518,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 6500,\n    \"Equipment\": 6400,\n    \"Prepaid Rent\": 3100,\n    \"Inventory\": 8300\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 27800,\n    \"Net Income (Loss)\": -3500\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 6500,\n    \"Equipment\": 6400,\n    \"Prepaid Rent\": 3100,\n    \"Inventory\": 8300\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 27800,\n    \"Net Income (Loss)\": -3500\n  }\n}",
+    "ACR": 0.8333,
+    "BEM": 0.0,
+    "SPA": 0.8333,
+    "PSR": 0,
+    "HR": 0.1667,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00290",
@@ -488,7 +560,13 @@
     "parse_failed": false,
     "n_errors": 0,
     "error_categories": {},
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 40500,\n    \"Equipment\": 6200,\n    \"Inventory\": 6300,\n    \"Prepaid Rent\": 4300\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 46100,\n    \"Retained Earnings\": 11200\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 40500,\n    \"Equipment\": 6200,\n    \"Inventory\": 6300,\n    \"Prepaid Rent\": 4300\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 46100,\n    \"Retained Earnings\": 11200\n  }\n}",
+    "ACR": 1.0,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 1,
+    "HR": 0.0,
+    "CECR": 1
   },
   {
     "problem_id": "FB_1_00390",
@@ -525,7 +603,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 97800,\n    \"Inventory\": 7100,\n    \"Prepaid Rent\": 4000\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 88900,\n    \"Net Income\": 20000\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 97800,\n    \"Inventory\": 7100,\n    \"Prepaid Rent\": 4000\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 88900,\n    \"Net Income\": 20000\n  }\n}",
+    "ACR": 0.8,
+    "BEM": 0.0,
+    "SPA": 0.8,
+    "PSR": 0,
+    "HR": 0.2,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00008",
@@ -563,7 +647,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 50000,\n    \"Equipment\": 17000,\n    \"Prepaid Rent\": 3700\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 61100,\n    \"Net Income\": 9600\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 50000,\n    \"Equipment\": 17000,\n    \"Prepaid Rent\": 3700\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 61100,\n    \"Net Income\": 9600\n  }\n}",
+    "ACR": 0.8,
+    "BEM": 0.0,
+    "SPA": 0.8,
+    "PSR": 0,
+    "HR": 0.2,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00463",
@@ -596,7 +686,13 @@
     "parse_failed": false,
     "n_errors": 0,
     "error_categories": {},
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 44000,\n    \"Inventory\": 20900\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 64900\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 44000,\n    \"Inventory\": 20900\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 64900\n  }\n}",
+    "ACR": 1.0,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 1,
+    "HR": 0.0,
+    "CECR": 1
   },
   {
     "problem_id": "FB_1_00250",
@@ -635,7 +731,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 71100,\n    \"Prepaid Rent\": 7300,\n    \"Equipment\": 3300,\n    \"Inventory\": 2000\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 83700\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 71100,\n    \"Prepaid Rent\": 7300,\n    \"Equipment\": 3300,\n    \"Inventory\": 2000\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 83700\n  }\n}",
+    "ACR": 0.8333,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00229",
@@ -674,7 +776,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 51500,\n    \"Prepaid Rent\": 7700,\n    \"Inventory\": 9300,\n    \"Equipment\": 14200\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 86700,\n    \"Net Income (Loss)\": -4000\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 51500,\n    \"Prepaid Rent\": 7700,\n    \"Inventory\": 9300,\n    \"Equipment\": 14200\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 86700,\n    \"Net Income (Loss)\": -4000\n  }\n}",
+    "ACR": 0.8333,
+    "BEM": 0.0,
+    "SPA": 0.8333,
+    "PSR": 0,
+    "HR": 0.1667,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00246",
@@ -712,7 +820,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 51000,\n    \"Inventory\": 9600,\n    \"Equipment\": 15900\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 67700,\n    \"Net Income\": 8800\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 51000,\n    \"Inventory\": 9600,\n    \"Equipment\": 15900\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 67700,\n    \"Net Income\": 8800\n  }\n}",
+    "ACR": 0.8,
+    "BEM": 0.0,
+    "SPA": 0.8,
+    "PSR": 0,
+    "HR": 0.2,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00212",
@@ -750,7 +864,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 3600,\n    \"Inventory\": 9300,\n    \"Equipment\": 14000\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 19300,\n    \"Net Income\": 7600\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 3600,\n    \"Inventory\": 9300,\n    \"Equipment\": 14000\n  },\n  \"liabilities\": {},\n  \"equity\": {\n    \"Owner's Equity\": 19300,\n    \"Net Income\": 7600\n  }\n}",
+    "ACR": 0.8,
+    "BEM": 0.0,
+    "SPA": 0.8,
+    "PSR": 0,
+    "HR": 0.2,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00851",
@@ -787,7 +907,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 59500,\n    \"Prepaid Rent\": 2300,\n    \"Inventory\": 44100\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 44100,\n    \"Loans Payable\": 3400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 56700,\n    \"Net Income\": 1700\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 59500,\n    \"Prepaid Rent\": 2300,\n    \"Inventory\": 44100\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 44100,\n    \"Loans Payable\": 3400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 56700,\n    \"Net Income\": 1700\n  }\n}",
+    "ACR": 0.8571,
+    "BEM": 0.0,
+    "SPA": 0.8571,
+    "PSR": 0,
+    "HR": 0.1429,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00898",
@@ -826,7 +952,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 39800,\n    \"Accounts Receivable\": 18300,\n    \"Prepaid Rent\": 500,\n    \"Equipment\": 18900\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 28100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 49400\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 39800,\n    \"Accounts Receivable\": 18300,\n    \"Prepaid Rent\": 500,\n    \"Equipment\": 18900\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 28100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 49400\n  }\n}",
+    "ACR": 0.8571,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00659",
@@ -866,7 +998,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 128700,\n    \"Accounts Receivable\": 1900,\n    \"Inventory\": 15000,\n    \"Prepaid Rent\": 6900,\n    \"Equipment\": 15300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 6000,\n    \"Loans Payable\": 71500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 86900,\n    \"Net Income\": 3400\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 128700,\n    \"Accounts Receivable\": 1900,\n    \"Inventory\": 15000,\n    \"Prepaid Rent\": 6900,\n    \"Equipment\": 15300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 6000,\n    \"Loans Payable\": 71500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 86900,\n    \"Net Income\": 3400\n  }\n}",
+    "ACR": 0.8889,
+    "BEM": 0.0,
+    "SPA": 0.8889,
+    "PSR": 0,
+    "HR": 0.1111,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01049",
@@ -901,7 +1039,13 @@
     "parse_failed": false,
     "n_errors": 0,
     "error_categories": {},
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 185500,\n    \"Accounts Receivable\": 17400,\n    \"Inventory\": 38700,\n    \"Prepaid Insurance\": 2200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 19400,\n    \"Loans Payable\": 117300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 49500,\n    \"Retained Earnings\": 57600\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 185500,\n    \"Accounts Receivable\": 17400,\n    \"Inventory\": 38700,\n    \"Prepaid Insurance\": 2200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 19400,\n    \"Loans Payable\": 117300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 49500,\n    \"Retained Earnings\": 57600\n  }\n}",
+    "ACR": 1.0,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 1,
+    "HR": 0.0,
+    "CECR": 1
   },
   {
     "problem_id": "FB_2_00676",
@@ -939,7 +1083,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 219700,\n    \"Accounts Receivable\": 12200,\n    \"Prepaid Insurance\": 4900,\n    \"Prepaid Rent\": 1800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 91400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 147200\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 219700,\n    \"Accounts Receivable\": 12200,\n    \"Prepaid Insurance\": 4900,\n    \"Prepaid Rent\": 1800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 91400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 147200\n  }\n}",
+    "ACR": 0.8571,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01211",
@@ -972,7 +1122,13 @@
     "error_categories": {
       "FE": 1
     },
-    "raw_response": ""
+    "raw_response": "",
+    "ACR": 0.0,
+    "BEM": 0.0,
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00867",
@@ -1013,7 +1169,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 150900,\n    \"Accounts Receivable\": 30400,\n    \"Inventory\": 11700,\n    \"Prepaid Rent\": 2000,\n    \"Prepaid Insurance\": 5200,\n    \"Equipment\": 16700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 9400,\n    \"Loans Payable\": 86100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 78700,\n    \"Net Income\": 42700\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 150900,\n    \"Accounts Receivable\": 30400,\n    \"Inventory\": 11700,\n    \"Prepaid Rent\": 2000,\n    \"Prepaid Insurance\": 5200,\n    \"Equipment\": 16700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 9400,\n    \"Loans Payable\": 86100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 78700,\n    \"Net Income\": 42700\n  }\n}",
+    "ACR": 0.9,
+    "BEM": 0.0,
+    "SPA": 0.9,
+    "PSR": 0,
+    "HR": 0.1,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01138",
@@ -1053,7 +1215,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 148500,\n    \"Prepaid Rent\": 3500,\n    \"Prepaid Insurance\": 2800,\n    \"Inventory\": 11500,\n    \"Equipment\": 15700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 5300,\n    \"Loans Payable\": 23800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 152900\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 148500,\n    \"Prepaid Rent\": 3500,\n    \"Prepaid Insurance\": 2800,\n    \"Inventory\": 11500,\n    \"Equipment\": 15700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 5300,\n    \"Loans Payable\": 23800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 152900\n  }\n}",
+    "ACR": 0.8889,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01103",
@@ -1094,7 +1262,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 24400,\n    \"Accounts Receivable\": 17500,\n    \"Inventory\": 17400,\n    \"Prepaid Insurance\": 4400,\n    \"Prepaid Rent\": 500,\n    \"Equipment\": 30900\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 8400,\n    \"Loans Payable\": 20600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 54000,\n    \"Net Income\": 12100\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 24400,\n    \"Accounts Receivable\": 17500,\n    \"Inventory\": 17400,\n    \"Prepaid Insurance\": 4400,\n    \"Prepaid Rent\": 500,\n    \"Equipment\": 30900\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 8400,\n    \"Loans Payable\": 20600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 54000,\n    \"Net Income\": 12100\n  }\n}",
+    "ACR": 0.9,
+    "BEM": 0.0,
+    "SPA": 0.9,
+    "PSR": 0,
+    "HR": 0.1,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00975",
@@ -1133,7 +1307,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 258000,\n    \"Inventory\": 13700,\n    \"Prepaid Rent\": 12400,\n    \"Equipment\": 40900\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 8200,\n    \"Loans Payable\": 222700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 85500,\n    \"Net Income\": 8600\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 258000,\n    \"Inventory\": 13700,\n    \"Prepaid Rent\": 12400,\n    \"Equipment\": 40900\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 8200,\n    \"Loans Payable\": 222700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 85500,\n    \"Net Income\": 8600\n  }\n}",
+    "ACR": 0.875,
+    "BEM": 0.0,
+    "SPA": 0.875,
+    "PSR": 0,
+    "HR": 0.125,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00787",
@@ -1174,7 +1354,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 136800,\n    \"Accounts Receivable\": 6600,\n    \"Inventory\": 5500,\n    \"Prepaid Rent\": 1800,\n    \"Prepaid Insurance\": 3500,\n    \"Equipment\": 22700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 5500,\n    \"Loans Payable\": 88700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 73000,\n    \"Current Period Net Income\": 9700\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 136800,\n    \"Accounts Receivable\": 6600,\n    \"Inventory\": 5500,\n    \"Prepaid Rent\": 1800,\n    \"Prepaid Insurance\": 3500,\n    \"Equipment\": 22700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 5500,\n    \"Loans Payable\": 88700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 73000,\n    \"Current Period Net Income\": 9700\n  }\n}",
+    "ACR": 0.9,
+    "BEM": 0.0,
+    "SPA": 0.9,
+    "PSR": 0,
+    "HR": 0.1,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01220",
@@ -1211,7 +1397,13 @@
     "parse_failed": false,
     "n_errors": 0,
     "error_categories": {},
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 64800,\n    \"Accounts Receivable\": 11000,\n    \"Inventory\": 27700,\n    \"Equipment\": 16300,\n    \"Prepaid Rent\": 4700\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 54200,\n    \"Accounts Payable\": 7000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 58100,\n    \"Retained Earnings\": 5200\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 64800,\n    \"Accounts Receivable\": 11000,\n    \"Inventory\": 27700,\n    \"Equipment\": 16300,\n    \"Prepaid Rent\": 4700\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 54200,\n    \"Accounts Payable\": 7000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 58100,\n    \"Retained Earnings\": 5200\n  }\n}",
+    "ACR": 1.0,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 1,
+    "HR": 0.0,
+    "CECR": 1
   },
   {
     "problem_id": "FB_2_01222",
@@ -1251,7 +1443,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 145400,\n    \"Accounts Receivable\": 1600,\n    \"Inventory\": 17000,\n    \"Prepaid Rent\": 5800,\n    \"Equipment\": 27700\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 169300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 18400,\n    \"Net Income\": 9800\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 145400,\n    \"Accounts Receivable\": 1600,\n    \"Inventory\": 17000,\n    \"Prepaid Rent\": 5800,\n    \"Equipment\": 27700\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 169300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 18400,\n    \"Net Income\": 9800\n  }\n}",
+    "ACR": 0.875,
+    "BEM": 0.0,
+    "SPA": 0.875,
+    "PSR": 0,
+    "HR": 0.125,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01009",
@@ -1292,7 +1490,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 116700,\n    \"Accounts Receivable\": 2700,\n    \"Inventory\": 22900,\n    \"Prepaid Rent\": 12600,\n    \"Prepaid Insurance\": 1200,\n    \"Equipment\": 16100\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 103600,\n    \"Accounts Payable\": 7500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 66100,\n    \"Net Loss\": -5000\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 116700,\n    \"Accounts Receivable\": 2700,\n    \"Inventory\": 22900,\n    \"Prepaid Rent\": 12600,\n    \"Prepaid Insurance\": 1200,\n    \"Equipment\": 16100\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 103600,\n    \"Accounts Payable\": 7500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 66100,\n    \"Net Loss\": -5000\n  }\n}",
+    "ACR": 0.9,
+    "BEM": 0.0,
+    "SPA": 0.9,
+    "PSR": 0,
+    "HR": 0.1,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01248",
@@ -1333,7 +1537,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 50400,\n    \"Accounts Receivable\": 8300,\n    \"Inventory\": 24400,\n    \"Prepaid Insurance\": 2000,\n    \"Prepaid Rent\": 3400,\n    \"Equipment\": 8600\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 4300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 92800\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 50400,\n    \"Accounts Receivable\": 8300,\n    \"Inventory\": 24400,\n    \"Prepaid Insurance\": 2000,\n    \"Prepaid Rent\": 3400,\n    \"Equipment\": 8600\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 4300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 92800\n  }\n}",
+    "ACR": 0.8889,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00984",
@@ -1373,7 +1583,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 12400,\n    \"Accounts Receivable\": 9000,\n    \"Inventory\": 10600,\n    \"Prepaid Rent\": 600,\n    \"Equipment\": 47700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 5600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 52300,\n    \"Net Income\": 22400\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 12400,\n    \"Accounts Receivable\": 9000,\n    \"Inventory\": 10600,\n    \"Prepaid Rent\": 600,\n    \"Equipment\": 47700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 5600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 52300,\n    \"Net Income\": 22400\n  }\n}",
+    "ACR": 0.875,
+    "BEM": 0.0,
+    "SPA": 0.875,
+    "PSR": 0,
+    "HR": 0.125,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01001",
@@ -1413,7 +1629,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 132300,\n    \"Equipment\": 2600,\n    \"Inventory\": 26400,\n    \"Prepaid Insurance\": 3200,\n    \"Prepaid Rent\": 1800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 33600,\n    \"Accounts Payable\": 13200\n  },\n  \"equity\": {\n    \"Owner's Equity\": 112000,\n    \"Net Income\": 7500\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 132300,\n    \"Equipment\": 2600,\n    \"Inventory\": 26400,\n    \"Prepaid Insurance\": 3200,\n    \"Prepaid Rent\": 1800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 33600,\n    \"Accounts Payable\": 13200\n  },\n  \"equity\": {\n    \"Owner's Equity\": 112000,\n    \"Net Income\": 7500\n  }\n}",
+    "ACR": 0.8889,
+    "BEM": 0.0,
+    "SPA": 0.8889,
+    "PSR": 0,
+    "HR": 0.1111,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01168",
@@ -1454,7 +1676,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 53200,\n    \"Accounts Receivable\": 25200,\n    \"Inventory\": 1300,\n    \"Prepaid Insurance\": 1500,\n    \"Prepaid Rent\": 1500,\n    \"Equipment\": 13300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 500,\n    \"Loans Payable\": 24700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 49800,\n    \"Net Income\": 21000\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 53200,\n    \"Accounts Receivable\": 25200,\n    \"Inventory\": 1300,\n    \"Prepaid Insurance\": 1500,\n    \"Prepaid Rent\": 1500,\n    \"Equipment\": 13300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 500,\n    \"Loans Payable\": 24700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 49800,\n    \"Net Income\": 21000\n  }\n}",
+    "ACR": 0.9,
+    "BEM": 0.0,
+    "SPA": 0.9,
+    "PSR": 0,
+    "HR": 0.1,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00529",
@@ -1495,7 +1723,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 80000,\n    \"Accounts Receivable\": 10000,\n    \"Inventory\": 10900,\n    \"Prepaid Insurance\": 1200,\n    \"Prepaid Rent\": 4200,\n    \"Equipment\": 5400\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 7600,\n    \"Loans Payable\": 48400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 47400,\n    \"Net Income\": 8300\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 80000,\n    \"Accounts Receivable\": 10000,\n    \"Inventory\": 10900,\n    \"Prepaid Insurance\": 1200,\n    \"Prepaid Rent\": 4200,\n    \"Equipment\": 5400\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 7600,\n    \"Loans Payable\": 48400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 47400,\n    \"Net Income\": 8300\n  }\n}",
+    "ACR": 0.9,
+    "BEM": 0.0,
+    "SPA": 0.9,
+    "PSR": 0,
+    "HR": 0.1,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00795",
@@ -1534,7 +1768,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 264100,\n    \"Accounts Receivable\": 16000,\n    \"Inventory\": 24200,\n    \"Prepaid Insurance\": 3700,\n    \"Prepaid Rent\": 2500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 12700,\n    \"Loans Payable\": 195700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 76800,\n    \"Net Income\": 25300\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 264100,\n    \"Accounts Receivable\": 16000,\n    \"Inventory\": 24200,\n    \"Prepaid Insurance\": 3700,\n    \"Prepaid Rent\": 2500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 12700,\n    \"Loans Payable\": 195700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 76800,\n    \"Net Income\": 25300\n  }\n}",
+    "ACR": 0.8889,
+    "BEM": 0.0,
+    "SPA": 0.8889,
+    "PSR": 0,
+    "HR": 0.1111,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01855",
@@ -1575,7 +1815,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 76300,\n    \"Prepaid Insurance\": 1100,\n    \"Inventory\": 6600,\n    \"Equipment\": 56500,\n    \"Furniture\": 14200,\n    \"Vehicles\": 46100\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 6600,\n    \"Loans Payable\": 90200,\n    \"Accrued Interest Payable\": 6400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 99600,\n    \"Retained Earnings (Net Loss)\": -2000\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 76300,\n    \"Prepaid Insurance\": 1100,\n    \"Inventory\": 6600,\n    \"Equipment\": 56500,\n    \"Furniture\": 14200,\n    \"Vehicles\": 46100\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 6600,\n    \"Loans Payable\": 90200,\n    \"Accrued Interest Payable\": 6400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 99600,\n    \"Retained Earnings (Net Loss)\": -2000\n  }\n}",
+    "ACR": 0.9091,
+    "BEM": 0.0,
+    "SPA": 0.9091,
+    "PSR": 0,
+    "HR": 0.0909,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01299",
@@ -1618,7 +1864,13 @@
       "OE": 2,
       "CO": 2
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 138400,\n    \"Accounts Receivable\": 56400,\n    \"Prepaid Rent\": 3700,\n    \"Prepaid Insurance\": 900,\n    \"Furniture\": 8900,\n    \"Accumulated Depreciation - Furniture\": -1700,\n    \"Vehicles\": 32100,\n    \"Equipment\": 22300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 2500,\n    \"Loans Payable\": 143400,\n    \"Accrued Interest Payable\": 6900\n  },\n  \"equity\": {\n    \"Owner's Equity\": 83300,\n    \"Retained Earnings (Net Income)\": 24900\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 138400,\n    \"Accounts Receivable\": 56400,\n    \"Prepaid Rent\": 3700,\n    \"Prepaid Insurance\": 900,\n    \"Furniture\": 8900,\n    \"Accumulated Depreciation - Furniture\": -1700,\n    \"Vehicles\": 32100,\n    \"Equipment\": 22300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 2500,\n    \"Loans Payable\": 143400,\n    \"Accrued Interest Payable\": 6900\n  },\n  \"equity\": {\n    \"Owner's Equity\": 83300,\n    \"Retained Earnings (Net Income)\": 24900\n  }\n}",
+    "ACR": 0.8462,
+    "BEM": 0.0,
+    "SPA": 0.8462,
+    "PSR": 0,
+    "HR": 0.1538,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01944",
@@ -1660,7 +1912,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 183300,\n    \"Accounts Receivable\": 41500,\n    \"Allowance for Doubtful Accounts\": -1800,\n    \"Inventory\": 11200,\n    \"Prepaid Rent\": 3600,\n    \"Vehicles\": 79800,\n    \"Equipment\": 7300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 11200,\n    \"Loans Payable\": 248700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 65000\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 183300,\n    \"Accounts Receivable\": 41500,\n    \"Allowance for Doubtful Accounts\": -1800,\n    \"Inventory\": 11200,\n    \"Prepaid Rent\": 3600,\n    \"Vehicles\": 79800,\n    \"Equipment\": 7300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 11200,\n    \"Loans Payable\": 248700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 65000\n  }\n}",
+    "ACR": 0.9091,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01654",
@@ -1704,7 +1962,13 @@
       "OE": 2,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 55800,\n    \"Accounts Receivable\": 46600,\n    \"Inventory\": 32900,\n    \"Prepaid Insurance\": 7000,\n    \"Prepaid Rent\": 5300,\n    \"Equipment\": 33100,\n    \"Accumulated Depreciation - Equipment\": -3000,\n    \"Vehicles\": 8200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 43700,\n    \"Loans Payable\": 58100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 84100\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 55800,\n    \"Accounts Receivable\": 46600,\n    \"Inventory\": 32900,\n    \"Prepaid Insurance\": 7000,\n    \"Prepaid Rent\": 5300,\n    \"Equipment\": 33100,\n    \"Accumulated Depreciation - Equipment\": -3000,\n    \"Vehicles\": 8200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 43700,\n    \"Loans Payable\": 58100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 84100\n  }\n}",
+    "ACR": 0.8333,
+    "BEM": 0.0,
+    "SPA": 0.9091,
+    "PSR": 0,
+    "HR": 0.0909,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01542",
@@ -1743,7 +2007,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 154700,\n    \"Accounts Receivable\": 39500,\n    \"Inventory\": 28300,\n    \"Prepaid Rent\": 1500,\n    \"Prepaid Insurance\": 5000\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 27800,\n    \"Loans Payable\": 98900,\n    \"Accrued Interest Payable\": 3800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 62700,\n    \"Net Income\": 35800\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 154700,\n    \"Accounts Receivable\": 39500,\n    \"Inventory\": 28300,\n    \"Prepaid Rent\": 1500,\n    \"Prepaid Insurance\": 5000\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 27800,\n    \"Loans Payable\": 98900,\n    \"Accrued Interest Payable\": 3800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 62700,\n    \"Net Income\": 35800\n  }\n}",
+    "ACR": 0.9,
+    "BEM": 0.0,
+    "SPA": 0.9,
+    "PSR": 0,
+    "HR": 0.1,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01353",
@@ -1786,7 +2056,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": -28000,\n    \"Accounts Receivable\": 20600,\n    \"Allowance for Doubtful Accounts\": -700,\n    \"Inventory\": 10400,\n    \"Prepaid Insurance\": 8200,\n    \"Prepaid Rent\": 1900,\n    \"Vehicles\": 59400,\n    \"Equipment\": 18900\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 6000,\n    \"Loans Payable\": 10300,\n    \"Accrued Interest Payable\": 400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 74000\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": -28000,\n    \"Accounts Receivable\": 20600,\n    \"Allowance for Doubtful Accounts\": -700,\n    \"Inventory\": 10400,\n    \"Prepaid Insurance\": 8200,\n    \"Prepaid Rent\": 1900,\n    \"Vehicles\": 59400,\n    \"Equipment\": 18900\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 6000,\n    \"Loans Payable\": 10300,\n    \"Accrued Interest Payable\": 400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 74000\n  }\n}",
+    "ACR": 0.9231,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01652",
@@ -1829,7 +2105,13 @@
       "OE": 2,
       "CO": 2
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 49600,\n    \"Accounts Receivable\": 21200,\n    \"Inventory\": 36100,\n    \"Prepaid Insurance\": 5000,\n    \"Prepaid Rent\": 2600,\n    \"Equipment\": 8700,\n    \"Vehicles\": 56800,\n    \"Accumulated Depreciation - Vehicles\": -10200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 21900,\n    \"Loans Payable\": 81600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 65200,\n    \"Net Income\": 1100\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 49600,\n    \"Accounts Receivable\": 21200,\n    \"Inventory\": 36100,\n    \"Prepaid Insurance\": 5000,\n    \"Prepaid Rent\": 2600,\n    \"Equipment\": 8700,\n    \"Vehicles\": 56800,\n    \"Accumulated Depreciation - Vehicles\": -10200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 21900,\n    \"Loans Payable\": 81600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 65200,\n    \"Net Income\": 1100\n  }\n}",
+    "ACR": 0.8333,
+    "BEM": 0.0,
+    "SPA": 0.8333,
+    "PSR": 0,
+    "HR": 0.1667,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01856",
@@ -1871,7 +2153,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 10900,\n    \"Accounts Receivable\": 39000,\n    \"Allowance for Doubtful Accounts\": -2200,\n    \"Inventory\": 4300,\n    \"Prepaid Rent\": 5500,\n    \"Prepaid Insurance\": 4700,\n    \"Equipment\": 44100\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 7300,\n    \"Loans Payable\": 7400,\n    \"Accrued Expenses\": 4200,\n    \"Accrued Interest Payable\": 400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 66200,\n    \"Net Income\": 20800\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 10900,\n    \"Accounts Receivable\": 39000,\n    \"Allowance for Doubtful Accounts\": -2200,\n    \"Inventory\": 4300,\n    \"Prepaid Rent\": 5500,\n    \"Prepaid Insurance\": 4700,\n    \"Equipment\": 44100\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 7300,\n    \"Loans Payable\": 7400,\n    \"Accrued Expenses\": 4200,\n    \"Accrued Interest Payable\": 400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 66200,\n    \"Net Income\": 20800\n  }\n}",
+    "ACR": 0.9231,
+    "BEM": 0.0,
+    "SPA": 0.9231,
+    "PSR": 0,
+    "HR": 0.0769,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01994",
@@ -1913,7 +2201,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 38100,\n    \"Accounts Receivable\": 7200,\n    \"Inventory\": 13100,\n    \"Prepaid Rent\": 3400,\n    \"Prepaid Insurance\": 3500,\n    \"Equipment\": 22000,\n    \"Furniture\": 8300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 22000,\n    \"Loans Payable\": 37700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 36600,\n    \"Net Income (Loss)\": -700\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 38100,\n    \"Accounts Receivable\": 7200,\n    \"Inventory\": 13100,\n    \"Prepaid Rent\": 3400,\n    \"Prepaid Insurance\": 3500,\n    \"Equipment\": 22000,\n    \"Furniture\": 8300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 22000,\n    \"Loans Payable\": 37700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 36600,\n    \"Net Income (Loss)\": -700\n  }\n}",
+    "ACR": 0.9091,
+    "BEM": 0.0,
+    "SPA": 0.9091,
+    "PSR": 0,
+    "HR": 0.0909,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01414",
@@ -1957,7 +2251,13 @@
       "OE": 2,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 92000,\n    \"Accounts Receivable\": 24000,\n    \"Inventory\": 23700,\n    \"Prepaid Insurance\": 7800,\n    \"Vehicles\": 29000,\n    \"Accumulated Depreciation - Vehicles\": -5200,\n    \"Equipment\": 12400,\n    \"Furniture\": 12300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 14500,\n    \"Loans Payable\": 93600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 87900\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 92000,\n    \"Accounts Receivable\": 24000,\n    \"Inventory\": 23700,\n    \"Prepaid Insurance\": 7800,\n    \"Vehicles\": 29000,\n    \"Accumulated Depreciation - Vehicles\": -5200,\n    \"Equipment\": 12400,\n    \"Furniture\": 12300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 14500,\n    \"Loans Payable\": 93600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 87900\n  }\n}",
+    "ACR": 0.8333,
+    "BEM": 0.0,
+    "SPA": 0.9091,
+    "PSR": 0,
+    "HR": 0.0909,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01890",
@@ -2001,7 +2301,13 @@
       "OE": 2,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 96700,\n    \"Accounts Receivable\": 5400,\n    \"Inventory\": 42400,\n    \"Prepaid Rent\": 5200,\n    \"Equipment\": 15600,\n    \"Vehicles\": 55200,\n    \"Accumulated Depreciation - Vehicles\": -9900,\n    \"Furniture\": 13100\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 171700,\n    \"Accounts Payable\": 11800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 40200\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 96700,\n    \"Accounts Receivable\": 5400,\n    \"Inventory\": 42400,\n    \"Prepaid Rent\": 5200,\n    \"Equipment\": 15600,\n    \"Vehicles\": 55200,\n    \"Accumulated Depreciation - Vehicles\": -9900,\n    \"Furniture\": 13100\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 171700,\n    \"Accounts Payable\": 11800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 40200\n  }\n}",
+    "ACR": 0.8333,
+    "BEM": 0.0,
+    "SPA": 0.9091,
+    "PSR": 0,
+    "HR": 0.0909,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01747",
@@ -2045,7 +2351,13 @@
       "OE": 2,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 60100,\n    \"Accounts Receivable\": 7800,\n    \"Inventory\": 8600,\n    \"Prepaid Insurance\": 1600,\n    \"Prepaid Rent\": 5400,\n    \"Equipment\": 6300,\n    \"Furniture\": 19900,\n    \"Accumulated Depreciation - Furniture\": -3800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 67500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 38400\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 60100,\n    \"Accounts Receivable\": 7800,\n    \"Inventory\": 8600,\n    \"Prepaid Insurance\": 1600,\n    \"Prepaid Rent\": 5400,\n    \"Equipment\": 6300,\n    \"Furniture\": 19900,\n    \"Accumulated Depreciation - Furniture\": -3800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 67500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 38400\n  }\n}",
+    "ACR": 0.8182,
+    "BEM": 0.0,
+    "SPA": 0.9,
+    "PSR": 0,
+    "HR": 0.1,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01428",
@@ -2089,7 +2401,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 52800,\n    \"Accounts Receivable\": 1000,\n    \"Allowance for Doubtful Accounts\": -100,\n    \"Inventory\": 23200,\n    \"Prepaid Rent\": 1900,\n    \"Prepaid Insurance\": 1500,\n    \"Vehicles\": 32600,\n    \"Equipment\": 6600,\n    \"Furniture\": 31800\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 16200,\n    \"Loans Payable\": 29400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 80000,\n    \"Net Income\": 25700\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 52800,\n    \"Accounts Receivable\": 1000,\n    \"Allowance for Doubtful Accounts\": -100,\n    \"Inventory\": 23200,\n    \"Prepaid Rent\": 1900,\n    \"Prepaid Insurance\": 1500,\n    \"Vehicles\": 32600,\n    \"Equipment\": 6600,\n    \"Furniture\": 31800\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 16200,\n    \"Loans Payable\": 29400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 80000,\n    \"Net Income\": 25700\n  }\n}",
+    "ACR": 0.9231,
+    "BEM": 0.0,
+    "SPA": 0.9231,
+    "PSR": 0,
+    "HR": 0.0769,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01579",
@@ -2132,7 +2450,13 @@
       "OE": 2,
       "CO": 2
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 500,\n    \"Accounts Receivable\": 7000,\n    \"Inventory\": 800,\n    \"Prepaid Insurance\": 11800,\n    \"Vehicles\": 57300,\n    \"Furniture\": 5500,\n    \"Equipment\": 15500,\n    \"Accumulated Depreciation - Furniture\": -1000\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 1400,\n    \"Loans Payable\": 43200,\n    \"Accrued Interest Payable\": 2300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 48400,\n    \"Net Income\": 2100\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 500,\n    \"Accounts Receivable\": 7000,\n    \"Inventory\": 800,\n    \"Prepaid Insurance\": 11800,\n    \"Vehicles\": 57300,\n    \"Furniture\": 5500,\n    \"Equipment\": 15500,\n    \"Accumulated Depreciation - Furniture\": -1000\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 1400,\n    \"Loans Payable\": 43200,\n    \"Accrued Interest Payable\": 2300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 48400,\n    \"Net Income\": 2100\n  }\n}",
+    "ACR": 0.8462,
+    "BEM": 0.0,
+    "SPA": 0.8462,
+    "PSR": 0,
+    "HR": 0.1538,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01999",
@@ -2175,7 +2499,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 21700,\n    \"Accounts Receivable\": 27600,\n    \"Allowance for Doubtful Accounts\": -2100,\n    \"Prepaid Insurance\": 3500,\n    \"Inventory\": 0,\n    \"Equipment\": 15800,\n    \"Furniture\": 11900\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 4200,\n    \"Loans Payable\": 12800,\n    \"Accrued Expenses\": 4600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 56800\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 21700,\n    \"Accounts Receivable\": 27600,\n    \"Allowance for Doubtful Accounts\": -2100,\n    \"Prepaid Insurance\": 3500,\n    \"Inventory\": 0,\n    \"Equipment\": 15800,\n    \"Furniture\": 11900\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 4200,\n    \"Loans Payable\": 12800,\n    \"Accrued Expenses\": 4600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 56800\n  }\n}",
+    "ACR": 0.9091,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0909,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01493",
@@ -2214,7 +2544,13 @@
     "parse_failed": false,
     "n_errors": 0,
     "error_categories": {},
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 130700,\n    \"Accounts Receivable\": 60500,\n    \"Inventory\": 36600,\n    \"Prepaid Insurance\": 1500,\n    \"Prepaid Rent\": 2100,\n    \"Equipment\": 18300,\n    \"Furniture\": 7500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 49700,\n    \"Loans Payable\": 84200\n  },\n  \"equity\": {\n    \"Owner's Equity\": 80800,\n    \"Retained Earnings\": 42500\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 130700,\n    \"Accounts Receivable\": 60500,\n    \"Inventory\": 36600,\n    \"Prepaid Insurance\": 1500,\n    \"Prepaid Rent\": 2100,\n    \"Equipment\": 18300,\n    \"Furniture\": 7500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 49700,\n    \"Loans Payable\": 84200\n  },\n  \"equity\": {\n    \"Owner's Equity\": 80800,\n    \"Retained Earnings\": 42500\n  }\n}",
+    "ACR": 1.0,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 1,
+    "HR": 0.0,
+    "CECR": 1
   },
   {
     "problem_id": "FB_3_01457",
@@ -2255,7 +2591,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 295300,\n    \"Accounts Receivable\": 3200,\n    \"Inventory\": 21800,\n    \"Prepaid Rent\": 2000,\n    \"Prepaid Insurance\": 3100,\n    \"Equipment\": 11100\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 234300,\n    \"Accounts Payable\": 14600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 74200,\n    \"Net Income\": 13400\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 295300,\n    \"Accounts Receivable\": 3200,\n    \"Inventory\": 21800,\n    \"Prepaid Rent\": 2000,\n    \"Prepaid Insurance\": 3100,\n    \"Equipment\": 11100\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 234300,\n    \"Accounts Payable\": 14600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 74200,\n    \"Net Income\": 13400\n  }\n}",
+    "ACR": 0.9,
+    "BEM": 0.0,
+    "SPA": 0.9,
+    "PSR": 0,
+    "HR": 0.1,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01327",
@@ -2299,7 +2641,13 @@
       "OE": 2,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 27900,\n    \"Accounts Receivable\": 17700,\n    \"Inventory\": 2200,\n    \"Prepaid Insurance\": 5500,\n    \"Furniture\": 25200,\n    \"Equipment\": 14800,\n    \"Vehicles\": 25600,\n    \"Accumulated Depreciation - Vehicles\": -4600\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 8200\n  },\n  \"equity\": {\n    \"Owner's Equity\": 106100\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 27900,\n    \"Accounts Receivable\": 17700,\n    \"Inventory\": 2200,\n    \"Prepaid Insurance\": 5500,\n    \"Furniture\": 25200,\n    \"Equipment\": 14800,\n    \"Vehicles\": 25600,\n    \"Accumulated Depreciation - Vehicles\": -4600\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 8200\n  },\n  \"equity\": {\n    \"Owner's Equity\": 106100\n  }\n}",
+    "ACR": 0.8182,
+    "BEM": 0.0,
+    "SPA": 0.9,
+    "PSR": 0,
+    "HR": 0.1,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01524",
@@ -2344,7 +2692,13 @@
       "OE": 2,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 74600,\n    \"Accounts Receivable\": 19500,\n    \"Inventory\": 6800,\n    \"Prepaid Insurance\": 11100,\n    \"Prepaid Rent\": 3000,\n    \"Equipment\": 49100,\n    \"Furniture\": 20200,\n    \"Vehicles\": 23300,\n    \"Accumulated Depreciation (Vehicles)\": -4200\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 42900,\n    \"Accounts Payable\": 1400,\n    \"Accrued Interest Payable\": 1600,\n    \"Accrued Expenses\": 2300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 155200\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 74600,\n    \"Accounts Receivable\": 19500,\n    \"Inventory\": 6800,\n    \"Prepaid Insurance\": 11100,\n    \"Prepaid Rent\": 3000,\n    \"Equipment\": 49100,\n    \"Furniture\": 20200,\n    \"Vehicles\": 23300,\n    \"Accumulated Depreciation (Vehicles)\": -4200\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 42900,\n    \"Accounts Payable\": 1400,\n    \"Accrued Interest Payable\": 1600,\n    \"Accrued Expenses\": 2300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 155200\n  }\n}",
+    "ACR": 0.8667,
+    "BEM": 0.0,
+    "SPA": 0.9286,
+    "PSR": 0,
+    "HR": 0.0714,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01770",
@@ -2388,7 +2742,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 178100,\n    \"Accounts Receivable\": 11400,\n    \"Allowance for Doubtful Accounts\": -600,\n    \"Prepaid Rent\": 14700,\n    \"Prepaid Insurance\": 13800,\n    \"Inventory\": 13600,\n    \"Equipment\": 19800,\n    \"Vehicles\": 92000,\n    \"Furniture\": 19300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 4200,\n    \"Loans Payable\": 170900\n  },\n  \"equity\": {\n    \"Owner's Equity\": 166700,\n    \"Net Income\": 20300\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 178100,\n    \"Accounts Receivable\": 11400,\n    \"Allowance for Doubtful Accounts\": -600,\n    \"Prepaid Rent\": 14700,\n    \"Prepaid Insurance\": 13800,\n    \"Inventory\": 13600,\n    \"Equipment\": 19800,\n    \"Vehicles\": 92000,\n    \"Furniture\": 19300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 4200,\n    \"Loans Payable\": 170900\n  },\n  \"equity\": {\n    \"Owner's Equity\": 166700,\n    \"Net Income\": 20300\n  }\n}",
+    "ACR": 0.9231,
+    "BEM": 0.0,
+    "SPA": 0.9231,
+    "PSR": 0,
+    "HR": 0.0769,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02055",
@@ -2432,7 +2792,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 245500,\n    \"Accounts Receivable\": 9400,\n    \"Allowance for Doubtful Accounts\": -200,\n    \"Inventory\": 35700,\n    \"Prepaid Rent\": 7100,\n    \"Prepaid Insurance\": 7900,\n    \"Furniture\": 18700,\n    \"Equipment\": 52300,\n    \"Vehicles\": 125900\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 29700,\n    \"Accrued Expenses\": 3600,\n    \"Loans Payable\": 251700,\n    \"Notes Payable\": 37800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 197400,\n    \"Current Year Net Loss\": -17900\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 245500,\n    \"Accounts Receivable\": 9400,\n    \"Allowance for Doubtful Accounts\": -200,\n    \"Inventory\": 35700,\n    \"Prepaid Rent\": 7100,\n    \"Prepaid Insurance\": 7900,\n    \"Furniture\": 18700,\n    \"Equipment\": 52300,\n    \"Vehicles\": 125900\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 29700,\n    \"Accrued Expenses\": 3600,\n    \"Loans Payable\": 251700,\n    \"Notes Payable\": 37800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 197400,\n    \"Current Year Net Loss\": -17900\n  }\n}",
+    "ACR": 0.9333,
+    "BEM": 0.0,
+    "SPA": 0.9333,
+    "PSR": 0,
+    "HR": 0.0667,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02003",
@@ -2476,7 +2842,13 @@
       "OE": 2,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 114000,\n    \"Accounts Receivable\": 30600,\n    \"Inventory\": 4900,\n    \"Prepaid Rent\": 9600,\n    \"Furniture\": 23500,\n    \"Equipment\": 45200,\n    \"Vehicles\": 109000,\n    \"Accumulated Depreciation - Vehicles\": -19600\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 2300,\n    \"Notes Payable\": 60300,\n    \"Loans Payable\": 150500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 104100\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 114000,\n    \"Accounts Receivable\": 30600,\n    \"Inventory\": 4900,\n    \"Prepaid Rent\": 9600,\n    \"Furniture\": 23500,\n    \"Equipment\": 45200,\n    \"Vehicles\": 109000,\n    \"Accumulated Depreciation - Vehicles\": -19600\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 2300,\n    \"Notes Payable\": 60300,\n    \"Loans Payable\": 150500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 104100\n  }\n}",
+    "ACR": 0.8462,
+    "BEM": 0.0,
+    "SPA": 0.9167,
+    "PSR": 0,
+    "HR": 0.0833,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02127",
@@ -2519,7 +2891,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 43500,\n    \"Accounts Receivable\": 5900,\n    \"Allowance for Doubtful Accounts\": -200,\n    \"Inventory\": 9000,\n    \"Prepaid Insurance\": 2300,\n    \"Vehicles\": 96600,\n    \"Equipment\": 152100,\n    \"Furniture\": 13900\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 12900,\n    \"Notes Payable\": 108100,\n    \"Loans Payable\": 41300,\n    \"Accrued Interest Payable\": 3600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 157200\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 43500,\n    \"Accounts Receivable\": 5900,\n    \"Allowance for Doubtful Accounts\": -200,\n    \"Inventory\": 9000,\n    \"Prepaid Insurance\": 2300,\n    \"Vehicles\": 96600,\n    \"Equipment\": 152100,\n    \"Furniture\": 13900\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 12900,\n    \"Notes Payable\": 108100,\n    \"Loans Payable\": 41300,\n    \"Accrued Interest Payable\": 3600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 157200\n  }\n}",
+    "ACR": 0.9286,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02029",
@@ -2563,7 +2941,13 @@
       "OE": 2,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 338300,\n    \"Accounts Receivable\": 7700,\n    \"Inventory\": 14300,\n    \"Prepaid Rent\": 4400,\n    \"Equipment\": 141000,\n    \"Vehicles\": 89800,\n    \"Furniture\": 17900,\n    \"Accumulated Depreciation - Furniture\": -3400\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 14500,\n    \"Loans Payable\": 463400,\n    \"Notes Payable\": 70400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 61700\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 338300,\n    \"Accounts Receivable\": 7700,\n    \"Inventory\": 14300,\n    \"Prepaid Rent\": 4400,\n    \"Equipment\": 141000,\n    \"Vehicles\": 89800,\n    \"Furniture\": 17900,\n    \"Accumulated Depreciation - Furniture\": -3400\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 14500,\n    \"Loans Payable\": 463400,\n    \"Notes Payable\": 70400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 61700\n  }\n}",
+    "ACR": 0.8462,
+    "BEM": 0.0,
+    "SPA": 0.9167,
+    "PSR": 0,
+    "HR": 0.0833,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02295",
@@ -2605,7 +2989,13 @@
       "OE": 2,
       "CO": 3
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 239900,\n    \"Accounts Receivable\": 62700,\n    \"Inventory\": 0,\n    \"Vehicles\": 232400,\n    \"Equipment\": 92600,\n    \"Furniture\": 10700,\n    \"Accumulated Depreciation - Furniture\": -2000\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 200,\n    \"Notes Payable\": 187400,\n    \"Loans Payable\": 316900,\n    \"Accrued Expenses\": 1000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 107100,\n    \"Retained Earnings (Net Income)\": 23700\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 239900,\n    \"Accounts Receivable\": 62700,\n    \"Inventory\": 0,\n    \"Vehicles\": 232400,\n    \"Equipment\": 92600,\n    \"Furniture\": 10700,\n    \"Accumulated Depreciation - Furniture\": -2000\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 200,\n    \"Notes Payable\": 187400,\n    \"Loans Payable\": 316900,\n    \"Accrued Expenses\": 1000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 107100,\n    \"Retained Earnings (Net Income)\": 23700\n  }\n}",
+    "ACR": 0.8333,
+    "BEM": 0.0,
+    "SPA": 0.8462,
+    "PSR": 0,
+    "HR": 0.2308,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02001",
@@ -2647,7 +3037,13 @@
       "OE": 2,
       "CO": 2
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 143900,\n    \"Accounts Receivable\": 22700,\n    \"Prepaid Insurance\": 3800,\n    \"Equipment\": 83300,\n    \"Vehicles\": 206300,\n    \"Furniture\": 14600,\n    \"Accumulated Depreciation - Furniture\": -2800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 234200,\n    \"Notes Payable\": 127000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 92100,\n    \"Net Income\": 18500\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 143900,\n    \"Accounts Receivable\": 22700,\n    \"Prepaid Insurance\": 3800,\n    \"Equipment\": 83300,\n    \"Vehicles\": 206300,\n    \"Furniture\": 14600,\n    \"Accumulated Depreciation - Furniture\": -2800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 234200,\n    \"Notes Payable\": 127000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 92100,\n    \"Net Income\": 18500\n  }\n}",
+    "ACR": 0.8182,
+    "BEM": 0.0,
+    "SPA": 0.8182,
+    "PSR": 0,
+    "HR": 0.1818,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02196",
@@ -2692,7 +3088,13 @@
       "OE": 2,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 104500,\n    \"Accounts Receivable\": 51700,\n    \"Inventory\": 12200,\n    \"Prepaid Insurance\": 2000,\n    \"Prepaid Rent\": 7200,\n    \"Furniture\": 22700,\n    \"Vehicles\": 172000,\n    \"Accumulated Depreciation - Vehicles\": -31000,\n    \"Equipment\": 63200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 39400,\n    \"Notes Payable\": 117900,\n    \"Loans Payable\": 166000,\n    \"Accrued Interest Payable\": 5000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 76200\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 104500,\n    \"Accounts Receivable\": 51700,\n    \"Inventory\": 12200,\n    \"Prepaid Insurance\": 2000,\n    \"Prepaid Rent\": 7200,\n    \"Furniture\": 22700,\n    \"Vehicles\": 172000,\n    \"Accumulated Depreciation - Vehicles\": -31000,\n    \"Equipment\": 63200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 39400,\n    \"Notes Payable\": 117900,\n    \"Loans Payable\": 166000,\n    \"Accrued Interest Payable\": 5000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 76200\n  }\n}",
+    "ACR": 0.8667,
+    "BEM": 0.0,
+    "SPA": 0.9286,
+    "PSR": 0,
+    "HR": 0.0714,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02125",
@@ -2734,7 +3136,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 11200,\n    \"Accounts Receivable\": 32500,\n    \"Inventory\": 13700,\n    \"Prepaid Insurance\": 3400,\n    \"Vehicles\": 54500,\n    \"Equipment\": 123200,\n    \"Furniture\": 28900,\n    \"Accumulated Depreciation\": -5500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 14800,\n    \"Notes Payable\": 60200,\n    \"Loans Payable\": 150000,\n    \"Accrued Expenses\": 4800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 49600,\n    \"Net Income (Loss)\": -17500\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 11200,\n    \"Accounts Receivable\": 32500,\n    \"Inventory\": 13700,\n    \"Prepaid Insurance\": 3400,\n    \"Vehicles\": 54500,\n    \"Equipment\": 123200,\n    \"Furniture\": 28900,\n    \"Accumulated Depreciation\": -5500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 14800,\n    \"Notes Payable\": 60200,\n    \"Loans Payable\": 150000,\n    \"Accrued Expenses\": 4800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 49600,\n    \"Net Income (Loss)\": -17500\n  }\n}",
+    "ACR": 0.9286,
+    "BEM": 0.0,
+    "SPA": 0.9286,
+    "PSR": 0,
+    "HR": 0.0714,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02222",
@@ -2777,7 +3185,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 43000,\n    \"Accounts Receivable\": 60100,\n    \"Inventory\": 8300,\n    \"Prepaid Rent\": 2900,\n    \"Prepaid Insurance\": 1900,\n    \"Furniture\": 10900,\n    \"Accumulated Depreciation\": -2100,\n    \"Vehicles\": 145700,\n    \"Equipment\": 32300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 6000,\n    \"Notes Payable\": 94700,\n    \"Loans Payable\": 87400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 99100,\n    \"Net Income\": 15800\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 43000,\n    \"Accounts Receivable\": 60100,\n    \"Inventory\": 8300,\n    \"Prepaid Rent\": 2900,\n    \"Prepaid Insurance\": 1900,\n    \"Furniture\": 10900,\n    \"Accumulated Depreciation\": -2100,\n    \"Vehicles\": 145700,\n    \"Equipment\": 32300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 6000,\n    \"Notes Payable\": 94700,\n    \"Loans Payable\": 87400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 99100,\n    \"Net Income\": 15800\n  }\n}",
+    "ACR": 0.9286,
+    "BEM": 0.0,
+    "SPA": 0.9286,
+    "PSR": 0,
+    "HR": 0.0714,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02153",
@@ -2819,7 +3233,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 38300,\n    \"Accounts Receivable\": 29300,\n    \"Prepaid Insurance\": 5700,\n    \"Prepaid Rent\": 3500,\n    \"Equipment\": 183000,\n    \"Accumulated Depreciation\": -16500,\n    \"Vehicles\": 125300,\n    \"Furniture\": 23300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 8100,\n    \"Accrued Expenses\": 2200,\n    \"Notes Payable\": 139000,\n    \"Loans Payable\": 128000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 114600\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 38300,\n    \"Accounts Receivable\": 29300,\n    \"Prepaid Insurance\": 5700,\n    \"Prepaid Rent\": 3500,\n    \"Equipment\": 183000,\n    \"Accumulated Depreciation\": -16500,\n    \"Vehicles\": 125300,\n    \"Furniture\": 23300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 8100,\n    \"Accrued Expenses\": 2200,\n    \"Notes Payable\": 139000,\n    \"Loans Payable\": 128000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 114600\n  }\n}",
+    "ACR": 0.9286,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02184",
@@ -2862,7 +3282,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 152000,\n    \"Accounts Receivable\": 80000,\n    \"Inventory\": 0,\n    \"Prepaid Insurance\": 3100,\n    \"Vehicles\": 115300,\n    \"Equipment\": 106700,\n    \"Furniture\": 34200\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 239900,\n    \"Notes Payable\": 35400,\n    \"Accounts Payable\": 2200,\n    \"Accrued Interest Payable\": 6600,\n    \"Accrued Expenses\": 4000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 203200\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 152000,\n    \"Accounts Receivable\": 80000,\n    \"Inventory\": 0,\n    \"Prepaid Insurance\": 3100,\n    \"Vehicles\": 115300,\n    \"Equipment\": 106700,\n    \"Furniture\": 34200\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 239900,\n    \"Notes Payable\": 35400,\n    \"Accounts Payable\": 2200,\n    \"Accrued Interest Payable\": 6600,\n    \"Accrued Expenses\": 4000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 203200\n  }\n}",
+    "ACR": 0.9231,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0769,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02202",
@@ -2906,7 +3332,13 @@
       "OE": 2,
       "CO": 2
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 71800,\n    \"Accounts Receivable\": 71100,\n    \"Inventory\": 7800,\n    \"Prepaid Insurance\": 2600,\n    \"Prepaid Rent\": 13000,\n    \"Equipment\": 80800,\n    \"Vehicles\": 129800,\n    \"Less: Accumulated Depreciation - Vehicles\": -23400,\n    \"Furniture\": 33100\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 10100,\n    \"Notes Payable\": 137800,\n    \"Loans Payable\": 97800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 93600,\n    \"Net Income\": 47300\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 71800,\n    \"Accounts Receivable\": 71100,\n    \"Inventory\": 7800,\n    \"Prepaid Insurance\": 2600,\n    \"Prepaid Rent\": 13000,\n    \"Equipment\": 80800,\n    \"Vehicles\": 129800,\n    \"Less: Accumulated Depreciation - Vehicles\": -23400,\n    \"Furniture\": 33100\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 10100,\n    \"Notes Payable\": 137800,\n    \"Loans Payable\": 97800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 93600,\n    \"Net Income\": 47300\n  }\n}",
+    "ACR": 0.8571,
+    "BEM": 0.0,
+    "SPA": 0.8571,
+    "PSR": 0,
+    "HR": 0.1429,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02172",
@@ -2950,7 +3382,13 @@
       "OE": 2,
       "CO": 2
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 13900,\n    \"Accounts Receivable\": 55400,\n    \"Inventory\": 53600,\n    \"Prepaid Insurance\": 1300,\n    \"Prepaid Rent\": 3500,\n    \"Equipment\": 51300,\n    \"Furniture\": 16800,\n    \"Accumulated Depreciation - Furniture\": -3200,\n    \"Vehicles\": 175800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 190000,\n    \"Notes Payable\": 74900,\n    \"Accounts Payable\": 29300,\n    \"Accrued Expenses\": 1100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 44500,\n    \"Retained Earnings (Net Income)\": 28600\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 13900,\n    \"Accounts Receivable\": 55400,\n    \"Inventory\": 53600,\n    \"Prepaid Insurance\": 1300,\n    \"Prepaid Rent\": 3500,\n    \"Equipment\": 51300,\n    \"Furniture\": 16800,\n    \"Accumulated Depreciation - Furniture\": -3200,\n    \"Vehicles\": 175800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 190000,\n    \"Notes Payable\": 74900,\n    \"Accounts Payable\": 29300,\n    \"Accrued Expenses\": 1100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 44500,\n    \"Retained Earnings (Net Income)\": 28600\n  }\n}",
+    "ACR": 0.8667,
+    "BEM": 0.0,
+    "SPA": 0.8667,
+    "PSR": 0,
+    "HR": 0.1333,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02249",
@@ -2996,7 +3434,13 @@
       "OE": 2,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 45700,\n    \"Accounts Receivable\": 19900,\n    \"Allowance for Doubtful Accounts\": -700,\n    \"Inventory\": 20300,\n    \"Prepaid Rent\": 3300,\n    \"Prepaid Insurance\": 500,\n    \"Furniture\": 50100,\n    \"Equipment\": 174500,\n    \"Vehicles\": 73400,\n    \"Accumulated Depreciation - Vehicles\": -13200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 13500,\n    \"Loans Payable\": 178700,\n    \"Notes Payable\": 116700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 64900\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 45700,\n    \"Accounts Receivable\": 19900,\n    \"Allowance for Doubtful Accounts\": -700,\n    \"Inventory\": 20300,\n    \"Prepaid Rent\": 3300,\n    \"Prepaid Insurance\": 500,\n    \"Furniture\": 50100,\n    \"Equipment\": 174500,\n    \"Vehicles\": 73400,\n    \"Accumulated Depreciation - Vehicles\": -13200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 13500,\n    \"Loans Payable\": 178700,\n    \"Notes Payable\": 116700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 64900\n  }\n}",
+    "ACR": 0.8667,
+    "BEM": 0.0,
+    "SPA": 0.9286,
+    "PSR": 0,
+    "HR": 0.0714,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02271",
@@ -3040,7 +3484,13 @@
       "OE": 2,
       "CO": 2
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 70300,\n    \"Accounts Receivable\": 54100,\n    \"Inventory\": 9400,\n    \"Prepaid Rent\": 4600,\n    \"Prepaid Insurance\": 3500,\n    \"Equipment\": 160500,\n    \"Furniture\": 47000,\n    \"Accumulated Depreciation - Furniture\": -8900,\n    \"Vehicles\": 100500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 10300,\n    \"Notes Payable\": 144000,\n    \"Loans Payable\": 123200,\n    \"Accrued Expenses\": 2700,\n    \"Accrued Interest Payable\": 15000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 127100,\n    \"Net Income\": 18700\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 70300,\n    \"Accounts Receivable\": 54100,\n    \"Inventory\": 9400,\n    \"Prepaid Rent\": 4600,\n    \"Prepaid Insurance\": 3500,\n    \"Equipment\": 160500,\n    \"Furniture\": 47000,\n    \"Accumulated Depreciation - Furniture\": -8900,\n    \"Vehicles\": 100500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 10300,\n    \"Notes Payable\": 144000,\n    \"Loans Payable\": 123200,\n    \"Accrued Expenses\": 2700,\n    \"Accrued Interest Payable\": 15000\n  },\n  \"equity\": {\n    \"Owner's Equity\": 127100,\n    \"Net Income\": 18700\n  }\n}",
+    "ACR": 0.875,
+    "BEM": 0.0,
+    "SPA": 0.875,
+    "PSR": 0,
+    "HR": 0.125,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02274",
@@ -3084,7 +3534,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 32100,\n    \"Accounts Receivable\": 40200,\n    \"Inventory\": 7200,\n    \"Prepaid Insurance\": 1400,\n    \"Prepaid Rent\": 1200,\n    \"Equipment\": 91200,\n    \"Accumulated Depreciation - Equipment\": -8200,\n    \"Vehicles\": 211400,\n    \"Furniture\": 30500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 34800,\n    \"Notes Payable\": 144200,\n    \"Loans Payable\": 120800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 66300,\n    \"Retained Earnings\": 40900\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 32100,\n    \"Accounts Receivable\": 40200,\n    \"Inventory\": 7200,\n    \"Prepaid Insurance\": 1400,\n    \"Prepaid Rent\": 1200,\n    \"Equipment\": 91200,\n    \"Accumulated Depreciation - Equipment\": -8200,\n    \"Vehicles\": 211400,\n    \"Furniture\": 30500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 34800,\n    \"Notes Payable\": 144200,\n    \"Loans Payable\": 120800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 66300,\n    \"Retained Earnings\": 40900\n  }\n}",
+    "ACR": 0.9286,
+    "BEM": 0.0,
+    "SPA": 0.9286,
+    "PSR": 0,
+    "HR": 0.0714,
+    "CECR": 1
   },
   {
     "problem_id": "FB_4_02057",
@@ -3126,7 +3582,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 5900,\n    \"Accounts Receivable\": 26400,\n    \"Inventory\": 19100,\n    \"Prepaid Insurance\": 5200,\n    \"Prepaid Rent\": 3400,\n    \"Vehicles\": 214000,\n    \"Equipment\": 85200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 27700,\n    \"Loans Payable\": 72500,\n    \"Notes Payable\": 105800,\n    \"Accrued Expenses\": 1200\n  },\n  \"equity\": {\n    \"Owner's Equity\": 152000\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 5900,\n    \"Accounts Receivable\": 26400,\n    \"Inventory\": 19100,\n    \"Prepaid Insurance\": 5200,\n    \"Prepaid Rent\": 3400,\n    \"Vehicles\": 214000,\n    \"Equipment\": 85200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 27700,\n    \"Loans Payable\": 72500,\n    \"Notes Payable\": 105800,\n    \"Accrued Expenses\": 1200\n  },\n  \"equity\": {\n    \"Owner's Equity\": 152000\n  }\n}",
+    "ACR": 0.9231,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02390",
@@ -3169,7 +3631,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 164200,\n    \"Accounts Receivable\": 10300,\n    \"Inventory\": 9300,\n    \"Prepaid Insurance\": 6800,\n    \"Prepaid Rent\": 15200,\n    \"Furniture\": 24500,\n    \"Equipment\": 95900,\n    \"Vehicles\": 23200,\n    \"Accumulated Depreciation\": -4700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 10600,\n    \"Loans Payable\": 183800,\n    \"Notes Payable\": 32300,\n    \"Accrued Interest Payable\": 7900\n  },\n  \"equity\": {\n    \"Owner's Equity\": 96400,\n    \"Net Income\": 13700\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 164200,\n    \"Accounts Receivable\": 10300,\n    \"Inventory\": 9300,\n    \"Prepaid Insurance\": 6800,\n    \"Prepaid Rent\": 15200,\n    \"Furniture\": 24500,\n    \"Equipment\": 95900,\n    \"Vehicles\": 23200,\n    \"Accumulated Depreciation\": -4700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 10600,\n    \"Loans Payable\": 183800,\n    \"Notes Payable\": 32300,\n    \"Accrued Interest Payable\": 7900\n  },\n  \"equity\": {\n    \"Owner's Equity\": 96400,\n    \"Net Income\": 13700\n  }\n}",
+    "ACR": 0.9333,
+    "BEM": 0.0,
+    "SPA": 0.9333,
+    "PSR": 0,
+    "HR": 0.0667,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02299",
@@ -3213,7 +3681,13 @@
       "OE": 2,
       "CO": 2
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 90400,\n    \"Accounts Receivable\": 47700,\n    \"Inventory\": 12200,\n    \"Prepaid Insurance\": 20500,\n    \"Prepaid Rent\": 10700,\n    \"Vehicles\": 153100,\n    \"Accumulated Depreciation - Vehicles\": -27600,\n    \"Furniture\": 47500,\n    \"Equipment\": 72200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 7000,\n    \"Loans Payable\": 140700,\n    \"Notes Payable\": 73400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 145300,\n    \"Net Income\": 60300\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 90400,\n    \"Accounts Receivable\": 47700,\n    \"Inventory\": 12200,\n    \"Prepaid Insurance\": 20500,\n    \"Prepaid Rent\": 10700,\n    \"Vehicles\": 153100,\n    \"Accumulated Depreciation - Vehicles\": -27600,\n    \"Furniture\": 47500,\n    \"Equipment\": 72200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 7000,\n    \"Loans Payable\": 140700,\n    \"Notes Payable\": 73400\n  },\n  \"equity\": {\n    \"Owner's Equity\": 145300,\n    \"Net Income\": 60300\n  }\n}",
+    "ACR": 0.8571,
+    "BEM": 0.0,
+    "SPA": 0.8571,
+    "PSR": 0,
+    "HR": 0.1429,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02360",
@@ -3255,7 +3729,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 12600,\n    \"Accounts Receivable\": 19200,\n    \"Inventory\": 3800,\n    \"Prepaid Insurance\": 7700,\n    \"Prepaid Rent\": 1100,\n    \"Equipment\": 115000,\n    \"Accumulated Depreciation\": -10400,\n    \"Vehicles\": 73500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 12200,\n    \"Loans Payable\": 88700,\n    \"Notes Payable\": 94700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 26900\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 12600,\n    \"Accounts Receivable\": 19200,\n    \"Inventory\": 3800,\n    \"Prepaid Insurance\": 7700,\n    \"Prepaid Rent\": 1100,\n    \"Equipment\": 115000,\n    \"Accumulated Depreciation\": -10400,\n    \"Vehicles\": 73500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 12200,\n    \"Loans Payable\": 88700,\n    \"Notes Payable\": 94700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 26900\n  }\n}",
+    "ACR": 0.9231,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02402",
@@ -3301,7 +3781,13 @@
       "OE": 2,
       "CO": 2
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 111100,\n    \"Accounts Receivable\": 20200,\n    \"Inventory\": 11100,\n    \"Prepaid Insurance\": 8100,\n    \"Prepaid Rent\": 16000,\n    \"Equipment\": 78000,\n    \"Vehicles\": 120900,\n    \"Accumulated Depreciation\u2014Vehicles\": -21800,\n    \"Furniture\": 38000,\n    \"Accumulated Depreciation\u2014Furniture\": -7200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 7200,\n    \"Notes Payable\": 72400,\n    \"Loans Payable\": 132600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 162200\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 111100,\n    \"Accounts Receivable\": 20200,\n    \"Inventory\": 11100,\n    \"Prepaid Insurance\": 8100,\n    \"Prepaid Rent\": 16000,\n    \"Equipment\": 78000,\n    \"Vehicles\": 120900,\n    \"Accumulated Depreciation\u2014Vehicles\": -21800,\n    \"Furniture\": 38000,\n    \"Accumulated Depreciation\u2014Furniture\": -7200\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 7200,\n    \"Notes Payable\": 72400,\n    \"Loans Payable\": 132600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 162200\n  }\n}",
+    "ACR": 0.8571,
+    "BEM": 0.0,
+    "SPA": 0.8571,
+    "PSR": 0,
+    "HR": 0.1429,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02428",
@@ -3347,7 +3833,13 @@
       "OE": 2,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 72100,\n    \"Accounts Receivable\": 53800,\n    \"Allowance for Doubtful Accounts\": -1200,\n    \"Inventory\": 18100,\n    \"Prepaid Insurance\": 9100,\n    \"Prepaid Rent\": 2300,\n    \"Vehicles\": 195600,\n    \"Accumulated Depreciation - Vehicles\": -35200,\n    \"Equipment\": 131400,\n    \"Furniture\": 16700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 10200,\n    \"Loans Payable\": 139800,\n    \"Notes Payable\": 103400,\n    \"Accrued Interest Payable\": 13100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 196200\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 72100,\n    \"Accounts Receivable\": 53800,\n    \"Allowance for Doubtful Accounts\": -1200,\n    \"Inventory\": 18100,\n    \"Prepaid Insurance\": 9100,\n    \"Prepaid Rent\": 2300,\n    \"Vehicles\": 195600,\n    \"Accumulated Depreciation - Vehicles\": -35200,\n    \"Equipment\": 131400,\n    \"Furniture\": 16700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 10200,\n    \"Loans Payable\": 139800,\n    \"Notes Payable\": 103400,\n    \"Accrued Interest Payable\": 13100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 196200\n  }\n}",
+    "ACR": 0.875,
+    "BEM": 0.0,
+    "SPA": 0.9333,
+    "PSR": 0,
+    "HR": 0.0667,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02453",
@@ -3390,7 +3882,13 @@
       "OE": 1,
       "CO": 2
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 171800,\n    \"Accounts Receivable\": 132700,\n    \"Inventory\": 0,\n    \"Prepaid Insurance\": 16000,\n    \"Prepaid Rent\": 2800,\n    \"Equipment\": 185500,\n    \"Vehicles\": 45700,\n    \"Furniture\": 19100,\n    \"Accumulated Depreciation\": -11800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 229400,\n    \"Notes Payable\": 70200,\n    \"Accounts Payable\": 11900,\n    \"Accrued Expenses\": 2400,\n    \"Accrued Interest Payable\": 14300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 211500,\n    \"Net Income\": 22100\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 171800,\n    \"Accounts Receivable\": 132700,\n    \"Inventory\": 0,\n    \"Prepaid Insurance\": 16000,\n    \"Prepaid Rent\": 2800,\n    \"Equipment\": 185500,\n    \"Vehicles\": 45700,\n    \"Furniture\": 19100,\n    \"Accumulated Depreciation\": -11800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 229400,\n    \"Notes Payable\": 70200,\n    \"Accounts Payable\": 11900,\n    \"Accrued Expenses\": 2400,\n    \"Accrued Interest Payable\": 14300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 211500,\n    \"Net Income\": 22100\n  }\n}",
+    "ACR": 0.9333,
+    "BEM": 0.0,
+    "SPA": 0.9375,
+    "PSR": 0,
+    "HR": 0.125,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02424",
@@ -3423,7 +3921,13 @@
     "error_categories": {
       "FE": 1
     },
-    "raw_response": ""
+    "raw_response": "",
+    "ACR": 0.0,
+    "BEM": 0.0,
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02421",
@@ -3466,7 +3970,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 3700,\n    \"Accounts Receivable\": 89800,\n    \"Inventory\": 18600,\n    \"Prepaid Rent\": 11100,\n    \"Prepaid Insurance\": 1900,\n    \"Vehicles\": 409700,\n    \"Equipment\": 124100,\n    \"Furniture\": 19800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 294200,\n    \"Notes Payable\": 156600,\n    \"Accounts Payable\": 2000,\n    \"Accrued Expenses\": 500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 168300,\n    \"Net Income\": 57100\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 3700,\n    \"Accounts Receivable\": 89800,\n    \"Inventory\": 18600,\n    \"Prepaid Rent\": 11100,\n    \"Prepaid Insurance\": 1900,\n    \"Vehicles\": 409700,\n    \"Equipment\": 124100,\n    \"Furniture\": 19800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 294200,\n    \"Notes Payable\": 156600,\n    \"Accounts Payable\": 2000,\n    \"Accrued Expenses\": 500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 168300,\n    \"Net Income\": 57100\n  }\n}",
+    "ACR": 0.9286,
+    "BEM": 0.0,
+    "SPA": 0.9286,
+    "PSR": 0,
+    "HR": 0.0714,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02460",
@@ -3512,7 +4022,13 @@
       "OE": 2,
       "CO": 2
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 113000,\n    \"Accounts Receivable\": 42800,\n    \"Inventory\": 13600,\n    \"Prepaid Insurance\": 10300,\n    \"Prepaid Rent\": 25500,\n    \"Furniture\": 30400,\n    \"Accumulated Depreciation - Furniture\": -5800,\n    \"Equipment\": 121700,\n    \"Vehicles\": 215100,\n    \"Accumulated Depreciation - Vehicles\": -38700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 36300,\n    \"Loans Payable\": 291200,\n    \"Notes Payable\": 128200,\n    \"Accrued Interest Payable\": 19300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 52900\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 113000,\n    \"Accounts Receivable\": 42800,\n    \"Inventory\": 13600,\n    \"Prepaid Insurance\": 10300,\n    \"Prepaid Rent\": 25500,\n    \"Furniture\": 30400,\n    \"Accumulated Depreciation - Furniture\": -5800,\n    \"Equipment\": 121700,\n    \"Vehicles\": 215100,\n    \"Accumulated Depreciation - Vehicles\": -38700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 36300,\n    \"Loans Payable\": 291200,\n    \"Notes Payable\": 128200,\n    \"Accrued Interest Payable\": 19300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 52900\n  }\n}",
+    "ACR": 0.8667,
+    "BEM": 0.0,
+    "SPA": 0.8667,
+    "PSR": 0,
+    "HR": 0.1333,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02484",
@@ -3557,7 +4073,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 55700,\n    \"Accounts Receivable\": 7900,\n    \"Allowance for Doubtful Accounts\": -200,\n    \"Inventory\": 0,\n    \"Prepaid Rent\": 9800,\n    \"Prepaid Insurance\": 2100,\n    \"Furniture\": 48200,\n    \"Accumulated Depreciation\": -9200,\n    \"Equipment\": 104000,\n    \"Vehicles\": 211500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 2600,\n    \"Notes Payable\": 137200,\n    \"Loans Payable\": 149200,\n    \"Accrued Expenses\": 600,\n    \"Accrued Interest Payable\": 17800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 122400\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 55700,\n    \"Accounts Receivable\": 7900,\n    \"Allowance for Doubtful Accounts\": -200,\n    \"Inventory\": 0,\n    \"Prepaid Rent\": 9800,\n    \"Prepaid Insurance\": 2100,\n    \"Furniture\": 48200,\n    \"Accumulated Depreciation\": -9200,\n    \"Equipment\": 104000,\n    \"Vehicles\": 211500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 2600,\n    \"Notes Payable\": 137200,\n    \"Loans Payable\": 149200,\n    \"Accrued Expenses\": 600,\n    \"Accrued Interest Payable\": 17800\n  },\n  \"equity\": {\n    \"Owner's Equity\": 122400\n  }\n}",
+    "ACR": 0.9375,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0625,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02457",
@@ -3601,7 +4123,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 106100,\n    \"Accounts Receivable\": 40400,\n    \"Allowance for Doubtful Accounts\": -2000,\n    \"Inventory\": 9800,\n    \"Prepaid Insurance\": 22200,\n    \"Prepaid Rent\": 18600,\n    \"Equipment\": 105300,\n    \"Vehicles\": 183100,\n    \"Furniture\": 21300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 10100,\n    \"Notes Payable\": 65100,\n    \"Loans Payable\": 198900,\n    \"Accrued Interest Payable\": 14300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 216400\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 106100,\n    \"Accounts Receivable\": 40400,\n    \"Allowance for Doubtful Accounts\": -2000,\n    \"Inventory\": 9800,\n    \"Prepaid Insurance\": 22200,\n    \"Prepaid Rent\": 18600,\n    \"Equipment\": 105300,\n    \"Vehicles\": 183100,\n    \"Furniture\": 21300\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 10100,\n    \"Notes Payable\": 65100,\n    \"Loans Payable\": 198900,\n    \"Accrued Interest Payable\": 14300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 216400\n  }\n}",
+    "ACR": 0.9333,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02474",
@@ -3645,7 +4173,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 105600,\n    \"Accounts Receivable\": 16400,\n    \"Inventory\": 9900,\n    \"Prepaid Rent\": 2600,\n    \"Prepaid Insurance\": 4500,\n    \"Equipment\": 102300,\n    \"Furniture\": 22500,\n    \"Vehicles\": 309600,\n    \"Accumulated Depreciation - Vehicles\": -55700\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 420900,\n    \"Notes Payable\": 64900,\n    \"Accounts Payable\": 2200,\n    \"Accrued Interest Payable\": 9000,\n    \"Accrued Expenses\": 2500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 74800,\n    \"Retained Earnings\": -56600\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 105600,\n    \"Accounts Receivable\": 16400,\n    \"Inventory\": 9900,\n    \"Prepaid Rent\": 2600,\n    \"Prepaid Insurance\": 4500,\n    \"Equipment\": 102300,\n    \"Furniture\": 22500,\n    \"Vehicles\": 309600,\n    \"Accumulated Depreciation - Vehicles\": -55700\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 420900,\n    \"Notes Payable\": 64900,\n    \"Accounts Payable\": 2200,\n    \"Accrued Interest Payable\": 9000,\n    \"Accrued Expenses\": 2500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 74800,\n    \"Retained Earnings\": -56600\n  }\n}",
+    "ACR": 0.9375,
+    "BEM": 0.0,
+    "SPA": 0.9375,
+    "PSR": 0,
+    "HR": 0.0625,
+    "CECR": 1
   },
   {
     "problem_id": "FB_5_02430",
@@ -3690,7 +4224,13 @@
       "OE": 2,
       "CO": 2
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 0,\n    \"Accounts Receivable\": 90700,\n    \"Inventory\": 68900,\n    \"Prepaid Insurance\": 16500,\n    \"Prepaid Rent\": 11300,\n    \"Vehicles\": 218500,\n    \"Equipment\": 38000,\n    \"Accumulated Depreciation - Equipment\": -3400,\n    \"Furniture\": 61500\n  },\n  \"liabilities\": {\n    \"Bank Overdraft\": 4100,\n    \"Accounts Payable\": 79900,\n    \"Notes Payable\": 21800,\n    \"Loans Payable\": 206000,\n    \"Accrued Interest Payable\": 8700,\n    \"Accrued Expenses\": 4600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 176900\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 0,\n    \"Accounts Receivable\": 90700,\n    \"Inventory\": 68900,\n    \"Prepaid Insurance\": 16500,\n    \"Prepaid Rent\": 11300,\n    \"Vehicles\": 218500,\n    \"Equipment\": 38000,\n    \"Accumulated Depreciation - Equipment\": -3400,\n    \"Furniture\": 61500\n  },\n  \"liabilities\": {\n    \"Bank Overdraft\": 4100,\n    \"Accounts Payable\": 79900,\n    \"Notes Payable\": 21800,\n    \"Loans Payable\": 206000,\n    \"Accrued Interest Payable\": 8700,\n    \"Accrued Expenses\": 4600\n  },\n  \"equity\": {\n    \"Owner's Equity\": 176900\n  }\n}",
+    "ACR": 0.875,
+    "BEM": 0.0,
+    "SPA": 0.875,
+    "PSR": 0,
+    "HR": 0.125,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02455",
@@ -3736,7 +4276,13 @@
       "OE": 2,
       "CO": 3
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 2800,\n    \"Accounts Receivable\": 93300,\n    \"Allowance for Doubtful Accounts\": -2700,\n    \"Inventory\": 46300,\n    \"Prepaid Rent\": 7700,\n    \"Prepaid Insurance\": 4600,\n    \"Vehicles\": 282300,\n    \"Accumulated Depreciation - Vehicles\": -50800,\n    \"Furniture\": 41500,\n    \"Accumulated Depreciation - Furniture\": -7900,\n    \"Equipment\": 149700\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 80900,\n    \"Notes Payable\": 137700,\n    \"Accounts Payable\": 58700,\n    \"Accrued Expenses\": 4100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 260800,\n    \"Current Year Net Income\": 24600\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 2800,\n    \"Accounts Receivable\": 93300,\n    \"Allowance for Doubtful Accounts\": -2700,\n    \"Inventory\": 46300,\n    \"Prepaid Rent\": 7700,\n    \"Prepaid Insurance\": 4600,\n    \"Vehicles\": 282300,\n    \"Accumulated Depreciation - Vehicles\": -50800,\n    \"Furniture\": 41500,\n    \"Accumulated Depreciation - Furniture\": -7900,\n    \"Equipment\": 149700\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 80900,\n    \"Notes Payable\": 137700,\n    \"Accounts Payable\": 58700,\n    \"Accrued Expenses\": 4100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 260800,\n    \"Current Year Net Income\": 24600\n  }\n}",
+    "ACR": 0.875,
+    "BEM": 0.0,
+    "SPA": 0.8235,
+    "PSR": 0,
+    "HR": 0.1765,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02443",
@@ -3779,7 +4325,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 171700,\n    \"Accounts Receivable\": 50000,\n    \"Allowance for Doubtful Accounts\": -700,\n    \"Inventory\": 29700,\n    \"Prepaid Rent\": 6100,\n    \"Vehicles\": 120500,\n    \"Accumulated Depreciation\": -21700,\n    \"Equipment\": 85900,\n    \"Furniture\": 4800\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 17500,\n    \"Notes Payable\": 77700,\n    \"Loans Payable\": 207600,\n    \"Accrued Interest Payable\": 12700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 130800\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 171700,\n    \"Accounts Receivable\": 50000,\n    \"Allowance for Doubtful Accounts\": -700,\n    \"Inventory\": 29700,\n    \"Prepaid Rent\": 6100,\n    \"Vehicles\": 120500,\n    \"Accumulated Depreciation\": -21700,\n    \"Equipment\": 85900,\n    \"Furniture\": 4800\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 17500,\n    \"Notes Payable\": 77700,\n    \"Loans Payable\": 207600,\n    \"Accrued Interest Payable\": 12700\n  },\n  \"equity\": {\n    \"Owner's Equity\": 130800\n  }\n}",
+    "ACR": 0.9333,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02401",
@@ -3825,7 +4377,13 @@
       "OE": 2,
       "CO": 3
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 29200,\n    \"Accounts Receivable\": 79600,\n    \"Allowance for Doubtful Accounts\": -2600,\n    \"Inventory\": 43200,\n    \"Prepaid Insurance\": 9500,\n    \"Prepaid Rent\": 13300,\n    \"Equipment\": 240200,\n    \"Vehicles\": 178400,\n    \"Furniture\": 13000,\n    \"Accumulated Depreciation\u2014Furniture\": -2500,\n    \"Accumulated Depreciation\u2014Vehicles\": -32100\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 70000,\n    \"Notes Payable\": 143600,\n    \"Loans Payable\": 71100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 227600,\n    \"Net Income\": 56900\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 29200,\n    \"Accounts Receivable\": 79600,\n    \"Allowance for Doubtful Accounts\": -2600,\n    \"Inventory\": 43200,\n    \"Prepaid Insurance\": 9500,\n    \"Prepaid Rent\": 13300,\n    \"Equipment\": 240200,\n    \"Vehicles\": 178400,\n    \"Furniture\": 13000,\n    \"Accumulated Depreciation\u2014Furniture\": -2500,\n    \"Accumulated Depreciation\u2014Vehicles\": -32100\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 70000,\n    \"Notes Payable\": 143600,\n    \"Loans Payable\": 71100\n  },\n  \"equity\": {\n    \"Owner's Equity\": 227600,\n    \"Net Income\": 56900\n  }\n}",
+    "ACR": 0.8667,
+    "BEM": 0.0,
+    "SPA": 0.8125,
+    "PSR": 0,
+    "HR": 0.1875,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02405",
@@ -3869,7 +4427,13 @@
       "AE": 1,
       "OE": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 74700,\n    \"Accounts Receivable\": 83300,\n    \"Allowance for Doubtful Accounts\": -4000,\n    \"Inventory\": 24200,\n    \"Prepaid Rent\": 6400,\n    \"Prepaid Insurance\": 15100,\n    \"Furniture\": 52000,\n    \"Equipment\": 133500,\n    \"Vehicles\": 247700,\n    \"Accumulated Depreciation\": -44600\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 49400,\n    \"Loans Payable\": 253600,\n    \"Notes Payable\": 107600,\n    \"Accrued Expenses\": 4300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 173400\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 74700,\n    \"Accounts Receivable\": 83300,\n    \"Allowance for Doubtful Accounts\": -4000,\n    \"Inventory\": 24200,\n    \"Prepaid Rent\": 6400,\n    \"Prepaid Insurance\": 15100,\n    \"Furniture\": 52000,\n    \"Equipment\": 133500,\n    \"Vehicles\": 247700,\n    \"Accumulated Depreciation\": -44600\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 49400,\n    \"Loans Payable\": 253600,\n    \"Notes Payable\": 107600,\n    \"Accrued Expenses\": 4300\n  },\n  \"equity\": {\n    \"Owner's Equity\": 173400\n  }\n}",
+    "ACR": 0.9375,
+    "BEM": 0.0,
+    "SPA": 1.0,
+    "PSR": 0,
+    "HR": 0.0,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02422",
@@ -3911,7 +4475,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 76900,\n    \"Accounts Receivable\": 57200,\n    \"Inventory\": 42100,\n    \"Prepaid Rent\": 6700,\n    \"Prepaid Insurance\": 900,\n    \"Equipment\": 176800,\n    \"Vehicles\": 336700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 41200,\n    \"Notes Payable\": 215300,\n    \"Loans Payable\": 237900,\n    \"Accrued Interest Payable\": 15900\n  },\n  \"equity\": {\n    \"Owner's Equity\": 125300,\n    \"Net Income\": 61700\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 76900,\n    \"Accounts Receivable\": 57200,\n    \"Inventory\": 42100,\n    \"Prepaid Rent\": 6700,\n    \"Prepaid Insurance\": 900,\n    \"Equipment\": 176800,\n    \"Vehicles\": 336700\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 41200,\n    \"Notes Payable\": 215300,\n    \"Loans Payable\": 237900,\n    \"Accrued Interest Payable\": 15900\n  },\n  \"equity\": {\n    \"Owner's Equity\": 125300,\n    \"Net Income\": 61700\n  }\n}",
+    "ACR": 0.9231,
+    "BEM": 0.0,
+    "SPA": 0.9231,
+    "PSR": 0,
+    "HR": 0.0769,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02466",
@@ -3954,7 +4524,13 @@
       "OE": 5,
       "CO": 4
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 175000,\n    \"Accounts Receivable\": 32800,\n    \"Inventory\": 74700,\n    \"Prepaid Insurance\": 11900,\n    \"Prepaid Rent\": 4100,\n    \"Furniture (net)\": 10000,\n    \"Equipment (net)\": 39400,\n    \"Vehicles\": 75400\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 52300,\n    \"Loans Payable\": 192900,\n    \"Notes Payable\": 37800\n  },\n  \"equity\": {\n    \"Owner's Equity (Capital)\": 112700,\n    \"Retained Earnings (Net Income)\": 27600\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 175000,\n    \"Accounts Receivable\": 32800,\n    \"Inventory\": 74700,\n    \"Prepaid Insurance\": 11900,\n    \"Prepaid Rent\": 4100,\n    \"Furniture (net)\": 10000,\n    \"Equipment (net)\": 39400,\n    \"Vehicles\": 75400\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 52300,\n    \"Loans Payable\": 192900,\n    \"Notes Payable\": 37800\n  },\n  \"equity\": {\n    \"Owner's Equity (Capital)\": 112700,\n    \"Retained Earnings (Net Income)\": 27600\n  }\n}",
+    "ACR": 0.6429,
+    "BEM": 0.0,
+    "SPA": 0.6923,
+    "PSR": 0,
+    "HR": 0.3077,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02496",
@@ -3997,7 +4573,13 @@
       "OE": 2,
       "CO": 2
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 178000,\n    \"Accounts Receivable\": 2700,\n    \"Inventory\": 11900,\n    \"Prepaid Rent\": 22700,\n    \"Prepaid Insurance\": 2000,\n    \"Furniture\": 22500,\n    \"Equipment\": 71600,\n    \"Vehicles\": 50500,\n    \"Accumulated Depreciation\": -15500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 3600,\n    \"Loans Payable\": 217600,\n    \"Notes Payable\": 19400,\n    \"Accrued Expenses\": 4100\n  },\n  \"equity\": {\n    \"Owner's Equity (Contributed Capital + Beginning Balance)\": 88600,\n    \"Net Income\": 13100\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 178000,\n    \"Accounts Receivable\": 2700,\n    \"Inventory\": 11900,\n    \"Prepaid Rent\": 22700,\n    \"Prepaid Insurance\": 2000,\n    \"Furniture\": 22500,\n    \"Equipment\": 71600,\n    \"Vehicles\": 50500,\n    \"Accumulated Depreciation\": -15500\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 3600,\n    \"Loans Payable\": 217600,\n    \"Notes Payable\": 19400,\n    \"Accrued Expenses\": 4100\n  },\n  \"equity\": {\n    \"Owner's Equity (Contributed Capital + Beginning Balance)\": 88600,\n    \"Net Income\": 13100\n  }\n}",
+    "ACR": 0.8667,
+    "BEM": 0.0,
+    "SPA": 0.8667,
+    "PSR": 0,
+    "HR": 0.1333,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02454",
@@ -4043,7 +4625,13 @@
       "OE": 2,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 379200,\n    \"Accounts Receivable\": 20400,\n    \"Allowance for Doubtful Accounts\": -900,\n    \"Prepaid Insurance\": 17300,\n    \"Prepaid Rent\": 24600,\n    \"Inventory\": 45000,\n    \"Furniture\": 16300,\n    \"Vehicles\": 214200,\n    \"Equipment\": 42700,\n    \"Accumulated Depreciation - Equipment\": -3800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 518400,\n    \"Notes Payable\": 54200,\n    \"Accounts Payable\": 25400,\n    \"Accrued Interest Payable\": 30000,\n    \"Accrued Expenses\": 3200\n  },\n  \"equity\": {\n    \"Owner's Equity\": 123800\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 379200,\n    \"Accounts Receivable\": 20400,\n    \"Allowance for Doubtful Accounts\": -900,\n    \"Prepaid Insurance\": 17300,\n    \"Prepaid Rent\": 24600,\n    \"Inventory\": 45000,\n    \"Furniture\": 16300,\n    \"Vehicles\": 214200,\n    \"Equipment\": 42700,\n    \"Accumulated Depreciation - Equipment\": -3800\n  },\n  \"liabilities\": {\n    \"Loans Payable\": 518400,\n    \"Notes Payable\": 54200,\n    \"Accounts Payable\": 25400,\n    \"Accrued Interest Payable\": 30000,\n    \"Accrued Expenses\": 3200\n  },\n  \"equity\": {\n    \"Owner's Equity\": 123800\n  }\n}",
+    "ACR": 0.8824,
+    "BEM": 0.0,
+    "SPA": 0.9375,
+    "PSR": 0,
+    "HR": 0.0625,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02411",
@@ -4086,7 +4674,13 @@
       "OE": 1,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 138200,\n    \"Accounts Receivable\": 70900,\n    \"Inventory\": 25400,\n    \"Prepaid Insurance\": 9100,\n    \"Prepaid Rent\": 9500,\n    \"Equipment\": 138700,\n    \"Vehicles\": 107700,\n    \"Accumulated Depreciation - Vehicles\": -19400\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 25600,\n    \"Loans Payable\": 242400,\n    \"Notes Payable\": 54200\n  },\n  \"equity\": {\n    \"Owner's Equity\": 90500,\n    \"Retained Earnings\": 67400\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 138200,\n    \"Accounts Receivable\": 70900,\n    \"Inventory\": 25400,\n    \"Prepaid Insurance\": 9100,\n    \"Prepaid Rent\": 9500,\n    \"Equipment\": 138700,\n    \"Vehicles\": 107700,\n    \"Accumulated Depreciation - Vehicles\": -19400\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 25600,\n    \"Loans Payable\": 242400,\n    \"Notes Payable\": 54200\n  },\n  \"equity\": {\n    \"Owner's Equity\": 90500,\n    \"Retained Earnings\": 67400\n  }\n}",
+    "ACR": 0.9231,
+    "BEM": 0.0,
+    "SPA": 0.9231,
+    "PSR": 0,
+    "HR": 0.0769,
+    "CECR": 1
   },
   {
     "problem_id": "FB_5_02473",
@@ -4132,6 +4726,12 @@
       "OE": 2,
       "CO": 1
     },
-    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 218700,\n    \"Accounts Receivable\": 78500,\n    \"Allowance for Doubtful Accounts\": -3000,\n    \"Inventory\": 22100,\n    \"Prepaid Insurance\": 5900,\n    \"Prepaid Rent\": 18700,\n    \"Vehicles\": 277800,\n    \"Accumulated Depreciation - Vehicles\": -50000,\n    \"Furniture\": 35800,\n    \"Equipment\": 75600\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 47900,\n    \"Notes Payable\": 130400,\n    \"Loans Payable\": 327500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 174300\n  }\n}"
+    "raw_response": "{\n  \"assets\": {\n    \"Cash\": 218700,\n    \"Accounts Receivable\": 78500,\n    \"Allowance for Doubtful Accounts\": -3000,\n    \"Inventory\": 22100,\n    \"Prepaid Insurance\": 5900,\n    \"Prepaid Rent\": 18700,\n    \"Vehicles\": 277800,\n    \"Accumulated Depreciation - Vehicles\": -50000,\n    \"Furniture\": 35800,\n    \"Equipment\": 75600\n  },\n  \"liabilities\": {\n    \"Accounts Payable\": 47900,\n    \"Notes Payable\": 130400,\n    \"Loans Payable\": 327500\n  },\n  \"equity\": {\n    \"Owner's Equity\": 174300\n  }\n}",
+    "ACR": 0.8667,
+    "BEM": 0.0,
+    "SPA": 0.9286,
+    "PSR": 0,
+    "HR": 0.0714,
+    "CECR": 0
   }
 ]

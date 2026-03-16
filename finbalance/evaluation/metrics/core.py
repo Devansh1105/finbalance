@@ -75,6 +75,14 @@ class ProblemMetrics:
     parse_error:          bool = False
     constraint_details:   dict = field(default_factory=dict)
 
+    # Extended metrics
+    ACR:  Optional[float] = None   # Account Coverage Rate
+    BEM:  float = 0.0              # Balance Error Magnitude
+    SPA:  Optional[float] = None   # Section Placement Accuracy
+    PSR:  int = 0                  # Perfect Score Rate (0/1)
+    HR:   Optional[float] = None   # Hallucination Rate
+    CECR: int = 0                  # Closing Entry Compliance Rate (0/1)
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -283,6 +291,98 @@ def _normalise_account_name(name: str) -> str:
     return name.lower().strip()
 
 
+def account_coverage_rate(predicted: dict, expected_bs: BalanceSheet) -> float:
+    """
+    ACR: fraction of expected accounts present in the prediction (presence-only, ignores values).
+    Separates structural recall from numerical accuracy.
+    """
+    expected_flat = _flat_expected(expected_bs)
+    if not expected_flat:
+        return 1.0
+    pred_accounts: set[str] = set()
+    for section in ("assets", "liabilities", "equity"):
+        for k in predicted.get(section, {}):
+            pred_accounts.add(_normalise_account_name(k))
+    expected_lower = {_normalise_account_name(k) for k in expected_flat}
+    return round(len(pred_accounts & expected_lower) / len(expected_lower), 4)
+
+
+def balance_error_magnitude(
+    pred_assets: float, pred_liabilities: float, pred_equity: float
+) -> float:
+    """BEM: |Assets − (Liabilities + Equity)| — continuous version of BA."""
+    return round(abs(pred_assets - (pred_liabilities + pred_equity)), 2)
+
+
+def section_placement_accuracy(predicted: dict, expected_bs: BalanceSheet) -> Optional[float]:
+    """
+    SPA: fraction of predicted accounts placed in the correct section.
+    Returns None if the prediction has no accounts.
+    Captures income-statement contamination (e.g. Net Income appearing in equity).
+    """
+    section_map: dict[str, str] = {}
+    for section in ("assets", "liabilities", "equity"):
+        for acc in getattr(expected_bs, section, {}) if hasattr(expected_bs, section) else {}:
+            section_map[_normalise_account_name(acc)] = section
+    # Build from dict if BalanceSheet uses dict-style
+    for section in ("assets", "liabilities", "equity"):
+        src = expected_bs.__dict__.get(section, {}) if hasattr(expected_bs, '__dict__') else {}
+        for acc in src:
+            section_map[_normalise_account_name(acc)] = section
+
+    total, correct = 0, 0
+    for section in ("assets", "liabilities", "equity"):
+        for acc in predicted.get(section, {}):
+            total += 1
+            if section_map.get(_normalise_account_name(acc)) == section:
+                correct += 1
+    return round(correct / total, 4) if total > 0 else None
+
+
+def hallucination_rate(predicted: dict, expected_bs: BalanceSheet) -> Optional[float]:
+    """
+    HR: fraction of predicted accounts that are NOT in the expected account set.
+    Measures how much the model invents accounts beyond what belongs on the balance sheet.
+    """
+    expected_lower = {_normalise_account_name(k) for k in _flat_expected(expected_bs)}
+    pred_accounts = []
+    for section in ("assets", "liabilities", "equity"):
+        for k in predicted.get(section, {}):
+            pred_accounts.append(_normalise_account_name(k))
+    if not pred_accounts:
+        return None
+    hallucinated = sum(1 for a in pred_accounts if a not in expected_lower)
+    return round(hallucinated / len(pred_accounts), 4)
+
+
+_RE_KEYS = {"retained earnings", "retained earning"}
+
+
+def closing_entry_compliance(predicted: dict, expected_bs: BalanceSheet) -> int:
+    """
+    CECR: 1 if Retained Earnings is present AND within tolerance, else 0.
+    Returns 1 for problems where RE is not expected (constraint trivially satisfied).
+    """
+    expected_equity = expected_bs.equity if hasattr(expected_bs, 'equity') else {}
+    re_expected: Optional[float] = None
+    for acc, val in expected_equity.items():
+        if _normalise_account_name(acc) in _RE_KEYS:
+            re_expected = float(val)
+            break
+    if re_expected is None:
+        return 1  # RE not required — trivially compliant
+    pred_equity = predicted.get("equity", {})
+    re_predicted: Optional[float] = None
+    for acc, val in pred_equity.items():
+        if _normalise_account_name(acc) in _RE_KEYS and isinstance(val, (int, float)):
+            re_predicted = float(val)
+            break
+    if re_predicted is None:
+        return 0
+    tol = max(ACCOUNT_TOLERANCE_ABS, abs(re_expected) * ACCOUNT_TOLERANCE_PCT)
+    return 1 if abs(re_predicted - re_expected) <= tol else 0
+
+
 def finbalance_score(
     ba: float,
     ala: float,
@@ -357,6 +457,14 @@ def evaluate_problem(
     m.CSR, m.constraint_details = constraint_satisfaction_rate(predicted, problem.expected)
     m.MAE, m.MAPE, m.RMSE = numerical_errors(predicted, problem.expected)
     m.FBS = finbalance_score(m.BA, m.ALA, m.TPA, m.CSR, m.MAE, tpa_available=tpa_available)
+
+    # Extended metrics
+    m.ACR  = account_coverage_rate(predicted, problem.expected)
+    m.BEM  = balance_error_magnitude(pa, pl, pe)
+    m.SPA  = section_placement_accuracy(predicted, problem.expected)
+    m.PSR  = 1 if m.FBS >= 100.0 else 0
+    m.HR   = hallucination_rate(predicted, problem.expected)
+    m.CECR = closing_entry_compliance(predicted, problem.expected)
 
     return m
 

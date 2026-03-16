@@ -1,438 +1,378 @@
 ================================================================================
-FINBALANCE — COMPREHENSIVE RESULTS REPORT
-Model: claude-3-haiku-20240307   |   Strategy: zero_shot   |   Date: 2026-03-02
+  FinBalance — Results Analysis & Paper Implications
+  Test Set: data/test.jsonl (100 problems, 20/level, seed=42)
+  Models: GPT-5.2, Gemini 3 Flash Preview, Llama 3.3 70B Instruct
+  Strategies: zero_shot, cot (Llama: zero_shot only)
+  Upper bound: Rule-based oracle (FBS=99.97, BA=100%)
 ================================================================================
 
-This document presents all evaluation results collected for the FinBalance
-benchmark, including headline metrics, dimension-by-dimension failure analysis,
-error propagation traces, and an assessment of the findings in the context of
-a top-tier AI/NLP conference submission.
-
---------------------------------------------------------------------------------
-PART 1 — EXPERIMENT OVERVIEW
---------------------------------------------------------------------------------
-
-Dataset split  : data/sample.jsonl (25 of 100 problems evaluated)
-Difficulty dist: L1=5, L2=5, L3=5, L4=5, L5=5
-Model backend  : Anthropic Messages API (claude-3-haiku-20240307)
-Temperature    : 0 (near-deterministic)
-Prompting      : zero_shot (bare instruction + transaction list → JSON)
-Parse failures : 0 / 25  (0%)
-
-NOTE: The parser was significantly hardened during this session after a root
-cause analysis revealed that the model outputs monetary values with
-thousands-separator commas (e.g. "Cash": 123,900) which json.loads() rejects.
-The fix uses a regex substitution to strip internal commas from numbers before
-parsing. All 25 responses parsed successfully after this fix.
-
---------------------------------------------------------------------------------
-PART 2 — HEADLINE PERFORMANCE METRICS
---------------------------------------------------------------------------------
-
-                    OVERALL (N=25)
-  ┌─────────────────────────────────────────────────────┐
-  │  Balance Accuracy (BA)           :  20.0%           │
-  │  Account-Level Accuracy (ALA)    :  0.4231  (42.3%) │
-  │  FinBalance Score (FBS)          :  36.3 / 100      │
-  │  Transaction Path Accuracy (TPA) :  0.0%            │
-  │  Parse Error Rate                :  0.0%            │
-  └─────────────────────────────────────────────────────┘
-
-Metric definitions:
-  BA  = 1 if |assets − (liabilities + equity)| < $1, else 0
-  ALA = correct_accounts / total_expected_accounts
-  TPA = fraction of intermediate account states correctly predicted
-        (zero_shot strategy does not output intermediate states → always 0)
-  FBS = 0.4 × BA  +  0.4 × ALA  +  0.2 × TPA
-
-Interpretation:
-  - The model correctly balances the balance sheet in only 20% of problems.
-  - It gets individual account values right ~42% of the time overall.
-  - The composite score of 36.3/100 places it well below functional competence
-    for automated financial reporting.
-  - TPA = 0% is expected under zero_shot (model outputs only the final sheet,
-    not step-by-step ledger states). This dimension is reserved for CoT/self-
-    refine evaluations.
-
---------------------------------------------------------------------------------
-PART 3 — PERFORMANCE BY DIFFICULTY LEVEL
---------------------------------------------------------------------------------
-
-  Level  N    BA       ALA      FBS    Avg Errors  Avg Accounts Expected
-  -----  --   ------   ------   -----  ----------  ---------------------
-  L1      5   40.0%    0.5333   45.9      2.8            5.0
-  L2      5   60.0%    0.5129   51.5      4.6            8.6
-  L3      5    0.0%    0.4817   32.0      7.6           12.2
-  L4      5    0.0%    0.3636   29.2     10.4           14.4
-  L5      5    0.0%    0.2241   23.2     12.6           15.0
-
-Key observations:
-
-  1. Performance cliff at L3. BA collapses from 60% (L2) to 0% (L3) and never
-     recovers. L3 introduces COGS tracking and accrual adjustments — the model
-     cannot handle these correctly.
-
-  2. ALA degrades monotonically across levels (0.533 → 0.224), confirming that
-     even partial credit decreases as complexity increases.
-
-  3. Average error count scales with problem complexity: 2.8 errors per problem
-     at L1, 12.6 errors per problem at L5.
-
-  4. At L5, the model correctly accounts for only 3.4 out of 15 expected
-     accounts on average — a 77% miss rate.
-
-  5. L2 outperforms L1 on BA (60% vs 40%). This is a small-sample effect
-     (n=5 each); L1 problems in this sample included edge cases where the
-     model omitted the liabilities section when there were loans present
-     (missing_section failures), while L2 problems happened to have simpler
-     liability structures.
-
---------------------------------------------------------------------------------
-PART 4 — ERROR COMPOSITION BY LEVEL
---------------------------------------------------------------------------------
-
-Error type codes:
-  AE = Arithmetic Error   (account present, value wrong)
-  OE = Omission Error     (expected account not predicted)
-  CV = Classification     (account in wrong balance sheet section)
-  CO = Count/Order        (duplicate entries)
-
-  Level   AE%     OE%     CV%     CO%    Total Errors
-  -----   -----   -----   -----   ----   ------------
-  L1      42.9%   35.7%   21.4%    0%       2.8
-  L2      69.6%   21.7%    8.7%    0%       4.6
-  L3      60.5%   21.1%   15.8%   2.6%      7.6
-  L4      73.1%   15.4%   11.5%    0%      10.4
-  L5      82.5%    9.5%    7.9%    0%      12.6
-
-Key trend: As difficulty increases, the error composition shifts heavily toward
-Arithmetic Errors (AE). At L5, 82.5% of all errors are arithmetic — the model
-has the right *accounts* but computes wrong *values*. This indicates that at
-lower levels the model makes conceptual errors (omitting whole accounts),
-whereas at higher levels the model's schema knowledge is partially there but
-its transaction arithmetic breaks down under compounding complexity.
-
---------------------------------------------------------------------------------
-PART 5 — COMPLEXITY FEATURE IMPACT ON PERFORMANCE
---------------------------------------------------------------------------------
-
-The failure analysis correlates problem-level complexity features with FBS
-degradation. ΔFBS is the mean FBS difference between problems that do vs do not
-contain the given feature (negative = feature hurts performance).
-
-  Feature               N problems   Avg FBS   BA Rate   ΔFBS    ΔALA
-  -------------------   ----------   -------   -------   -----   ------
-  prepaid               24 / 25      35.39     16.7%    -23.71  +0.094
-  cogs                  15 / 25      28.09      0.0%    -20.61  -0.167
-  derived_interest      10 / 25      26.14      0.0%    -16.99  -0.188
-  mixed_funding         10 / 25      26.16      0.0%    -16.96  -0.216
-  debt                  18 / 25      32.72     11.1%    -12.90  -0.081
-  credit_transaction    20 / 25      33.94     15.0%    -11.99  -0.138
-  depreciable_asset     23 / 25      35.51     17.4%    -10.30  -0.047
-
-Findings:
-
-  1. COGS (ΔFBS = -20.61, BA = 0%): When the model must track inventory
-     contra cash/AR AND record COGS separately, it never balances. The 4-entry
-     nature of COGS transactions (Dr Cash/AR, Cr Revenue, Dr COGS, Cr Inventory)
-     appears to be beyond the model's reliable capability.
-
-  2. Derived interest (ΔFBS = -16.99): Computing interest as loan_balance × rate
-     / 12 and accruing it correctly (Dr Interest Expense, Cr Accrued Interest
-     Payable) fails consistently. BA = 0% on all 10 problems containing this
-     feature.
-
-  3. Mixed funding (ΔFBS = -16.96): Purchases that are partially cash and
-     partially financed (Dr Asset, Cr Cash, Cr Notes Payable) confuse the model's
-     arithmetic. Both the Notes Payable split and the asset total are wrong.
-
-  4. Prepaid items (ΔFBS = -23.71, present in 24/25 problems): This feature is
-     nearly universal but shows the largest raw ΔFBS because it changes the sign
-     of the relationship when comparing against the rare problems without it.
-     Prepaid items themselves are handled reasonably (17/23 correct in ALA).
-
-  NOTE: ΔFBS for prepaid appears large because the 1 problem without prepaid is
-  L1-trivial. The directional effect should be interpreted cautiously at n=25.
-
---------------------------------------------------------------------------------
-PART 6 — ACCOUNT-LEVEL ACCURACY: COMPLETE BREAKDOWN
---------------------------------------------------------------------------------
-
-Each account is evaluated across all problems where it was expected.
-
-  Account                          Type          N     Omit%   Arith%  HallPct  Avg$Err
-  -------------------------------  -----------   ---   -----   ------  -------  -------
-  Cash                             asset          25    0.0%    96.0%    0.0%    47,958
-  Owner's Equity                   equity         25    0.0%    76.0%    0.0%    14,558
-  Retained Earnings                equity         25  100.0%     0.0%    0.0%         0
-  Prepaid Rent                     asset          23    0.0%    17.4%    0.0%     2,450
-  Equipment                        asset          22    0.0%    54.6%    0.0%    24,158
-  Inventory                        asset          21    0.0%    71.4%   50.0%    12,907
-  Loans Payable                    liability      18    0.0%    50.0%    0.0%    65,489
-  Accounts Receivable              asset          17    0.0%    82.4%    0.0%    10,657
-  Accounts Payable                 liability      17    0.0%    64.7%    0.0%     8,145
-  Prepaid Insurance                asset          16    0.0%    37.5%    0.0%     1,167
-  Furniture                        asset          14    0.0%    21.4%    0.0%     6,500
-  Vehicles                         asset          14    0.0%    57.1%    0.0%    40,300
-  Notes Payable                    liability      10    0.0%    90.0%    0.0%    25,289
-  Accumulated Depreciation         contra_asset    9   55.6%     0.0%    0.0%         0
-  Accrued Expenses                 liability       8    0.0%     0.0%    0.0%         0
-  Accrued Interest Payable         liability       8    0.0%     0.0%    0.0%         0
-  Allowance for Doubtful Accounts  contra_asset    4   50.0%    25.0%    0.0%       400
-
-Top insights:
-
-  RETAINED EARNINGS: 100% omission rate (25/25 problems).
-    The model never closes revenue and expense accounts into Retained Earnings.
-    This is the single most impactful failure — it causes the balance equation to
-    fail in 17 of the 20 unbalanced responses. The model treats the balance sheet
-    as a snapshot of raw account balances rather than a post-closing GAAP
-    statement. Retained Earnings = Net Income (Revenue - Expenses) should fold
-    into equity, but the model either ignores this entirely or places Revenue/
-    Expense as separate line items in equity (which satisfies ALA but not BA).
-
-  CASH: 96% arithmetic error rate, average error of $47,958.
-    Cash is the most frequently transacted account and accumulates the most
-    arithmetic error. The large average error reflects cascading mistakes: if
-    COGS or mixed-funding transactions are computed incorrectly, the cash figure
-    compounds all those errors.
-
-  ACCUMULATED DEPRECIATION: 55.6% omission.
-    Contra-asset blindness — when the model depreciation adjustments are present,
-    it often records only the Depreciation Expense debit but omits the
-    Accumulated Depreciation credit entry, or treats Accumulated Depreciation as
-    a standard asset rather than a contra (balance-reducing) account.
-
-  NOTES PAYABLE: 90% arithmetic error rate, average error $25,289.
-    Driven almost entirely by mixed_funding transactions where the cash/loan
-    split is computed incorrectly. The model either assigns the full purchase
-    price to cash or gets the proportional split wrong.
-
-  ACCRUED EXPENSES / ACCRUED INTEREST PAYABLE: 0% error rate.
-    Notably, the model handles simple accrual entries perfectly when the amounts
-    are given directly. This confirms the failure is conceptual (closing entries,
-    contra accounts) rather than a general inability to handle liabilities.
-
-  HALLUCINATIONS: Only 1 instance — Inventory appearing in a problem where it
-    was not expected. Crucially, the hallucinated account was in-schema
-    (schema_known_rate = 100%). The model does not invent fictional accounts;
-    it applies real-but-wrong accounts from its training knowledge.
-
---------------------------------------------------------------------------------
-PART 7 — BALANCE FAILURE ROOT CAUSE ANALYSIS
---------------------------------------------------------------------------------
-
-20 out of 25 problems (80%) have BA = 0. Root cause breakdown:
-
-  Cause                  Count   Pct    Description
-  -------------------    -----   ----   -----------------------------------------------
-  omitted_key_account       17   85%    A structurally required account is missing
-  missing_section            3   15%    Entire balance sheet section (liabilities) absent
-
-  OMITTED KEY ACCOUNT (17 cases):
-    All 17 are caused by missing Retained Earnings (100%).
-    In 7 of 17 cases, Accumulated Depreciation is also absent.
-    In 2 of 17 cases, Allowance for Doubtful Accounts is also absent.
-    The imbalance ranges from -$300,000 to +$75,600 depending on net income.
-
-  MISSING SECTION (3 cases):
-    All 3 are L1 problems (FB_1_00003, FB_1_00004, FB_1_00005).
-    The liabilities section is entirely absent in these responses.
-    These are early-period problems where the model may treat a zero-or-small
-    liability balance as negligible and omit the section entirely.
-    Imbalances: $200, -$11,400, -$6,300.
-
-  Arithmetically balanced problems (BA = 1): 5
-    L1: 2 problems (FB_1_00001, FB_1_00002)
-    L2: 3 problems (FB_2_00008, FB_2_00009, FB_2_00010)
-    These are the simpler problems without COGS, without mixed funding, and
-    without the Retained Earnings closing requirement (sometimes the model
-    happens to place net income directly in Owner's Equity, which balances).
-
---------------------------------------------------------------------------------
-PART 8 — ERROR PROPAGATION SIMULATION RESULTS
---------------------------------------------------------------------------------
-
-The propagation simulator was run on 1 problem per difficulty level (5 total).
-It makes one API call per transaction — sending prefixes of length K=1,2,...,N
-— and measures MAE (mean absolute error across all accounts) at each step.
-
-  SUMMARY STATISTICS
-  ┌────────────────────────────────────────────────────────────┐
-  │  Problems simulated    :  5 (1 per level)                  │
-  │  Total API calls made  :  ~65 (sum of all checkpoints)     │
-  │  Mean onset fraction   :  0.295                            │
-  │  Error propagation shape:  GRADUAL                         │
-  │  Mean final MAE        :  $17,099                          │
-  └────────────────────────────────────────────────────────────┘
-
-  MAE Trajectory (averaged across 5 problems, normalised to quantile points):
-    Q0  (start)    :      $0
-    Q25 (25% in)   :  $2,243
-    Q50 (halfway)  :  $4,333
-    Q75 (75% in)   :  $8,990
-    Q100 (final)   : $17,099
-
-  Error onset transaction type distribution:
-    cash_sale_with_cogs        2 problems  (L3, L5)
-    cash_expense               1 problem   (L1)
-    prepaid_rent               1 problem   (L2)
-    mixed_purchase_equipment   1 problem   (L4)
-
-  PER-PROBLEM DETAIL:
-
-  Problem FB_1_00001  (L1, 5 transactions)
-    First error at k=5 (last transaction), tx_type=cash_expense
-    MAE trajectory: [0.0, 0.0, 0.0, 0.0, 11875.0]
-    Interpretation: The model handles the first 4 transactions perfectly.
-    Error erupts only at the final entry — likely due to Retained Earnings
-    being omitted from the closing balance sheet (the model got the arithmetic
-    right throughout but failed the closing-entry step).
-
-  Problem FB_2_00006  (L2, 20 transactions)
-    First error at k=3, tx_type=prepaid_rent
-    MAE trajectory start: [0.0, 0.0, 480, 414, 3329, 2278, ...]  final=13,245
-    Interpretation: Prepaid Rent entry triggers the first deviation at step 3.
-    The error fluctuates (rises and falls, suggesting partial self-correction)
-    before spiking dramatically at the end when Retained Earnings is omitted.
-
-  Problem FB_3_00011  (L3, 24 transactions)
-    First error at k=3, tx_type=cash_sale_with_cogs
-    MAE trajectory start: [0.0, 0.0, 3333, 3333, 4043, ...]  final=12,860
-    Interpretation: The first COGS transaction at step 3 immediately introduces
-    a $3,333 error. The error grows steadily through the problem, with a spike
-    near the end reflecting the compounded Retained Earnings omission.
-
-  Problem FB_4_00016  (L4, 46 transactions)
-    First error at k=7, tx_type=mixed_purchase_equipment
-    Final MAE: $7,888  (lower than L3 due to problem-specific magnitudes)
-    Interpretation: The model handles 6 transactions correctly before the first
-    mixed-funding equipment purchase at step 7 breaks the cash/Notes Payable
-    split.
-
-  Problem FB_5_00021  (L5, 83 transactions)
-    First error at k=4, tx_type=cash_sale_with_cogs  (onset fraction = 4.8%)
-    Final MAE: $39,628  (highest of all 5 problems)
-    Interpretation: Error appears within the first 5% of transactions at L5 and
-    compounds exponentially over 83 transactions, reaching a final MAE of nearly
-    $40,000.
-
-  GRADUAL vs IMMEDIATE vs LATE:
-    Mean onset fraction of 0.295 means errors typically appear about 30% into
-    a problem — classified as "gradual". No problems showed "late" onset
-    (fraction > 0.6). The only "late" onset was L1 (onset at k=5 = 100%),
-    which was actually a closing-step failure, not a mid-problem arithmetic one.
-
---------------------------------------------------------------------------------
-PART 9 — KEY RESEARCH FINDINGS (PAPER-READY SUMMARY)
---------------------------------------------------------------------------------
-
-FINDING 1: SYSTEMATIC CLOSING-ENTRY BLINDNESS
-  Claude Haiku 3 omits Retained Earnings in 100% of evaluated problems
-  (n=25). The accounting closing cycle — debiting Revenue and crediting
-  Retained Earnings, then crediting Expense and debiting Retained Earnings —
-  is completely absent from the model's output. This is a CONCEPTUAL deficit,
-  not arithmetic. The model knows the individual account values (Revenue,
-  Expenses are often correct) but does not know that they must be collapsed into
-  Retained Earnings before the balance sheet is finalised. This alone drives
-  85% of all balance equation failures.
-
-FINDING 2: CONTRA-ASSET BLINDNESS
-  Accumulated Depreciation is omitted in 56% of problems where it is expected.
-  Allowance for Doubtful Accounts is omitted in 50% of relevant problems.
-  Both are contra-asset accounts (normal credit balance, subtracted from the
-  asset section). The pattern suggests the model's account taxonomy does not
-  reliably represent the contra-asset concept.
-
-FINDING 3: TRANSACTION-TYPE SPECIFIC ERROR TRIGGERS
-  Three transaction templates reliably trigger the first error:
-    - cash_sale_with_cogs: 4-entry COGS transactions
-    - mixed_purchase_equipment: 3-entry split-funding purchases
-    - prepaid_rent: adjustment-based prepaid recognition
-  These are all L3+ features. Problems using only L1-L2 templates may
-  achieve BA > 0 if the closing-entry issue happens not to appear.
-
-FINDING 4: ARITHMETIC ERRORS DOMINATE AT HIGH COMPLEXITY
-  At L5, 82.5% of errors are arithmetic (correct account, wrong value).
-  At L1, only 42.9% are arithmetic — omission errors are more common.
-  This shift suggests the model's schema coverage improves at scale
-  (it knows more accounts to include) but loses arithmetic precision as
-  the number of interacting transactions grows.
-
-FINDING 5: ERROR PROPAGATION IS GRADUAL, NOT STEP-CHANGE
-  Errors do not appear suddenly at a single critical transaction; instead,
-  MAE grows roughly quadratically through the problem (Q0=$0, Q25=$2K,
-  Q50=$4K, Q75=$9K, Q100=$17K). This indicates the model accumulates small
-  arithmetic deviations from the onset transaction forward, rather than
-  catastrophically failing at one point.
-
-FINDING 6: PARSE RELIABILITY (POSITIVE FINDING)
-  With the thousands-separator comma fix, parse rate is 100% across all
-  zero_shot responses. The model reliably outputs syntactically structured
-  JSON, meaning evaluation failures are genuine semantic errors, not
-  formatting noise. This is an important methodological control.
-
---------------------------------------------------------------------------------
-PART 10 — CONFERENCE READINESS ASSESSMENT
---------------------------------------------------------------------------------
-
-Current state score: ~65/100
-
-STRENGTHS (paper contributions):
-  + Novel task framing: no prior LLM benchmark for balance sheet generation
-  + Controlled complexity gradient with 5 well-defined levels
-  + Three distinct failure modes identified (closing-entry, contra-asset,
-    COGS arithmetic) with precise account-level attribution
-  + Error propagation simulator is a new methodological contribution
-  + 2,500 deterministically generated, 100% balanced ground-truth problems
-  + Robust evaluation pipeline with 0% parse failure on tested model
-
-GAPS TO ADDRESS BEFORE SUBMISSION:
-  - Only 1 model evaluated (Haiku 3); need ≥3 models for comparison
-  - Only zero_shot evaluated; need few_shot, CoT, self_refine comparisons
-  - n=25 is too small for statistical significance; target n=100 (full sample)
-  - No statistical uncertainty (confidence intervals, paired t-tests)
-  - No human or rule-based baseline
-  - TPA metric is always 0 under zero_shot — need CoT results for full metric
-  - Error propagation run on only 5 problems — need 20+ for publication
-
-RECOMMENDED NEXT STEPS (priority order):
-  1. Restore sample.jsonl to 100 problems and run full zero_shot evaluation
-  2. Run 3 additional strategy experiments (few_shot, cot, self_refine)
-  3. Add GPT-4o-mini and at least one more model via OpenRouter
-  4. Compute bootstrap 95% CIs for all FBS/ALA/BA values
-  5. Run propagation simulator on 20+ problems (4 per level)
-  6. Check whether CoT resolves closing-entry blindness (key research question)
-  7. Write human baseline section (even 1 expert on 10 problems is meaningful)
-
-ESTIMATED VENUE FIT:
-  Current:   FinNLP @ EMNLP (workshop track) — ~75% acceptance probability
-  After step 1-4: NLP4Finance @ COLING, EMNLP Findings — ~50-65%
-  After full roadmap: ACL / EMNLP main — ~20-35%
-
---------------------------------------------------------------------------------
-PART 11 — RESULT FILE INDEX
---------------------------------------------------------------------------------
-
-  results/claude-3-haiku-20240307_zero_shot.json
-    → Raw per-problem results for all 25 evaluated problems.
-    → Fields: problem_id, difficulty, BA, ALA, FBS, TPA, parse_failed,
-              n_errors, error_categories, raw_response, latency_s
-
-  results/failure_analysis_haiku_zero_shot.json
-    → 5-dimension failure analysis produced by analyze_failures.py.
-    → Sections: complexity_drivers, account_miss_rates, balance_failures,
-                hallucinations, difficulty_gradient
-
-  results/propagation_haiku.json
-    → Full per-checkpoint raw data for 5 propagation traces.
-    → Each trace contains: mae_trajectory, error_counts, per-checkpoint
-      true_accounts, pred_accounts, account_errors list
-
-  results/propagation_haiku_summary.json
-    → Aggregated propagation statistics: onset distribution, shape,
-      quantile MAE curve, per-level summary
 
 ================================================================================
-END OF REPORT
+  FINDING 1 — Three-Tier Capability Hierarchy (Statistically Significant)
+================================================================================
+
+  Tier 1 — Frontier (FBS ~90):    GPT-5.2   ZS: BA=98%  FBS=90.2  BEM=$0
+                                   GPT-5.2  CoT: BA=100% FBS=90.9  BEM=$0
+
+  Tier 2 — Mid-tier (FBS ~79-83): Gemini    ZS: BA=73%  FBS=79.0  BEM=$4,376
+                                   Gemini   CoT: BA=80%  FBS=83.5  BEM=$4,630
+
+  Tier 3 — Failing  (FBS ~33):    Llama     ZS: BA=2%   FBS=33.4  BEM=$56,856
+
+  Rule-based Oracle:                          BA=100% FBS=99.97 BEM=$0
+
+  Pairwise Permutation Tests (n=10,000):
+    GPT-5.2 vs Gemini:    Delta=+7.4-11.8 pts, p<0.001  ***
+    GPT-5.2 vs Llama:     Delta=+56.8-57.4 pts, p<0.001 ***
+    Gemini vs Llama:      Delta=+45.6-50.0 pts, p<0.001 ***
+    GPT-5.2 CoT vs ZS:    Delta=+0.65 pts,      p=0.533 n.s.
+    Gemini CoT vs ZS:     Delta=+4.4 pts,        p=0.062 marginal
+
+  PAPER IMPLICATION:
+  The benchmark discriminates between three capability tiers with p<0.001
+  for every inter-tier gap. This validates FinBalance as a discriminative
+  benchmark — a key reviewer concern for any new benchmark paper. The
+  non-significant CoT vs zero-shot gap for GPT-5.2 (p=0.53) is itself a
+  finding: frontier models do not benefit from extended reasoning on this
+  task in terms of FBS, only in terms of BA (parse safety).
+
+  Use this in: Section 4 Main Results, Table 2 (leaderboard), Section 5.1
+  statistical validity.
+
+
+================================================================================
+  FINDING 2 — The Closing-Entry Blindness Paradox (Headline Finding)
+================================================================================
+
+  GPT-5.2 Retained Earnings compliance (CECR):
+    Zero-shot:  8%   (omission rate=92.8%, arithmetic error rate=0%)
+    CoT:        1%   (CoT worsens this — omission rate approaches 99%)
+
+  GPT-5.2 CECR by level (zero-shot):  L1=10%, L2=10%, L3=5%, L4=5%, L5=10%
+  GPT-5.2 CECR by level (CoT):        L1=5%,  L2=0%,  L3=0%, L4=0%, L5=0%
+
+  Gemini Retained Earnings compliance (CECR):
+    Zero-shot: 15%   (omission=10.1%, arithmetic error=75.8%)
+    CoT:       17%   (mixed: CECR improves at L1/L3, degrades at L2/L4)
+
+  Llama CECR: 1% across all levels.
+
+  The paradox: GPT-5.2 achieves BA=98-100% (perfect equation balance)
+  but CECR=1-8% (almost never correct closing entries). The model satisfies
+  Assets = Liabilities + Equity by inflating Owner's Equity rather than
+  correctly splitting equity into Owner's Equity + Retained Earnings as
+  GAAP requires. The equation is satisfied for the wrong structural reason.
+
+  GPT-5.2 zero-shot error breakdown:
+    OE (Omission):      44.5%  -- missing RE drives this entirely
+    CO (Hallucination): 34.5%  -- Net Income hallucinated instead of RE
+    AE (Arithmetic):    13.5%
+    CV (Classification): 6.8%
+
+  GPT-5.2 CoT error breakdown:
+    OE: 45.6%  (+1.1pp -- RE omission persists and slightly worsens)
+    CO: 28.7%  (-5.8pp -- fewer hallucinations overall)
+    AE: 19.3%  (+5.8pp -- CoT introduces more arithmetic mistakes)
+
+  PAPER IMPLICATION:
+  This is the headline finding. It shows BA alone is insufficient -- a
+  model can score BA=100% while being conceptually wrong on the GAAP
+  closing-entry step. CECR is the metric that exposes this. The paradox
+  also gives the paper a concrete "surprising result": the best model
+  scores highest on the equation but lowest on conceptual compliance.
+
+  Quotable for abstract: "GPT-5.2 achieves BA=98-100% yet correctly
+  produces Retained Earnings in only 1-8% of responses — satisfying the
+  accounting equation by inflating Owner's Equity rather than performing
+  the closing-entry step mandated by GAAP."
+
+  Use this in: Section 1 Introduction, Section 4.2 Closing-Entry Analysis,
+  Section 5 Discussion.
+
+
+================================================================================
+  FINDING 3 — Two Distinct Failure Modes (ACR + BEM make this visible)
+================================================================================
+
+  GPT-5.2 profile:  ACR=86%  BA=98%  BEM=$0      ALA=0.827
+  Gemini profile:   ACR=98%  BA=73%  BEM=$4,376  ALA=0.719
+
+  GPT-5.2 failure mode — STRUCTURAL OMISSION:
+    - Computes present accounts correctly (BA=98%, AE only 13.5% of errors)
+    - But systematically omits accounts (OE=44.5%, driven entirely by RE)
+    - Missing accounts are compensated by inflating Owner's Equity
+    - ACR=86%: 14% of expected accounts consistently absent from output
+    - BEM~$0: omission + compensation keeps the equation exactly balanced
+
+  Gemini failure mode — ARITHMETIC COLLAPSE:
+    - Identifies nearly all expected accounts (ACR=98% zero-shot)
+    - But cannot compute their values correctly (AE=81.4% of all errors)
+    - Cash arithmetic error rate: 86% (wrong value in 86/100 problems)
+    - RE arithmetic error rate: 75.8% (present but computed incorrectly)
+    - BEM=$4,376: wrong values create real imbalances in the equation
+    - BA=73%: wrong numbers prevent the equation from balancing
+
+  This contrast is invisible from BA or ALA alone. You need:
+    - ACR to reveal Gemini has the accounts but GPT-5.2 is missing them
+    - BEM to reveal GPT-5.2's failures are near-zero vs Gemini's $4k gap
+
+  Per-level FBS degradation:
+    Gemini zero-shot: L1=88.5 -> L5=66.5 (-22.0 pts, steep)
+    GPT-5.2 zero-shot: L1=90.7 -> L5=87.0 (-3.7 pts, nearly flat)
+
+  PAPER IMPLICATION:
+  ACR and BEM jointly justify the extended metric suite as a methodological
+  contribution. The paper can argue: "Two models with similar ALA scores
+  can have completely different failure modes — structural omission vs
+  arithmetic collapse — and only ACR+BEM distinguish them." This motivates
+  the metric design beyond just the dataset.
+
+  Concrete paper table: "Model A (GPT-5.2) has BA=98% because it omits
+  problematic accounts (ACR=86%, BEM~$0). Model B (Gemini) has BA=73%
+  because it includes all accounts but miscalculates them (ACR=98%,
+  BEM=$4.4k). High BA can reflect either structural accuracy or strategic
+  omission — FinBalance's extended suite distinguishes between the two."
+
+  Use this in: Section 3 Metrics motivation, Section 4.3 Failure Mode
+  Analysis, Section 5 Discussion.
+
+
+================================================================================
+  FINDING 4 — CoT Is Counterproductive for Frontier Models on This Task
+================================================================================
+
+  GPT-5.2 CoT vs Zero-shot:
+    BA:    98% -> 100%    (+2pp)    CoT helps (parse safety)
+    ALA:   0.827 -> 0.813 (-1.4pp) CoT hurts
+    ACR:   85.9% -> 87.0% (+1.1pp) marginal
+    FBS:   90.2 -> 90.9   (+0.65)  NOT significant (p=0.533)
+    CECR:  8% -> 1%        (-7pp)  CoT severely worsens RE compliance
+    AE:    13.5% -> 19.3%          CoT adds arithmetic errors
+    L1 ALA: 0.790 -> 0.718        CoT hurts most on simple problems
+
+  CECR collapse under CoT by level:
+    L2: 10% -> 0%  L3: 5% -> 0%  L4: 5% -> 0%
+
+  Gemini CoT vs Zero-shot:
+    BA:   73% -> 80%     (+7pp)   CoT helps BA
+    ALA:  0.719 -> 0.801 (+8.2pp) CoT helps ALA
+    ACR:  98.2% -> 91.7% (-6.5pp) CoT reduces account coverage
+    FBS:  79.0 -> 83.5   (+4.4)   marginal (p=0.062)
+    CECR: 15% -> 17%     (+2pp)   minimal change
+    AE:   81.4% -> 51.4%          CoT reduces arithmetic errors
+    OE:   2.8% -> 28.3%           but adds omission errors (ACR drops)
+
+  CoT tradeoff is model-specific:
+    GPT-5.2: CoT trades ALA + CECR for BA. Net effect on FBS: not significant.
+    Gemini:  CoT trades ACR/coverage for BA/arithmetic. Net FBS: marginal gain.
+
+  PAPER IMPLICATION:
+  CoT is universally recommended in NLP for reasoning tasks. FinBalance
+  shows that for structured financial generation, CoT is neutral for
+  frontier models (p=0.53) and actually worsens the headline finding
+  (CECR drops from 8% to 1%). The reasoning trace appears to reinforce
+  the incorrect pattern (conflating income statement with balance sheet)
+  rather than correcting it. Practitioners using LLMs for financial
+  reporting should NOT assume CoT improves compliance with GAAP.
+
+  Use this in: Section 4.4 Prompting Strategy Analysis,
+  Section 5.3 Practical Implications.
+
+
+================================================================================
+  FINDING 5 — Difficulty Scaling Validates Benchmark Construction
+================================================================================
+
+  FBS by level (zero-shot):
+
+  Level   GPT-5.2   Gemini   Llama   Notes
+  L1       90.7      88.5     36.3   Simple: owner investment, cash sales
+  L2       88.9      79.0     33.8   Credit txns, loans
+  L3       92.2      85.0     41.9   COGS, adjusting entries
+  L4       92.3      76.1     31.9   Mixed funding, derived interest
+  L5       87.0      66.5     23.3   Full complexity
+
+  GPT-5.2 L1 to L5 drop: -3.7 pts (robust, nearly flat)
+  Gemini  L1 to L5 drop: -22.0 pts (sensitive to complexity)
+  Llama   L1 to L5 drop: -13.0 pts (already failing from L1)
+
+  Gemini complexity drivers (delta-FBS vs problems without that feature):
+    mixed_funding:     -12.8 pts  (worst)
+    debt:              -12.6 pts
+    depreciable_asset: -11.9 pts
+    credit_transaction: -11.8 pts
+    derived_interest:  -10.3 pts
+
+  GPT-5.2 complexity drivers:
+    mixed_funding:     -0.9 pts   (near-zero impact)
+    depreciable_asset: +6.7 pts   (GPT-5.2 is BETTER with depreciation)
+
+  Key inversion: depreciation problems hurt older models (Haiku: -10.3 ΔFBS)
+  but help GPT-5.2 (+6.7 ΔFBS). This suggests a generational shift in how
+  frontier models have internalized adjusting-entry mechanics.
+
+  PAPER IMPLICATION:
+  The steep Gemini degradation proves the complexity levels are genuine,
+  not cosmetic. GPT-5.2's near-flat curve shows the benchmark can still
+  place frontier models even when they are robust at all levels (important
+  for longevity of the benchmark). The depreciation inversion is a concrete
+  example of capability evolution across generations — useful for the
+  "benchmark analysis" contributions ACL reviewers value.
+
+  Use this in: Section 3.1 Benchmark Design Validation,
+  Section 4.1 Capability Curve (F1, F8).
+
+
+================================================================================
+  FINDING 6 — Error Propagation: Gradual Onset at ~30% of Problem
+================================================================================
+
+  Data: Claude Haiku 3, 5 problems from sample.jsonl (preliminary)
+
+  Problem      Level  EPR (slope)   Onset_k   Final MAE
+  FB_1_00001     L1    $2,375/ck       5       $11,875
+  FB_2_00006     L2      $193/ck       3       $13,245
+  FB_3_00011     L3      $488/ck       3       $12,860
+  FB_4_00016     L4      $105/ck       7        $7,888
+  FB_5_00021     L5      $556/ck       4       $39,628
+
+  Mean EPR: $743/checkpoint  Std: $833
+  Mean onset fraction: 0.295 (errors first appear ~30% into the problem)
+  Primary onset trigger: cash_sale_with_cogs (COGS transaction)
+  Error propagation shape: Gradual in all 5 cases
+
+  Models correctly handle opening balances and simple cash transactions.
+  Errors begin when COGS/depreciation transactions first appear (~30%
+  through), then compound progressively rather than collapsing suddenly.
+
+  PAPER IMPLICATION:
+  Unique contribution not found in any prior financial NLP benchmark.
+  Shows WHERE in reasoning the model fails (specific transaction type),
+  not just that it fails. The gradual accumulation pattern suggests that
+  targeted checkpointing or intermediate verification could intercept
+  errors before they compound — actionable for practitioners.
+
+  NOTE: Currently only Haiku 3 (5 problems). GPT-5.2 and Gemini
+  propagation runs would let you compare onset patterns across capability
+  tiers (highly recommended before ACL submission).
+
+  Use this in: Section 6 Error Propagation, Section 5.4 Design Implications.
+
+
+================================================================================
+  FINDING 7 — Net Income Hallucination Is Systematic, Not Random
+================================================================================
+
+  GPT-5.2 zero-shot top hallucinations (CO=34.5% of all errors, HR=9.4%):
+    Net Income:                  39/100 problems
+    Accum. Depr - Vehicles:      14 (sub-account split of schema account)
+    Accum. Depr - Furniture:     10 (same pattern)
+    Inventory:                    5 (not expected in these problems)
+
+  Gemini zero-shot (CO=4.6% of all errors, HR=1.9%):
+    Total Assets/Liabilities/Equity: 2 each (hallucinated section totals)
+    Owner's Capital:              2 (alternative label for Owner's Equity)
+    Revenue:                      3 (income-statement contamination)
+
+  Llama zero-shot (CO=1.1% of all errors, HR=0.8%):
+    Minimal hallucination — failure is arithmetic, not invention.
+
+  The shared hallucination pattern: "Net Income" in the equity section.
+  All three models show income-statement contamination, confirming this
+  is a conceptual gap (conflating BS preparation with IS reporting) rather
+  than a model-specific quirk.
+
+  PAPER IMPLICATION:
+  The hallucination taxonomy directly supports the closing-entry blindness
+  narrative. Models are not hallucinating randomly -- they make the same
+  specific conceptual error (Net Income belongs on income statement, not
+  balance sheet). This makes the finding credible and actionable for the
+  accounting/NLP community. The sub-account split hallucinations (Accum.
+  Depr - Vehicles instead of unified Accumulated Depreciation) reveal a
+  secondary finding: models over-decompose accounts, suggesting excessive
+  specificity in their accounting knowledge.
+
+  Use this in: Section 4.2 Closing-Entry Analysis,
+  Section 4.5 Hallucination Catalog.
+
+
+================================================================================
+  MAIN RESULTS TABLE (for paper)
+================================================================================
+
+  Model              Strat   BA     ALA    ACR    BEM       FBS   PSR   CECR  95% CI FBS
+  ─────────────────────────────────────────────────────────────────────────────────────────
+  Rule-based Oracle   --    100%   1.000  100%    $0       99.97  97%   --    [100.0, 100.0]
+  GPT-5.2            CoT   100%   0.813   87%    $0       90.9   1%    1%    [90.2, 91.5]
+  GPT-5.2            ZS     98%   0.827   86%    $0       90.2   5%    8%    [87.2, 92.4]
+  Gemini 3 Flash     CoT    80%   0.801   92%   $4,630    83.5   9%   17%    [79.9, 86.6]
+  Gemini 3 Flash     ZS     73%   0.719   98%   $4,376    79.0   8%   15%    [75.6, 82.5]
+  Llama 3.3 70B      ZS      2%   0.390   74%  $56,856    33.4   0%    1%    [30.1, 36.5]
+  ─────────────────────────────────────────────────────────────────────────────────────────
+  All inter-tier gaps: p<0.001 (paired permutation test, n=10,000)
+  GPT-5.2 CoT vs ZS: p=0.533 (not significant)
+  Gemini CoT vs ZS:  p=0.062 (marginal)
+
+
+================================================================================
+  SUGGESTED PAPER NARRATIVE FLOW
+================================================================================
+
+  Section 1 Introduction
+    Hook: "We show that a frontier model can achieve near-perfect balance
+    equation accuracy while correctly producing Retained Earnings in fewer
+    than 8% of responses — a paradox that existing benchmarks cannot detect."
+    -> motivates CECR and the extended metric suite
+
+  Section 2 Related Work
+    -> FinQA, TAT-QA, ConvFinQA: QA over existing docs, no generation
+    -> No benchmark requires generating a structured financial statement
+    -> No benchmark tests GAAP closing-entry compliance specifically
+
+  Section 3 Benchmark Design
+    -> 9 metrics, justify each (Finding 3 motivates ACR + BEM over BA alone)
+    -> Show F8 (dataset complexity profile) to validate difficulty calibration
+    -> Show rule-based oracle = 99.97 to anchor upper bound
+
+  Section 4 Results
+    4.1  Main table + F1 (capability curve): three-tier hierarchy
+    4.2  Closing-entry blindness: CECR paradox + Net Income hallucination
+    4.3  Two failure modes: structural vs arithmetic (ACR/BEM contrast)
+    4.4  CoT analysis: F3 (effect) + F6 (by difficulty)
+    4.5  Error composition: F2 (stacked bar) + F4 (account heatmap)
+    4.6  Complexity drivers: F5 (BEM distribution), difficulty degradation
+
+  Section 5 Error Propagation
+    -> F7 (trajectory), gradual onset at ~30%, COGS as primary trigger
+    -> EPR metric, $743/ck mean slope
+
+  Section 6 Discussion
+    -> BA insufficient without CECR (Finding 2)
+    -> CoT not recommended for financial generation (Finding 4)
+    -> Two failure modes require different interventions (Finding 3)
+    -> Benchmark longevity: frontier models still have room to improve
+       (ALA~83%, CECR~8%, PSR~5%)
+
+  Section 7 Limitations
+    -> Synthetic data (though deterministic and GAAP-correct)
+    -> Human baseline pending
+    -> English-only
+    -> Single-currency
+
+
+================================================================================
+  WHAT IS STILL NEEDED BEFORE SUBMISSION
+================================================================================
+
+  Priority   Item                              Impact on paper
+  ─────────────────────────────────────────────────────────────────────────────
+  HIGH       Llama 3.3 70B CoT run             Complete model x strategy matrix
+  HIGH       GPT-5.2 + Gemini propagation      Compare onset patterns across tiers
+  MEDIUM     Human baseline (20 problems)      Upper bound + reviewer requirement
+  MEDIUM     1 more model (e.g. GPT-5.1 on    Richer leaderboard, historical
+             standardized test set)             comparison within same eval harness
+  LOW        Few-shot strategy                 Test whether examples fix RE omission
+  LOW        SPA depth analysis                Section-placement contamination story
+  ─────────────────────────────────────────────────────────────────────────────
+
 ================================================================================
