@@ -26,12 +26,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00416",
@@ -60,12 +60,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00093",
@@ -94,12 +94,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00216",
@@ -129,12 +129,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00480",
@@ -162,12 +162,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00060",
@@ -195,12 +195,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00369",
@@ -228,12 +228,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00164",
@@ -261,12 +261,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00211",
@@ -296,12 +296,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00252",
@@ -330,12 +330,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00444",
@@ -364,12 +364,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00321",
@@ -399,12 +399,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00290",
@@ -434,12 +434,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00390",
@@ -467,12 +467,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00008",
@@ -501,12 +501,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00463",
@@ -533,12 +533,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00250",
@@ -568,12 +568,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00229",
@@ -603,12 +603,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00246",
@@ -637,12 +637,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_1_00212",
@@ -671,12 +671,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00851",
@@ -704,12 +704,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00898",
@@ -739,12 +739,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00659",
@@ -775,12 +775,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01049",
@@ -809,12 +809,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00676",
@@ -843,12 +843,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01211",
@@ -878,12 +878,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00867",
@@ -915,12 +915,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01138",
@@ -951,12 +951,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01103",
@@ -988,12 +988,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00975",
@@ -1023,12 +1023,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00787",
@@ -1060,12 +1060,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01220",
@@ -1096,12 +1096,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01222",
@@ -1132,12 +1132,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01009",
@@ -1169,12 +1169,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01248",
@@ -1206,12 +1206,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00984",
@@ -1242,12 +1242,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01001",
@@ -1278,12 +1278,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_01168",
@@ -1315,12 +1315,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00529",
@@ -1352,12 +1352,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_2_00795",
@@ -1387,12 +1387,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01855",
@@ -1424,12 +1424,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01299",
@@ -1463,12 +1463,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0714,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01944",
@@ -1500,12 +1500,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01654",
@@ -1538,12 +1538,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01542",
@@ -1573,12 +1573,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01353",
@@ -1611,12 +1611,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
+    "SPA": null,
     "PSR": 0,
-    "HR": 0.0,
-    "CECR": 1
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01652",
@@ -1649,12 +1649,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01856",
@@ -1686,12 +1686,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01994",
@@ -1724,12 +1724,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01414",
@@ -1762,12 +1762,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01890",
@@ -1800,12 +1800,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01747",
@@ -1838,12 +1838,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01428",
@@ -1877,12 +1877,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01579",
@@ -1915,12 +1915,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01999",
@@ -1952,12 +1952,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0833,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01493",
@@ -1990,12 +1990,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01457",
@@ -2027,12 +2027,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01327",
@@ -2065,12 +2065,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01524",
@@ -2104,12 +2104,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_3_01770",
@@ -2143,12 +2143,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02055",
@@ -2182,12 +2182,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02003",
@@ -2220,12 +2220,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02127",
@@ -2258,12 +2258,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02029",
@@ -2296,12 +2296,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02295",
@@ -2333,12 +2333,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0769,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02001",
@@ -2370,12 +2370,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02196",
@@ -2409,12 +2409,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02125",
@@ -2447,12 +2447,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02222",
@@ -2486,12 +2486,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02153",
@@ -2525,12 +2525,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0667,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02184",
@@ -2563,12 +2563,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0714,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02202",
@@ -2602,12 +2602,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02172",
@@ -2641,12 +2641,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02249",
@@ -2680,12 +2680,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02271",
@@ -2719,12 +2719,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02274",
@@ -2758,12 +2758,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02057",
@@ -2796,12 +2796,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02390",
@@ -2835,12 +2835,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02299",
@@ -2874,12 +2874,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_4_02360",
@@ -2912,12 +2912,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02402",
@@ -2951,12 +2951,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02428",
@@ -2990,12 +2990,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02453",
@@ -3029,12 +3029,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0625,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02424",
@@ -3068,12 +3068,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02421",
@@ -3107,12 +3107,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02460",
@@ -3146,12 +3146,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02484",
@@ -3185,12 +3185,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0588,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02457",
@@ -3224,12 +3224,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02474",
@@ -3263,12 +3263,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02430",
@@ -3302,12 +3302,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
+    "SPA": null,
     "PSR": 0,
-    "HR": 0.0,
-    "CECR": 1
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02455",
@@ -3341,12 +3341,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02443",
@@ -3379,12 +3379,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02401",
@@ -3418,12 +3418,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02405",
@@ -3457,12 +3457,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02422",
@@ -3495,12 +3495,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02466",
@@ -3534,12 +3534,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02496",
@@ -3573,12 +3573,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02454",
@@ -3612,12 +3612,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02411",
@@ -3650,12 +3650,12 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   },
   {
     "problem_id": "FB_5_02473",
@@ -3689,11 +3689,11 @@
       "total_assets_positive": true,
       "completeness": true
     },
-    "ACR": 1.0,
+    "ACR": 0.0,
     "BEM": 0.0,
-    "SPA": 1.0,
-    "PSR": 1,
-    "HR": 0.0,
-    "CECR": 1
+    "SPA": null,
+    "PSR": 0,
+    "HR": null,
+    "CECR": 0
   }
 ]

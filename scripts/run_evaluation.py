@@ -39,9 +39,9 @@ from finbalance.evaluation.models.openrouter import OpenRouterModel
 from finbalance.evaluation.runner import EvaluationRunner
 
 
-def build_model(model_id: str, api_key: str | None, seed: int) -> AnthropicModel | OpenRouterModel:
+def build_model(model_id: str, api_key: str | None, seed: int, max_tokens: int = 8192) -> AnthropicModel | OpenRouterModel:
     """Auto-select backend: Anthropic for claude-* models, OpenRouter for everything else."""
-    config = ModelConfig(model_id=model_id, temperature=0.0, seed=seed)
+    config = ModelConfig(model_id=model_id, temperature=0.0, seed=seed, max_tokens=max_tokens)
     if model_id.startswith("claude-"):
         return AnthropicModel(config, api_key=api_key or os.environ.get("ANTHROPIC_API_KEY"))
     return OpenRouterModel(config, api_key=api_key or os.environ.get("OPENROUTER_API_KEY"))
@@ -158,6 +158,12 @@ def main():
     parser.add_argument("--seed",       type=int, default=42)
     parser.add_argument("--api-key",    default=None,
                         help="API key (overrides ANTHROPIC_API_KEY / OPENROUTER_API_KEY env vars)")
+    parser.add_argument("--workers",    type=int, default=1,
+                        help="Concurrent API requests per model×strategy run (default 1). "
+                             "5-10 is safe for OpenRouter; too high risks rate-limit errors.")
+    parser.add_argument("--max-tokens", type=int, default=8192,
+                        help="Max tokens for model completion (default 8192). "
+                             "Use 16384 or 32768 for reasoning models on L4/L5 problems.")
     args = parser.parse_args()
 
     # Load or generate problems
@@ -184,8 +190,9 @@ def main():
 
     for model_id in model_ids:
         for strategy in strategies:
-            model  = build_model(model_id, api_key=args.api_key, seed=args.seed)
-            runner = EvaluationRunner(model, strategy=strategy, verbose=True)
+            model  = build_model(model_id, api_key=args.api_key, seed=args.seed, max_tokens=args.max_tokens)
+            runner = EvaluationRunner(model, strategy=strategy, verbose=True,
+                                      max_workers=args.workers)
 
             results = runner.run(problems)
 

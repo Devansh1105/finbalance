@@ -1,0 +1,776 @@
+{
+  "model_id": "qwen/qwen3.5-flash-02-23",
+  "strategy": "zero_shot",
+  "n_problems": 100,
+  "complexity_drivers": {
+    "features": [
+      {
+        "feature": "mixed_funding",
+        "n_problems": 40,
+        "avg_fbs": 74.68,
+        "avg_ala": 0.7517,
+        "avg_errors": 4.25,
+        "ba_rate": 0.65,
+        "fbs_delta": -14.69,
+        "ala_delta": -0.0033
+      },
+      {
+        "feature": "derived_interest",
+        "n_problems": 45,
+        "avg_fbs": 76.59,
+        "avg_ala": 0.7606,
+        "avg_errors": 4.0,
+        "ba_rate": 0.6889,
+        "fbs_delta": -12.55,
+        "ala_delta": 0.0126
+      },
+      {
+        "feature": "cogs",
+        "n_problems": 58,
+        "avg_fbs": 80.17,
+        "avg_ala": 0.7788,
+        "avg_errors": 3.62,
+        "ba_rate": 0.7586,
+        "fbs_delta": -7.91,
+        "ala_delta": 0.0599
+      },
+      {
+        "feature": "prepaid",
+        "n_problems": 94,
+        "avg_fbs": 83.2,
+        "avg_ala": 0.7567,
+        "avg_errors": 3.0,
+        "ba_rate": 0.8511,
+        "fbs_delta": -4.99,
+        "ala_delta": 0.0511
+      },
+      {
+        "feature": "depreciable_asset",
+        "n_problems": 88,
+        "avg_fbs": 82.98,
+        "avg_ala": 0.7598,
+        "avg_errors": 3.08,
+        "ba_rate": 0.8409,
+        "fbs_delta": -4.31,
+        "ala_delta": 0.0509
+      },
+      {
+        "feature": "debt",
+        "n_problems": 77,
+        "avg_fbs": 82.52,
+        "avg_ala": 0.7769,
+        "avg_errors": 3.23,
+        "ba_rate": 0.8182,
+        "fbs_delta": -4.25,
+        "ala_delta": 0.101
+      },
+      {
+        "feature": "credit_transaction",
+        "n_problems": 80,
+        "avg_fbs": 82.81,
+        "avg_ala": 0.7771,
+        "avg_errors": 3.19,
+        "ba_rate": 0.825,
+        "fbs_delta": -3.42,
+        "ala_delta": 0.1171
+      }
+    ],
+    "skipped_features": [],
+    "min_group_n": 5
+  },
+  "account_miss_rates": {
+    "accounts": [
+      {
+        "account": "Cash",
+        "account_type": "asset",
+        "n_expected": 99,
+        "n_omitted": 0,
+        "n_arithmetic": 19,
+        "n_correct": 80,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.1919,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 14763.16
+      },
+      {
+        "account": "Owner's Equity",
+        "account_type": "equity",
+        "n_expected": 99,
+        "n_omitted": 0,
+        "n_arithmetic": 92,
+        "n_correct": 7,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.9293,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 22280.43
+      },
+      {
+        "account": "Retained Earnings",
+        "account_type": "equity",
+        "n_expected": 98,
+        "n_omitted": 92,
+        "n_arithmetic": 4,
+        "n_correct": 2,
+        "n_hallucinated": 0,
+        "omission_rate": 0.9388,
+        "arithmetic_rate": 0.0408,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 26375.0
+      },
+      {
+        "account": "Equipment",
+        "account_type": "asset",
+        "n_expected": 87,
+        "n_omitted": 0,
+        "n_arithmetic": 5,
+        "n_correct": 82,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0575,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 10260.0
+      },
+      {
+        "account": "Inventory",
+        "account_type": "asset",
+        "n_expected": 85,
+        "n_omitted": 0,
+        "n_arithmetic": 7,
+        "n_correct": 78,
+        "n_hallucinated": 3,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0824,
+        "hallucination_rate": 0.25,
+        "avg_abs_error": 7942.86
+      },
+      {
+        "account": "Prepaid Rent",
+        "account_type": "asset",
+        "n_expected": 83,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 83,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Loans Payable",
+        "account_type": "liability",
+        "n_expected": 76,
+        "n_omitted": 0,
+        "n_arithmetic": 1,
+        "n_correct": 75,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0132,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 5200.0
+      },
+      {
+        "account": "Accounts Receivable",
+        "account_type": "asset",
+        "n_expected": 74,
+        "n_omitted": 0,
+        "n_arithmetic": 8,
+        "n_correct": 66,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.1081,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 8337.5
+      },
+      {
+        "account": "Accounts Payable",
+        "account_type": "liability",
+        "n_expected": 73,
+        "n_omitted": 0,
+        "n_arithmetic": 2,
+        "n_correct": 71,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0274,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 2500.0
+      },
+      {
+        "account": "Prepaid Insurance",
+        "account_type": "asset",
+        "n_expected": 67,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 67,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Vehicles",
+        "account_type": "asset",
+        "n_expected": 52,
+        "n_omitted": 0,
+        "n_arithmetic": 4,
+        "n_correct": 48,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0769,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 36800.0
+      },
+      {
+        "account": "Furniture",
+        "account_type": "asset",
+        "n_expected": 48,
+        "n_omitted": 0,
+        "n_arithmetic": 3,
+        "n_correct": 45,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0625,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 6866.67
+      },
+      {
+        "account": "Accumulated Depreciation",
+        "account_type": "contra_asset",
+        "n_expected": 41,
+        "n_omitted": 8,
+        "n_arithmetic": 0,
+        "n_correct": 33,
+        "n_hallucinated": 0,
+        "omission_rate": 0.1951,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Notes Payable",
+        "account_type": "liability",
+        "n_expected": 39,
+        "n_omitted": 0,
+        "n_arithmetic": 2,
+        "n_correct": 37,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0513,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 15450.0
+      },
+      {
+        "account": "Accrued Interest Payable",
+        "account_type": "liability",
+        "n_expected": 22,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 22,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Accrued Expenses",
+        "account_type": "liability",
+        "n_expected": 20,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 20,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Allowance for Doubtful Accounts",
+        "account_type": "contra_asset",
+        "n_expected": 18,
+        "n_omitted": 2,
+        "n_arithmetic": 0,
+        "n_correct": 16,
+        "n_hallucinated": 0,
+        "omission_rate": 0.1111,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Revenue",
+        "account_type": "revenue",
+        "n_expected": 0,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 0,
+        "n_hallucinated": 1,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0111,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Accumulated Depreciation - Vehicles",
+        "account_type": "unknown",
+        "n_expected": 0,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 0,
+        "n_hallucinated": 4,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.2105,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Accumulated Depreciation - Furniture",
+        "account_type": "unknown",
+        "n_expected": 0,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 0,
+        "n_hallucinated": 4,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.2105,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Accumulated Depreciation - Equipment",
+        "account_type": "unknown",
+        "n_expected": 0,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 0,
+        "n_hallucinated": 1,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.25,
+        "avg_abs_error": 0.0
+      }
+    ],
+    "most_omitted": [
+      [
+        "Retained Earnings",
+        0.9388
+      ],
+      [
+        "Accumulated Depreciation",
+        0.1951
+      ],
+      [
+        "Allowance for Doubtful Accounts",
+        0.1111
+      ],
+      [
+        "Cash",
+        0.0
+      ],
+      [
+        "Owner's Equity",
+        0.0
+      ],
+      [
+        "Equipment",
+        0.0
+      ],
+      [
+        "Inventory",
+        0.0
+      ],
+      [
+        "Prepaid Rent",
+        0.0
+      ],
+      [
+        "Loans Payable",
+        0.0
+      ],
+      [
+        "Accounts Receivable",
+        0.0
+      ]
+    ],
+    "most_arithmetic": [
+      [
+        "Owner's Equity",
+        0.9293
+      ],
+      [
+        "Cash",
+        0.1919
+      ],
+      [
+        "Accounts Receivable",
+        0.1081
+      ],
+      [
+        "Inventory",
+        0.0824
+      ],
+      [
+        "Vehicles",
+        0.0769
+      ],
+      [
+        "Furniture",
+        0.0625
+      ],
+      [
+        "Equipment",
+        0.0575
+      ],
+      [
+        "Notes Payable",
+        0.0513
+      ],
+      [
+        "Retained Earnings",
+        0.0408
+      ],
+      [
+        "Accounts Payable",
+        0.0274
+      ]
+    ],
+    "most_hallucinated": [
+      [
+        "Inventory",
+        0.25
+      ],
+      [
+        "Accumulated Depreciation - Equipment",
+        0.25
+      ],
+      [
+        "Accumulated Depreciation - Vehicles",
+        0.2105
+      ],
+      [
+        "Accumulated Depreciation - Furniture",
+        0.2105
+      ],
+      [
+        "Revenue",
+        0.0111
+      ]
+    ]
+  },
+  "balance_failures": {
+    "n_failures": 13,
+    "causes": [
+      {
+        "problem_id": "FB_4_02003",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 11400.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02274",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 12000.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02299",
+        "difficulty": 4,
+        "cause": "arithmetic_error",
+        "description": "Arithmetic error on 'Owner's Equity': predicted=256000 expected=145300",
+        "imbalance": 45000.0,
+        "missing_accounts": [],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02428",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 1800.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02424",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -13400.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02421",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -3300.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02460",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Accumulated Depreciation']",
+        "imbalance": -26600.0,
+        "missing_accounts": [
+          "Accumulated Depreciation"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02484",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Accumulated Depreciation']",
+        "imbalance": -100.0,
+        "missing_accounts": [
+          "Accumulated Depreciation"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02474",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -6300.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02430",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 4100.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02401",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings', 'Accumulated Depreciation', 'Allowance for Doubtful Accounts']",
+        "imbalance": -1000.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Allowance for Doubtful Accounts",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02422",
+        "difficulty": 5,
+        "cause": "arithmetic_error",
+        "description": "Arithmetic error on 'Cash': predicted=19400 expected=76900",
+        "imbalance": -55500.0,
+        "missing_accounts": [],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02473",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 15100.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      }
+    ],
+    "cause_summary": {
+      "omitted_key_account": 11,
+      "arithmetic_error": 2
+    }
+  },
+  "hallucinations": {
+    "entries": [
+      {
+        "account_name": "Accumulated Depreciation - Vehicles",
+        "frequency": 4,
+        "in_schema": false,
+        "account_type": null
+      },
+      {
+        "account_name": "Accumulated Depreciation - Furniture",
+        "frequency": 4,
+        "in_schema": false,
+        "account_type": null
+      },
+      {
+        "account_name": "Inventory",
+        "frequency": 3,
+        "in_schema": true,
+        "account_type": "asset"
+      },
+      {
+        "account_name": "Revenue",
+        "frequency": 1,
+        "in_schema": true,
+        "account_type": "revenue"
+      },
+      {
+        "account_name": "Accumulated Depreciation - Equipment",
+        "frequency": 1,
+        "in_schema": false,
+        "account_type": null
+      }
+    ],
+    "total_hallucinations": 13,
+    "schema_known_rate": 0.4
+  },
+  "difficulty_gradient": {
+    "levels": [
+      {
+        "level": 1,
+        "n_problems": 20,
+        "avg_fbs": 86.233,
+        "avg_ala": 0.66,
+        "ba_rate": 1.0,
+        "avg_n_errors": 1.9,
+        "error_composition": {
+          "OE": 0.5,
+          "AE": 0.4737,
+          "CO": 0.0263
+        },
+        "avg_n_accounts_expected": 5.2,
+        "avg_n_accounts_correct": 3.4,
+        "feature_rates": {
+          "prepaid": 0.75,
+          "depreciable_asset": 0.7,
+          "mixed_funding": 0.0,
+          "cogs": 0.0,
+          "derived_interest": 0.0,
+          "debt": 0.0,
+          "credit_transaction": 0.0
+        }
+      },
+      {
+        "level": 2,
+        "n_problems": 20,
+        "avg_fbs": 89.657,
+        "avg_ala": 0.768,
+        "ba_rate": 1.0,
+        "avg_n_errors": 2.0,
+        "error_composition": {
+          "AE": 0.5,
+          "OE": 0.5
+        },
+        "avg_n_accounts_expected": 8.75,
+        "avg_n_accounts_correct": 6.75,
+        "feature_rates": {
+          "prepaid": 1.0,
+          "debt": 0.9,
+          "credit_transaction": 1.0,
+          "mixed_funding": 0.0,
+          "cogs": 0.0,
+          "depreciable_asset": 0.75,
+          "derived_interest": 0.0
+        }
+      },
+      {
+        "level": 3,
+        "n_problems": 20,
+        "avg_fbs": 92.2215,
+        "avg_ala": 0.8369,
+        "ba_rate": 1.0,
+        "avg_n_errors": 2.25,
+        "error_composition": {
+          "AE": 0.4222,
+          "OE": 0.4222,
+          "CV": 0.1556
+        },
+        "avg_n_accounts_expected": 11.9,
+        "avg_n_accounts_correct": 10.0,
+        "feature_rates": {
+          "depreciable_asset": 0.95,
+          "prepaid": 1.0,
+          "cogs": 0.95,
+          "derived_interest": 0.45,
+          "debt": 0.95,
+          "credit_transaction": 1.0,
+          "mixed_funding": 0.0
+        }
+      },
+      {
+        "level": 4,
+        "n_problems": 20,
+        "avg_fbs": 85.4205,
+        "avg_ala": 0.8116,
+        "ba_rate": 0.85,
+        "avg_n_errors": 2.95,
+        "error_composition": {
+          "AE": 0.5424,
+          "OE": 0.339,
+          "CV": 0.1017,
+          "CO": 0.0169
+        },
+        "avg_n_accounts_expected": 13.85,
+        "avg_n_accounts_correct": 11.25,
+        "feature_rates": {
+          "mixed_funding": 1.0,
+          "depreciable_asset": 1.0,
+          "prepaid": 0.95,
+          "cogs": 0.95,
+          "derived_interest": 0.8,
+          "debt": 1.0,
+          "credit_transaction": 1.0
+        }
+      },
+      {
+        "level": 5,
+        "n_problems": 20,
+        "avg_fbs": 63.949,
+        "avg_ala": 0.6919,
+        "ba_rate": 0.45,
+        "avg_n_errors": 5.55,
+        "error_composition": {
+          "AE": 0.5225,
+          "OE": 0.2162,
+          "CV": 0.1532,
+          "CO": 0.0991,
+          "FE": 0.009
+        },
+        "avg_n_accounts_expected": 15.1,
+        "avg_n_accounts_correct": 10.45,
+        "feature_rates": {
+          "mixed_funding": 1.0,
+          "depreciable_asset": 1.0,
+          "prepaid": 1.0,
+          "cogs": 1.0,
+          "derived_interest": 1.0,
+          "debt": 1.0,
+          "credit_transaction": 1.0
+        }
+      }
+    ]
+  }
+}

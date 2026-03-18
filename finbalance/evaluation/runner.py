@@ -5,7 +5,9 @@ Evaluation runner: orchestrates model → prompt → parse → metrics → error
 import json
 import re
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
+from threading import Lock
 from typing import Optional
 
 from finbalance.analysis.error_detection import ErrorReport, detect_errors
@@ -165,15 +167,19 @@ class EvaluationRunner:
         strategy: str = "zero_shot",
         retry_on_parse_fail: bool = True,
         verbose: bool = True,
+        max_workers: int = 1,
     ):
-        self.model   = model
-        self.strategy = strategy
-        self.retry   = retry_on_parse_fail
-        self.verbose = verbose
+        self.model      = model
+        self.strategy   = strategy
+        self.retry      = retry_on_parse_fail
+        self.verbose    = verbose
+        self.max_workers = max_workers
+        self._print_lock = Lock()
 
     def _log(self, msg: str):
         if self.verbose:
-            print(msg)
+            with self._print_lock:
+                print(msg, flush=True)
 
     def run_one(self, problem: Problem) -> EvalResult:
         prompt = build_prompt(problem, self.strategy)
@@ -235,11 +241,35 @@ class EvaluationRunner:
         )
 
     def run(self, problems: list[Problem]) -> list[EvalResult]:
-        results = []
-        self._log(f"\nRunning {len(problems)} problems | model={self.model} | strategy={self.strategy}\n")
-        for i, problem in enumerate(problems, 1):
-            self._log(f"[{i}/{len(problems)}]")
-            results.append(self.run_one(problem))
+        n = len(problems)
+        self._log(f"\nRunning {n} problems | model={self.model} | strategy={self.strategy} | workers={self.max_workers}\n")
+
+        if self.max_workers <= 1:
+            results = []
+            for i, problem in enumerate(problems, 1):
+                self._log(f"[{i}/{n}]")
+                results.append(self.run_one(problem))
+            return results
+
+        # Parallel execution — preserve original problem order in output
+        results = [None] * n
+        completed = [0]
+
+        def _run_indexed(idx_problem):
+            idx, problem = idx_problem
+            result = self.run_one(problem)
+            with self._print_lock:
+                completed[0] += 1
+                print(f"[{completed[0]}/{n}] (worker)", flush=True)
+            return idx, result
+
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            futures = {executor.submit(_run_indexed, (i, p)): i
+                       for i, p in enumerate(problems)}
+            for future in as_completed(futures):
+                idx, result = future.result()
+                results[idx] = result
+
         return results
 
     def save_results(self, results: list[EvalResult], path: str):

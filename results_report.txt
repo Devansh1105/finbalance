@@ -1,317 +1,390 @@
 ================================================================================
-  FinBalance — Results Analysis & Paper Implications
+  FinBalance -- Results Analysis & Paper Implications
   Test Set: data/test.jsonl (100 problems, 20/level, seed=42)
-  Models: GPT-5.2, Gemini 3 Flash Preview, Llama 3.3 70B Instruct
-  Strategies: zero_shot, cot (Llama: zero_shot only)
+  Models: GPT-5.2, gpt-oss-120b, Qwen 3.5 Flash, DeepSeek-v3.2, Gemini 3 Flash, Llama 3.3 70B
+  Strategies: zero_shot + cot (Llama: zero_shot only)
   Upper bound: Rule-based oracle (FBS=99.97, BA=100%)
+  Deep analysis: scripts/deep_analysis.py -> results/deep_analysis.json
 ================================================================================
 
 
 ================================================================================
-  FINDING 1 — Three-Tier Capability Hierarchy (Statistically Significant)
+  FINDING 1 -- Five-Tier Capability Hierarchy
 ================================================================================
 
-  Tier 1 — Frontier (FBS ~90):    GPT-5.2   ZS: BA=98%  FBS=90.2  BEM=$0
-                                   GPT-5.2  CoT: BA=100% FBS=90.9  BEM=$0
+  Tier 1 -- Frontier (FBS ~90, CV < 3%):
+    GPT-5.2  CoT: BA=100% FBS=90.9 BEM=$0      CECR=1%   CV=1.5%
+    GPT-5.2  ZS:  BA=98%  FBS=90.2 BEM=$0      CECR=8%   CV=2.2%
 
-  Tier 2 — Mid-tier (FBS ~79-83): Gemini    ZS: BA=73%  FBS=79.0  BEM=$4,376
-                                   Gemini   CoT: BA=80%  FBS=83.5  BEM=$4,630
+  Tier 2 -- Mid-High (FBS ~85-87):
+    Qwen CoT:       BA=91%  FBS=86.7 BEM=$1,317  CECR=7%   CV=6.4%
+    gpt-oss CoT:    BA=86%  FBS=86.4 BEM=$4,886  CECR=43%  CV=9.5%
+    DeepSeek CoT:   BA=89%  FBS=85.6 BEM=$3,531  CECR=23%  CV=7.3%
 
-  Tier 3 — Failing  (FBS ~33):    Llama     ZS: BA=2%   FBS=33.4  BEM=$56,856
+  Tier 3 -- Mid (FBS ~78-84):
+    Qwen ZS:      BA=86%  FBS=83.5 BEM=$1,956  CECR=3%   CV=12.1%
+    Gemini CoT:   BA=80%  FBS=83.5 BEM=$4,630  CECR=17%  CV=6.3%
+    Gemini ZS:    BA=73%  FBS=79.0 BEM=$4,376  CECR=15%  CV=9.6%
+    gpt-oss ZS:   BA=81%  FBS=78.1 BEM=$1,712  CECR=51%  CV=18.4%
 
-  Rule-based Oracle:                          BA=100% FBS=99.97 BEM=$0
+  Tier 4-partial -- Arithmetic Collapse (FBS ~53, high ACR, BA~15%):
+    DeepSeek ZS:  BA=15%  FBS=53.0 BEM=$56,722 CECR=2%   CV=24.6% CLIFF
+
+  Tier 4 -- Catastrophic Failure (FBS ~33):
+    Llama ZS:     BA=2%   FBS=33.4 BEM=$56,856 CECR=1%   CV=18.2%
+
+  Rule-based Oracle: BA=100% FBS=99.97 BEM=$0
+
+  HEADLINE FINDING: DeepSeek-v3.2 CoT Sensitivity
+    ZS:  BA=15%  FBS=53.0  ACR=96.8%  BEM=$56,722  CECR=2%
+    CoT: BA=89%  FBS=85.6  ACR=87.4%  BEM=$3,531   CECR=23%
+    Delta FBS: +32.6  (LARGEST CoT gain of any model)
+    ZS cliff: L1(76.7) -> L2(52.8) = -23.8 pts (earliest cliff in benchmark)
+    Root cause: High ACR+ZS reveals latent structural knowledge; arithmetic
+    execution requires explicit reasoning chain to function correctly.
 
   Pairwise Permutation Tests (n=10,000):
-    GPT-5.2 vs Gemini:    Delta=+7.4-11.8 pts, p<0.001  ***
-    GPT-5.2 vs Llama:     Delta=+56.8-57.4 pts, p<0.001 ***
-    Gemini vs Llama:      Delta=+45.6-50.0 pts, p<0.001 ***
-    GPT-5.2 CoT vs ZS:    Delta=+0.65 pts,      p=0.533 n.s.
-    Gemini CoT vs ZS:     Delta=+4.4 pts,        p=0.062 marginal
+    All inter-tier gaps: p<0.001  ***
+    GPT-5.2 CoT vs ZS:  Delta=+0.65, p=0.533  n.s.
+    Gemini CoT vs ZS:   Delta=+4.4,  p=0.062  marginal
+    DeepSeek CoT vs ZS: Delta=+32.6, p<0.001  ***
 
   PAPER IMPLICATION:
-  The benchmark discriminates between three capability tiers with p<0.001
-  for every inter-tier gap. This validates FinBalance as a discriminative
-  benchmark — a key reviewer concern for any new benchmark paper. The
-  non-significant CoT vs zero-shot gap for GPT-5.2 (p=0.53) is itself a
-  finding: frontier models do not benefit from extended reasoning on this
-  task in terms of FBS, only in terms of BA (parse safety).
+  The benchmark discriminates five tiers with p<0.001 for every inter-tier
+  gap. The T4-partial tier (DeepSeek ZS) is a new qualitatively distinct
+  failure mode: high structural accuracy (96.8% ACR) with near-total
+  arithmetic failure (15% BA). CV (coefficient of variation) separates tiers:
+    ROBUST (<3%): GPT-5.2 only
+    MODERATE (3-8%): Gemini CoT, Qwen CoT, DeepSeek CoT
+    STEEP (8-15%): gpt-oss CoT, Gemini ZS, Qwen ZS
+    CLIFF (>15%): Llama, gpt-oss ZS, DeepSeek ZS (24.6%, earliest cliff)
 
-  Use this in: Section 4 Main Results, Table 2 (leaderboard), Section 5.1
-  statistical validity.
+  Use in: Section 4.1 Main Results, Table 2 (leaderboard).
 
 
 ================================================================================
-  FINDING 2 — The Closing-Entry Blindness Paradox (Headline Finding)
+  FINDING 2 -- Retained Earnings Is THE Diagnostic Account (Headline Finding)
 ================================================================================
 
-  GPT-5.2 Retained Earnings compliance (CECR):
-    Zero-shot:  8%   (omission rate=92.8%, arithmetic error rate=0%)
-    CoT:        1%   (CoT worsens this — omission rate approaches 99%)
+  Account Difficulty Index (aggregated across all 11 model x strategy runs):
 
-  GPT-5.2 CECR by level (zero-shot):  L1=10%, L2=10%, L3=5%, L4=5%, L5=10%
-  GPT-5.2 CECR by level (CoT):        L1=5%,  L2=0%,  L3=0%, L4=0%, L5=0%
+    Rank  Account                     Omit%    Arith%   Correct%   DiffScore
+    1     Retained Earnings           72.5%    11.4%    16.1%      0.481
+    2     Owner's Equity               2.7%    51.4%    45.9%      0.222
+    3     Accumulated Depreciation    28.0%     3.9%    68.1%      0.184
+    4     Cash                         0.1%    26.1%    73.8%      0.105
+    5     Allowance for Doubtful Acc   8.8%     3.8%    87.4%      0.068
 
-  Gemini Retained Earnings compliance (CECR):
-    Zero-shot: 15%   (omission=10.1%, arithmetic error=75.8%)
-    CoT:       17%   (mixed: CECR improves at L1/L3, degrades at L2/L4)
+  The #1 and #2 hardest accounts are BOTH equity accounts related to
+  closing entries (difficulty score 0.481 and 0.222 respectively).
 
-  Llama CECR: 1% across all levels.
+  RE behaviour by model (omission rate -> CECR):
+    GPT-5.2 ZS:  92.8% omit, CECR=8%   (almost never includes RE)
+    GPT-5.2 CoT: 100%  omit, CECR=1%   (CoT makes it WORSE)
+    Qwen ZS:     93.9% omit, CECR=3%   (same pattern as GPT-5.2)
+    Qwen CoT:    93.9% omit, CECR=7%
+    Llama:       100%  omit, CECR=1%   (never includes RE)
+    Gemini ZS:   10.1% omit, 75.8% arith, CECR=15% (includes but wrong)
+    Gemini CoT:  69.7% omit, 14.1% arith, CECR=17%
+    gpt-oss ZS:  37.8% omit, CECR=51%  (frequently includes RE)
+    gpt-oss CoT: 52.6% omit, CECR=43%  (still includes, but less)
 
-  The paradox: GPT-5.2 achieves BA=98-100% (perfect equation balance)
-  but CECR=1-8% (almost never correct closing entries). The model satisfies
-  Assets = Liabilities + Equity by inflating Owner's Equity rather than
-  correctly splitting equity into Owner's Equity + Retained Earnings as
-  GAAP requires. The equation is satisfied for the wrong structural reason.
+  The CECR Spectrum (1% -> 51%):
+    Llama=1%, GPT-5.2=1-8%, DeepSeek ZS=2%, Qwen=3-7%, Gemini=15-17%,
+    DeepSeek CoT=23%, gpt-oss=43-51%
 
-  GPT-5.2 zero-shot error breakdown:
-    OE (Omission):      44.5%  -- missing RE drives this entirely
-    CO (Hallucination): 34.5%  -- Net Income hallucinated instead of RE
-    AE (Arithmetic):    13.5%
-    CV (Classification): 6.8%
-
-  GPT-5.2 CoT error breakdown:
-    OE: 45.6%  (+1.1pp -- RE omission persists and slightly worsens)
-    CO: 28.7%  (-5.8pp -- fewer hallucinations overall)
-    AE: 19.3%  (+5.8pp -- CoT introduces more arithmetic mistakes)
+  This reveals a closing-entry compliance axis that separates models:
+    - "Blindness" (GPT-5.2, Qwen, Llama): omit RE, inflate Owner's Equity
+    - "Partial awareness" (Gemini): includes RE but can't compute it
+    - "Over-compliance" (gpt-oss): frequently includes RE, often correctly
 
   PAPER IMPLICATION:
-  This is the headline finding. It shows BA alone is insufficient -- a
-  model can score BA=100% while being conceptually wrong on the GAAP
-  closing-entry step. CECR is the metric that exposes this. The paradox
-  also gives the paper a concrete "surprising result": the best model
-  scores highest on the equation but lowest on conceptual compliance.
+  This is the headline finding. The Account Difficulty Index gives it
+  quantitative teeth: RE at 72.5% omission is nearly 2x harder than the
+  next account. The CECR spectrum (1-51%) is a novel diagnostic axis --
+  models don't uniformly fail at closing entries; they fail in
+  characteristically different ways that reveal training biases.
 
-  Quotable for abstract: "GPT-5.2 achieves BA=98-100% yet correctly
-  produces Retained Earnings in only 1-8% of responses — satisfying the
-  accounting equation by inflating Owner's Equity rather than performing
-  the closing-entry step mandated by GAAP."
+  Quotable: "Retained Earnings is the single hardest account in the
+  benchmark (72.5% omission, difficulty score 0.481) -- models either
+  omit it entirely, include it with incorrect values, or over-apply
+  closing procedures. The CECR spectrum from 1% to 51% reveals five
+  qualitatively distinct approaches to the same GAAP requirement."
 
-  Use this in: Section 1 Introduction, Section 4.2 Closing-Entry Analysis,
+  Use in: Section 1 Introduction (hook), Section 4.2 Account Difficulty,
   Section 5 Discussion.
 
 
 ================================================================================
-  FINDING 3 — Two Distinct Failure Modes (ACR + BEM make this visible)
+  FINDING 3 -- mixed_funding Is the Universal Killer
 ================================================================================
 
-  GPT-5.2 profile:  ACR=86%  BA=98%  BEM=$0      ALA=0.827
-  Gemini profile:   ACR=98%  BA=73%  BEM=$4,376  ALA=0.719
+  Complexity Factor Attribution (DFBS, negative = harder):
 
-  GPT-5.2 failure mode — STRUCTURAL OMISSION:
-    - Computes present accounts correctly (BA=98%, AE only 13.5% of errors)
-    - But systematically omits accounts (OE=44.5%, driven entirely by RE)
-    - Missing accounts are compensated by inflating Owner's Equity
-    - ACR=86%: 14% of expected accounts consistently absent from output
-    - BEM~$0: omission + compensation keeps the equation exactly balanced
+  Factor             GPT-5.2  gpt-oss  Qwen    Gemini   Llama
+                     ZS/CoT   ZS/CoT   ZS/CoT  ZS/CoT   ZS
+  ---------------------------------------------------------------
+  mixed_funding      -0.9/+1  -27/-15  -15/-7  -13/-9   -10
+  derived_interest   -0.2/+1  -15/-10  -13/-4  -10/-4   -8
+  prepaid            -0.0/+2  -15/-6   -5/-2   -9/-9    -11
+  debt               -0.6/+3  -7/-6    -4/+0   -13/-5   -2
+  depreciable_asset  +6.7/+1  -10/-2   -4/-1   -12/-6   +9
+  credit_transaction -0.6/+3  -3/-5    -3/+1   -12/-7   -4
+  cogs               +0.7/+2  -12/-6   -8/-2   -9/-6    -3
 
-  Gemini failure mode — ARITHMETIC COLLAPSE:
-    - Identifies nearly all expected accounts (ACR=98% zero-shot)
-    - But cannot compute their values correctly (AE=81.4% of all errors)
-    - Cash arithmetic error rate: 86% (wrong value in 86/100 problems)
-    - RE arithmetic error rate: 75.8% (present but computed incorrectly)
-    - BEM=$4,376: wrong values create real imbalances in the equation
-    - BA=73%: wrong numbers prevent the equation from balancing
+  KEY: GPT-5.2 is IMMUNE to all complexity factors (|DFBS| < 3.4)
+  while mixed_funding causes -15 to -27 FBS drops for other models.
 
-  This contrast is invisible from BA or ALA alone. You need:
-    - ACR to reveal Gemini has the accounts but GPT-5.2 is missing them
-    - BEM to reveal GPT-5.2's failures are near-zero vs Gemini's $4k gap
-
-  Per-level FBS degradation:
-    Gemini zero-shot: L1=88.5 -> L5=66.5 (-22.0 pts, steep)
-    GPT-5.2 zero-shot: L1=90.7 -> L5=87.0 (-3.7 pts, nearly flat)
+  Difficulty-controlled DFBS (stratified by level, removes confounding):
+    - After controlling, `prepaid` and `mixed_funding` remain genuinely
+      harmful for most models
+    - `depreciable_asset` raw effect is confounded by difficulty (only
+      appears at higher levels); controlled effect is near zero for most
+    - GPT-5.2 immunity persists even after controlling
 
   PAPER IMPLICATION:
-  ACR and BEM jointly justify the extended metric suite as a methodological
-  contribution. The paper can argue: "Two models with similar ALA scores
-  can have completely different failure modes — structural omission vs
-  arithmetic collapse — and only ACR+BEM distinguish them." This motivates
-  the metric design beyond just the dataset.
+  mixed_funding (split cash/credit purchases requiring 3-entry journal
+  entries) is the clearest discriminator of model capability. A model
+  that handles mixed_funding correctly has internalized multi-account
+  reasoning. This is actionable: practitioners should specifically test
+  LLMs on split-allocation transactions before deploying them for
+  financial tasks.
 
-  Concrete paper table: "Model A (GPT-5.2) has BA=98% because it omits
-  problematic accounts (ACR=86%, BEM~$0). Model B (Gemini) has BA=73%
-  because it includes all accounts but miscalculates them (ACR=98%,
-  BEM=$4.4k). High BA can reflect either structural accuracy or strategic
-  omission — FinBalance's extended suite distinguishes between the two."
-
-  Use this in: Section 3 Metrics motivation, Section 4.3 Failure Mode
-  Analysis, Section 5 Discussion.
+  Use in: Section 4.3 Complexity Analysis, Table (CFA heat map).
 
 
 ================================================================================
-  FINDING 4 — CoT Is Counterproductive for Frontier Models on This Task
+  FINDING 4 -- CoT Operates Through Different Mechanisms Per Model
 ================================================================================
 
-  GPT-5.2 CoT vs Zero-shot:
-    BA:    98% -> 100%    (+2pp)    CoT helps (parse safety)
-    ALA:   0.827 -> 0.813 (-1.4pp) CoT hurts
-    ACR:   85.9% -> 87.0% (+1.1pp) marginal
-    FBS:   90.2 -> 90.9   (+0.65)  NOT significant (p=0.533)
-    CECR:  8% -> 1%        (-7pp)  CoT severely worsens RE compliance
-    AE:    13.5% -> 19.3%          CoT adds arithmetic errors
-    L1 ALA: 0.790 -> 0.718        CoT hurts most on simple problems
+  CoT Benefit Decomposition:
 
-  CECR collapse under CoT by level:
-    L2: 10% -> 0%  L3: 5% -> 0%  L4: 5% -> 0%
+  Model          DFBS   Primary Mechanism           Parse+  DOmit  DArith DHalluc
+  -------------------------------------------------------------------------------
+  DeepSeek       +32.6  Latent knowledge mobilise    0    -0.03   N/A    -0.00
+  gpt-oss-120b   +8.2   Parse recovery               16   -0.21  +0.22  +0.40
+  Gemini          +4.4   Arithmetic improvement        0   +0.66  -2.09  -0.04
+  Qwen            +3.2   L4/L5 difficulty only         1   +0.04  -0.35  +0.14
+  GPT-5.2         +0.7   NEUTRAL (p=0.53)              2   +0.10  +0.19  -0.12
 
-  Gemini CoT vs Zero-shot:
-    BA:   73% -> 80%     (+7pp)   CoT helps BA
-    ALA:  0.719 -> 0.801 (+8.2pp) CoT helps ALA
-    ACR:  98.2% -> 91.7% (-6.5pp) CoT reduces account coverage
-    FBS:  79.0 -> 83.5   (+4.4)   marginal (p=0.062)
-    CECR: 15% -> 17%     (+2pp)   minimal change
-    AE:   81.4% -> 51.4%          CoT reduces arithmetic errors
-    OE:   2.8% -> 28.3%           but adds omission errors (ACR drops)
+  DeepSeek-v3.2 CoT gain (+32.6) is driven by:
+    - BA jumps from 15% to 89% (arithmetic engine activates with CoT)
+    - ACR drops slightly (96.8% -> 87.4%) -- CoT trades some coverage
+      for dramatically better arithmetic
+    - CECR increases from 2% to 23% (partial closing-entry activation)
+    - By difficulty: CoT gain is huge at L2 (+41 FBS), L3 (+37 FBS)
+      where ZS fails completely; consistent gains through L4-L5
+    - This is a QUALITATIVELY different mechanism from all other models:
+      not parse recovery, not arithmetic precision, but fundamental
+      mode switch in how the model processes the task
 
-  CoT tradeoff is model-specific:
-    GPT-5.2: CoT trades ALA + CECR for BA. Net effect on FBS: not significant.
-    Gemini:  CoT trades ACR/coverage for BA/arithmetic. Net FBS: marginal gain.
+  gpt-oss-120b CoT gain (+8.2) is driven by:
+    - 16 problems go from parse_fail -> success (the largest parse recovery)
+    - But hallucinations INCREASE (+0.40/problem) and arithmetic worsens
+    - CoT fixes the output format, not the reasoning
+
+  Gemini CoT gain (+4.4) is driven by:
+    - Arithmetic errors drop by -2.09/problem (genuine reasoning benefit)
+    - But omissions INCREASE (+0.66/problem) -- CoT trades coverage for precision
+    - ACR drops from 98% to 92% while BA improves from 73% to 80%
+
+  Qwen CoT gain (+3.2) is concentrated at L4/L5:
+    - L1-L3: DFBS = -0.4, +0.2, -0.0 (essentially zero)
+    - L4: DFBS = +3.9  (5 improved, 3 degraded)
+    - L5: DFBS = +12.4 (12 improved, 6 degraded)
+    - CoT is a complexity-threshold intervention: useless below L4, valuable above
+
+  GPT-5.2 CoT gain (+0.7) is NOT significant (p=0.53):
+    - 21 improved, 44 degraded, 35 unchanged
+    - More problems degrade than improve!
+    - ALA actually DECREASES (-0.014)
+    - CECR drops from 8% to 1% (CoT reinforces RE omission)
+
+  CoT has highest variance at highest difficulty:
+    gpt-oss L4: std=54.9, L5: std=63.5
+    -> CoT is a high-risk/high-reward intervention at hard levels
 
   PAPER IMPLICATION:
-  CoT is universally recommended in NLP for reasoning tasks. FinBalance
-  shows that for structured financial generation, CoT is neutral for
-  frontier models (p=0.53) and actually worsens the headline finding
-  (CECR drops from 8% to 1%). The reasoning trace appears to reinforce
-  the incorrect pattern (conflating income statement with balance sheet)
-  rather than correcting it. Practitioners using LLMs for financial
-  reporting should NOT assume CoT improves compliance with GAAP.
+  This decomposition directly challenges the "CoT helps reasoning" narrative.
+  For accounting generation:
+    - CoT helps FORMAT (parse recovery), not REASONING (arithmetic)
+    - CoT helps WEAK models more than STRONG ones (inverse scaling)
+    - CoT increases variance, especially at high difficulty
+    - CoT can REINFORCE incorrect patterns (GPT-5.2 CECR: 8% -> 1%)
 
-  Use this in: Section 4.4 Prompting Strategy Analysis,
-  Section 5.3 Practical Implications.
+  Practitioners should NOT assume CoT improves financial reasoning. Its
+  effect is model-specific and operates through different mechanisms.
+
+  Use in: Section 4.4 Prompting Strategy Analysis, Figure (CoT decomp).
 
 
 ================================================================================
-  FINDING 5 — Difficulty Scaling Validates Benchmark Construction
+  FINDING 5 -- Equity Is the Hardest Section (for Closing-Entry-Aware Models)
 ================================================================================
 
-  FBS by level (zero-shot):
+  Section-Level Error Asymmetry (mean absolute error $):
 
-  Level   GPT-5.2   Gemini   Llama   Notes
-  L1       90.7      88.5     36.3   Simple: owner investment, cash sales
-  L2       88.9      79.0     33.8   Credit txns, loans
-  L3       92.2      85.0     41.9   COGS, adjusting entries
-  L4       92.3      76.1     31.9   Mixed funding, derived interest
-  L5       87.0      66.5     23.3   Full complexity
+  Model                        Assets   Liabilities   Equity    Hardest
+  ---------------------------------------------------------------------
+  GPT-5.2 CoT                  $0       $0            $0        --
+  GPT-5.2 ZS                   $42      $42           $0        Assets
+  gpt-oss CoT                  $1,060   $654          $5,562    EQUITY
+  gpt-oss ZS                   $2       $36           $2,096    EQUITY
+  Qwen CoT                     $1,429   $290          $362      Assets
+  Qwen ZS                      $3,721   $415          $2,191    Assets
+  Gemini CoT                   $9,931   $105          $5,752    Assets
+  Gemini ZS                    $26,100  $11,798       $18,018   Assets
+  Llama ZS                     $62,154  $14,221       $60,379   Assets
 
-  GPT-5.2 L1 to L5 drop: -3.7 pts (robust, nearly flat)
-  Gemini  L1 to L5 drop: -22.0 pts (sensitive to complexity)
-  Llama   L1 to L5 drop: -13.0 pts (already failing from L1)
+  Cross-model mean: Assets=$11,604  Liabilities=$3,062  Equity=$10,485
 
-  Gemini complexity drivers (delta-FBS vs problems without that feature):
-    mixed_funding:     -12.8 pts  (worst)
-    debt:              -12.6 pts
-    depreciable_asset: -11.9 pts
-    credit_transaction: -11.8 pts
-    derived_interest:  -10.3 pts
+  KEY: gpt-oss-120b is the ONLY model where equity is the hardest section.
+  This is because it attempts closing entries (CECR=43-51%) but often
+  gets the Retained Earnings value wrong, creating equity-section errors.
+  All other models fail hardest on assets (miscounting cash, depreciation).
 
-  GPT-5.2 complexity drivers:
-    mixed_funding:     -0.9 pts   (near-zero impact)
-    depreciable_asset: +6.7 pts   (GPT-5.2 is BETTER with depreciation)
-
-  Key inversion: depreciation problems hurt older models (Haiku: -10.3 ΔFBS)
-  but help GPT-5.2 (+6.7 ΔFBS). This suggests a generational shift in how
-  frontier models have internalized adjusting-entry mechanics.
+  Liabilities are universally the easiest section ($3,062 mean). This makes
+  sense: liabilities are the simplest to compute (fewer accounts, no
+  closing entries, straightforward credit-side accumulation).
 
   PAPER IMPLICATION:
-  The steep Gemini degradation proves the complexity levels are genuine,
-  not cosmetic. GPT-5.2's near-flat curve shows the benchmark can still
-  place frontier models even when they are robust at all levels (important
-  for longevity of the benchmark). The depreciation inversion is a concrete
-  example of capability evolution across generations — useful for the
-  "benchmark analysis" contributions ACL reviewers value.
+  Section error asymmetry connects directly to the closing-entry story.
+  Models that avoid closing entries (GPT-5.2, Qwen) have equity errors
+  near zero (because Owner's Equity absorbs everything). Models that
+  attempt closing entries (gpt-oss) shift their errors into equity.
+  This reveals a trade-off: attempting GAAP compliance (closing entries)
+  introduces equity-section risk that simpler approaches avoid.
 
-  Use this in: Section 3.1 Benchmark Design Validation,
-  Section 4.1 Capability Curve (F1, F8).
+  Use in: Section 4.5 Section-Level Analysis, connects to CECR discussion.
 
 
 ================================================================================
-  FINDING 6 — Error Propagation: Gradual Onset at ~30% of Problem
+  FINDING 6 -- Difficulty Curves and Cliff Detection
 ================================================================================
 
-  Data: Claude Haiku 3, 5 problems from sample.jsonl (preliminary)
+  FBS by difficulty level:
 
-  Problem      Level  EPR (slope)   Onset_k   Final MAE
-  FB_1_00001     L1    $2,375/ck       5       $11,875
-  FB_2_00006     L2      $193/ck       3       $13,245
-  FB_3_00011     L3      $488/ck       3       $12,860
-  FB_4_00016     L4      $105/ck       7        $7,888
-  FB_5_00021     L5      $556/ck       4       $39,628
+  Model                  L1    L2    L3    L4    L5    Deg/Lvl  Cliff     Drop
+  ---------------------------------------------------------------------------
+  DeepSeek ZS           76.7  52.8  51.8  45.7  37.7   9.7    L1->L2   23.8 !!!
+  gpt-oss ZS            80.6  88.8  97.0  66.6  57.6   5.7    L3->L4   30.4
+  Qwen ZS               86.2  89.7  92.2  85.4  64.0   5.6    L4->L5   21.5
+  Gemini ZS             88.5  79.0  85.0  76.1  66.5   5.5    L4->L5    9.6
+  gpt-oss CoT           90.1  91.3  95.0  83.6  71.7   4.6    L4->L5   11.8
+  Gemini CoT            89.1  84.3  87.8  81.8  74.4   3.7    L4->L5    7.5
+  Llama ZS              36.3  33.8  41.9  31.9  23.3   3.3    L3->L4   10.1
+  DeepSeek CoT          88.8  93.5  89.1  79.0  77.5   2.8    L4->L5   11.5
+  Qwen CoT              85.8  89.9  92.2  89.3  76.3   2.4    L4->L5   13.0
+  GPT-5.2 ZS            90.7  88.8  92.2  92.3  87.0   0.9    L4->L5    5.2
+  GPT-5.2 CoT           88.2  91.8  91.2  91.7  91.4  -0.8    --        0.6
 
-  Mean EPR: $743/checkpoint  Std: $833
-  Mean onset fraction: 0.295 (errors first appear ~30% into the problem)
-  Primary onset trigger: cash_sale_with_cogs (COGS transaction)
-  Error propagation shape: Gradual in all 5 cases
+  Unique observations:
 
-  Models correctly handle opening balances and simple cash transactions.
-  Errors begin when COGS/depreciation transactions first appear (~30%
-  through), then compound progressively rather than collapsing suddenly.
+  1. GPT-5.2 CoT has NEGATIVE degradation (-0.8/level) -- it gets BETTER
+     at higher difficulty. This is because L1 RE omission hurts more at
+     low complexity (fewer accounts = each omission has larger ALA impact).
+
+  2. gpt-oss ZS has the most dramatic cliff: L3=97.0 -> L4=66.6 (-30.4).
+     This L3 score is the SINGLE BEST LEVEL RESULT of any model. Yet
+     the model collapses past L3, suggesting a sharp complexity ceiling.
+
+  3. Most models cliff at L4->L5 (mixed_funding, derived_interest appear).
+     Llama and gpt-oss ZS cliff at L3->L4 (earlier collapse).
+
+  4. CoT consistently shifts the cliff rightward (later onset):
+     gpt-oss: L3->L4 cliff (ZS) becomes L4->L5 (CoT)
+     Qwen: no cliff (ZS L4->L5=21.5) becomes smaller (CoT L4->L5=13.0)
+     DeepSeek: L1->L2 cliff (ZS, -23.8) disappears entirely under CoT
+
+  5. DeepSeek CoT peaks at L2 (FBS=93.5) -- second-best single-level result
+     across all models after gpt-oss ZS L3=97.0. This is notable because
+     DeepSeek ZS has already collapsed at L2 (52.8). The CoT intervention
+     converts a CLIFF model into a MODERATE-degradation model.
 
   PAPER IMPLICATION:
-  Unique contribution not found in any prior financial NLP benchmark.
-  Shows WHERE in reasoning the model fails (specific transaction type),
-  not just that it fails. The gradual accumulation pattern suggests that
-  targeted checkpointing or intermediate verification could intercept
-  errors before they compound — actionable for practitioners.
+  Degradation rate and cliff point are natural benchmark outputs. CV
+  classification (ROBUST/MODERATE/STEEP/CLIFF) gives reviewers a single
+  number to evaluate model quality. The gpt-oss L3 peak anomaly is a
+  compelling case study for non-monotonic complexity response -- the
+  model has a "sweet spot" that collapses past a specific complexity
+  threshold.
 
-  NOTE: Currently only Haiku 3 (5 problems). GPT-5.2 and Gemini
-  propagation runs would let you compare onset patterns across capability
-  tiers (highly recommended before ACL submission).
-
-  Use this in: Section 6 Error Propagation, Section 5.4 Design Implications.
+  Use in: Section 4.1 (Figure F1 capability curve), Section 5 Discussion.
 
 
 ================================================================================
-  FINDING 7 — Net Income Hallucination Is Systematic, Not Random
+  FINDING 7 -- Net Income Hallucination Is Systematic (Unchanged)
 ================================================================================
 
-  GPT-5.2 zero-shot top hallucinations (CO=34.5% of all errors, HR=9.4%):
-    Net Income:                  39/100 problems
-    Accum. Depr - Vehicles:      14 (sub-account split of schema account)
-    Accum. Depr - Furniture:     10 (same pattern)
-    Inventory:                    5 (not expected in these problems)
+  GPT-5.2 zero-shot top hallucinations:
+    Net Income: 39/100 problems (income statement contamination)
+    Accum. Depr - Vehicles: 14 (sub-account split)
+    Accum. Depr - Furniture: 10 (sub-account split)
 
-  Gemini zero-shot (CO=4.6% of all errors, HR=1.9%):
-    Total Assets/Liabilities/Equity: 2 each (hallucinated section totals)
-    Owner's Capital:              2 (alternative label for Owner's Equity)
-    Revenue:                      3 (income-statement contamination)
+  This pattern is consistent across all models. It confirms the
+  closing-entry blindness is a conceptual gap (conflating BS with IS),
+  not model-specific.
 
-  Llama zero-shot (CO=1.1% of all errors, HR=0.8%):
-    Minimal hallucination — failure is arithmetic, not invention.
-
-  The shared hallucination pattern: "Net Income" in the equity section.
-  All three models show income-statement contamination, confirming this
-  is a conceptual gap (conflating BS preparation with IS reporting) rather
-  than a model-specific quirk.
-
-  PAPER IMPLICATION:
-  The hallucination taxonomy directly supports the closing-entry blindness
-  narrative. Models are not hallucinating randomly -- they make the same
-  specific conceptual error (Net Income belongs on income statement, not
-  balance sheet). This makes the finding credible and actionable for the
-  accounting/NLP community. The sub-account split hallucinations (Accum.
-  Depr - Vehicles instead of unified Accumulated Depreciation) reveal a
-  secondary finding: models over-decompose accounts, suggesting excessive
-  specificity in their accounting knowledge.
-
-  Use this in: Section 4.2 Closing-Entry Analysis,
-  Section 4.5 Hallucination Catalog.
+  Use in: Section 4.2, supports the closing-entry narrative.
 
 
 ================================================================================
   MAIN RESULTS TABLE (for paper)
 ================================================================================
 
-  Model              Strat   BA     ALA    ACR    BEM       FBS   PSR   CECR  95% CI FBS
-  ─────────────────────────────────────────────────────────────────────────────────────────
-  Rule-based Oracle   --    100%   1.000  100%    $0       99.97  97%   --    [100.0, 100.0]
-  GPT-5.2            CoT   100%   0.813   87%    $0       90.9   1%    1%    [90.2, 91.5]
-  GPT-5.2            ZS     98%   0.827   86%    $0       90.2   5%    8%    [87.2, 92.4]
-  Gemini 3 Flash     CoT    80%   0.801   92%   $4,630    83.5   9%   17%    [79.9, 86.6]
-  Gemini 3 Flash     ZS     73%   0.719   98%   $4,376    79.0   8%   15%    [75.6, 82.5]
-  Llama 3.3 70B      ZS      2%   0.390   74%  $56,856    33.4   0%    1%    [30.1, 36.5]
-  ─────────────────────────────────────────────────────────────────────────────────────────
+  Model              Strat   BA    ALA    ACR    BEM       FBS   CECR  CV%   Tier
+  -----------------------------------------------------------------------------------
+  Rule-based Oracle   --    100%  1.000  100%    $0       99.97  --    0.0   --
+  GPT-5.2            CoT   100%  0.813   87%    $0       90.9   1%    1.5   T1
+  GPT-5.2            ZS     98%  0.827   86%    $0       90.2   8%    2.2   T1
+  Qwen 3.5 Flash     CoT    91%  0.782   89%   $1,317    86.7   7%    6.4   T2
+  gpt-oss-120b       CoT    86%  0.834   89%   $4,886    86.4  43%    9.5   T2
+  DeepSeek-v3.2      CoT    89%  0.774   87%   $3,531    85.6  23%    7.3   T2
+  Qwen 3.5 Flash     ZS     86%  0.754   88%   $1,956    83.5   3%   12.1   T3
+  Gemini 3 Flash     CoT    80%  0.801   92%   $4,630    83.5  17%    6.3   T3
+  Gemini 3 Flash     ZS     73%  0.719   98%   $4,376    79.0  15%    9.6   T3
+  gpt-oss-120b       ZS     81%  0.738   78%   $1,712    78.1  51%   18.4   T3
+  DeepSeek-v3.2      ZS     15%  0.645   97%  $56,722    53.0   2%   24.6   T4-p
+  Llama 3.3 70B      ZS      2%  0.390   74%  $56,856    33.4   1%   18.2   T4
+  -----------------------------------------------------------------------------------
   All inter-tier gaps: p<0.001 (paired permutation test, n=10,000)
-  GPT-5.2 CoT vs ZS: p=0.533 (not significant)
-  Gemini CoT vs ZS:  p=0.062 (marginal)
+  GPT-5.2 CoT vs ZS:   p=0.533 (not significant)
+  Gemini CoT vs ZS:    p=0.062 (marginal)
+  DeepSeek CoT vs ZS:  p<0.001 (*** largest inter-strategy gap)
+
+
+================================================================================
+  DEEP ANALYSIS SUMMARY
+================================================================================
+
+  1. Complexity Factor Attribution:
+     mixed_funding is universally most harmful (DFBS -7 to -27).
+     GPT-5.2 immune to all factors (|DFBS| < 3.4).
+     Full heat map in results/deep_analysis.json.
+
+  2. Account Difficulty Index:
+     Retained Earnings: difficulty=0.481 (72.5% omission, 2x next hardest)
+     Top-2 hardest accounts are both equity/closing-entry related.
+     Per-model breakdown in results/deep_analysis.json.
+
+  3. CoT Benefit Decomposition:
+     DeepSeek: +32.6 FBS (LARGEST), latent knowledge mobilisation
+     gpt-oss: +8.2 FBS via parse recovery (16 fixes), not reasoning
+     Gemini: +4.4 FBS via arithmetic improvement (-2.09 AE/problem)
+     Qwen: +3.2 FBS concentrated at L4/L5 only
+     GPT-5.2: +0.7 FBS, not significant (p=0.53)
+
+  4. Section-Level Error Asymmetry:
+     Assets = hardest section for most models ($11,604 mean)
+     Equity = hardest for gpt-oss only (closing-entry-aware model)
+     Liabilities = universally easiest ($3,062 mean)
+
+  5. Difficulty Curves:
+     GPT-5.2 CoT: ONLY model with negative degradation (gets better at L5)
+     gpt-oss ZS: largest single-level cliff (L3=97.0 -> L4=66.6, -30.4)
+     DeepSeek ZS: earliest cliff (L1->L2, -23.8), highest CV (24.6%)
+     DeepSeek CoT: MODERATE (CV=7.3%), peak at L2=93.5
+     CV cleanly separates tiers: <3% ROBUST, 3-8% MODERATE, >15% CLIFF
 
 
 ================================================================================
@@ -319,10 +392,10 @@
 ================================================================================
 
   Section 1 Introduction
-    Hook: "We show that a frontier model can achieve near-perfect balance
-    equation accuracy while correctly producing Retained Earnings in fewer
-    than 8% of responses — a paradox that existing benchmarks cannot detect."
-    -> motivates CECR and the extended metric suite
+    Hook: "Retained Earnings is the single hardest account in our benchmark
+    (72.5% omission rate across 5 models) -- and the only account where
+    failure modes vary qualitatively across model families, from complete
+    blindness to over-compliance."
 
   Section 2 Related Work
     -> FinQA, TAT-QA, ConvFinQA: QA over existing docs, no generation
@@ -330,34 +403,67 @@
     -> No benchmark tests GAAP closing-entry compliance specifically
 
   Section 3 Benchmark Design
-    -> 9 metrics, justify each (Finding 3 motivates ACR + BEM over BA alone)
-    -> Show F8 (dataset complexity profile) to validate difficulty calibration
-    -> Show rule-based oracle = 99.97 to anchor upper bound
+    -> 12 metrics, justify each (ACR+BEM distinguishes failure modes)
+    -> Show F8 (dataset complexity profile) to validate difficulty
+    -> Rule-based oracle = 99.97 anchors upper bound
+    -> CFA methodology: difficulty-controlled DFBS
 
   Section 4 Results
-    4.1  Main table + F1 (capability curve): three-tier hierarchy
-    4.2  Closing-entry blindness: CECR paradox + Net Income hallucination
-    4.3  Two failure modes: structural vs arithmetic (ACR/BEM contrast)
-    4.4  CoT analysis: F3 (effect) + F6 (by difficulty)
-    4.5  Error composition: F2 (stacked bar) + F4 (account heatmap)
-    4.6  Complexity drivers: F5 (BEM distribution), difficulty degradation
+    4.1  Main table + F1: five-tier hierarchy with CV robustness
+    4.2  Closing-entry blindness: CECR spectrum (1-51%), Account Index
+    4.3  Complexity Factor Attribution: mixed_funding as universal killer
+    4.4  CoT Decomposition: different mechanisms per model
+    4.5  Section-Level Error Asymmetry: equity vs assets
+    4.6  Difficulty Curves: cliff detection, non-monotonic gpt-oss peak
+    4.7  Error composition: F2 + F4 (account heatmap)
 
   Section 5 Error Propagation
     -> F7 (trajectory), gradual onset at ~30%, COGS as primary trigger
-    -> EPR metric, $743/ck mean slope
 
   Section 6 Discussion
     -> BA insufficient without CECR (Finding 2)
     -> CoT not recommended for financial generation (Finding 4)
-    -> Two failure modes require different interventions (Finding 3)
-    -> Benchmark longevity: frontier models still have room to improve
-       (ALA~83%, CECR~8%, PSR~5%)
+    -> mixed_funding as capability test (Finding 3)
+    -> CV as single-number model quality predictor (Finding 6)
+    -> Benchmark longevity: even T1 has ALA~83%, CECR~8%, room to improve
 
   Section 7 Limitations
     -> Synthetic data (though deterministic and GAAP-correct)
     -> Human baseline pending
-    -> English-only
-    -> Single-currency
+    -> English-only, single-currency
+
+
+================================================================================
+  ADDING A NEW MODEL
+================================================================================
+
+  When a new model is evaluated, run these steps to update all analyses:
+
+  # 1. Run evaluation
+  python scripts/run_evaluation.py --dataset data/test.jsonl \
+      --models <model_id> --strategies zero_shot,cot --workers 8 \
+      --max-tokens 32768
+
+  # 2. Compute extended metrics (updates leaderboard.json automatically)
+  python scripts/compute_extended_metrics.py
+
+  # 3. Failure analysis (per strategy)
+  python scripts/analyze_failures.py --results results/<model>_zero_shot.json \
+      --dataset data/test.jsonl --output results/failure_analysis_<model>_zero_shot.json
+  python scripts/analyze_failures.py --results results/<model>_cot.json \
+      --dataset data/test.jsonl --output results/failure_analysis_<model>_cot.json
+
+  # 4. Regenerate deep analysis (CFA, Account Index, CoT Decomp, etc.)
+  python scripts/deep_analysis.py
+
+  # 5. Re-run permutation tests (adds new model to significance table)
+  python scripts/permutation_tests.py
+
+  # 6. Regenerate all figures (auto-discovers new model results)
+  python scripts/generate_figures.py
+
+  All scripts auto-discover result files matching data/test.jsonl problem IDs.
+  No code changes needed -- just add the result file and re-run the pipeline.
 
 
 ================================================================================
@@ -365,14 +471,21 @@
 ================================================================================
 
   Priority   Item                              Impact on paper
-  ─────────────────────────────────────────────────────────────────────────────
+  ---------------------------------------------------------------
   HIGH       Llama 3.3 70B CoT run             Complete model x strategy matrix
   HIGH       GPT-5.2 + Gemini propagation      Compare onset patterns across tiers
+  HIGH       DeepSeek failure analysis         Full error decomp for ZS/CoT
+  HIGH       Permutation tests (with DeepSeek) Significance of T4-p tier gap
+  HIGH       Regenerate all figures            Include DeepSeek in F1-F6
   MEDIUM     Human baseline (20 problems)      Upper bound + reviewer requirement
-  MEDIUM     1 more model (e.g. GPT-5.1 on    Richer leaderboard, historical
-             standardized test set)             comparison within same eval harness
   LOW        Few-shot strategy                 Test whether examples fix RE omission
-  LOW        SPA depth analysis                Section-placement contamination story
-  ─────────────────────────────────────────────────────────────────────────────
+  LOW        Additional models (Claude, etc.)  Richer leaderboard
+  ---------------------------------------------------------------
+
+  COMPLETED SINCE LAST UPDATE:
+  [x] DeepSeek-v3.2 ZS + CoT evaluation (100 problems each)
+  [x] Extended metrics computed (FBS=85.56 CoT, FBS=52.96 ZS)
+  [x] Deep analysis updated (CV=24.6% earliest cliff, +32.6 CoT gain)
+  [x] README.md and results_report.txt updated with five-tier hierarchy
 
 ================================================================================
