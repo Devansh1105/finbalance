@@ -43,13 +43,13 @@ FinBalance evaluates whether large language models understand double-entry bookk
 
 ### Core Findings
 
-**Five-tier capability hierarchy.** GPT-5.2 achieves 98–100% Balance Accuracy (FBS ~90); a mid-high tier groups gpt-oss-120b CoT, Qwen CoT, and DeepSeek-v3.2 CoT (FBS 85.6–86.7); a mid tier covers Gemini, Qwen ZS, and gpt-oss ZS (FBS 78–84); DeepSeek-v3.2 zero-shot represents a partial-failure tier (BA = 15%, FBS = 53.0) with near-zero parse failures but catastrophic arithmetic collapse; and Llama 3.3 70B fails completely (BA = 2%, FBS = 33.4). GPT-5.2 is the only model with a robustness CV below 3% (flat performance across all difficulty levels). The most striking single finding is **DeepSeek-v3.2's extreme CoT sensitivity**: zero-shot FBS = 53.0 vs. CoT FBS = 85.6, a +32.6 point gain — the largest CoT lift of any evaluated model.
+**Five-tier capability hierarchy.** GPT-5.2 achieves 98–100% Balance Accuracy (FBS ~90); a mid-high tier groups gpt-oss-120b CoT, Qwen CoT, and DeepSeek-v3.2 CoT (FBS 85.6–86.7); a mid tier covers Gemini, Qwen ZS, and gpt-oss ZS (FBS 78–84); a partial-failure tier (T4-p) contains DeepSeek-v3.2 ZS (FBS = 53.0, BA = 15%) and Llama 3.3 70B CoT (FBS = 51.7, BA = 29%) — both show reasonable structural coverage but arithmetic collapse; and Llama 3.3 70B zero-shot fails completely (BA = 2%, FBS = 33.4). GPT-5.2 is the only model with a robustness CV below 3%. The most striking single findings are **DeepSeek-v3.2's CoT sensitivity** (+32.6 FBS, largest CoT lift) and **Llama 3.3 70B's CoT sensitivity** (+18.3 FBS, second largest) — revealing that CoT gain scales inversely with zero-shot capability.
 
 **Retained Earnings is THE diagnostic account.** Across all 6 models and 11 configurations, Retained Earnings has a 72.5% omission rate — the single hardest account in the benchmark (difficulty score 0.481, nearly 2x the next-hardest). Models either omit RE entirely (GPT-5.2: 93–100%, Qwen: 94%, DeepSeek ZS: ~0% CECR, Llama: 100%) or include it but compute it incorrectly (Gemini ZS: 76% arithmetic error). gpt-oss-120b is the only model that partially succeeds (38–53% omission, CECR = 43–51%). The CECR spectrum (1% → 51%) expands with DeepSeek: ZS = 2%, CoT = 23%.
 
 **`mixed_funding` is the universally most harmful transaction type.** Complexity Factor Attribution analysis shows that transactions requiring split cash/credit allocation cause DFBS drops of −6.5 to −26.7 for every model except GPT-5.2 (which is immune to all complexity factors with |DFBS| < 3.4).
 
-**CoT operates through different mechanisms per model.** CoT Benefit Decomposition reveals: DeepSeek gains +32.6 FBS (largest gain, latent knowledge mobilisation); gpt-oss-120b gains +8.2 FBS via parse recovery (16 parse-fail fixes); Gemini gains +4.4 FBS via arithmetic improvement (−2.09 AE per problem); Qwen gains +3.2 FBS only at L4/L5; GPT-5.2 gains +0.7 FBS (not significant, p = 0.53). CoT is not a general reasoning enhancer for accounting — its effect is model-dependent.
+**CoT operates through different mechanisms per model.** CoT Benefit Decomposition reveals: DeepSeek gains +32.6 FBS (largest, latent knowledge mobilisation); Llama gains +18.3 FBS (second largest, combined parse recovery + arithmetic improvement, CV degrades to 35.6% — worst in benchmark); gpt-oss-120b gains +8.2 FBS via parse recovery; Gemini gains +4.4 FBS via arithmetic improvement; Qwen gains +3.2 FBS only at L4/L5; GPT-5.2 gains +0.7 FBS (not significant, p = 0.53). CoT gain scales inversely with zero-shot capability: the weakest models benefit most.
 
 **Equity is the hardest section for closing-entry-aware models.** Section-level error asymmetry shows gpt-oss-120b (which attempts closing entries) has its largest errors in the equity section ($5,562 mean error), while all other models fail hardest on assets ($11,604 cross-model mean).
 
@@ -108,6 +108,7 @@ finbalance/
 │   ├── google_gemini-3-flash-preview_zero_shot.json       # Gemini 3 Flash zero_shot (100 problems)
 │   ├── google_gemini-3-flash-preview_cot.json             # Gemini 3 Flash CoT (100 problems)
 │   ├── meta-llama_llama-3.3-70b-instruct_zero_shot.json  # Llama 3.3 70B zero_shot (100 problems)
+│   ├── meta-llama_llama-3.3-70b-instruct_cot.json        # Llama 3.3 70B CoT (100 problems)
 │   ├── qwen_qwen3.5-flash-02-23_zero_shot.json           # Qwen 3.5 Flash zero_shot (100 problems)
 │   ├── qwen_qwen3.5-flash-02-23_cot.json                 # Qwen 3.5 Flash CoT (100 problems)
 │   ├── openai_gpt-oss-120b_zero_shot.json                 # gpt-oss-120b zero_shot (100 problems)
@@ -418,10 +419,11 @@ All models below evaluated on `data/test.jsonl` (100 problems, 20/level, seed 42
 | Gemini 3 Flash | `cot` | 100 | 80% | 0.801 | 91.7% | $4,630 | 83.5 | 17% | 6.3 | T3 |
 | Gemini 3 Flash | `zero_shot` | 100 | 73% | 0.719 | **98.2%** | $4,376 | 79.0 | 15% | 9.6 | T3 |
 | gpt-oss-120b | `zero_shot` | 100 | 81% | 0.738 | 77.8% | $1,712 | 78.1 | **51%** | **18.4** | T3 |
-| DeepSeek-v3.2 | `zero_shot` | 100 | 15% | 0.645 | **96.8%** | $56,722 | 53.0 | 2% | **24.6** | T4-p |
-| Llama 3.3 70B | `zero_shot` | 100 | 2% | 0.390 | 74.1% | $56,856 | 33.4 | 1% | **18.2** | T4 |
+| DeepSeek-v3.2 | `zero_shot` | 100 | 15% | 0.645 | **96.8%** | $56,722 | 53.0 | 2% | 24.6 | T4-p |
+| Llama 3.3 70B | `cot` | 100 | 29% | 0.545 | 80.4% | $36,300 | 51.7 | 1% | **35.6** | T4-p |
+| Llama 3.3 70B | `zero_shot` | 100 | 2% | 0.390 | 74.1% | $56,856 | 33.4 | 1% | 18.2 | T4 |
 
-CV% = coefficient of variation of FBS across difficulty levels (lower = more robust). Tier assignment: T1 (FBS > 88), T2 (FBS 85–88), T3 (FBS 75–85), T4-p (partial failure: high ACR but arithmetic collapse), T4 (FBS < 40, catastrophic).
+CV% = coefficient of variation of FBS across difficulty levels (lower = more robust). Tier assignment: T1 (FBS > 88), T2 (FBS 85–88), T3 (FBS 75–85), T4-p (partial failure: structural coverage with arithmetic collapse), T4 (FBS < 40, catastrophic). Llama CoT has the highest CV of any model (35.6%).
 
 \* Preliminary results on legacy `sample.jsonl` (not shown): GPT-5.1 FBS=47.9, Claude Haiku 4.5 FBS=43.4, Claude Haiku 3 FBS=36.3.
 
@@ -434,13 +436,13 @@ All inter-tier gaps are statistically significant (p < 0.001). Within-strategy c
 
 | Rank | Account | Omission% | Arithmetic% | Correct% | Difficulty Score |
 |------|---------|-----------|-------------|----------|-----------------|
-| 1 | **Retained Earnings** | **72.5%** | 11.4% | 16.1% | **0.481** |
-| 2 | Owner's Equity | 2.7% | 51.4% | 45.9% | 0.222 |
-| 3 | Accumulated Depreciation | 28.0% | 3.9% | 68.1% | 0.184 |
-| 4 | Cash | 0.1% | 26.1% | 73.8% | 0.105 |
-| 5 | Allowance for Doubtful Accounts | 8.8% | 3.8% | 87.4% | 0.068 |
+| 1 | **Retained Earnings** | **70.4%** | 15.6% | 14.0% | **0.485** |
+| 2 | Accumulated Depreciation | **34.0%** | 3.5% | 62.4% | 0.218 |
+| 3 | Owner's Equity | 2.2% | 50.7% | 47.0% | 0.216 |
+| 4 | Allowance for Doubtful Accounts | 18.7% | 5.6% | 75.7% | 0.135 |
+| 5 | Cash | 0.3% | 31.9% | 67.8% | 0.129 |
 
-The top 2 hardest accounts are both equity accounts related to closing entries, directly supporting the closing-entry blindness thesis.
+*Aggregated across all 12 model×strategy runs. With Llama CoT included, Accumulated Depreciation rises to #2 (Llama CoT has 76% omission rate on AccumDepr — it frequently misses this account entirely under CoT, unlike zero-shot where it was partially present).*
 
 #### Complexity Factor Attribution (Most Harmful Factor per Model)
 
@@ -456,24 +458,25 @@ The top 2 hardest accounts are both equity accounts related to closing entries, 
 
 #### CoT Benefit Decomposition
 
-| Model | DFBS | Primary Mechanism | Parse Fixes | DArith |
-|-------|------|-------------------|-------------|--------|
-| **DeepSeek-v3.2** | **+32.6** | **Latent knowledge mobilisation** | 0 | — |
-| gpt-oss-120b | +8.2 | Parse recovery | 16 | +0.22 |
-| Gemini | +4.4 | Arithmetic improvement | 0 | −2.09 |
-| Qwen | +3.2 | L4/L5 only | 1 | −0.35 |
-| GPT-5.2 | +0.7 | Neutral (p=0.53) | 2 | +0.19 |
+| Model | DFBS | Primary Mechanism | Parse Fixes | DArith | Improved | Degraded |
+|-------|------|-------------------|-------------|--------|----------|---------|
+| **DeepSeek-v3.2** | **+32.6** | **Latent knowledge mobilisation** | 0 | −3.47 | 87 | 11 |
+| **Llama 3.3 70B** | **+18.3** | **Parse recovery + arithmetic** | 16 | −1.52 | 79 | 15 |
+| gpt-oss-120b | +8.2 | Parse recovery only | 16 | +0.22 | 37 | 33 |
+| Gemini | +4.4 | Arithmetic improvement | 0 | −2.09 | 53 | 41 |
+| Qwen | +3.2 | L4/L5 only | 1 | −0.35 | 19 | 13 |
+| GPT-5.2 | +0.7 | Neutral (p=0.53) | 2 | +0.19 | 21 | 44 |
 
-DeepSeek-v3.2's +32.6 FBS CoT gain is qualitatively different from all other models: ZS output format is incompatible with correct arithmetic (BA = 15%, ACR = 96.8% — high structural coverage but arithmetic collapse), while CoT fully mobilises latent accounting knowledge (BA = 89%, CECR = 23%). This is the largest CoT lift in the benchmark.
+**CoT gain scales inversely with zero-shot capability.** The two models with the highest CoT gains (DeepSeek +32.6, Llama +18.3) are also the two worst zero-shot performers. Both fix parse failures (Llama: 16, gpt-oss: 16) but Llama also fixes arithmetic (DArith = −1.52), while gpt-oss arithmetic *worsens* (+0.22). Llama CoT's gains are front-loaded at L1/L2 (+44.1, +29.7) and negligible at L3–L5, producing the worst CV in the benchmark (35.6%).
 
 #### Difficulty Robustness (CV Classification)
 
 | Classification | CV% | Models |
 |---------------|-----|--------|
 | ROBUST | < 3% | GPT-5.2 (both strategies) |
-| MODERATE | 3–8% | Gemini CoT, Qwen CoT, DeepSeek CoT |
-| STEEP | 8–15% | gpt-oss-120b CoT, Gemini ZS, Qwen ZS |
-| CLIFF | > 15% | Llama ZS, gpt-oss-120b ZS, **DeepSeek ZS (24.6%, earliest cliff L1→L2)** |
+| MODERATE | 3–8% | Gemini CoT (6.3%), Qwen CoT (6.4%), DeepSeek CoT (7.3%) |
+| STEEP | 8–15% | gpt-oss CoT (9.5%), Gemini ZS (9.6%), Qwen ZS (12.1%) |
+| CLIFF | > 15% | Llama ZS (18.2%), gpt-oss ZS (18.4%), DeepSeek ZS (24.6%), **Llama CoT (35.6% — worst in benchmark)** |
 
 ### 8.3 GPT-5.2 — By Difficulty Level
 
@@ -632,7 +635,19 @@ Unlike older models where `depreciable_asset` was the largest negative driver (�
 | L4 | 20 | 0.0% | 0.310 | 79.9% | $55,780 | 31.9 | 2 |
 | L5 | 20 | 0.0% | 0.173 | 77.1% | $147,510 | 23.3 | 3 |
 
-**Interpretation:** Llama 3.3 70B fails catastrophically across all levels (BA = 2%, FBS = 33.4). The dominant error type is arithmetic (AE = 70.7%), with the model identifying accounts in the right category (ACR 62–85%) but producing wildly incorrect values — BEM reaches $147,510 at L5. The 16 parse failures (16%) are concentrated at L1–L2, suggesting the model also struggles to produce valid JSON for structurally simple problems. CECR = 1%: Retained Earnings is correctly handled in only 1 out of 100 problems.
+**Interpretation:** Llama 3.3 70B fails catastrophically across all levels (BA = 2%, FBS = 33.4). The dominant error type is arithmetic (AE = 70.7%), with the model identifying accounts in the right category (ACR 62–85%) but producing wildly incorrect values — BEM reaches $147,510 at L5. The 16 parse failures (16%) are concentrated at L1–L2. CECR = 1%: Retained Earnings is correctly handled in only 1 out of 100 problems.
+
+#### Chain-of-Thought (CV = 35.6%, CLIFF — highest CV of any model)
+
+| Level | N | BA | ALA | ACR | BEM | FBS | CECR |
+|-------|---|----|-----|-----|-----|-----|------|
+| L1 | 20 | 85.0% | 0.668 | 82.0% | $595 | **80.5** | 5% |
+| L2 | 20 | 30.0% | 0.814 | 88.4% | $9,725 | 63.4 | 0% |
+| L3 | 20 | 25.0% | 0.558 | 69.0% | $19,025 | 48.2 | 0% |
+| L4 | 20 | 0.0% | 0.463 | 74.9% | $42,990 | 37.8 | 0% |
+| L5 | 20 | 5.0% | 0.221 | 64.5% | $69,160 | 28.8 | 0% |
+
+**Interpretation:** Llama CoT represents the largest absolute CoT gain in the benchmark after DeepSeek (+18.3 FBS vs. ZS). The gain is almost entirely front-loaded: L1 improves dramatically (FBS 36.3 → 80.5, BA 10% → 85%) as CoT eliminates parse failures and fixes simple arithmetic. However, from L2 onward the model still collapses, making Llama CoT the **worst CV in the entire benchmark (35.6%)** — worse than even DeepSeek ZS (24.6%). The cliff at L1→L2 (−17.1 FBS) is the steepest level-to-level drop of any CoT run. CECR remains 1%: CoT does not activate closing-entry awareness in Llama at any level. The error pattern shifts from arithmetic-dominant (ZS: AE=70.7%) to still arithmetic-dominant (CoT: AE=62.3%) but with fewer parse failures (6% vs 16%).
 
 ### 8.9 DeepSeek-v3.2 — By Difficulty Level
 
@@ -791,6 +806,7 @@ python scripts/simulate_propagation.py \
 - [x] Run Qwen 3.5 Flash (zero_shot + CoT) on 100-problem test set
 - [x] Run gpt-oss-120b (zero_shot + CoT) on 100-problem test set
 - [x] Run DeepSeek-v3.2 (zero_shot + CoT) on 100-problem test set
+- [x] Run Llama 3.3 70B CoT on 100-problem test set (FBS=51.7, CV=35.6%, +18.3 from ZS)
 - [x] Extended metrics: ACR, BEM, SPA, PSR, HR, CECR
 - [x] Bootstrap confidence intervals and pairwise permutation tests
 - [x] 5-dimension failure analysis module
@@ -800,7 +816,7 @@ python scripts/simulate_propagation.py \
 - [x] Deep analysis: CFA, Account Difficulty Index, CoT Decomposition, Section Error Asymmetry, Difficulty Curves
 
 ### Pending
-- [ ] Llama 3.3 70B CoT evaluation
+- [x] Llama 3.3 70B CoT evaluation
 - [ ] Human baseline (20 problems, 4 per level)
 - [ ] Error propagation run for GPT-5.2 and Gemini (n=3/level, checkpoint-every=2)
 - [ ] Few-shot and self-refine strategies on top-performing models
