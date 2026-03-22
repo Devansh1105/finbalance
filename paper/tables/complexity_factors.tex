@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lrrrr}
+\toprule
+Model & $\Delta$\fbs{} ZS & $\Delta$\fbs{} CoT & CV ZS & CV CoT \\
+\midrule
+GPT-5.2 & $-0.9$ & $+1.2$ & 2.23 & 1.47 \\
+gpt-oss-120b & $-26.7$ & $-14.5$ & 18.38 & 9.49 \\
+Qwen 3.5 Flash & $-14.7$ & $-6.5$ & 12.06 & 6.42 \\
+Gemini 3 Flash & $-12.8$ & $-9.0$ & 9.63 & 6.26 \\
+DeepSeek-v3.2 & $-18.7$ & $-12.2$ & 24.58 & 7.29 \\
+Llama 3.3 70B & $-9.8$ & $-30.7$ & 18.25 & 35.58 \\
+\bottomrule
+\end{tabular}
+}
+\caption{Effect of the \texttt{mixed\_funding} factor on \fbs{} (raw difference between problems with and without the factor) together with the coefficient of variation (CV) from difficulty curves. GPT-5.2 is nearly invariant to this factor; weaker models are not.}
+\label{tab:complexity-factors}
+\end{table}

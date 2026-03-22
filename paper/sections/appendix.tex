@@ -1,0 +1,29 @@
+\section{Appendix}
+
+\subsection{Evaluation Protocol Details}
+
+The benchmark uses a deterministic synthetic generator, a stratified held-out split, and structured JSON scoring.
+All reported runs ask the model to return three top-level sections: \texttt{assets}, \texttt{liabilities}, and \texttt{equity}.
+If a response contains reasoning or markdown wrappers, the parser extracts the final parseable JSON object before scoring.
+
+\subsection{Prompted Output Format}
+
+All reported runs ask the model to emit a JSON object with three top-level keys:
+\texttt{assets}, \texttt{liabilities}, and \texttt{equity}.
+\CoT{} prompts may include intermediate reasoning, but the final score is based only on the terminal structured answer.
+
+\subsection{Additional Figures}
+
+\begin{figure*}[h]
+\centering
+\includegraphics[width=0.95\textwidth]{../figures/F2_error_composition.pdf}
+\caption{Error composition by model and prompt setting.}
+\label{fig:error-composition}
+\end{figure*}
+
+\begin{figure*}[h]
+\centering
+\includegraphics[width=0.95\textwidth]{../figures/F5_bem_distribution.pdf}
+\caption{Distribution of balance error magnitude (\textsc{BEM}) by model and prompt setting.}
+\label{fig:bem-distribution}
+\end{figure*}

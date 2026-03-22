@@ -1,0 +1,26 @@
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{llrrrrrr}
+\toprule
+Model & Prompt & \fbs{} & \ba{} & \ala{} & \acr{} & \cecr{} & Parse fail \\
+ &  &  & (\%) & (\%) & (\%) & (\%) & (\%) \\
+\midrule
+Rule-based oracle & -- & 99.97 & 100 & 100.0 & -- & -- & 0 \\
+GPT-5.2 & \CoT{} & 90.85 & 100 & 81.3 & 87.0 & 1 & 0 \\
+GPT-5.2 & \zs{} & 90.20 & 98 & 82.7 & 85.9 & 8 & 2 \\
+Qwen 3.5 Flash & \CoT{} & 86.72 & 91 & 78.2 & 89.1 & 7 & 0 \\
+gpt-oss-120b & \CoT{} & 86.35 & 86 & 83.4 & 88.8 & 43 & 4 \\
+DeepSeek-v3.2 & \CoT{} & 85.56 & 89 & 77.4 & 87.4 & 23 & 0 \\
+Qwen 3.5 Flash & \zs{} & 83.50 & 86 & 75.4 & 88.4 & 3 & 1 \\
+Gemini 3 Flash & \CoT{} & 83.47 & 80 & 80.1 & 91.7 & 17 & 0 \\
+Gemini 3 Flash & \zs{} & 79.04 & 73 & 71.9 & 98.2 & 15 & 0 \\
+gpt-oss-120b & \zs{} & 78.12 & 81 & 73.8 & 77.8 & 51 & 17 \\
+DeepSeek-v3.2 & \zs{} & 52.96 & 15 & 64.5 & 96.8 & 2 & 0 \\
+Llama 3.3 70B & \CoT{} & 51.73 & 29 & 54.5 & 80.4 & 1 & 6 \\
+Llama 3.3 70B & \zs{} & 33.43 & 2 & 39.0 & 74.1 & 1 & 16 \\
+\bottomrule
+\end{tabular}
+\caption{Held-out test results. The table shows a wide spread between structural recall (\acr{}) and equation satisfaction (\ba{}), most clearly for DeepSeek-v3.2 under \zs{}.}
+\label{tab:main-results}
+\end{table*}

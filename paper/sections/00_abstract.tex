@@ -1,0 +1,15 @@
+\begin{abstract}
+We present \benchmark{}, a benchmark for testing whether large language models can construct internally consistent balance sheets from transaction sequences rather than merely answer questions about pre-existing financial documents.
+The benchmark couples a deterministic ledger-based generator with a structured evaluation harness, error taxonomy, and post-hoc analysis suite.
+The released dataset contains 2{,}500 synthetic accounting problems across five difficulty levels, with complexity increasing through credit transactions, adjusting entries, cost-of-goods-sold coupling, mixed cash-plus-debt purchases, and derived-interest calculations.
+
+We study six model families under \zs{} and \CoT{} prompting on a stratified 100-problem held-out test split.
+The best configuration, GPT-5.2 with \CoT{}, reaches \fbs{} $=90.85$ and \ba{} $=100\%$.
+The most striking result is a large gap between structural and numerical competence: DeepSeek-v3.2 under \zs{} attains \acr{} $=96.8\%$ but only \ba{} $=15\%$, showing that the model usually names the right accounts while failing to preserve the accounting equation.
+\CoT{} recovers much of this lost performance for DeepSeek-v3.2, improving \fbs{} by $+32.6$ points and \ba{} by $+74$ points.
+
+Benchmark-level failure analysis reveals two consistent bottlenecks.
+First, Retained Earnings is the single hardest account in the benchmark, with a $70.4\%$ omission rate across evaluated systems.
+Second, mixed-funding transactions are the clearest discriminator of model robustness: GPT-5.2 is almost unaffected, while weaker models lose between $6.5$ and $30.7$ \fbs{} points when this factor is present.
+These findings position \benchmark{} as a controlled testbed for studying structured financial generation, failure modes, and prompt sensitivity in modern LLMs.
+\end{abstract}

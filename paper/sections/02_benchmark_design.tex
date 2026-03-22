@@ -1,0 +1,78 @@
+\section{Benchmark Design}
+
+\subsection{Generation Pipeline}
+
+The generator maintains a ledger whose sign convention follows normal accounting balances: assets and expenses increase on debits, while liabilities, equity, and revenue increase on credits.
+Every transaction is applied to this ledger, and the final balance sheet is derived directly from the resulting account state.
+Revenue and expense balances are folded into Retained Earnings when the final balance sheet is built, making closing-entry competence observable in the model outputs.
+
+Transaction templates are organized by difficulty level and accounting feature.
+Lower levels emphasize basic cash bookkeeping; higher levels activate credit transactions, debt servicing, prepaids, depreciation, cost-of-goods-sold coupling, derived-interest calculations, and mixed-funding purchases.
+Adjustments are generated separately and applied before the statement is prepared.
+The full benchmark is deterministic given a random seed, and the released corpus contains 2{,}500 problems.
+
+\input{tables/dataset_summary}
+
+Table~\ref{tab:dataset-summary} shows that difficulty is not cosmetic.
+Average transactions increase from $7.56$ at Level~1 to $79.35$ at Level~5, while average account support rises from $5.18$ to $15.22$.
+The generator therefore scales both event count and latent bookkeeping structure.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../figures/F8_dataset_complexity.pdf}
+\caption{Dataset complexity by difficulty level, showing how transaction count, account count, and feature activation rise together.}
+\label{fig:dataset-complexity}
+\end{figure}
+
+\subsection{Prompted Task}
+
+The reported experiments use two prompting regimes.
+\zs{} asks for a JSON answer directly with a reminder that Assets must equal Liabilities plus Equity.
+\CoT{} asks the model to reason step by step and then emit a final JSON object after the marker \texttt{FINAL ANSWER:}.
+Although the broader experimental framework also supports few-shot and self-refine variants, the headline results reported here cover only these two prompt conditions.
+
+\begin{center}
+\fbox{%
+\begin{minipage}{0.95\columnwidth}
+\textbf{Sample benchmark entry.}
+
+\vspace{4pt}
+\footnotesize
+\texttt{Opening balances: Cash 49,400; Owner's Equity 49,400}
+
+\texttt{Transactions:}
+
+\texttt{1. Dr Equipment 17,700 / Cr Cash 17,700}
+
+\texttt{2. Dr Operating Expenses 200 / Cr Cash 200}
+
+\texttt{3. Dr Prepaid Rent 5,900 / Cr Cash 5,900}
+
+\texttt{4. Dr Prepaid Rent 3,400 / Cr Cash 3,400}
+
+\texttt{5. Dr Cash 20,600 / Cr Owner's Equity 20,600}
+
+\vspace{4pt}
+\texttt{Expected JSON output:}
+
+\texttt{\{"assets": \{"Cash": 42800, "Equipment": 17700, "Prepaid Rent": 9300\},}
+
+\texttt{"liabilities": \{\},}
+
+\texttt{"equity": \{"Owner's Equity": 70000, "Retained Earnings": -200\}\}}
+\end{minipage}}
+\end{center}
+
+\subsection{Metrics and Error Taxonomy}
+
+\ba{} measures whether the accounting equation holds within one currency unit.
+\ala{} measures account-level correctness using a hybrid tolerance of \(\max(\$10, 1\%\ \text{of expected value})\).
+\acr{} isolates structural recall by ignoring values and asking only whether expected accounts are present.
+The continuous balance error magnitude (\textsc{BEM}), section placement accuracy, hallucination rate, and closing-entry compliance rate (\cecr{}) provide secondary diagnostics.
+
+The paper's main scalar summary is \fbs{}, a weighted aggregate of \ba{}, \ala{}, constraint satisfaction, and normalized numerical error.
+When no intermediate ledger states are available, the transaction-processing term is dropped and its weight is redistributed across the remaining components.
+This is the case for the results in this paper.
+
+Errors are categorized into arithmetic errors, omissions, hallucinations, classification errors, constraint violations, and formatting failures.
+Secondary analyses then aggregate these into complexity-factor reports, account-difficulty indices, difficulty curves, and permutation-test summaries.

@@ -1,0 +1,10 @@
+\section{Conclusion}
+
+\benchmark{} turns balance-sheet construction into a controlled structured-generation benchmark with exact ground truth, reusable analysis tooling, and paper-ready artifacts.
+The experiments show that modern LLMs differ sharply not only in final score, but in \emph{how} they fail.
+Some models miss the right accounts, some preserve structure but break arithmetic, and some nearly solve the task while remaining blind to Retained Earnings.
+
+Two conclusions stand out.
+First, prompt sensitivity is model-specific: \CoT{} is transformative for DeepSeek-v3.2, modest for Gemini and Qwen, and nearly irrelevant for GPT-5.2.
+Second, account-level and factor-level analysis is necessary to interpret leaderboard scores.
+Without it, one would miss both the structural-versus-numerical split seen in DeepSeek-v3.2 \zs{} and the central role of mixed-funding transactions and closing-entry behavior in separating robust systems from brittle ones.

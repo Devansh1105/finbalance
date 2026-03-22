@@ -1,0 +1,59 @@
+\section{Failure Analysis and Discussion}
+
+\subsection{Chain-of-Thought Helps Through Different Mechanisms}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../figures/F3_cot_effect.pdf}
+\caption{Prompt effect by model.}
+\label{fig:cot-effect}
+\end{figure}
+
+Figure~\ref{fig:cot-effect} shows that \CoT{} is not a universal improvement operator.
+DeepSeek-v3.2 benefits the most, followed by Llama~3.3~70B and gpt-oss-120b.
+But these gains arise for different reasons in the deeper error analysis.
+For DeepSeek-v3.2, the gain is primarily arithmetic: mean arithmetic errors drop by \(3.47\) per problem, and \(87\) of \(100\) problems improve.
+For gpt-oss-120b, the gain is partly superficial: \(17\%\) parse failures in \zs{} shrink to \(4\%\) under \CoT{}, so some of the score increase comes from output recoverability rather than better accounting.
+For GPT-5.2, \CoT{} is effectively neutral and even reduces \ala{} slightly.
+
+\subsection{Retained Earnings Is the Hardest Account}
+
+\input{tables/account_difficulty}
+
+Table~\ref{tab:account-difficulty} aggregates account-level behavior over all evaluated systems.
+Retained Earnings is by far the hardest account, with a \(70.4\%\) omission rate and only \(14.0\%\) correct prediction rate.
+The next two accounts reveal two different failure modes.
+Accumulated Depreciation is often omitted, whereas Owner's Equity is usually present but numerically wrong.
+This distinction matters: the benchmark is not only exposing missing terminology, but also confusion about how income-statement activity closes into equity.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../figures/F4_account_heatmap.pdf}
+\caption{Account omission and arithmetic patterns by model--prompt pair.}
+\label{fig:account-heatmap}
+\end{figure}
+
+Figure~\ref{fig:account-heatmap} sharpens this point.
+Some models behave as if closing entries do not exist: GPT-5.2, Qwen, and Llama frequently omit Retained Earnings almost entirely.
+Other models include the account but miscompute it.
+Gemini and DeepSeek under \zs{} are the clearest examples of this second pattern.
+gpt-oss-120b is unusual in the opposite direction, reaching the highest \cecr{} values in the benchmark and therefore showing partial closing-entry awareness despite weaker overall robustness.
+
+\subsection{Mixed-Funding Transactions Separate Robust Models from Fragile Ones}
+
+\input{tables/complexity_factors}
+
+Table~\ref{tab:complexity-factors} focuses on the \texttt{mixed\_funding} factor because it is the cleanest cross-model separator in the complexity-attribution analysis.
+These transactions require splitting a purchase between cash and debt, so they test whether the model can maintain multi-account consistency under partial financing.
+GPT-5.2 is nearly invariant to the factor, but every weaker family degrades.
+The combination of a large negative \(\Delta\)\fbs{} and a high difficulty-curve coefficient of variation is especially revealing for Llama~3.3~70B and gpt-oss-120b.
+
+\paragraph{Robustness is rare.}
+The difficulty-curve analysis shows that GPT-5.2 is the only family with a robustness CV below \(3\%\).
+Gemini \CoT{}, Qwen \CoT{}, and DeepSeek \CoT{} fall into a moderate robustness band with CV between \(6.26\%\) and \(7.29\%\).
+At the other end, DeepSeek \zs{} and Llama \CoT{} exhibit cliff behavior: their largest drops occur early and are severe enough to dominate the aggregate curve.
+
+\paragraph{An exploratory propagation module broadens the paper's scope.}
+An exploratory propagation analysis also queries models after prefixes of a transaction stream.
+The available trace summary spans only five problems, so it is too small for headline claims, but it demonstrates that the benchmark infrastructure can study when errors first appear and how they accumulate across a ledger trajectory.
+This makes \benchmark{} useful not only as a leaderboard, but as a laboratory for failure forensics.

@@ -1,0 +1,23 @@
+\section{Experimental Setup}
+
+\subsection{Models and Splits}
+
+The held-out evaluation uses a stratified test split with 20 problems from each of the five difficulty levels for a total of 100 test items.
+We evaluate paired \zs{}/\CoT{} runs for six model families:
+GPT-5.2, gpt-oss-120b, Qwen~3.5 Flash, Gemini~3 Flash, DeepSeek-v3.2, and Llama~3.3~70B.
+Additional exploratory runs exist for other models, but they are not part of the main comparison reported here.
+
+\subsection{Evaluation Harness}
+
+The evaluation harness executes a prompt, parses the returned JSON, computes metrics, and attaches an error report.
+For non-\zs{} conditions, the harness retries once with a \zs{} prompt if the initial parse fails.
+This matters empirically: some of the apparent \CoT{} gains, particularly for gpt-oss-120b and Llama~3.3~70B, are partly format-recovery effects rather than pure reasoning gains.
+
+All runs use deterministic decoding settings with temperature fixed at \(0\).
+A rule-based baseline provides an oracle-style upper bound and reaches \fbs{} $=99.97$ on the held-out split.
+
+\subsection{Secondary Analysis Artifacts}
+
+Three retained result summaries are especially important for the paper: primary leaderboard metrics, a deep analysis bundle covering complexity attribution and difficulty curves, and a significance bundle with bootstrap confidence intervals and paired permutation tests.
+The significance bundle does not cover every model pair, so the paper treats some comparisons as descriptive rather than inferential.
+Where exact \(p\)-values are cited below, they come directly from the retained permutation-test output.
