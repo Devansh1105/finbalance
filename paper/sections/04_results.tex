@@ -2,7 +2,7 @@
 
 \input{tables/main_results}
 
-Table~\ref{tab:main-results} shows a broad spread in performance even though every system receives the same structured task.
+Table~\ref{tab:main-results} reports the controlled Small-100 study and shows a broad spread in performance even though every system receives the same accounting task.
 GPT-5.2 is clearly strongest and is the only family that remains near the oracle ceiling in both prompt settings.
 Its best run, GPT-5.2 \CoT{}, reaches perfect balance accuracy and \fbs{} $=90.85$.
 The corresponding \zs{} run is effectively tied: the retained paired permutation test reports a mean \fbs{} difference of only \(+0.65\) points with two-sided \(p=0.533\).
@@ -16,8 +16,8 @@ The corresponding \zs{} run is effectively tied: the retained paired permutation
 
 Figure~\ref{fig:capability-curve} makes the performance hierarchy more interpretable.
 GPT-5.2 is nearly flat across difficulty, while all other models show increasingly visible degradation at Levels~4 and~5.
-Among non-frontier systems, the strongest runs are Qwen~3.5 Flash \CoT{} (\fbs{} $=86.72$), gpt-oss-120b \CoT{} (\fbs{} $=86.35$), and DeepSeek-v3.2 \CoT{} (\fbs{} $=85.56$).
-Gemini 3 Flash occupies a middle band, and Llama~3.3~70B remains weak even with \CoT{}.
+Among the open-weight systems, the strongest runs are Qwen~3.5 Flash \CoT{} (\fbs{} $=86.72$), gpt-oss-120b \CoT{} (\fbs{} $=86.35$), and DeepSeek-v3.2 \CoT{} (\fbs{} $=85.56$).
+Gemini 3 Flash forms the strongest non-GPT closed-source baseline in the controlled study, while Llama~3.3~70B remains weak even with \CoT{}.
 
 \paragraph{Structural recall is easier than numerical consistency.}
 The most diagnostic row in Table~\ref{tab:main-results} is DeepSeek-v3.2 \zs{}.

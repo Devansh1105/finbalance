@@ -1,6 +1,6 @@
 \begin{abstract}
 We present \benchmark{}, a benchmark for testing whether large language models can construct internally consistent balance sheets from transaction sequences rather than merely answer questions about pre-existing financial documents.
-The benchmark couples a deterministic ledger-based generator with a structured evaluation harness, error taxonomy, and post-hoc analysis suite.
+The benchmark couples a deterministic ledger-based generator with a structured evaluation harness, accounting-specific error taxonomy, and post-hoc analysis suite.
 The released dataset contains 2{,}500 synthetic accounting problems across five difficulty levels, with complexity increasing through credit transactions, adjusting entries, cost-of-goods-sold coupling, mixed cash-plus-debt purchases, and derived-interest calculations.
 
 We study six model families under \zs{} and \CoT{} prompting on a stratified 100-problem held-out test split.
@@ -11,5 +11,5 @@ The most striking result is a large gap between structural and numerical compete
 Benchmark-level failure analysis reveals two consistent bottlenecks.
 First, Retained Earnings is the single hardest account in the benchmark, with a $70.4\%$ omission rate across evaluated systems.
 Second, mixed-funding transactions are the clearest discriminator of model robustness: GPT-5.2 is almost unaffected, while weaker models lose between $6.5$ and $30.7$ \fbs{} points when this factor is present.
-These findings position \benchmark{} as a controlled testbed for studying structured financial generation, failure modes, and prompt sensitivity in modern LLMs.
+These findings position \benchmark{} as a controlled testbed for structured financial generation, accounting-specific failure modes, and prompt sensitivity in modern LLMs.
 \end{abstract}

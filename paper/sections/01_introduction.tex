@@ -7,20 +7,21 @@ Balance-sheet construction is a sharp stress test for structured reasoning becau
 \benchmark{} targets this generative setting directly.
 Each problem starts from opening balances, presents a sequence of double-entry journal events, optionally adds end-of-period adjustments, and asks the model to emit a JSON balance sheet with \texttt{assets}, \texttt{liabilities}, and \texttt{equity}.
 The benchmark is built around a deterministic ledger engine, so every instance has exact ground truth by construction.
-This lets us separate surface-level formatting issues from genuine failures in arithmetic, classification, account coverage, and closing-entry behavior.
+This lets us separate surface-level formatting issues from genuine failures in statement preparation, verification, classification, account coverage, and closing-entry behavior.
+Arithmetic matters and is measured explicitly, but the benchmark is aimed at the broader accounting task of preparing a valid balance sheet that balances for the right reasons.
 
 \input{figures/benchmark_overview}
 
 Three research questions organize the paper:
 \begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=2pt,label=\textbf{RQ\arabic*:}]
-\item How does balance-sheet generation accuracy degrade as accounting mechanisms compound across five difficulty levels?
-\item When prompt strategy changes from \zs{} to \CoT{}, does performance improve uniformly, or only for specific model families and failure modes?
+\item How well do modern language models prepare and verify balance sheets as accounting mechanisms compound across five difficulty levels?
+\item When supervision increases from \zs{} prompting to reflective \CoT{} prompting, which models improve, and do those gains reflect better accounting or merely more recoverable output structure?
 \item Which accounts and transaction factors dominate benchmark difficulty once per-problem outputs are retained for secondary analysis?
 \end{enumerate}
 
 \paragraph{Contributions.}
 This paper makes four concrete contributions.
 First, it introduces a deterministic benchmark for balance-sheet construction rather than document-centric financial question answering.
-Second, it reports a six-model, two-prompt comparison on the released held-out split.
-Third, it identifies account-level and factor-level failure patterns, including closing-entry blindness and arithmetic collapse under high structural recall.
-Fourth, it shows how retained per-problem outputs support analyses that go beyond aggregate leaderboard scores.
+Second, it formalizes the task as structured JSON generation with exact ledger-derived ground truth and accounting-specific metrics.
+Third, it reports a controlled six-model Small-100 comparison under \zs{} and \CoT{} prompting on the same stratified split.
+Fourth, it identifies account-level and factor-level failure patterns, including closing-entry blindness and arithmetic collapse under high structural recall, showing how retained per-problem outputs support analyses beyond aggregate leaderboard scores.

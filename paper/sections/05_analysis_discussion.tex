@@ -52,8 +52,3 @@ The combination of a large negative \(\Delta\)\fbs{} and a high difficulty-curve
 The difficulty-curve analysis shows that GPT-5.2 is the only family with a robustness CV below \(3\%\).
 Gemini \CoT{}, Qwen \CoT{}, and DeepSeek \CoT{} fall into a moderate robustness band with CV between \(6.26\%\) and \(7.29\%\).
 At the other end, DeepSeek \zs{} and Llama \CoT{} exhibit cliff behavior: their largest drops occur early and are severe enough to dominate the aggregate curve.
-
-\paragraph{An exploratory propagation module broadens the paper's scope.}
-An exploratory propagation analysis also queries models after prefixes of a transaction stream.
-The available trace summary spans only five problems, so it is too small for headline claims, but it demonstrates that the benchmark infrastructure can study when errors first appear and how they accumulate across a ledger trajectory.
-This makes \benchmark{} useful not only as a leaderboard, but as a laboratory for failure forensics.

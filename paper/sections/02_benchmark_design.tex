@@ -26,10 +26,10 @@ The generator therefore scales both event count and latent bookkeeping structure
 
 \subsection{Prompted Task}
 
-The reported experiments use two prompting regimes.
+\benchmark{} evaluates whether a model can prepare a valid balance sheet from the provided ledger state and transaction stream.
 \zs{} asks for a JSON answer directly with a reminder that Assets must equal Liabilities plus Equity.
-\CoT{} asks the model to reason step by step and then emit a final JSON object after the marker \texttt{FINAL ANSWER:}.
-Although the broader experimental framework also supports few-shot and self-refine variants, the headline results reported here cover only these two prompt conditions.
+Reflective \CoT{} asks the model to reason step by step and then emit a final JSON object after the marker \texttt{FINAL ANSWER:}.
+These are the two evaluated prompting conditions in this paper.
 
 \begin{center}
 \fbox{%

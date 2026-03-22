@@ -1,11 +1,11 @@
 \section{Experimental Setup}
 
-\subsection{Models and Splits}
+\subsection{Controlled Study}
 
-The held-out evaluation uses a stratified test split with 20 problems from each of the five difficulty levels for a total of 100 test items.
+The main controlled evaluation uses a stratified Small-100 split with 20 problems from each of the five difficulty levels.
 We evaluate paired \zs{}/\CoT{} runs for six model families:
-GPT-5.2, gpt-oss-120b, Qwen~3.5 Flash, Gemini~3 Flash, DeepSeek-v3.2, and Llama~3.3~70B.
-Additional exploratory runs exist for other models, but they are not part of the main comparison reported here.
+GPT-5.2, Gemini~3 Flash, Qwen~3.5 Flash, gpt-oss-120b, DeepSeek-v3.2, and Llama~3.3~70B.
+This is the only setting in the paper where all models are directly comparable on the same 100 problems.
 
 \subsection{Evaluation Harness}
 
