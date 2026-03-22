@@ -2,12 +2,12 @@
 
 \subsection{Chain-of-Thought Helps Through Different Mechanisms}
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{../figures/F3_cot_effect.pdf}
+\includegraphics[width=0.95\textwidth]{../figures/F3_cot_effect.pdf}
 \caption{Prompt effect by model.}
 \label{fig:cot-effect}
-\end{figure}
+\end{figure*}
 
 Figure~\ref{fig:cot-effect} shows that \CoT{} is not a universal improvement operator.
 DeepSeek-v3.2 benefits the most, followed by Llama~3.3~70B and gpt-oss-120b.
@@ -26,12 +26,12 @@ The next two accounts reveal two different failure modes.
 Accumulated Depreciation is often omitted, whereas Owner's Equity is usually present but numerically wrong.
 This distinction matters: the benchmark is not only exposing missing terminology, but also confusion about how income-statement activity closes into equity.
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{../figures/F4_account_heatmap.pdf}
+\includegraphics[width=0.95\textwidth]{../figures/F4_account_heatmap.pdf}
 \caption{Account omission and arithmetic patterns by model--prompt pair.}
 \label{fig:account-heatmap}
-\end{figure}
+\end{figure*}
 
 Figure~\ref{fig:account-heatmap} sharpens this point.
 Some models behave as if closing entries do not exist: GPT-5.2, Qwen, and Llama frequently omit Retained Earnings almost entirely.
