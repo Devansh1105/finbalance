@@ -13,6 +13,8 @@ formula suffices; the model must chain heterogeneous accounting
 steps while maintaining a global conservation constraint across
 every account it emits.
 
+\subsection{Related Work}
+
 A growing body of financial NLP benchmarks has emerged, but all
 target \emph{comprehension} of pre-existing documents rather than
 \emph{construction} of new ones.
@@ -47,6 +49,8 @@ To our knowledge, no existing benchmark asks a model to construct
 a complete, internally consistent balance sheet from raw journal
 entries---the gap \benchmark{} is designed to fill.
 
+\subsection{Benchmark Overview}
+
 \benchmark{} targets this generative gap directly.
 Each problem starts from opening balances, presents a sequence of
 double-entry journal events, optionally adds end-of-period
@@ -57,6 +61,16 @@ every instance has exact ground truth by construction.
 This lets us separate surface-level formatting issues from genuine
 failures in statement preparation, account classification, equity
 closure, and arithmetic consistency.
+
+In the controlled Small-100 study, GPT-5.2 stays closest to the
+oracle ceiling and reaches \fbs{} $=90.85$ with perfect \ba{},
+whereas most other models deteriorate markedly at Levels~4--5.
+The benchmark also exposes a structural--numerical split:
+DeepSeek-v3.2 under \zs{} recalls \(96.8\%\) of expected accounts
+yet balances only \(15\%\) of statements.
+Retained Earnings emerges as the hardest account overall, and
+mixed-funding transactions are a consistent separator between
+robust and fragile systems.
 
 \input{figures/benchmark_overview}
 
@@ -77,8 +91,9 @@ Three research questions organize the paper:
 \end{enumerate}
 
 \paragraph{Contributions.}
-This paper makes four concrete contributions.
-First, it introduces a deterministic benchmark for balance-sheet construction rather than document-centric financial question answering.
-Second, it formalizes the task as structured JSON generation with exact ledger-derived ground truth and accounting-specific metrics.
-Third, it reports a controlled six-model Small-100 comparison under \zs{} and \CoT{} prompting on the same stratified split.
-Fourth, it identifies account-level and factor-level failure patterns, including closing-entry blindness and arithmetic collapse under high structural recall, showing how retained per-problem outputs support analyses beyond aggregate leaderboard scores.
+This paper makes five contributions:
+(1) a deterministic 2{,}500-problem dataset for balance-sheet construction from journal entries across five difficulty levels;
+(2) an automated, flexible benchmarking harness that varies model backends and prompting strategies, recovers structured outputs when possible, and retains per-problem artifacts;
+(3) an accounting-specific evaluation suite centered on \fbs{}, \ba{}, \ala{}, \acr{}, and \cecr{};
+(4) a controlled six-model Small-100 comparison under matched \zs{} and \CoT{} settings; and
+(5) an analysis of recurring failure modes, including arithmetic collapse under high structural recall, closing-entry blindness, and mixed-funding fragility.

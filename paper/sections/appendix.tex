@@ -1,5 +1,67 @@
 \section{Appendix}
 
+\subsection{Worked Pipeline Example}
+\label{app:worked-example}
+
+This appendix gives a concrete end-to-end example of the benchmark
+pipeline, from prompted input to ledger processing to the expected
+JSON answer.
+
+\paragraph{Prompted input.}
+\begin{verbatim}
+Opening balances:
+Cash 49,400; Owner's Equity 49,400
+
+Transactions:
+1. Dr Equipment 17,700 / Cr Cash 17,700
+2. Dr Operating Expenses 200 / Cr Cash 200
+3. Dr Prepaid Rent 5,900 / Cr Cash 5,900
+4. Dr Prepaid Rent 3,400 / Cr Cash 3,400
+5. Dr Cash 20,600 /
+   Cr Owner's Equity 20,600
+\end{verbatim}
+
+\paragraph{Ledger processing.}
+\begin{center}
+\small
+\begin{tabularx}{\columnwidth}{@{}l>{\raggedright\arraybackslash}X@{}}
+\toprule
+Step & Running balances and effect \\
+\midrule
+Opening & Cash \(=49{,}400\); Owner's Equity \(=49{,}400\). \\
+Tx 1 & Purchase equipment for cash. Cash decreases to \(31{,}700\); Equipment increases to \(17{,}700\). \\
+Tx 2 & Record operating expense. Cash decreases to \(31{,}500\); Operating Expenses \(=200\). \\
+Tx 3 & Record prepaid rent. Cash decreases to \(25{,}600\); Prepaid Rent \(=5{,}900\). \\
+Tx 4 & Record additional prepaid rent. Cash decreases to \(22{,}200\); Prepaid Rent increases to \(9{,}300\). \\
+Tx 5 & Owner contributes additional cash. Cash increases to \(42{,}800\); Owner's Equity increases to \(70{,}000\). \\
+Closing & Expense accounts close into equity. Operating Expenses \(=200\) therefore become Retained Earnings \(=-200\). \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\paragraph{Expected output.}
+\begin{verbatim}
+{
+  "assets": {
+    "Cash": 42800,
+    "Equipment": 17700,
+    "Prepaid Rent": 9300
+  },
+  "liabilities": {},
+  "equity": {
+    "Owner's Equity": 70000,
+    "Retained Earnings": -200
+  }
+}
+\end{verbatim}
+
+The final statement balances because total assets equal
+\(42{,}800 + 17{,}700 + 9{,}300 = 69{,}800\), while total equity
+equals \(70{,}000 - 200 = 69{,}800\) and liabilities are zero.
+This example makes explicit the accounting behaviors the benchmark
+tests: transaction accumulation, section placement, and closing of
+income-statement activity into Retained Earnings.
+
 \subsection{Evaluation Protocol Details}
 
 The benchmark uses a deterministic synthetic generator, a stratified held-out split, and structured JSON scoring.

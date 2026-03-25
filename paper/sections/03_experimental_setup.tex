@@ -9,9 +9,19 @@ This is the only setting in the paper where all models are directly comparable o
 
 \subsection{Evaluation Harness}
 
-The evaluation harness executes a prompt, parses the returned JSON, computes metrics, and attaches an error report.
-For non-\zs{} conditions, the harness retries once with a \zs{} prompt if the initial parse fails.
-This matters empirically: some of the apparent \CoT{} gains, particularly for gpt-oss-120b and Llama~3.3~70B, are partly format-recovery effects rather than pure reasoning gains.
+The evaluation harness is automated and flexible: it instantiates a
+model backend, applies a selected prompting strategy, parses the raw
+response with multiple JSON-recovery rules, computes the full metric
+suite, attaches an error report, and saves per-problem artifacts for
+later analysis.
+Because prompting strategies, retry behavior, and model backends are
+decoupled, the same harness supports controlled comparisons without
+changing the benchmark instances or scoring logic.
+For non-\zs{} conditions, the harness retries once with a \zs{}
+prompt if the initial parse fails.
+This matters empirically: some of the apparent \CoT{} gains,
+particularly for gpt-oss-120b and Llama~3.3~70B, are partly
+format-recovery effects rather than pure reasoning gains.
 
 All runs use deterministic decoding settings with temperature fixed at \(0\).
 A rule-based baseline provides an oracle-style upper bound and reaches \fbs{} $=99.97$ on the held-out split.

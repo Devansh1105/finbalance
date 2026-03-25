@@ -63,16 +63,65 @@ These are the two evaluated prompting conditions in this paper.
 \end{minipage}}
 \end{center}
 
+Appendix~\ref{app:worked-example} provides a full worked pipeline
+example for this task, including the prompted input, intermediate
+ledger updates, the retained-earnings closure step, and the final
+expected JSON output.
+
 \subsection{Metrics and Error Taxonomy}
 
-\ba{} measures whether the accounting equation holds within one currency unit.
-\ala{} measures account-level correctness using a hybrid tolerance of \(\max(\$10, 1\%\ \text{of expected value})\).
-\acr{} isolates structural recall by ignoring values and asking only whether expected accounts are present.
-The continuous balance error magnitude (\textsc{BEM}), section placement accuracy, hallucination rate, and closing-entry compliance rate (\cecr{}) provide secondary diagnostics.
+No single score captures this task well because models can produce
+the right account set while still failing the bookkeeping.
+\ba{} (balance accuracy) is therefore a hard binary check:
+it equals \(1\) only when the predicted statement satisfies
+\(|A-(L+E)| \leq 1\) currency unit.
+\ala{} (account-level accuracy) measures the fraction of expected
+non-zero accounts whose predicted values fall within a hybrid
+tolerance of \(\max(\$10, 1\%\ \text{of expected value})\); omitted
+accounts count as incorrect.
+\acr{} (account coverage rate) ignores values and asks only whether
+the expected accounts appear anywhere in the output, which isolates
+structural recall from numerical correctness.
+\cecr{} (closing-entry compliance rate) checks whether Retained
+Earnings is present in equity and numerically correct under the same
+hybrid tolerance; if Retained Earnings is not expected, the instance
+is treated as trivially compliant.
 
-The paper's main scalar summary is \fbs{}, a weighted aggregate of \ba{}, \ala{}, constraint satisfaction, and normalized numerical error.
-When no intermediate ledger states are available, the transaction-processing term is dropped and its weight is redistributed across the remaining components.
-This is the case for the results in this paper.
+We report four secondary diagnostics to make failure modes more
+interpretable.
+\textsc{BEM} (balance error magnitude) is the continuous version of
+\ba{}, defined as \(|A-(L+E)|\).
+Section placement accuracy (SPA) is the fraction of predicted
+accounts assigned to the correct top-level section
+(\texttt{assets}, \texttt{liabilities}, or \texttt{equity}).
+Hallucination rate (HR) is the fraction of predicted accounts that
+do not belong in the expected final statement.
+Constraint satisfaction rate (CSR) is the proportion of benchmark
+constraints satisfied, including the balance equation, non-negative
+non-contra assets, contra-asset sanity, non-negative total assets,
+and completeness of the expected account set.
+Numerical error is summarized with MAE and RMSE over expected
+accounts, treating missing values as zero.
 
-Errors are categorized into arithmetic errors, omissions, hallucinations, classification errors, constraint violations, and formatting failures.
-Secondary analyses then aggregate these into complexity-factor reports, account-difficulty indices, difficulty curves, and permutation-test summaries.
+The main scalar summary is \fbs{}, a \(0\)--\(100\) weighted
+aggregate of \ba{}, \ala{}, CSR, and normalized numerical error
+\(1-\min(\text{MAE}/50{,}000, 1)\).
+For the no-intermediate-state setting used in this paper, the
+weights are \(0.375\) for \ba{}, \(0.3125\) for \ala{},
+\(0.1875\) for CSR, and \(0.125\) for normalized numerical error.
+If intermediate ledger states are available, the transaction
+processing accuracy term receives weight \(0.20\), and the remaining
+weights revert to \(0.30\), \(0.25\), \(0.15\), and \(0.10\),
+respectively.
+
+The error taxonomy complements these metrics.
+We distinguish arithmetic errors (wrong values on present accounts),
+omission errors (missing expected accounts), hallucinations (extra
+accounts), classification errors (correct accounts in the wrong
+section), constraint violations (for example, an unbalanced sheet or
+impossible asset sign), and formatting/parsing failures.
+When intermediate states are available, repeated downstream mistakes
+are additionally marked as propagation errors.
+Secondary analyses aggregate these per-problem signals into
+complexity-factor reports, account-difficulty indices, difficulty
+curves, and permutation-test summaries.
