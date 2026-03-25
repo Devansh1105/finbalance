@@ -1,22 +1,79 @@
 \section{Introduction}
 
-Recent financial NLP benchmarks have concentrated on question answering over existing reports, tables, or filings.
-That setting is useful, but it bypasses a harder requirement that appears in real accounting workflows: synthesizing a correct financial statement from a stream of journal events.
-Balance-sheet construction is a sharp stress test for structured reasoning because the model must simultaneously preserve sign conventions, accumulate account balances, apply period-end adjustments, and satisfy a global conservation constraint.
+Preparing a balance sheet from a sequence of journal entries is,
+in principle, deterministic: a correct ledger engine can do it
+without error.  Yet the same task becomes a genuine reasoning
+challenge when posed to a language model because the model
+receives only the natural-language transaction descriptions and
+must internally reconstruct the double-entry logic---choosing
+which accounts to debit and credit, accumulating running
+balances, closing revenue and expense into equity, and verifying
+that Assets~$=$~Liabilities~$+$~Equity.  No single rule or
+formula suffices; the model must chain heterogeneous accounting
+steps while maintaining a global conservation constraint across
+every account it emits.
 
-\benchmark{} targets this generative setting directly.
-Each problem starts from opening balances, presents a sequence of double-entry journal events, optionally adds end-of-period adjustments, and asks the model to emit a JSON balance sheet with \texttt{assets}, \texttt{liabilities}, and \texttt{equity}.
-The benchmark is built around a deterministic ledger engine, so every instance has exact ground truth by construction.
-This lets us separate surface-level formatting issues from genuine failures in statement preparation, verification, classification, account coverage, and closing-entry behavior.
-Arithmetic matters and is measured explicitly, but the benchmark is aimed at the broader accounting task of preparing a valid balance sheet that balances for the right reasons.
+A growing body of financial NLP benchmarks has emerged, but all
+target \emph{comprehension} of pre-existing documents rather than
+\emph{construction} of new ones.
+FinQA~\citep{chen2021finqa} and
+ConvFinQA~\citep{chen2022convfinqa} pose numerical reasoning
+questions over corporate earnings reports;
+TAT-QA~\citep{zhu2021tatqa} adds hybrid tabular--textual
+contexts; and DocFinQA~\citep{reddy2024docfinqa} embeds similar
+questions in full-length SEC filings.
+Each requires the model to \emph{read} a financial table and
+compute an answer---never to \emph{produce} one from scratch.
+Broader evaluation suites---FLUE~\citep{shah2022flueflang},
+PIXIU~\citep{xie2023pixiu}, FinBen~\citep{xie2024finben}, and
+FinanceBench~\citep{islam2023financebench}---aggregate tasks
+spanning sentiment analysis, named-entity recognition, stock-movement
+prediction, and open-book QA, yet none includes end-to-end
+financial statement preparation.
+Even MMLU~\citep{hendrycks2021mmlu}, which contains
+professional-accounting questions, tests only declarative
+knowledge through multiple choice rather than procedural
+application.
+
+The closest prior work, \citet{kim2024financial}, feeds
+\emph{existing} balance sheets and income statements to GPT-4
+and evaluates whether the model can predict earnings
+direction---a complementary but fundamentally different task from
+generating a statement \emph{de novo}.
+Multi-step arithmetic benchmarks such as
+GSM8K~\citep{cobbe2021gsm8k} stress numerical reasoning but
+outside any domain-specific accounting structure.
+To our knowledge, no existing benchmark asks a model to construct
+a complete, internally consistent balance sheet from raw journal
+entries---the gap \benchmark{} is designed to fill.
+
+\benchmark{} targets this generative gap directly.
+Each problem starts from opening balances, presents a sequence of
+double-entry journal events, optionally adds end-of-period
+adjustments, and asks the model to emit a JSON balance sheet with
+\texttt{assets}, \texttt{liabilities}, and \texttt{equity}.
+The benchmark is built around a deterministic ledger engine, so
+every instance has exact ground truth by construction.
+This lets us separate surface-level formatting issues from genuine
+failures in statement preparation, account classification, equity
+closure, and arithmetic consistency.
 
 \input{figures/benchmark_overview}
 
 Three research questions organize the paper:
 \begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=2pt,label=\textbf{RQ\arabic*:}]
-\item How well do modern language models prepare and verify balance sheets as accounting mechanisms compound across five difficulty levels?
-\item When supervision increases from \zs{} prompting to reflective \CoT{} prompting, which models improve, and do those gains reflect better accounting or merely more recoverable output structure?
-\item Which accounts and transaction factors dominate benchmark difficulty once per-problem outputs are retained for secondary analysis?
+\item How well do modern language models prepare and verify balance
+  sheets as accounting mechanisms compound across five difficulty
+  levels (ranging from cash-only bookkeeping at Level~1 to problems
+  combining credit transactions, COGS, mixed funding, and
+  derived interest at Level~5; see Table~\ref{tab:dataset-summary})?
+\item When supervision increases from \zs{} prompting to reflective
+  \CoT{} prompting~\citep{wei2022chainofthought}, which models
+  improve, and do those gains reflect better accounting or merely
+  more recoverable output structure?
+\item Which accounts and transaction factors dominate benchmark
+  difficulty once per-problem outputs are retained for secondary
+  analysis?
 \end{enumerate}
 
 \paragraph{Contributions.}
