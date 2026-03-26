@@ -30,12 +30,12 @@ import numpy as np
 # ---------------------------------------------------------------------------
 plt.rcParams.update({
     "font.family":       "serif",
-    "font.size":         11,
-    "axes.titlesize":    12,
-    "axes.labelsize":    11,
-    "xtick.labelsize":   10,
-    "ytick.labelsize":   10,
-    "legend.fontsize":   9,
+    "font.size":         15,
+    "axes.titlesize":    16,
+    "axes.labelsize":    15,
+    "xtick.labelsize":   13,
+    "ytick.labelsize":   13,
+    "legend.fontsize":   12,
     "figure.dpi":        150,
     "axes.spines.top":   False,
     "axes.spines.right": False,
@@ -130,7 +130,7 @@ def display_name(model_id: str, strategy: str) -> str:
 # ---------------------------------------------------------------------------
 
 def fig_capability_curve(groups: dict, out_path: Path, fmt: str):
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4.5), sharey=False)
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5.5), sharey=False)
     metrics = [("FBS", "FinBalance Score (FBS)", (0, 100)), ("BA", "Balance Accuracy (%)", (0, 105))]
     levels = [1, 2, 3, 4, 5]
 
@@ -183,12 +183,13 @@ def fig_capability_curve(groups: dict, out_path: Path, fmt: str):
         ax.set_ylim(*ylim)
         ax.set_title(f"({'ab'[ax_idx]}) {ylabel}")
 
-    # Shared legend below
+    # Shared legend below — push well below x-axis labels
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc="lower center", ncol=min(len(handles), 4),
-               bbox_to_anchor=(0.5, -0.08), frameon=True, framealpha=0.9)
-    fig.suptitle("Figure 1: Performance vs. Difficulty Level (Capability Curve)",
-                 fontsize=13, fontweight="bold", y=1.01)
+               bbox_to_anchor=(0.5, -0.18), frameon=True, framealpha=0.9,
+               fontsize=13, handlelength=2.5)
+    fig.suptitle("Performance vs. Difficulty Level (Capability Curve)",
+                 fontsize=16, fontweight="bold", y=1.01)
     plt.tight_layout()
     fig.savefig(out_path, format=fmt, bbox_inches="tight")
     plt.close(fig)
@@ -219,7 +220,7 @@ def fig_error_composition(groups: dict, out_path: Path, fmt: str):
         return
 
     n = len(rows)
-    fig, ax = plt.subplots(figsize=(9, max(3, n * 0.7 + 1.5)))
+    fig, ax = plt.subplots(figsize=(10, max(4, n * 0.8 + 2)))
     y_pos = np.arange(n)
 
     lefts = np.zeros(n)
@@ -237,7 +238,7 @@ def fig_error_composition(groups: dict, out_path: Path, fmt: str):
     ax.set_xlabel("Proportion of Total Errors (%)")
     ax.set_xlim(0, 100)
     ax.axvline(50, color="gray", linewidth=0.8, linestyle=":")
-    ax.legend(handles=patches, loc="lower right", ncol=2, framealpha=0.9)
+    ax.legend(handles=patches, loc="lower right", ncol=2, framealpha=0.9, fontsize=9)
     ax.set_title("Figure 2: Error Composition by Model and Strategy", fontweight="bold")
     plt.tight_layout()
     fig.savefig(out_path, format=fmt, bbox_inches="tight")
@@ -287,7 +288,7 @@ def fig_cot_effect(groups: dict, out_path: Path, fmt: str):
     x = np.arange(n_models)
     width = 0.25
 
-    fig, ax = plt.subplots(figsize=(max(7, n_models * 2.5), 5))
+    fig, ax = plt.subplots(figsize=(max(10, n_models * 3.2), 6.5))
 
     for i, metric in enumerate(metrics_to_plot):
         vals = [d[metric] for d in deltas]
@@ -297,20 +298,21 @@ def fig_cot_effect(groups: dict, out_path: Path, fmt: str):
                       color=colors, label=metric, zorder=3)
         for bar, v in zip(bars, vals):
             ax.text(bar.get_x() + bar.get_width() / 2,
-                    v + (0.3 if v >= 0 else -0.8),
+                    v + (0.4 if v >= 0 else -1.0),
                     f"{v:+.1f}", ha="center", va="bottom" if v >= 0 else "top",
-                    fontsize=8)
+                    fontsize=17, fontweight="bold")
 
     ax.axhline(0, color="black", linewidth=1.0)
     ax.set_xticks(x)
-    ax.set_xticklabels([d["model"] for d in deltas])
-    ax.set_ylabel("CoT − Zero-shot (percentage points / FBS points)")
-    ax.set_title("Figure 3: Effect of Chain-of-Thought Prompting", fontweight="bold")
+    ax.set_xticklabels([d["model"] for d in deltas], fontsize=20)
+    ax.set_ylabel("CoT − Zero-shot (pp / FBS pts)", fontsize=20)
+    ax.set_title("Effect of Chain-of-Thought Prompting", fontweight="bold", fontsize=20)
+    ax.tick_params(axis="y", labelsize=19)
 
     # Custom legend: positive = improvement (blue), negative = degradation (gray)
     handles = [mpatches.Patch(color=PALETTE[i], label=m) for i, m in enumerate(metrics_to_plot)]
     handles += [mpatches.Patch(color="#cccccc", label="Degradation")]
-    ax.legend(handles=handles, loc="upper right", ncol=2, framealpha=0.9)
+    ax.legend(handles=handles, loc="upper right", ncol=2, framealpha=0.9, fontsize=20)
 
     plt.tight_layout()
     fig.savefig(out_path, format=fmt, bbox_inches="tight")
@@ -382,29 +384,32 @@ def fig_account_heatmap(analyses: dict, out_path: Path, fmt: str):
             omit_matrix[row_idx, col_idx]  = entry.get("omission_rate", 0) * 100
             arith_matrix[row_idx, col_idx] = entry.get("arithmetic_rate", 0) * 100
 
-    fig, axes = plt.subplots(1, 2, figsize=(max(10, n_mod * 2.5), max(6, n_acc * 0.45 + 2)),
-                              sharey=True)
+    # 2×1 vertical layout, width capped at 12 to limit LaTeX down-scaling
+    fig, axes = plt.subplots(2, 1, figsize=(12, 10), sharex=True)
+    plt.subplots_adjust(hspace=0.35)
 
     for ax, matrix, title, cmap in [
-        (axes[0], omit_matrix,  "Omission Rate (%)",   "Reds"),
-        (axes[1], arith_matrix, "Arithmetic Error Rate (%)", "Blues"),
+        (axes[0], omit_matrix,  "(a) Omission Rate (%)",   "Reds"),
+        (axes[1], arith_matrix, "(b) Arithmetic Error Rate (%)", "Blues"),
     ]:
         im = ax.imshow(matrix, aspect="auto", cmap=cmap, vmin=0, vmax=100)
         ax.set_xticks(range(n_mod))
-        ax.set_xticklabels(model_labels, rotation=30, ha="right")
+        ax.set_xticklabels(model_labels, rotation=40, ha="right", fontsize=11)
         ax.set_yticks(range(n_acc))
-        ax.set_yticklabels(common_accounts, fontsize=9)
-        ax.set_title(title, fontweight="bold")
-        plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+        ax.set_yticklabels(common_accounts, fontsize=13)
+        ax.set_title(title, fontsize=15)
+        cbar = plt.colorbar(im, ax=ax, fraction=0.03, pad=0.02)
+        cbar.ax.tick_params(labelsize=11)
         # Annotate cells
         for r in range(n_acc):
             for c in range(n_mod):
                 val = matrix[r, c]
                 if val > 1:
                     ax.text(c, r, f"{val:.0f}", ha="center", va="center",
-                            fontsize=7, color="white" if val > 60 else "black")
+                            fontsize=9,
+                            color="white" if val > 60 else "black")
 
-    fig.suptitle("Figure 4: Account-Level Error Rates by Model", fontweight="bold", fontsize=13)
+    fig.suptitle("Account-Level Error Rates by Model", fontweight="bold", fontsize=16, y=1.0)
     plt.tight_layout()
     fig.savefig(out_path, format=fmt, bbox_inches="tight")
     plt.close(fig)
@@ -432,7 +437,12 @@ def fig_bem_distribution(groups: dict, out_path: Path, fmt: str):
         print("  F5: no BEM data found, skipping.")
         return
 
-    fig, ax = plt.subplots(figsize=(max(7, len(rows) * 1.6), 5))
+    # BEM is an absolute magnitude — clip to ≥0 and use log1p scale
+    for row in rows:
+        row["bems"] = [max(0, b) for b in row["bems"]]
+
+    # Cap width at 10 so LaTeX scaling preserves readable font sizes
+    fig, ax = plt.subplots(figsize=(min(10, max(7, len(rows) * 1.4)), 6))
     positions = range(len(rows))
 
     bps = ax.boxplot(
@@ -448,12 +458,13 @@ def fig_bem_distribution(groups: dict, out_path: Path, fmt: str):
         patch.set_alpha(0.7)
 
     ax.set_xticks(list(positions))
-    ax.set_xticklabels([r["label"] for r in rows], rotation=20, ha="right")
+    ax.set_xticklabels([r["label"] for r in rows], rotation=35, ha="right")
     ax.set_ylabel("Balance Error Magnitude ($)")
-    ax.set_yscale("symlog", linthresh=100)
+    ax.set_yscale("symlog", linthresh=1)
+    ax.set_ylim(bottom=-0.5)
     ax.axhline(0, color="green", linewidth=1, linestyle="--", label="Perfect balance (BEM=0)")
     ax.legend(loc="upper left")
-    ax.set_title("Figure 5: Balance Error Magnitude Distribution by Model", fontweight="bold")
+    ax.set_title("BEM Distribution by Model", fontweight="bold")
     plt.tight_layout()
     fig.savefig(out_path, format=fmt, bbox_inches="tight")
     plt.close(fig)
@@ -508,7 +519,7 @@ def fig_cot_by_difficulty(groups: dict, out_path: Path, fmt: str):
             ax.text(bar.get_x() + bar.get_width() / 2,
                     d + (0.2 if d >= 0 else -0.5),
                     f"{d:+.1f}", ha="center", va="bottom" if d >= 0 else "top",
-                    fontsize=8)
+                    fontsize=10)
 
     ax.axhline(0, color="black", linewidth=1)
     ax.set_xticks(x)
@@ -538,7 +549,7 @@ def fig_error_propagation(results_dir: Path, out_path: Path, fmt: str):
         print("  F7: no propagation traces, skipping.")
         return
 
-    fig, ax = plt.subplots(figsize=(9, 5))
+    fig, ax = plt.subplots(figsize=(11, 6))
     level_colors = {1: PALETTE[0], 2: PALETTE[1], 3: PALETTE[2], 4: PALETTE[3], 5: PALETTE[4]}
 
     for t in traces:
@@ -553,7 +564,7 @@ def fig_error_propagation(results_dir: Path, out_path: Path, fmt: str):
 
         # Normalize x-axis to fraction of problem completed
         xs = [i / max(len(traj) - 1, 1) for i in range(len(traj))]
-        ax.plot(xs, traj, color=color, linewidth=2, alpha=0.8,
+        ax.plot(xs, traj, color=color, linewidth=2.5, alpha=0.8,
                 label=f"L{lvl} ({pid})")
         if onset is not None:
             onset_frac = onset / max(n_tx, 1)
@@ -561,12 +572,13 @@ def fig_error_propagation(results_dir: Path, out_path: Path, fmt: str):
 
     # Mark 30% onset line
     ax.axvline(0.30, color="gray", linewidth=1.5, linestyle="--", label="Mean onset (~30%)")
-    ax.set_xlabel("Fraction of Problem Completed (transactions processed)")
-    ax.set_ylabel("Mean Absolute Error ($)")
+    ax.set_xlabel("Fraction of Problem Completed (transactions processed)", fontsize=15)
+    ax.set_ylabel("Mean Absolute Error ($)", fontsize=15)
     ax.set_xlim(0, 1)
-    ax.legend(loc="upper left", fontsize=9)
+    ax.tick_params(axis="both", labelsize=13)
+    ax.legend(loc="upper left", fontsize=13)
     ax.set_title("Figure 7: Error Propagation Trajectory (Claude Haiku 3, 5 problems)",
-                 fontweight="bold")
+                 fontweight="bold", fontsize=16)
     plt.tight_layout()
     fig.savefig(out_path, format=fmt, bbox_inches="tight")
     plt.close(fig)
@@ -604,7 +616,7 @@ def fig_dataset_complexity(dataset_path: Path, out_path: Path, fmt: str):
         "mixed_funding": "Mixed Funding",
     }
 
-    fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5.5))
 
     # Left: avg transaction count + avg account count by level
     ax = axes[0]
@@ -622,10 +634,10 @@ def fig_dataset_complexity(dataset_path: Path, out_path: Path, fmt: str):
     ax.set_xticklabels([f"L{l}" for l in levels])
     ax.set_ylabel("Count")
     ax.set_title("(a) Problem Complexity by Level", fontweight="bold")
-    ax.legend()
+    ax.legend(loc="upper left", bbox_to_anchor=(0.0, 0.95))
     for bar in list(b1) + list(b2):
         ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.3,
-                f"{bar.get_height():.0f}", ha="center", va="bottom", fontsize=8)
+                f"{bar.get_height():.0f}", ha="center", va="bottom", fontsize=13, fontweight="bold")
 
     # Right: feature presence rate heatmap by level
     ax = axes[1]
@@ -642,7 +654,7 @@ def fig_dataset_complexity(dataset_path: Path, out_path: Path, fmt: str):
     ax.set_xticks(range(len(levels)))
     ax.set_xticklabels([f"L{l}" for l in levels])
     ax.set_yticks(range(len(features)))
-    ax.set_yticklabels([feature_labels.get(f, f) for f in features], fontsize=9)
+    ax.set_yticklabels([feature_labels.get(f, f) for f in features], fontsize=13)
     ax.set_title("(b) Feature Presence Rate (%) by Level", fontweight="bold")
     plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     for r in range(len(features)):
@@ -650,9 +662,10 @@ def fig_dataset_complexity(dataset_path: Path, out_path: Path, fmt: str):
             val = feat_matrix[r, c]
             if val > 1:
                 ax.text(c, r, f"{val:.0f}", ha="center", va="center",
-                        fontsize=8, color="white" if val > 60 else "black")
+                        fontsize=13, fontweight="bold",
+                        color="white" if val > 60 else "black")
 
-    fig.suptitle("Figure 8: Dataset Complexity Profile", fontweight="bold", fontsize=13)
+    fig.suptitle("Figure 8: Dataset Complexity Profile", fontweight="bold", fontsize=15)
     plt.tight_layout()
     fig.savefig(out_path, format=fmt, bbox_inches="tight")
     plt.close(fig)
