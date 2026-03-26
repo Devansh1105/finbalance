@@ -58,21 +58,26 @@ adjustments, and asks the model to emit a JSON balance sheet with
 \texttt{assets}, \texttt{liabilities}, and \texttt{equity}.
 The benchmark is built around a deterministic ledger engine, so
 every instance has exact ground truth by construction.
-This lets us separate surface-level formatting issues from genuine
-failures in statement preparation, account classification, equity
-closure, and arithmetic consistency.
+Figure~\ref{fig:overview} summarizes the pipeline.
+A \emph{dataset generator} uses templates and a random seed to
+produce 2{,}500 problems across five difficulty levels (L1--L5),
+each with deterministic ground truth.
+An \emph{evaluation harness} prompts each LLM under both \zs{} and
+\CoT{} settings, parses the JSON response with retry logic, and
+computes a metric suite (\ba{}, \ala{}, \acr{}, \cecr{}, \fbs{}).
+A \emph{post-hoc analysis} layer then extracts failure
+classifications, complexity attributions, and significance tests,
+producing the leaderboard, error taxonomy, and difficulty curves
+reported in this paper.
 
-In the controlled Small-100 study, a stratified 100-problem subset
-with 20 problems from each difficulty level, GPT-5.2 stays closest
-to the oracle ceiling and reaches \fbs{} $=90.85$ with perfect
-\ba{}, whereas most other models deteriorate markedly at
-Levels~4--5.
+In the controlled Small-100 study (20 problems per level),
+GPT-5.2 reaches \fbs{}\,$=90.85$ with perfect \ba{}, whereas most
+models deteriorate markedly at Levels~4--5.
 The benchmark also exposes a structural--numerical split:
 DeepSeek-v3.2 under \zs{} recalls \(96.8\%\) of expected accounts
 yet balances only \(15\%\) of statements.
-Retained Earnings emerges as the hardest account overall, and
-mixed-funding transactions are a consistent separator between
-robust and fragile systems.
+Retained Earnings emerges as the hardest account, and mixed-funding
+transactions consistently separate robust from fragile systems.
 
 \input{figures/benchmark_overview}
 
