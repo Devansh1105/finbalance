@@ -9,3 +9,6 @@
 *.pdf
 *.run.xml
 *.synctex.gz
+
+# Track source figures while still ignoring compiled paper PDFs.
+!figures/*.pdf

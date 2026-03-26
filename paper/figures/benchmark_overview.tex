@@ -1,62 +1,8 @@
 \begin{figure*}[t]
 \centering
-\resizebox{\textwidth}{!}{%
-\begin{tikzpicture}[
-    node distance=1.1cm and 0.9cm,
-    box/.style={draw, rounded corners, align=left, inner sep=10pt, fill=gray!6, font=\small},
-    arrow/.style={-{Latex[length=2.5mm]}, thick}
-]
-\node[box, minimum width=0.27\textwidth] (gen) {
-    {\bfseries Dataset Generator}\\
-    Deterministic ledger engine with double-entry updates.\\
-    Transaction templates, adjusting-entry templates, and\\
-    difficulty-dependent feature activation define each problem.
-};
-
-\node[box, minimum width=0.27\textwidth, right=of gen] (eval) {
-    {\bfseries Evaluation Harness}\\
-    Prompt builders produce structured accounting tasks.\\
-    The runner parses JSON, retries failed \CoT{} parses with\\
-    a \zs{} fallback, and scores every response against ground truth.
-};
-
-\node[box, minimum width=0.27\textwidth, right=of eval] (analysis) {
-    {\bfseries Post-hoc Analysis}\\
-    Failure analysis, complexity attribution, account difficulty,\\
-    difficulty curves, significance tests, and propagation traces\\
-    are computed from saved per-problem outputs.
-};
-
-\draw[arrow] (gen) -- (eval);
-\draw[arrow] (eval) -- (analysis);
-
-\node[box, minimum width=0.21\textwidth, below=1.05cm of gen] (levels) {
-    {\bfseries Five Difficulty Levels}\\
-    L1: cash-only bookkeeping\\
-    L2: credit and prepaids\\
-    L3: COGS and adjustments\\
-    L4: mixed funding and derived interest\\
-    L5: all factors combined
-};
-
-\node[box, minimum width=0.21\textwidth, below=1.05cm of eval] (metrics) {
-    {\bfseries Scored Outputs}\\
-    JSON balance sheet with \texttt{assets},\\
-    \texttt{liabilities}, and \texttt{equity}.\\
-    Primary metrics: \ba{}, \ala{}, \acr{}, \cecr{}, and \fbs{}.
-};
-
-\node[box, minimum width=0.21\textwidth, below=1.05cm of analysis] (artifacts) {
-    {\bfseries Retained Artifacts}\\
-    Dataset splits, raw model responses, parsed outputs,\\
-    error categories, analysis JSON, and publication figures.
-};
-
-\draw[arrow] (gen) -- (levels);
-\draw[arrow] (eval) -- (metrics);
-\draw[arrow] (analysis) -- (artifacts);
-\end{tikzpicture}
-}
+\includegraphics[width=0.85\textwidth]{figures/finbalance_pipeline_cropped.pdf}
+\vspace{-4pt}
 \caption{Overview of the \benchmark{} pipeline. The benchmark couples deterministic problem generation with structured evaluation and a second analysis layer that extracts failure modes from saved per-problem results.}
 \label{fig:overview}
+\vspace{-8pt}
 \end{figure*}
