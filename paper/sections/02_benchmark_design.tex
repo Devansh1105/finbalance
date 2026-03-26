@@ -20,9 +20,50 @@ The generator therefore scales both event count and latent bookkeeping structure
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.95\textwidth]{../figures/F8_dataset_complexity.pdf}
-\caption{Dataset complexity by difficulty level, showing how transaction count, account count, and feature activation rise together.}
+\caption{Dataset complexity profile. Panel (a) shows the mean number of transactions and distinct non-zero balance-sheet accounts per problem at each difficulty level. Panel (b) shows the percentage of problems at each level containing each accounting mechanism. Higher levels therefore increase both bookkeeping volume and mechanism diversity.}
 \label{fig:dataset-complexity}
 \end{figure*}
+
+Figure~\ref{fig:dataset-complexity} should be read panel by panel.
+In panel~(a), the x-axis is difficulty level (L1--L5) and the y-axis
+is a count; the blue bars show the mean number of journal
+transactions, while the orange bars show the mean number of distinct
+accounts in the expected final statement.
+The point is that harder levels are not just longer prompts:
+they require the model to maintain more latent account states as well.
+Panel~(b) uses the same x-axis but changes the y-axis to feature type
+and the color scale to the percentage of problems at that level that
+contain the feature.
+\emph{Depreciation} means depreciable fixed assets together with their
+end-of-period depreciation adjustment;
+\emph{COGS} means sales paired with inventory relief and
+cost-of-goods-sold recognition;
+\emph{Credit Txns} means receivable/payable transactions rather than
+pure cash flows;
+\emph{Debt} means loans, notes, or their repayment/accrual;
+\emph{Prepaid Items} means prepaid rent or insurance later expired into
+expense;
+\emph{Derived Interest} means interest computed from principal, rate,
+and time rather than copied directly from a stated amount; and
+\emph{Mixed Funding} means fixed-asset purchases split between cash and
+debt.
+The main takeaway is that Levels~4--5 add interacting accounting
+mechanisms, not just more rows.
+Difficulty is staged progressively across all five levels.
+Level~1 contains 5--10 mostly cash transactions and no end-of-period
+adjustments, so the task is basic ledger accumulation.
+Level~2 introduces credit sales and purchases, receivables/payables,
+debt, and a single adjustment.
+Level~3 expands to 20--35 transactions plus 1--3 adjustments such as
+depreciation, accruals, bad-debt provision, and COGS-coupled sales.
+Level~4 adds mixed-funded fixed-asset purchases and chained
+adjustments, so multiple mechanisms must be coordinated in one
+statement.
+Level~5 uses the same mechanism set at the highest density, typically
+60--100 transactions with 3--5 adjustments, making long-horizon
+bookkeeping and closing especially difficult.
+Appendix~\ref{app:difficulty-samples} gives abbreviated sample problems
+for Levels~1--5.
 
 \subsection{Prompted Task}
 
@@ -67,6 +108,8 @@ Appendix~\ref{app:worked-example} provides a full worked pipeline
 example for this task, including the prompted input, intermediate
 ledger updates, the retained-earnings closure step, and the final
 expected JSON output.
+Appendix~\ref{app:difficulty-samples} additionally provides abbreviated
+sample problems for each of the five difficulty levels.
 
 \subsection{Metrics and Error Taxonomy}
 
@@ -115,13 +158,20 @@ weights revert to \(0.30\), \(0.25\), \(0.15\), and \(0.10\),
 respectively.
 
 The error taxonomy complements these metrics.
-We distinguish arithmetic errors (wrong values on present accounts),
-omission errors (missing expected accounts), hallucinations (extra
-accounts), classification errors (correct accounts in the wrong
-section), constraint violations (for example, an unbalanced sheet or
-impossible asset sign), and formatting/parsing failures.
+We distinguish arithmetic errors (wrong values on present accounts,
+for example Cash reported as \(12{,}400\) instead of \(13{,}400\)),
+omission errors (missing expected accounts, such as an omitted
+Accumulated Depreciation line), hallucinations (extra unsupported
+accounts, such as Goodwill), classification errors (correct accounts in
+the wrong section, such as Notes Payable under equity), constraint
+violations (global bookkeeping breaks such as
+\(A \neq L + E\) or a positive Accumulated Depreciation balance), and
+formatting/parsing failures (malformed or non-JSON outputs that cannot
+be scored reliably).
 When intermediate states are available, repeated downstream mistakes
-are additionally marked as propagation errors.
+are additionally marked as propagation errors, for example an early
+Accounts Receivable mistake that later distorts both cash collections
+and ending equity.
 Secondary analyses aggregate these per-problem signals into
 complexity-factor reports, account-difficulty indices, difficulty
 curves, and permutation-test summaries.

@@ -62,6 +62,126 @@ This example makes explicit the accounting behaviors the benchmark
 tests: transaction accumulation, section placement, and closing of
 income-statement activity into Retained Earnings.
 
+\subsection{Difficulty-Level Samples}
+\label{app:difficulty-samples}
+
+This appendix subsection gives abbreviated prompt-style samples for all
+five difficulty levels.
+They are illustrative rather than exhaustive, but they show the
+mechanism progression used in the generator.
+
+\paragraph{Level~1: cash-only bookkeeping.}
+\begin{verbatim}
+Opening balances:
+Cash 30,000; Owner's Equity 30,000
+
+Transactions:
+1. Dr Equipment 8,000 /
+   Cr Cash 8,000
+2. Dr Operating Expenses 1,200 /
+   Cr Cash 1,200
+3. Dr Cash 6,000 /
+   Cr Revenue 6,000
+4. Dr Prepaid Rent 2,400 /
+   Cr Cash 2,400
+\end{verbatim}
+
+\paragraph{Level~2: credit transactions and one adjustment.}
+\begin{verbatim}
+Opening balances:
+Cash 24,000; Owner's Equity 24,000
+
+Transactions:
+1. Dr Inventory 5,500 /
+   Cr Accounts Payable 5,500
+2. Dr Accounts Receivable 7,200 /
+   Cr Revenue 7,200
+3. Dr Cash 3,000 /
+   Cr Accounts Receivable 3,000
+4. Dr Cash 12,000 /
+   Cr Loans Payable 12,000
+
+Adjustment:
+Dr Rent Expense 1,000 /
+Cr Prepaid Rent 1,000
+\end{verbatim}
+
+\paragraph{Level~3: adjustments and COGS coupling.}
+\begin{verbatim}
+Opening balances:
+Cash 40,000; Owner's Equity 40,000
+
+Transactions:
+1. Dr Inventory 8,000 /
+   Cr Cash 8,000
+2. Dr Cash 9,000 /
+   Cr Revenue 9,000
+3. Dr Cost of Goods Sold 4,500 /
+   Cr Inventory 4,500
+4. Dr Furniture 10,000 /
+   Cr Cash 10,000
+
+Adjustments:
+Dr Depreciation Expense 1,900 /
+Cr Accumulated Depreciation 1,900
+Dr Salaries Expense 1,300 /
+Cr Accrued Expenses 1,300
+\end{verbatim}
+
+\paragraph{Level~4: mixed funding and chained adjustments.}
+\begin{verbatim}
+Opening balances:
+Cash 55,000; Owner's Equity 55,000
+
+Transactions:
+1. Dr Equipment 24,000 /
+   Cr Cash 9,000 /
+   Cr Notes Payable 15,000
+2. Dr Accounts Receivable 11,000 /
+   Cr Revenue 11,000
+3. Dr Cost of Goods Sold 6,200 /
+   Cr Inventory 6,200
+4. Dr Cash 18,000 /
+   Cr Loans Payable 18,000
+
+Adjustments:
+Dr Interest Expense 900 /
+Cr Accrued Interest Payable 900
+Dr Bad Debt Expense 700 /
+Cr Allowance for Doubtful Accounts 700
+Dr Allowance for Doubtful Accounts 300 /
+Cr Accounts Receivable 300
+\end{verbatim}
+
+\paragraph{Level~5: dense multi-mechanism bookkeeping.}
+\begin{verbatim}
+Opening balances:
+Cash 70,000; Owner's Equity 70,000
+
+Transactions:
+1. Dr Vehicles 36,000 /
+   Cr Cash 14,000 /
+   Cr Notes Payable 22,000
+2. Dr Accounts Receivable 15,500 /
+   Cr Revenue 15,500
+3. Dr Cost of Goods Sold 8,900 /
+   Cr Inventory 8,900
+4. Dr Inventory 7,600 /
+   Cr Accounts Payable 7,600
+5. Dr Cash 25,000 /
+   Cr Loans Payable 25,000
+
+Adjustments:
+Dr Depreciation Expense 3,800 /
+Cr Accumulated Depreciation 3,800
+Dr Interest Expense 1,200 /
+Cr Accrued Interest Payable 1,200
+Dr Operating Expenses 900 /
+Cr Inventory 900
+Dr Rent Expense 1,400 /
+Cr Prepaid Rent 1,400
+\end{verbatim}
+
 \subsection{Evaluation Protocol Details}
 
 The benchmark uses a deterministic synthetic generator, a stratified held-out split, and structured JSON scoring.
