@@ -194,6 +194,107 @@ All reported runs ask the model to emit a JSON object with three top-level keys:
 \texttt{assets}, \texttt{liabilities}, and \texttt{equity}.
 \CoT{} prompts may include intermediate reasoning, but the final score is based only on the terminal structured answer.
 
+\subsection{Concrete Model Failure Examples}
+\label{app:failure-examples}
+
+The following examples are drawn verbatim from retained per-problem
+outputs.  Each illustrates a distinct failure mode discussed in the
+main paper.
+
+\paragraph{Arithmetic collapse.}
+DeepSeek-v3.2 under \zs{} on problem FB\_3\_01855 (Level~3) recalls
+every expected account (\acr{}\,$=1.0$) yet fails the balance equation
+(\ba{}\,$=0$, \textsc{BEM}\,$=\$35{,}100$).
+The primary error is a \$36{,}300 overstatement of Cash:
+
+\begin{small}
+\begin{verbatim}
+Ground truth:            Model output:
+"Cash": 76300            "Cash": 112600   [+36300]
+"Prepaid Insurance":1100 "Prepaid Insurance":1100
+"Equipment": 56500       "Equipment": 56400 [-100]
+"Inventory": 6600        "Inventory": 6600
+"Furniture": 14200       "Furniture": 14200
+"Vehicles": 46100        "Vehicles": 46100
+  Total assets: 200800     Total assets: 237000
+\end{verbatim}
+\end{small}
+
+\noindent
+Assets are overstated by \$36{,}200 while liabilities and equity are
+correct in structure but the balance equation
+$A = L + E$ is violated by \$35{,}100.
+This pattern---structurally complete but numerically
+incoherent---typifies the ``arithmetic collapse'' failure mode, where
+the model recovers the right account names but loses track of running
+balances across many transactions.
+
+\paragraph{Retained Earnings omission (closing-entry blindness).}
+DeepSeek-v3.2 under \zs{} on problem FB\_2\_00851 (Level~2)
+omits Retained Earnings entirely (\cecr{}\,$=0$):
+
+\begin{small}
+\begin{verbatim}
+Ground truth equity:     Model output equity:
+"Owner's Equity": 56700  "Owner's Equity": 56800
+"Retained Earnings":1700  (missing)
+\end{verbatim}
+\end{small}
+
+\noindent
+The model recognizes the correct number of asset and liability
+accounts (\acr{}\,$=0.86$) but never closes revenue and expense
+activity into Retained Earnings.  Instead, the net income is
+partially absorbed into a slightly inflated Owner's Equity, destroying
+both account-level accuracy and the balance equation.  This is the
+single most frequent failure in the benchmark, with Retained Earnings
+showing a 70.4\% omission rate across all models.
+
+\paragraph{Commission error (unclosed income-statement accounts).}
+DeepSeek-v3.2 under \zs{} on problem FB\_3\_01353 (Level~3) places
+five income-statement accounts directly into the equity section instead
+of closing them into Retained Earnings:
+
+\begin{small}
+\begin{verbatim}
+Ground truth equity:     Model output equity:
+"Owner's Equity": 38900  "Owner's Equity": 38900
+"Retained Earnings":35100 "Revenue": 48900
+                          "Operating Expenses":-2500
+                          "Cost of Goods Sold":-10400
+                          "Bad Debt Expense": -700
+                          "Interest Expense": -400
+\end{verbatim}
+\end{small}
+
+\noindent
+This is a commission error: the five income-statement line items
+(Revenue, Operating Expenses, COGS, Bad Debt Expense, Interest
+Expense) should not appear on the balance sheet at all.  Their net
+effect should be a single Retained Earnings entry of \$35{,}100.
+The model has skipped the closing-entry step entirely, exposing
+temporary accounts as if they were permanent equity items.
+
+\paragraph{Formatting failure (non-numeric expression).}
+Llama~3.3~70B under \zs{} on problem FB\_1\_00480 (Level~1) emits an
+arithmetic expression instead of a computed value:
+
+\begin{small}
+\begin{verbatim}
+"equity": {
+  "Owner's Equity": 29000+3200-2200-9400-5400-6700
+}
+\end{verbatim}
+\end{small}
+
+\noindent
+While the model identifies the right account and even enumerates
+the correct adjustments, the result is not valid JSON because the
+value is an expression rather than a number.  The harness marks this
+as a parse failure and retries with a \zs{} fallback prompt.
+Such formatting errors account for \(17\%\) of gpt-oss-120b \zs{}
+outputs and a smaller fraction of Llama runs.
+
 \subsection{Additional Figures}
 
 \begin{figure*}[h]
