@@ -1,0 +1,1727 @@
+{
+  "model_id": "google/gemma-3-12b-it",
+  "strategy": "cot",
+  "n_problems": 100,
+  "complexity_drivers": {
+    "features": [
+      {
+        "feature": "credit_transaction",
+        "n_problems": 80,
+        "avg_fbs": 42.89,
+        "avg_ala": 0.528,
+        "avg_errors": 7.84,
+        "ba_rate": 0.05,
+        "fbs_delta": -29.65,
+        "ala_delta": -0.137
+      },
+      {
+        "feature": "debt",
+        "n_problems": 77,
+        "avg_fbs": 42.86,
+        "avg_ala": 0.5271,
+        "avg_errors": 7.94,
+        "ba_rate": 0.0519,
+        "fbs_delta": -25.9,
+        "ala_delta": -0.1232
+      },
+      {
+        "feature": "prepaid",
+        "n_problems": 94,
+        "avg_fbs": 47.38,
+        "avg_ala": 0.5515,
+        "avg_errors": 7.09,
+        "ba_rate": 0.1383,
+        "fbs_delta": -23.91,
+        "ala_delta": -0.0652
+      },
+      {
+        "feature": "cogs",
+        "n_problems": 58,
+        "avg_fbs": 39.27,
+        "avg_ala": 0.4726,
+        "avg_errors": 9.17,
+        "ba_rate": 0.0172,
+        "fbs_delta": -22.73,
+        "ala_delta": -0.1972
+      },
+      {
+        "feature": "mixed_funding",
+        "n_problems": 40,
+        "avg_fbs": 35.36,
+        "avg_ala": 0.3781,
+        "avg_errors": 10.75,
+        "ba_rate": 0.025,
+        "fbs_delta": -22.43,
+        "ala_delta": -0.2956
+      },
+      {
+        "feature": "derived_interest",
+        "n_problems": 45,
+        "avg_fbs": 37.7,
+        "avg_ala": 0.4371,
+        "avg_errors": 9.84,
+        "ba_rate": 0.0222,
+        "fbs_delta": -20.22,
+        "ala_delta": -0.2152
+      },
+      {
+        "feature": "depreciable_asset",
+        "n_problems": 88,
+        "avg_fbs": 46.94,
+        "avg_ala": 0.5403,
+        "avg_errors": 7.34,
+        "ba_rate": 0.1364,
+        "fbs_delta": -15.63,
+        "ala_delta": -0.1263
+      }
+    ],
+    "skipped_features": [],
+    "min_group_n": 5
+  },
+  "account_miss_rates": {
+    "accounts": [
+      {
+        "account": "Cash",
+        "account_type": "asset",
+        "n_expected": 100,
+        "n_omitted": 0,
+        "n_arithmetic": 70,
+        "n_correct": 30,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.7,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 61770.0
+      },
+      {
+        "account": "Owner's Equity",
+        "account_type": "equity",
+        "n_expected": 100,
+        "n_omitted": 0,
+        "n_arithmetic": 54,
+        "n_correct": 46,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.54,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 42442.59
+      },
+      {
+        "account": "Retained Earnings",
+        "account_type": "equity",
+        "n_expected": 99,
+        "n_omitted": 94,
+        "n_arithmetic": 2,
+        "n_correct": 3,
+        "n_hallucinated": 0,
+        "omission_rate": 0.9495,
+        "arithmetic_rate": 0.0202,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 8900.0
+      },
+      {
+        "account": "Equipment",
+        "account_type": "asset",
+        "n_expected": 88,
+        "n_omitted": 0,
+        "n_arithmetic": 29,
+        "n_correct": 59,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.3295,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 25575.86
+      },
+      {
+        "account": "Inventory",
+        "account_type": "asset",
+        "n_expected": 86,
+        "n_omitted": 0,
+        "n_arithmetic": 43,
+        "n_correct": 43,
+        "n_hallucinated": 7,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.5,
+        "hallucination_rate": 0.5833,
+        "avg_abs_error": 10474.42
+      },
+      {
+        "account": "Prepaid Rent",
+        "account_type": "asset",
+        "n_expected": 84,
+        "n_omitted": 0,
+        "n_arithmetic": 31,
+        "n_correct": 53,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.369,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 5001.88
+      },
+      {
+        "account": "Loans Payable",
+        "account_type": "liability",
+        "n_expected": 77,
+        "n_omitted": 0,
+        "n_arithmetic": 27,
+        "n_correct": 50,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.3506,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 41392.59
+      },
+      {
+        "account": "Accounts Receivable",
+        "account_type": "asset",
+        "n_expected": 75,
+        "n_omitted": 0,
+        "n_arithmetic": 39,
+        "n_correct": 36,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.52,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 20151.28
+      },
+      {
+        "account": "Accounts Payable",
+        "account_type": "liability",
+        "n_expected": 74,
+        "n_omitted": 3,
+        "n_arithmetic": 29,
+        "n_correct": 42,
+        "n_hallucinated": 4,
+        "omission_rate": 0.0405,
+        "arithmetic_rate": 0.3919,
+        "hallucination_rate": 0.1538,
+        "avg_abs_error": 9713.79
+      },
+      {
+        "account": "Prepaid Insurance",
+        "account_type": "asset",
+        "n_expected": 67,
+        "n_omitted": 1,
+        "n_arithmetic": 22,
+        "n_correct": 44,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0149,
+        "arithmetic_rate": 0.3284,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 3843.56
+      },
+      {
+        "account": "Vehicles",
+        "account_type": "asset",
+        "n_expected": 53,
+        "n_omitted": 0,
+        "n_arithmetic": 31,
+        "n_correct": 22,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.5849,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 46961.29
+      },
+      {
+        "account": "Furniture",
+        "account_type": "asset",
+        "n_expected": 49,
+        "n_omitted": 0,
+        "n_arithmetic": 12,
+        "n_correct": 37,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.2449,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 6666.67
+      },
+      {
+        "account": "Accumulated Depreciation",
+        "account_type": "contra_asset",
+        "n_expected": 42,
+        "n_omitted": 15,
+        "n_arithmetic": 6,
+        "n_correct": 21,
+        "n_hallucinated": 0,
+        "omission_rate": 0.3571,
+        "arithmetic_rate": 0.1429,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 14766.67
+      },
+      {
+        "account": "Notes Payable",
+        "account_type": "liability",
+        "n_expected": 40,
+        "n_omitted": 1,
+        "n_arithmetic": 20,
+        "n_correct": 19,
+        "n_hallucinated": 0,
+        "omission_rate": 0.025,
+        "arithmetic_rate": 0.5,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 36485.0
+      },
+      {
+        "account": "Accrued Interest Payable",
+        "account_type": "liability",
+        "n_expected": 23,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 23,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Accrued Expenses",
+        "account_type": "liability",
+        "n_expected": 20,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 20,
+        "n_hallucinated": 0,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Allowance for Doubtful Accounts",
+        "account_type": "contra_asset",
+        "n_expected": 19,
+        "n_omitted": 6,
+        "n_arithmetic": 7,
+        "n_correct": 6,
+        "n_hallucinated": 0,
+        "omission_rate": 0.3158,
+        "arithmetic_rate": 0.3684,
+        "hallucination_rate": 0.0,
+        "avg_abs_error": 2428.57
+      },
+      {
+        "account": "",
+        "account_type": "unknown",
+        "n_expected": 0,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 0,
+        "n_hallucinated": 13,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.1313,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Revenue",
+        "account_type": "revenue",
+        "n_expected": 0,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 0,
+        "n_hallucinated": 9,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0918,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Operating Expenses",
+        "account_type": "expense",
+        "n_expected": 0,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 0,
+        "n_hallucinated": 6,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0612,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Insurance Expense",
+        "account_type": "expense",
+        "n_expected": 0,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 0,
+        "n_hallucinated": 4,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0519,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Bad Debt Expense",
+        "account_type": "expense",
+        "n_expected": 0,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 0,
+        "n_hallucinated": 2,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0364,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Interest Expense",
+        "account_type": "expense",
+        "n_expected": 0,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 0,
+        "n_hallucinated": 4,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0727,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Cost of Goods Sold",
+        "account_type": "expense",
+        "n_expected": 0,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 0,
+        "n_hallucinated": 1,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0227,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Rent Expense",
+        "account_type": "expense",
+        "n_expected": 0,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 0,
+        "n_hallucinated": 1,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0385,
+        "avg_abs_error": 0.0
+      },
+      {
+        "account": "Depreciation Expense",
+        "account_type": "expense",
+        "n_expected": 0,
+        "n_omitted": 0,
+        "n_arithmetic": 0,
+        "n_correct": 0,
+        "n_hallucinated": 1,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.0,
+        "hallucination_rate": 0.0385,
+        "avg_abs_error": 0.0
+      }
+    ],
+    "most_omitted": [
+      [
+        "Retained Earnings",
+        0.9495
+      ],
+      [
+        "Accumulated Depreciation",
+        0.3571
+      ],
+      [
+        "Allowance for Doubtful Accounts",
+        0.3158
+      ],
+      [
+        "Accounts Payable",
+        0.0405
+      ],
+      [
+        "Notes Payable",
+        0.025
+      ],
+      [
+        "Prepaid Insurance",
+        0.0149
+      ],
+      [
+        "Cash",
+        0.0
+      ],
+      [
+        "Owner's Equity",
+        0.0
+      ],
+      [
+        "Equipment",
+        0.0
+      ],
+      [
+        "Inventory",
+        0.0
+      ]
+    ],
+    "most_arithmetic": [
+      [
+        "Cash",
+        0.7
+      ],
+      [
+        "Vehicles",
+        0.5849
+      ],
+      [
+        "Owner's Equity",
+        0.54
+      ],
+      [
+        "Accounts Receivable",
+        0.52
+      ],
+      [
+        "Inventory",
+        0.5
+      ],
+      [
+        "Notes Payable",
+        0.5
+      ],
+      [
+        "Accounts Payable",
+        0.3919
+      ],
+      [
+        "Prepaid Rent",
+        0.369
+      ],
+      [
+        "Allowance for Doubtful Accounts",
+        0.3684
+      ],
+      [
+        "Loans Payable",
+        0.3506
+      ]
+    ],
+    "most_hallucinated": [
+      [
+        "Inventory",
+        0.5833
+      ],
+      [
+        "Accounts Payable",
+        0.1538
+      ],
+      [
+        "",
+        0.1313
+      ],
+      [
+        "Revenue",
+        0.0918
+      ],
+      [
+        "Interest Expense",
+        0.0727
+      ],
+      [
+        "Operating Expenses",
+        0.0612
+      ],
+      [
+        "Insurance Expense",
+        0.0519
+      ],
+      [
+        "Rent Expense",
+        0.0385
+      ],
+      [
+        "Depreciation Expense",
+        0.0385
+      ],
+      [
+        "Bad Debt Expense",
+        0.0364
+      ]
+    ]
+  },
+  "balance_failures": {
+    "n_failures": 83,
+    "causes": [
+      {
+        "problem_id": "FB_1_00404",
+        "difficulty": 1,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 15000.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_1_00216",
+        "difficulty": 1,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -4800.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_1_00252",
+        "difficulty": 1,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 26100.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_1_00290",
+        "difficulty": 1,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -7200.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_1_00390",
+        "difficulty": 1,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -900.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_1_00250",
+        "difficulty": 1,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -2900.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_1_00246",
+        "difficulty": 1,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -4600.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_00851",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -1100.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_00659",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -4400.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_01049",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -4400.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_00676",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -13400.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_01211",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -14800.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_00867",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 14000.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_01103",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -14200.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_00787",
+        "difficulty": 2,
+        "cause": "arithmetic_error",
+        "description": "Arithmetic error on 'Cash': predicted=126800 expected=136800",
+        "imbalance": -10000.0,
+        "missing_accounts": [],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_01220",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 8100.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_01222",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 25200.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_01009",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -57400.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_01248",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 24100.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_00984",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 52400.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_01001",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -37100.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_01168",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -1400.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_00529",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -8400.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_2_00795",
+        "difficulty": 2,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 70700.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01855",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -15100.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01299",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 22000.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01944",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 29000.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01654",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 66800.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01542",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 43200.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01353",
+        "difficulty": 3,
+        "cause": "misclassified_account",
+        "description": "Account(s) in wrong section: ['Allowance for Doubtful Accounts']",
+        "imbalance": 68500.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": [
+          "Allowance for Doubtful Accounts"
+        ]
+      },
+      {
+        "problem_id": "FB_3_01652",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -26100.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01856",
+        "difficulty": 3,
+        "cause": "misclassified_account",
+        "description": "Account(s) in wrong section: ['Allowance for Doubtful Accounts']",
+        "imbalance": 37400.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": [
+          "Allowance for Doubtful Accounts"
+        ]
+      },
+      {
+        "problem_id": "FB_3_01994",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -27300.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01414",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 41900.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01890",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 22600.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01747",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 32700.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01428",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Allowance for Doubtful Accounts']",
+        "imbalance": -8000.0,
+        "missing_accounts": [
+          "Allowance for Doubtful Accounts"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01579",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 3100.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01999",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -9300.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01493",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 51216.66,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01457",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -23400.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01327",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 19500.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01524",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Accumulated Depreciation', 'Retained Earnings']",
+        "imbalance": 4700.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_3_01770",
+        "difficulty": 3,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 20400.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02055",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings', 'Allowance for Doubtful Accounts']",
+        "imbalance": -75700.0,
+        "missing_accounts": [
+          "Allowance for Doubtful Accounts",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02003",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 8500.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02127",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings', 'Allowance for Doubtful Accounts']",
+        "imbalance": 113900.0,
+        "missing_accounts": [
+          "Allowance for Doubtful Accounts",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02029",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings', 'Accumulated Depreciation']",
+        "imbalance": -328200.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02295",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 116300.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02001",
+        "difficulty": 4,
+        "cause": "misclassified_account",
+        "description": "Account(s) in wrong section: ['Accumulated Depreciation']",
+        "imbalance": 24100.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": [
+          "Accumulated Depreciation"
+        ]
+      },
+      {
+        "problem_id": "FB_4_02196",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 70500.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02125",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings', 'Accumulated Depreciation']",
+        "imbalance": 20000.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02222",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 26000.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02153",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 33000.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02184",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 60800.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02202",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings', 'Accumulated Depreciation']",
+        "imbalance": 238600.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02172",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -35100.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02249",
+        "difficulty": 4,
+        "cause": "misclassified_account",
+        "description": "Account(s) in wrong section: ['Accumulated Depreciation', 'Allowance for Doubtful Accounts']",
+        "imbalance": 132400.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": [
+          "Accumulated Depreciation",
+          "Allowance for Doubtful Accounts"
+        ]
+      },
+      {
+        "problem_id": "FB_4_02271",
+        "difficulty": 4,
+        "cause": "misclassified_account",
+        "description": "Account(s) in wrong section: ['Notes Payable', 'Accumulated Depreciation']",
+        "imbalance": 319300.0,
+        "missing_accounts": [
+          "Prepaid Insurance",
+          "Retained Earnings"
+        ],
+        "misclassified": [
+          "Notes Payable",
+          "Accumulated Depreciation"
+        ]
+      },
+      {
+        "problem_id": "FB_4_02274",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 18200.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02057",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 131600.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02390",
+        "difficulty": 4,
+        "cause": "misclassified_account",
+        "description": "Account(s) in wrong section: ['Notes Payable']",
+        "imbalance": 83200.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": [
+          "Notes Payable"
+        ]
+      },
+      {
+        "problem_id": "FB_4_02299",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 404300.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_4_02360",
+        "difficulty": 4,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings', 'Accumulated Depreciation']",
+        "imbalance": 7700.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02402",
+        "difficulty": 5,
+        "cause": "misclassified_account",
+        "description": "Account(s) in wrong section: ['Notes Payable', 'Loans Payable']",
+        "imbalance": 192500.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Retained Earnings"
+        ],
+        "misclassified": [
+          "Notes Payable",
+          "Loans Payable"
+        ]
+      },
+      {
+        "problem_id": "FB_5_02428",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings', 'Accumulated Depreciation', 'Allowance for Doubtful Accounts']",
+        "imbalance": -20000.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Allowance for Doubtful Accounts",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02453",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings', 'Accumulated Depreciation']",
+        "imbalance": 40100.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02424",
+        "difficulty": 5,
+        "cause": "misclassified_account",
+        "description": "Account(s) in wrong section: ['Allowance for Doubtful Accounts']",
+        "imbalance": -79200.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Retained Earnings"
+        ],
+        "misclassified": [
+          "Allowance for Doubtful Accounts"
+        ]
+      },
+      {
+        "problem_id": "FB_5_02421",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings', 'Accounts Payable']",
+        "imbalance": 20500.0,
+        "missing_accounts": [
+          "Accounts Payable",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02460",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Accumulated Depreciation', 'Retained Earnings']",
+        "imbalance": 73800.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02484",
+        "difficulty": 5,
+        "cause": "misclassified_account",
+        "description": "Account(s) in wrong section: ['Allowance for Doubtful Accounts']",
+        "imbalance": 17600.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Retained Earnings"
+        ],
+        "misclassified": [
+          "Allowance for Doubtful Accounts"
+        ]
+      },
+      {
+        "problem_id": "FB_5_02457",
+        "difficulty": 5,
+        "cause": "misclassified_account",
+        "description": "Account(s) in wrong section: ['Allowance for Doubtful Accounts']",
+        "imbalance": 204400.0,
+        "missing_accounts": [
+          "Accounts Payable",
+          "Retained Earnings"
+        ],
+        "misclassified": [
+          "Allowance for Doubtful Accounts"
+        ]
+      },
+      {
+        "problem_id": "FB_5_02474",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings', 'Accumulated Depreciation']",
+        "imbalance": 10000.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02430",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 104000.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02455",
+        "difficulty": 5,
+        "cause": "misclassified_account",
+        "description": "Account(s) in wrong section: ['Accumulated Depreciation', 'Allowance for Doubtful Accounts']",
+        "imbalance": 440700.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": [
+          "Accumulated Depreciation",
+          "Allowance for Doubtful Accounts"
+        ]
+      },
+      {
+        "problem_id": "FB_5_02443",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Accumulated Depreciation', 'Retained Earnings', 'Allowance for Doubtful Accounts']",
+        "imbalance": 39700.0,
+        "missing_accounts": [
+          "Allowance for Doubtful Accounts",
+          "Accumulated Depreciation",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02401",
+        "difficulty": 5,
+        "cause": "misclassified_account",
+        "description": "Account(s) in wrong section: ['Accumulated Depreciation', 'Allowance for Doubtful Accounts']",
+        "imbalance": 528500.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": [
+          "Accumulated Depreciation",
+          "Allowance for Doubtful Accounts"
+        ]
+      },
+      {
+        "problem_id": "FB_5_02405",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -68000.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02422",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": -73000.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02466",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings', 'Accumulated Depreciation']",
+        "imbalance": 112900.0,
+        "missing_accounts": [
+          "Accumulated Depreciation",
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02496",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Accumulated Depreciation']",
+        "imbalance": 1200.0,
+        "missing_accounts": [
+          "Accumulated Depreciation"
+        ],
+        "misclassified": []
+      },
+      {
+        "problem_id": "FB_5_02454",
+        "difficulty": 5,
+        "cause": "misclassified_account",
+        "description": "Account(s) in wrong section: ['Allowance for Doubtful Accounts']",
+        "imbalance": 42000.0,
+        "missing_accounts": [
+          "Notes Payable",
+          "Retained Earnings"
+        ],
+        "misclassified": [
+          "Allowance for Doubtful Accounts"
+        ]
+      },
+      {
+        "problem_id": "FB_5_02411",
+        "difficulty": 5,
+        "cause": "omitted_key_account",
+        "description": "Key account(s) missing: ['Retained Earnings']",
+        "imbalance": 118100.0,
+        "missing_accounts": [
+          "Retained Earnings"
+        ],
+        "misclassified": []
+      }
+    ],
+    "cause_summary": {
+      "omitted_key_account": 69,
+      "arithmetic_error": 1,
+      "misclassified_account": 13
+    }
+  },
+  "hallucinations": {
+    "entries": [
+      {
+        "account_name": "",
+        "frequency": 13,
+        "in_schema": false,
+        "account_type": null
+      },
+      {
+        "account_name": "Revenue",
+        "frequency": 9,
+        "in_schema": true,
+        "account_type": "revenue"
+      },
+      {
+        "account_name": "Inventory",
+        "frequency": 7,
+        "in_schema": true,
+        "account_type": "asset"
+      },
+      {
+        "account_name": "Operating Expenses",
+        "frequency": 6,
+        "in_schema": true,
+        "account_type": "expense"
+      },
+      {
+        "account_name": "Accounts Payable",
+        "frequency": 4,
+        "in_schema": true,
+        "account_type": "liability"
+      },
+      {
+        "account_name": "Insurance Expense",
+        "frequency": 4,
+        "in_schema": true,
+        "account_type": "expense"
+      },
+      {
+        "account_name": "Interest Expense",
+        "frequency": 4,
+        "in_schema": true,
+        "account_type": "expense"
+      },
+      {
+        "account_name": "Bad Debt Expense",
+        "frequency": 2,
+        "in_schema": true,
+        "account_type": "expense"
+      },
+      {
+        "account_name": "Cost of Goods Sold",
+        "frequency": 1,
+        "in_schema": true,
+        "account_type": "expense"
+      },
+      {
+        "account_name": "Rent Expense",
+        "frequency": 1,
+        "in_schema": true,
+        "account_type": "expense"
+      },
+      {
+        "account_name": "Depreciation Expense",
+        "frequency": 1,
+        "in_schema": true,
+        "account_type": "expense"
+      }
+    ],
+    "total_hallucinations": 52,
+    "schema_known_rate": 0.9091
+  },
+  "difficulty_gradient": {
+    "levels": [
+      {
+        "level": 1,
+        "n_problems": 20,
+        "avg_fbs": 72.541,
+        "avg_ala": 0.665,
+        "ba_rate": 0.65,
+        "avg_n_errors": 3.3,
+        "error_composition": {
+          "CO": 0.3333,
+          "AE": 0.303,
+          "OE": 0.2576,
+          "CV": 0.1061
+        },
+        "avg_n_accounts_expected": 5.2,
+        "avg_n_accounts_correct": 3.45,
+        "feature_rates": {
+          "depreciable_asset": 0.7,
+          "prepaid": 0.75,
+          "debt": 0.0,
+          "cogs": 0.0,
+          "derived_interest": 0.0,
+          "credit_transaction": 0.0,
+          "mixed_funding": 0.0
+        }
+      },
+      {
+        "level": 2,
+        "n_problems": 20,
+        "avg_fbs": 52.4535,
+        "avg_ala": 0.6597,
+        "ba_rate": 0.15,
+        "avg_n_errors": 4.35,
+        "error_composition": {
+          "AE": 0.4713,
+          "OE": 0.2184,
+          "CV": 0.1954,
+          "CO": 0.1149
+        },
+        "avg_n_accounts_expected": 8.75,
+        "avg_n_accounts_correct": 5.8,
+        "feature_rates": {
+          "prepaid": 1.0,
+          "debt": 0.9,
+          "credit_transaction": 1.0,
+          "depreciable_asset": 0.75,
+          "derived_interest": 0.0,
+          "mixed_funding": 0.0,
+          "cogs": 0.0
+        }
+      },
+      {
+        "level": 3,
+        "n_problems": 20,
+        "avg_fbs": 48.371,
+        "avg_ala": 0.6962,
+        "ba_rate": 0.0,
+        "avg_n_errors": 5.5,
+        "error_composition": {
+          "AE": 0.4727,
+          "CV": 0.2182,
+          "OE": 0.1909,
+          "CO": 0.1,
+          "CE": 0.0182
+        },
+        "avg_n_accounts_expected": 11.9,
+        "avg_n_accounts_correct": 8.3,
+        "feature_rates": {
+          "prepaid": 1.0,
+          "debt": 0.95,
+          "derived_interest": 0.45,
+          "depreciable_asset": 0.95,
+          "credit_transaction": 1.0,
+          "cogs": 0.95,
+          "mixed_funding": 0.0
+        }
+      },
+      {
+        "level": 4,
+        "n_problems": 20,
+        "avg_fbs": 40.7175,
+        "avg_ala": 0.5255,
+        "ba_rate": 0.0,
+        "avg_n_errors": 8.45,
+        "error_composition": {
+          "AE": 0.6391,
+          "OE": 0.1598,
+          "CV": 0.1243,
+          "CO": 0.0414,
+          "CE": 0.0355
+        },
+        "avg_n_accounts_expected": 13.85,
+        "avg_n_accounts_correct": 7.25,
+        "feature_rates": {
+          "prepaid": 0.95,
+          "debt": 1.0,
+          "derived_interest": 0.8,
+          "depreciable_asset": 1.0,
+          "mixed_funding": 1.0,
+          "credit_transaction": 1.0,
+          "cogs": 0.95
+        }
+      },
+      {
+        "level": 5,
+        "n_problems": 20,
+        "avg_fbs": 30.0025,
+        "avg_ala": 0.2307,
+        "ba_rate": 0.05,
+        "avg_n_errors": 13.05,
+        "error_composition": {
+          "AE": 0.7395,
+          "OE": 0.1379,
+          "CV": 0.0766,
+          "CE": 0.0383,
+          "CO": 0.0077
+        },
+        "avg_n_accounts_expected": 15.1,
+        "avg_n_accounts_correct": 3.5,
+        "feature_rates": {
+          "prepaid": 1.0,
+          "debt": 1.0,
+          "cogs": 1.0,
+          "derived_interest": 1.0,
+          "depreciable_asset": 1.0,
+          "credit_transaction": 1.0,
+          "mixed_funding": 1.0
+        }
+      }
+    ]
+  }
+}

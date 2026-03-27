@@ -270,6 +270,136 @@
           "delta_fbs_controlled": -1.22
         }
       },
+      "google/gemma-3-12b-it (cot)": {
+        "cogs": {
+          "n_with": 58,
+          "n_without": 42,
+          "fbs_with": 39.27,
+          "fbs_without": 62.0,
+          "delta_fbs_raw": -22.73,
+          "delta_ala_raw": -0.1971,
+          "delta_fbs_controlled": null
+        },
+        "credit_transaction": {
+          "n_with": 80,
+          "n_without": 20,
+          "fbs_with": 42.89,
+          "fbs_without": 72.54,
+          "delta_fbs_raw": -29.65,
+          "delta_ala_raw": -0.137,
+          "delta_fbs_controlled": null
+        },
+        "debt": {
+          "n_with": 77,
+          "n_without": 23,
+          "fbs_with": 42.86,
+          "fbs_without": 68.76,
+          "delta_fbs_raw": -25.9,
+          "delta_ala_raw": -0.1233,
+          "delta_fbs_controlled": 13.48
+        },
+        "depreciable_asset": {
+          "n_with": 88,
+          "n_without": 12,
+          "fbs_with": 46.94,
+          "fbs_without": 62.57,
+          "delta_fbs_raw": -15.63,
+          "delta_ala_raw": -0.1263,
+          "delta_fbs_controlled": -0.81
+        },
+        "derived_interest": {
+          "n_with": 45,
+          "n_without": 55,
+          "fbs_with": 37.7,
+          "fbs_without": 57.92,
+          "delta_fbs_raw": -20.22,
+          "delta_ala_raw": -0.2152,
+          "delta_fbs_controlled": 1.74
+        },
+        "mixed_funding": {
+          "n_with": 40,
+          "n_without": 60,
+          "fbs_with": 35.36,
+          "fbs_without": 57.79,
+          "delta_fbs_raw": -22.43,
+          "delta_ala_raw": -0.2955,
+          "delta_fbs_controlled": null
+        },
+        "prepaid": {
+          "n_with": 94,
+          "n_without": 6,
+          "fbs_with": 47.38,
+          "fbs_without": 71.3,
+          "delta_fbs_raw": -23.91,
+          "delta_ala_raw": -0.0651,
+          "delta_fbs_controlled": -7.32
+        }
+      },
+      "google/gemma-3-12b-it (zero_shot)": {
+        "cogs": {
+          "n_with": 58,
+          "n_without": 42,
+          "fbs_with": 27.17,
+          "fbs_without": 36.75,
+          "delta_fbs_raw": -9.58,
+          "delta_ala_raw": -0.1688,
+          "delta_fbs_controlled": null
+        },
+        "credit_transaction": {
+          "n_with": 80,
+          "n_without": 20,
+          "fbs_with": 29.76,
+          "fbs_without": 36.95,
+          "delta_fbs_raw": -7.19,
+          "delta_ala_raw": -0.0702,
+          "delta_fbs_controlled": null
+        },
+        "debt": {
+          "n_with": 77,
+          "n_without": 23,
+          "fbs_with": 29.55,
+          "fbs_without": 36.71,
+          "delta_fbs_raw": -7.16,
+          "delta_ala_raw": -0.0722,
+          "delta_fbs_controlled": -3.26
+        },
+        "depreciable_asset": {
+          "n_with": 88,
+          "n_without": 12,
+          "fbs_with": 30.03,
+          "fbs_without": 39.76,
+          "delta_fbs_raw": -9.74,
+          "delta_ala_raw": -0.1351,
+          "delta_fbs_controlled": -4.18
+        },
+        "derived_interest": {
+          "n_with": 45,
+          "n_without": 55,
+          "fbs_with": 25.11,
+          "fbs_without": 36.18,
+          "delta_fbs_raw": -11.07,
+          "delta_ala_raw": -0.1882,
+          "delta_fbs_controlled": -2.33
+        },
+        "mixed_funding": {
+          "n_with": 40,
+          "n_without": 60,
+          "fbs_with": 23.67,
+          "fbs_without": 36.21,
+          "delta_fbs_raw": -12.54,
+          "delta_ala_raw": -0.2373,
+          "delta_fbs_controlled": null
+        },
+        "prepaid": {
+          "n_with": 94,
+          "n_without": 6,
+          "fbs_with": 30.8,
+          "fbs_without": 37.32,
+          "delta_fbs_raw": -6.52,
+          "delta_ala_raw": 0.0649,
+          "delta_fbs_controlled": -4.3
+        }
+      },
       "meta-llama/llama-3.3-70b-instruct (cot)": {
         "cogs": {
           "n_with": 58,
@@ -660,6 +790,136 @@
           "delta_fbs_controlled": -13.27
         }
       },
+      "qwen/qwen3-8b (cot)": {
+        "cogs": {
+          "n_with": 58,
+          "n_without": 42,
+          "fbs_with": 52.03,
+          "fbs_without": 85.9,
+          "delta_fbs_raw": -33.87,
+          "delta_ala_raw": -0.1218,
+          "delta_fbs_controlled": null
+        },
+        "credit_transaction": {
+          "n_with": 80,
+          "n_without": 20,
+          "fbs_with": 61.36,
+          "fbs_without": 85.85,
+          "delta_fbs_raw": -24.5,
+          "delta_ala_raw": -0.012,
+          "delta_fbs_controlled": null
+        },
+        "debt": {
+          "n_with": 77,
+          "n_without": 23,
+          "fbs_with": 60.87,
+          "fbs_without": 84.28,
+          "delta_fbs_raw": -23.4,
+          "delta_ala_raw": -0.0194,
+          "delta_fbs_controlled": -1.99
+        },
+        "depreciable_asset": {
+          "n_with": 88,
+          "n_without": 12,
+          "fbs_with": 64.29,
+          "fbs_without": 80.69,
+          "delta_fbs_raw": -16.41,
+          "delta_ala_raw": -0.0818,
+          "delta_fbs_controlled": 4.37
+        },
+        "derived_interest": {
+          "n_with": 45,
+          "n_without": 55,
+          "fbs_with": 51.15,
+          "fbs_without": 78.61,
+          "delta_fbs_raw": -27.46,
+          "delta_ala_raw": -0.1174,
+          "delta_fbs_controlled": 6.27
+        },
+        "mixed_funding": {
+          "n_with": 40,
+          "n_without": 60,
+          "fbs_with": 45.72,
+          "fbs_without": 79.95,
+          "delta_fbs_raw": -34.22,
+          "delta_ala_raw": -0.1736,
+          "delta_fbs_controlled": null
+        },
+        "prepaid": {
+          "n_with": 94,
+          "n_without": 6,
+          "fbs_with": 65.42,
+          "fbs_without": 79.34,
+          "delta_fbs_raw": -13.92,
+          "delta_ala_raw": 0.0046,
+          "delta_fbs_controlled": -2.11
+        }
+      },
+      "qwen/qwen3-8b (zero_shot)": {
+        "cogs": {
+          "n_with": 58,
+          "n_without": 42,
+          "fbs_with": 50.68,
+          "fbs_without": 80.29,
+          "delta_fbs_raw": -29.6,
+          "delta_ala_raw": -0.1333,
+          "delta_fbs_controlled": null
+        },
+        "credit_transaction": {
+          "n_with": 80,
+          "n_without": 20,
+          "fbs_with": 57.93,
+          "fbs_without": 83.85,
+          "delta_fbs_raw": -25.91,
+          "delta_ala_raw": -0.0526,
+          "delta_fbs_controlled": null
+        },
+        "debt": {
+          "n_with": 77,
+          "n_without": 23,
+          "fbs_with": 56.67,
+          "fbs_without": 84.69,
+          "delta_fbs_raw": -28.02,
+          "delta_ala_raw": -0.077,
+          "delta_fbs_controlled": -10.45
+        },
+        "depreciable_asset": {
+          "n_with": 88,
+          "n_without": 12,
+          "fbs_with": 60.82,
+          "fbs_without": 79.93,
+          "delta_fbs_raw": -19.11,
+          "delta_ala_raw": -0.091,
+          "delta_fbs_controlled": 4.83
+        },
+        "derived_interest": {
+          "n_with": 45,
+          "n_without": 55,
+          "fbs_with": 43.65,
+          "fbs_without": 79.04,
+          "delta_fbs_raw": -35.39,
+          "delta_ala_raw": -0.1739,
+          "delta_fbs_controlled": -9.95
+        },
+        "mixed_funding": {
+          "n_with": 40,
+          "n_without": 60,
+          "fbs_with": 40.14,
+          "fbs_without": 78.43,
+          "delta_fbs_raw": -38.3,
+          "delta_ala_raw": -0.2423,
+          "delta_fbs_controlled": null
+        },
+        "prepaid": {
+          "n_with": 94,
+          "n_without": 6,
+          "fbs_with": 62.1,
+          "fbs_without": 79.04,
+          "delta_fbs_raw": -16.94,
+          "delta_ala_raw": -0.03,
+          "delta_fbs_controlled": -4.79
+        }
+      },
       "qwen/qwen3.5-flash-02-23 (cot)": {
         "cogs": {
           "n_with": 58,
@@ -797,189 +1057,189 @@
       {
         "account": "Retained Earnings",
         "account_type": "equity",
-        "n_expected": 1142,
-        "omission_rate": 0.704,
-        "arithmetic_rate": 0.1559,
-        "correct_rate": 0.1401,
+        "n_expected": 1533,
+        "omission_rate": 0.771,
+        "arithmetic_rate": 0.1226,
+        "correct_rate": 0.1063,
         "n_hallucinated": 2,
-        "avg_abs_error": 33712.81,
-        "difficulty_score": 0.4848
+        "avg_abs_error": 34767.45,
+        "difficulty_score": 0.5117
       },
       {
         "account": "Accumulated Depreciation",
         "account_type": "asset",
-        "n_expected": 479,
-        "omission_rate": 0.3403,
-        "arithmetic_rate": 0.0355,
-        "correct_rate": 0.6242,
+        "n_expected": 646,
+        "omission_rate": 0.3947,
+        "arithmetic_rate": 0.0929,
+        "correct_rate": 0.5124,
         "n_hallucinated": 0,
-        "avg_abs_error": 18241.18,
-        "difficulty_score": 0.2184
+        "avg_abs_error": 28105.0,
+        "difficulty_score": 0.274
       },
       {
         "account": "Owner's Equity",
         "account_type": "equity",
-        "n_expected": 1154,
-        "omission_rate": 0.0225,
-        "arithmetic_rate": 0.5069,
-        "correct_rate": 0.4705,
+        "n_expected": 1549,
+        "omission_rate": 0.0168,
+        "arithmetic_rate": 0.5804,
+        "correct_rate": 0.4028,
         "n_hallucinated": 0,
-        "avg_abs_error": 29320.74,
-        "difficulty_score": 0.2163
+        "avg_abs_error": 34154.09,
+        "difficulty_score": 0.2422
       },
       {
         "account": "Allowance for Doubtful Accounts",
         "account_type": "asset",
-        "n_expected": 214,
-        "omission_rate": 0.1869,
-        "arithmetic_rate": 0.0561,
-        "correct_rate": 0.757,
+        "n_expected": 289,
+        "omission_rate": 0.2561,
+        "arithmetic_rate": 0.1315,
+        "correct_rate": 0.6125,
         "n_hallucinated": 0,
-        "avg_abs_error": 1583.33,
-        "difficulty_score": 0.1346
+        "avg_abs_error": 2084.21,
+        "difficulty_score": 0.2062
       },
       {
         "account": "Cash",
         "account_type": "asset",
-        "n_expected": 1154,
-        "omission_rate": 0.0026,
-        "arithmetic_rate": 0.3189,
-        "correct_rate": 0.6785,
+        "n_expected": 1549,
+        "omission_rate": 0.0019,
+        "arithmetic_rate": 0.3822,
+        "correct_rate": 0.6159,
         "n_hallucinated": 0,
-        "avg_abs_error": 43727.76,
-        "difficulty_score": 0.1291
+        "avg_abs_error": 51922.66,
+        "difficulty_score": 0.154
       },
       {
         "account": "Accounts Receivable",
         "account_type": "asset",
-        "n_expected": 861,
-        "omission_rate": 0.0151,
-        "arithmetic_rate": 0.1974,
-        "correct_rate": 0.7875,
+        "n_expected": 1159,
+        "omission_rate": 0.0173,
+        "arithmetic_rate": 0.2701,
+        "correct_rate": 0.7127,
         "n_hallucinated": 0,
-        "avg_abs_error": 13821.18,
-        "difficulty_score": 0.088
-      },
-      {
-        "account": "Inventory",
-        "account_type": "asset",
-        "n_expected": 990,
-        "omission_rate": 0.0,
-        "arithmetic_rate": 0.1899,
-        "correct_rate": 0.8101,
-        "n_hallucinated": 66,
-        "avg_abs_error": 10165.43,
-        "difficulty_score": 0.076
-      },
-      {
-        "account": "Vehicles",
-        "account_type": "asset",
-        "n_expected": 607,
-        "omission_rate": 0.0148,
-        "arithmetic_rate": 0.1334,
-        "correct_rate": 0.8517,
-        "n_hallucinated": 0,
-        "avg_abs_error": 33098.77,
-        "difficulty_score": 0.0623
+        "avg_abs_error": 14962.62,
+        "difficulty_score": 0.1184
       },
       {
         "account": "Notes Payable",
         "account_type": "liability",
-        "n_expected": 453,
-        "omission_rate": 0.011,
-        "arithmetic_rate": 0.1347,
-        "correct_rate": 0.8543,
+        "n_expected": 612,
+        "omission_rate": 0.0114,
+        "arithmetic_rate": 0.2353,
+        "correct_rate": 0.7533,
         "n_hallucinated": 0,
-        "avg_abs_error": 23259.02,
-        "difficulty_score": 0.0605
+        "avg_abs_error": 29581.94,
+        "difficulty_score": 0.101
+      },
+      {
+        "account": "Inventory",
+        "account_type": "asset",
+        "n_expected": 1330,
+        "omission_rate": 0.0,
+        "arithmetic_rate": 0.2481,
+        "correct_rate": 0.7519,
+        "n_hallucinated": 90,
+        "avg_abs_error": 10029.09,
+        "difficulty_score": 0.0992
+      },
+      {
+        "account": "Vehicles",
+        "account_type": "asset",
+        "n_expected": 817,
+        "omission_rate": 0.011,
+        "arithmetic_rate": 0.2154,
+        "correct_rate": 0.7736,
+        "n_hallucinated": 0,
+        "avg_abs_error": 40396.59,
+        "difficulty_score": 0.0928
       },
       {
         "account": "Accounts Payable",
         "account_type": "liability",
-        "n_expected": 853,
-        "omission_rate": 0.0023,
-        "arithmetic_rate": 0.1266,
-        "correct_rate": 0.871,
-        "n_hallucinated": 0,
-        "avg_abs_error": 5671.3,
-        "difficulty_score": 0.0521
-      },
-      {
-        "account": "Loans Payable",
-        "account_type": "liability",
-        "n_expected": 886,
-        "omission_rate": 0.0034,
-        "arithmetic_rate": 0.1095,
-        "correct_rate": 0.8871,
-        "n_hallucinated": 0,
-        "avg_abs_error": 28477.32,
-        "difficulty_score": 0.0458
+        "n_expected": 1146,
+        "omission_rate": 0.0052,
+        "arithmetic_rate": 0.1972,
+        "correct_rate": 0.7976,
+        "n_hallucinated": 24,
+        "avg_abs_error": 6968.58,
+        "difficulty_score": 0.082
       },
       {
         "account": "Furniture",
         "account_type": "asset",
-        "n_expected": 559,
-        "omission_rate": 0.0197,
-        "arithmetic_rate": 0.0769,
-        "correct_rate": 0.9034,
+        "n_expected": 753,
+        "omission_rate": 0.0159,
+        "arithmetic_rate": 0.158,
+        "correct_rate": 0.826,
         "n_hallucinated": 0,
-        "avg_abs_error": 4434.88,
-        "difficulty_score": 0.0426
+        "avg_abs_error": 6873.11,
+        "difficulty_score": 0.0728
+      },
+      {
+        "account": "Loans Payable",
+        "account_type": "liability",
+        "n_expected": 1191,
+        "omission_rate": 0.0025,
+        "arithmetic_rate": 0.1688,
+        "correct_rate": 0.8287,
+        "n_hallucinated": 0,
+        "avg_abs_error": 37077.11,
+        "difficulty_score": 0.069
       },
       {
         "account": "Equipment",
         "account_type": "asset",
-        "n_expected": 1017,
-        "omission_rate": 0.0069,
-        "arithmetic_rate": 0.0934,
-        "correct_rate": 0.8997,
+        "n_expected": 1364,
+        "omission_rate": 0.0051,
+        "arithmetic_rate": 0.1547,
+        "correct_rate": 0.8402,
         "n_hallucinated": 0,
-        "avg_abs_error": 15123.16,
-        "difficulty_score": 0.0415
+        "avg_abs_error": 20986.26,
+        "difficulty_score": 0.065
       },
       {
         "account": "Prepaid Insurance",
         "account_type": "asset",
-        "n_expected": 768,
-        "omission_rate": 0.0065,
-        "arithmetic_rate": 0.082,
-        "correct_rate": 0.9115,
+        "n_expected": 1033,
+        "omission_rate": 0.0058,
+        "arithmetic_rate": 0.1258,
+        "correct_rate": 0.8683,
         "n_hallucinated": 0,
-        "avg_abs_error": 3098.41,
-        "difficulty_score": 0.0367
+        "avg_abs_error": 4136.6,
+        "difficulty_score": 0.0538
       },
       {
         "account": "Prepaid Rent",
         "account_type": "asset",
-        "n_expected": 966,
-        "omission_rate": 0.001,
-        "arithmetic_rate": 0.0642,
-        "correct_rate": 0.9348,
+        "n_expected": 1298,
+        "omission_rate": 0.0008,
+        "arithmetic_rate": 0.1133,
+        "correct_rate": 0.886,
         "n_hallucinated": 0,
-        "avg_abs_error": 3612.74,
-        "difficulty_score": 0.0263
+        "avg_abs_error": 3991.49,
+        "difficulty_score": 0.0458
       },
       {
         "account": "Accrued Interest Payable",
         "account_type": "liability",
-        "n_expected": 262,
-        "omission_rate": 0.0038,
-        "arithmetic_rate": 0.0076,
-        "correct_rate": 0.9885,
+        "n_expected": 353,
+        "omission_rate": 0.0057,
+        "arithmetic_rate": 0.0057,
+        "correct_rate": 0.9887,
         "n_hallucinated": 0,
         "avg_abs_error": 5650.0,
-        "difficulty_score": 0.0053
+        "difficulty_score": 0.0057
       },
       {
         "account": "Accrued Expenses",
         "account_type": "liability",
-        "n_expected": 231,
+        "n_expected": 311,
         "omission_rate": 0.0,
-        "arithmetic_rate": 0.0043,
-        "correct_rate": 0.9957,
-        "n_hallucinated": 0,
+        "arithmetic_rate": 0.0032,
+        "correct_rate": 0.9968,
+        "n_hallucinated": 1,
         "avg_abs_error": 17800.0,
-        "difficulty_score": 0.0017
+        "difficulty_score": 0.0013
       },
       {
         "account": "Accumulated Depreciation - Furniture",
@@ -1043,7 +1303,7 @@
         "omission_rate": 0,
         "arithmetic_rate": 0,
         "correct_rate": 0,
-        "n_hallucinated": 33,
+        "n_hallucinated": 47,
         "avg_abs_error": 0,
         "difficulty_score": 0
       },
@@ -1054,7 +1314,7 @@
         "omission_rate": 0,
         "arithmetic_rate": 0,
         "correct_rate": 0,
-        "n_hallucinated": 15,
+        "n_hallucinated": 20,
         "avg_abs_error": 0,
         "difficulty_score": 0
       },
@@ -1065,7 +1325,7 @@
         "omission_rate": 0,
         "arithmetic_rate": 0,
         "correct_rate": 0,
-        "n_hallucinated": 22,
+        "n_hallucinated": 35,
         "avg_abs_error": 0,
         "difficulty_score": 0
       },
@@ -1076,7 +1336,7 @@
         "omission_rate": 0,
         "arithmetic_rate": 0,
         "correct_rate": 0,
-        "n_hallucinated": 13,
+        "n_hallucinated": 19,
         "avg_abs_error": 0,
         "difficulty_score": 0
       },
@@ -1087,7 +1347,7 @@
         "omission_rate": 0,
         "arithmetic_rate": 0,
         "correct_rate": 0,
-        "n_hallucinated": 14,
+        "n_hallucinated": 20,
         "avg_abs_error": 0,
         "difficulty_score": 0
       },
@@ -1098,7 +1358,7 @@
         "omission_rate": 0,
         "arithmetic_rate": 0,
         "correct_rate": 0,
-        "n_hallucinated": 7,
+        "n_hallucinated": 12,
         "avg_abs_error": 0,
         "difficulty_score": 0
       },
@@ -1109,7 +1369,7 @@
         "omission_rate": 0,
         "arithmetic_rate": 0,
         "correct_rate": 0,
-        "n_hallucinated": 14,
+        "n_hallucinated": 26,
         "avg_abs_error": 0,
         "difficulty_score": 0
       },
@@ -1120,7 +1380,7 @@
         "omission_rate": 0,
         "arithmetic_rate": 0,
         "correct_rate": 0,
-        "n_hallucinated": 10,
+        "n_hallucinated": 16,
         "avg_abs_error": 0,
         "difficulty_score": 0
       },
@@ -1186,7 +1446,7 @@
         "omission_rate": 0,
         "arithmetic_rate": 0,
         "correct_rate": 0,
-        "n_hallucinated": 10,
+        "n_hallucinated": 16,
         "avg_abs_error": 0,
         "difficulty_score": 0
       },
@@ -1197,7 +1457,7 @@
         "omission_rate": 0,
         "arithmetic_rate": 0,
         "correct_rate": 0,
-        "n_hallucinated": 8,
+        "n_hallucinated": 10,
         "avg_abs_error": 0,
         "difficulty_score": 0
       },
@@ -1224,7 +1484,7 @@
         "difficulty_score": 0
       },
       {
-        "account": "Total Equity",
+        "account": "Total Assets",
         "account_type": "unknown",
         "n_expected": 0,
         "omission_rate": 0,
@@ -1235,13 +1495,46 @@
         "difficulty_score": 0
       },
       {
+        "account": "Total Liabilities",
+        "account_type": "unknown",
+        "n_expected": 0,
+        "omission_rate": 0,
+        "arithmetic_rate": 0,
+        "correct_rate": 0,
+        "n_hallucinated": 5,
+        "avg_abs_error": 0,
+        "difficulty_score": 0
+      },
+      {
+        "account": "Total Equity",
+        "account_type": "unknown",
+        "n_expected": 0,
+        "omission_rate": 0,
+        "arithmetic_rate": 0,
+        "correct_rate": 0,
+        "n_hallucinated": 7,
+        "avg_abs_error": 0,
+        "difficulty_score": 0
+      },
+      {
+        "account": "",
+        "account_type": "unknown",
+        "n_expected": 0,
+        "omission_rate": 0,
+        "arithmetic_rate": 0,
+        "correct_rate": 0,
+        "n_hallucinated": 15,
+        "avg_abs_error": 0,
+        "difficulty_score": 0
+      },
+      {
         "account": "Net Income",
         "account_type": "unknown",
         "n_expected": 0,
         "omission_rate": 0,
         "arithmetic_rate": 0,
         "correct_rate": 0,
-        "n_hallucinated": 66,
+        "n_hallucinated": 69,
         "avg_abs_error": 0,
         "difficulty_score": 0
       },
@@ -1504,6 +1797,130 @@
           "omission_rate": 0.02,
           "arithmetic_rate": 0.15,
           "error_rate": 0.17
+        }
+      ],
+      "google/gemma-3-12b-it (cot)": [
+        {
+          "account": "Retained Earnings",
+          "omission_rate": 0.9495,
+          "arithmetic_rate": 0.0202,
+          "error_rate": 0.9697
+        },
+        {
+          "account": "Allowance for Doubtful Accounts",
+          "omission_rate": 0.3158,
+          "arithmetic_rate": 0.3684,
+          "error_rate": 0.6842
+        },
+        {
+          "account": "Cash",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.68,
+          "error_rate": 0.68
+        },
+        {
+          "account": "Vehicles",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.5472,
+          "error_rate": 0.5472
+        },
+        {
+          "account": "Accounts Receivable",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.52,
+          "error_rate": 0.52
+        },
+        {
+          "account": "Owner's Equity",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.5,
+          "error_rate": 0.5
+        },
+        {
+          "account": "Accumulated Depreciation",
+          "omission_rate": 0.3571,
+          "arithmetic_rate": 0.1429,
+          "error_rate": 0.5
+        },
+        {
+          "account": "Notes Payable",
+          "omission_rate": 0.025,
+          "arithmetic_rate": 0.475,
+          "error_rate": 0.5
+        },
+        {
+          "account": "Inventory",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.4767,
+          "error_rate": 0.4767
+        },
+        {
+          "account": "Accounts Payable",
+          "omission_rate": 0.0405,
+          "arithmetic_rate": 0.3919,
+          "error_rate": 0.4324
+        }
+      ],
+      "google/gemma-3-12b-it (zero_shot)": [
+        {
+          "account": "Cash",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 1.0,
+          "error_rate": 1.0
+        },
+        {
+          "account": "Retained Earnings",
+          "omission_rate": 0.9894,
+          "arithmetic_rate": 0.0106,
+          "error_rate": 1.0
+        },
+        {
+          "account": "Accumulated Depreciation",
+          "omission_rate": 0.8293,
+          "arithmetic_rate": 0.122,
+          "error_rate": 0.9512
+        },
+        {
+          "account": "Notes Payable",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.8974,
+          "error_rate": 0.8974
+        },
+        {
+          "account": "Owner's Equity",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.8526,
+          "error_rate": 0.8526
+        },
+        {
+          "account": "Accounts Receivable",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.8082,
+          "error_rate": 0.8082
+        },
+        {
+          "account": "Vehicles",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.7451,
+          "error_rate": 0.7451
+        },
+        {
+          "account": "Inventory",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.7439,
+          "error_rate": 0.7439
+        },
+        {
+          "account": "Accounts Payable",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.7324,
+          "error_rate": 0.7324
+        },
+        {
+          "account": "Furniture",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.617,
+          "error_rate": 0.617
         }
       ],
       "meta-llama/llama-3.3-70b-instruct (cot)": [
@@ -1878,6 +2295,130 @@
           "error_rate": 0.0
         }
       ],
+      "qwen/qwen3-8b (cot)": [
+        {
+          "account": "Retained Earnings",
+          "omission_rate": 0.9495,
+          "arithmetic_rate": 0.0505,
+          "error_rate": 1.0
+        },
+        {
+          "account": "Allowance for Doubtful Accounts",
+          "omission_rate": 0.6842,
+          "arithmetic_rate": 0.2632,
+          "error_rate": 0.9474
+        },
+        {
+          "account": "Accumulated Depreciation",
+          "omission_rate": 0.5476,
+          "arithmetic_rate": 0.381,
+          "error_rate": 0.9286
+        },
+        {
+          "account": "Owner's Equity",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.89,
+          "error_rate": 0.89
+        },
+        {
+          "account": "Furniture",
+          "omission_rate": 0.0204,
+          "arithmetic_rate": 0.3469,
+          "error_rate": 0.3673
+        },
+        {
+          "account": "Notes Payable",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.35,
+          "error_rate": 0.35
+        },
+        {
+          "account": "Accounts Receivable",
+          "omission_rate": 0.0533,
+          "arithmetic_rate": 0.2933,
+          "error_rate": 0.3467
+        },
+        {
+          "account": "Vehicles",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.283,
+          "error_rate": 0.283
+        },
+        {
+          "account": "Cash",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.24,
+          "error_rate": 0.24
+        },
+        {
+          "account": "Accounts Payable",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.2297,
+          "error_rate": 0.2297
+        }
+      ],
+      "qwen/qwen3-8b (zero_shot)": [
+        {
+          "account": "Retained Earnings",
+          "omission_rate": 0.9798,
+          "arithmetic_rate": 0.0202,
+          "error_rate": 1.0
+        },
+        {
+          "account": "Allowance for Doubtful Accounts",
+          "omission_rate": 0.5789,
+          "arithmetic_rate": 0.3684,
+          "error_rate": 0.9474
+        },
+        {
+          "account": "Owner's Equity",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.94,
+          "error_rate": 0.94
+        },
+        {
+          "account": "Accumulated Depreciation",
+          "omission_rate": 0.4762,
+          "arithmetic_rate": 0.381,
+          "error_rate": 0.8571
+        },
+        {
+          "account": "Notes Payable",
+          "omission_rate": 0.025,
+          "arithmetic_rate": 0.375,
+          "error_rate": 0.4
+        },
+        {
+          "account": "Cash",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.37,
+          "error_rate": 0.37
+        },
+        {
+          "account": "Furniture",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.3673,
+          "error_rate": 0.3673
+        },
+        {
+          "account": "Accounts Receivable",
+          "omission_rate": 0.04,
+          "arithmetic_rate": 0.3067,
+          "error_rate": 0.3467
+        },
+        {
+          "account": "Accounts Payable",
+          "omission_rate": 0.0135,
+          "arithmetic_rate": 0.2703,
+          "error_rate": 0.2838
+        },
+        {
+          "account": "Equipment",
+          "omission_rate": 0.0,
+          "arithmetic_rate": 0.2727,
+          "error_rate": 0.2727
+        }
+      ],
       "qwen/qwen3.5-flash-02-23 (cot)": [
         {
           "account": "Retained Earnings",
@@ -2111,6 +2652,59 @@
         }
       }
     },
+    "google/gemma-3-12b-it": {
+      "n_problems": 100,
+      "mean_delta_fbs": 17.62,
+      "std_delta_fbs": 19.55,
+      "mean_delta_ala": 0.2666,
+      "mean_delta_ba": 0.15,
+      "parse_improvements": 5,
+      "parse_regressions": 0,
+      "mean_delta_omissions": -0.11,
+      "mean_delta_arithmetic": -2.27,
+      "mean_delta_hallucinations": 0.09,
+      "mean_delta_cecr": 0.03,
+      "problems_improved": 85,
+      "problems_degraded": 3,
+      "problems_unchanged": 12,
+      "by_difficulty": {
+        "1": {
+          "n": 20,
+          "mean_delta_fbs": 35.59,
+          "std": 27.23,
+          "improved": 17,
+          "degraded": 0
+        },
+        "2": {
+          "n": 20,
+          "mean_delta_fbs": 15.06,
+          "std": 18.85,
+          "improved": 15,
+          "degraded": 0
+        },
+        "3": {
+          "n": 20,
+          "mean_delta_fbs": 14.08,
+          "std": 11.74,
+          "improved": 18,
+          "degraded": 1
+        },
+        "4": {
+          "n": 20,
+          "mean_delta_fbs": 14.56,
+          "std": 9.22,
+          "improved": 18,
+          "degraded": 2
+        },
+        "5": {
+          "n": 20,
+          "mean_delta_fbs": 8.82,
+          "std": 12.78,
+          "improved": 17,
+          "degraded": 0
+        }
+      }
+    },
     "meta-llama/llama-3.3-70b-instruct": {
       "n_problems": 100,
       "mean_delta_fbs": 18.3,
@@ -2266,6 +2860,59 @@
           "mean_delta_fbs": 14.1,
           "std": 63.54,
           "improved": 10,
+          "degraded": 6
+        }
+      }
+    },
+    "qwen/qwen3-8b": {
+      "n_problems": 100,
+      "mean_delta_fbs": 3.14,
+      "std_delta_fbs": 20.92,
+      "mean_delta_ala": 0.0325,
+      "mean_delta_ba": 0.04,
+      "parse_improvements": 0,
+      "parse_regressions": 0,
+      "mean_delta_omissions": 0.01,
+      "mean_delta_arithmetic": -0.46,
+      "mean_delta_hallucinations": 0.03,
+      "mean_delta_cecr": 0.0,
+      "problems_improved": 33,
+      "problems_degraded": 24,
+      "problems_unchanged": 43,
+      "by_difficulty": {
+        "1": {
+          "n": 20,
+          "mean_delta_fbs": 2.01,
+          "std": 8.75,
+          "improved": 1,
+          "degraded": 0
+        },
+        "2": {
+          "n": 20,
+          "mean_delta_fbs": 7.62,
+          "std": 21.41,
+          "improved": 4,
+          "degraded": 1
+        },
+        "3": {
+          "n": 20,
+          "mean_delta_fbs": -5.09,
+          "std": 32.33,
+          "improved": 6,
+          "degraded": 8
+        },
+        "4": {
+          "n": 20,
+          "mean_delta_fbs": 0.59,
+          "std": 11.8,
+          "improved": 9,
+          "degraded": 9
+        },
+        "5": {
+          "n": 20,
+          "mean_delta_fbs": 10.57,
+          "std": 17.81,
+          "improved": 13,
           "degraded": 6
         }
       }
@@ -2518,6 +3165,104 @@
           "assets": 58445.0,
           "liabilities": 37405.0,
           "equity": 34240.0
+        }
+      }
+    },
+    "google/gemma-3-12b-it (cot)": {
+      "overall": {
+        "assets": {
+          "mean_abs_error": 45309.17,
+          "median_abs_error": 13900.0,
+          "mean_relative_error": 13.73,
+          "n": 100
+        },
+        "liabilities": {
+          "mean_abs_error": 20696.0,
+          "median_abs_error": 0.0,
+          "mean_relative_error": 7.05,
+          "n": 100
+        },
+        "equity": {
+          "mean_abs_error": 33059.0,
+          "median_abs_error": 13800.0,
+          "mean_relative_error": 36.24,
+          "n": 100
+        }
+      },
+      "by_difficulty": {
+        "1": {
+          "assets": 3595.0,
+          "liabilities": 0.0,
+          "equity": 3900.0
+        },
+        "2": {
+          "assets": 9970.0,
+          "liabilities": 1120.0,
+          "equity": 9735.0
+        },
+        "3": {
+          "assets": 18070.83,
+          "liabilities": 375.0,
+          "equity": 17225.0
+        },
+        "4": {
+          "assets": 75920.0,
+          "liabilities": 33045.0,
+          "equity": 43205.0
+        },
+        "5": {
+          "assets": 118990.0,
+          "liabilities": 68940.0,
+          "equity": 91230.0
+        }
+      }
+    },
+    "google/gemma-3-12b-it (zero_shot)": {
+      "overall": {
+        "assets": {
+          "mean_abs_error": 83100.53,
+          "median_abs_error": 42300.0,
+          "mean_relative_error": 31.81,
+          "n": 95
+        },
+        "liabilities": {
+          "mean_abs_error": 31841.05,
+          "median_abs_error": 7900.0,
+          "mean_relative_error": 13.16,
+          "n": 95
+        },
+        "equity": {
+          "mean_abs_error": 64815.79,
+          "median_abs_error": 29300.0,
+          "mean_relative_error": 84.09,
+          "n": 95
+        }
+      },
+      "by_difficulty": {
+        "1": {
+          "assets": 11711.11,
+          "liabilities": 0.0,
+          "equity": 10583.33
+        },
+        "2": {
+          "assets": 28089.47,
+          "liabilities": 6605.26,
+          "equity": 26836.84
+        },
+        "3": {
+          "assets": 74100.0,
+          "liabilities": 9778.95,
+          "equity": 45526.32
+        },
+        "4": {
+          "assets": 163470.0,
+          "liabilities": 67065.0,
+          "equity": 70015.0
+        },
+        "5": {
+          "assets": 130144.74,
+          "liabilities": 72226.32,
+          "equity": 167989.47
         }
       }
     },
@@ -2815,6 +3560,104 @@
         }
       }
     },
+    "qwen/qwen3-8b (cot)": {
+      "overall": {
+        "assets": {
+          "mean_abs_error": 15797.0,
+          "median_abs_error": 0.0,
+          "mean_relative_error": 3.85,
+          "n": 100
+        },
+        "liabilities": {
+          "mean_abs_error": 8912.0,
+          "median_abs_error": 0.0,
+          "mean_relative_error": 2.95,
+          "n": 100
+        },
+        "equity": {
+          "mean_abs_error": 13145.5,
+          "median_abs_error": 0.0,
+          "mean_relative_error": 12.44,
+          "n": 100
+        }
+      },
+      "by_difficulty": {
+        "1": {
+          "assets": 0.0,
+          "liabilities": 0.0,
+          "equity": 0.0
+        },
+        "2": {
+          "assets": 0.0,
+          "liabilities": 0.0,
+          "equity": 250.0
+        },
+        "3": {
+          "assets": 5940.0,
+          "liabilities": 2555.0,
+          "equity": 1200.0
+        },
+        "4": {
+          "assets": 33290.0,
+          "liabilities": 16860.0,
+          "equity": 17972.5
+        },
+        "5": {
+          "assets": 39755.0,
+          "liabilities": 25145.0,
+          "equity": 46305.0
+        }
+      }
+    },
+    "qwen/qwen3-8b (zero_shot)": {
+      "overall": {
+        "assets": {
+          "mean_abs_error": 30239.0,
+          "median_abs_error": 2850.0,
+          "mean_relative_error": 6.87,
+          "n": 100
+        },
+        "liabilities": {
+          "mean_abs_error": 13942.0,
+          "median_abs_error": 0.0,
+          "mean_relative_error": 4.47,
+          "n": 100
+        },
+        "equity": {
+          "mean_abs_error": 17895.0,
+          "median_abs_error": 0.0,
+          "mean_relative_error": 13.18,
+          "n": 100
+        }
+      },
+      "by_difficulty": {
+        "1": {
+          "assets": 0.0,
+          "liabilities": 0.0,
+          "equity": 10.0
+        },
+        "2": {
+          "assets": 975.0,
+          "liabilities": 3275.0,
+          "equity": 1705.0
+        },
+        "3": {
+          "assets": 7400.0,
+          "liabilities": 60.0,
+          "equity": 4235.0
+        },
+        "4": {
+          "assets": 37715.0,
+          "liabilities": 21665.0,
+          "equity": 13755.0
+        },
+        "5": {
+          "assets": 105105.0,
+          "liabilities": 44710.0,
+          "equity": 69770.0
+        }
+      }
+    },
     "qwen/qwen3.5-flash-02-23 (cot)": {
       "overall": {
         "assets": {
@@ -2914,9 +3757,9 @@
       }
     },
     "_cross_model_mean": {
-      "assets": 15361.36,
-      "liabilities": 3942.6,
-      "equity": 14123.84
+      "assets": 22423.88,
+      "liabilities": 7668.89,
+      "equity": 18650.08
     }
   },
   "difficulty_curves": {
@@ -3119,6 +3962,106 @@
       "l1_fbs": 88.52,
       "l5_fbs": 66.55,
       "robustness_cv": 9.63
+    },
+    "google/gemma-3-12b-it (cot)": {
+      "levels": {
+        "1": {
+          "n": 20,
+          "fbs_mean": 72.54,
+          "fbs_std": 21.22,
+          "ba_pct": 65.0,
+          "ala_mean": 0.665,
+          "mae_mean": 2596.33
+        },
+        "2": {
+          "n": 20,
+          "fbs_mean": 52.45,
+          "fbs_std": 15.28,
+          "ba_pct": 15.0,
+          "ala_mean": 0.6597,
+          "mae_mean": 4487.46
+        },
+        "3": {
+          "n": 20,
+          "fbs_mean": 48.37,
+          "fbs_std": 5.9,
+          "ba_pct": 0.0,
+          "ala_mean": 0.6962,
+          "mae_mean": 4200.13
+        },
+        "4": {
+          "n": 20,
+          "fbs_mean": 40.72,
+          "fbs_std": 9.9,
+          "ba_pct": 0.0,
+          "ala_mean": 0.5255,
+          "mae_mean": 14409.4
+        },
+        "5": {
+          "n": 20,
+          "fbs_mean": 30.0,
+          "fbs_std": 8.67,
+          "ba_pct": 5.0,
+          "ala_mean": 0.2307,
+          "mae_mean": 30388.55
+        }
+      },
+      "degradation_rate_per_level": 10.64,
+      "cliff_point": "L1->L2",
+      "cliff_magnitude": 20.09,
+      "l1_fbs": 72.54,
+      "l5_fbs": 30.0,
+      "robustness_cv": 28.91
+    },
+    "google/gemma-3-12b-it (zero_shot)": {
+      "levels": {
+        "1": {
+          "n": 20,
+          "fbs_mean": 36.95,
+          "fbs_std": 17.33,
+          "ba_pct": 10.0,
+          "ala_mean": 0.345,
+          "mae_mean": 7224.33
+        },
+        "2": {
+          "n": 20,
+          "fbs_mean": 37.4,
+          "fbs_std": 9.8,
+          "ba_pct": 0.0,
+          "ala_mean": 0.4398,
+          "mae_mean": 8465.64
+        },
+        "3": {
+          "n": 20,
+          "fbs_mean": 34.29,
+          "fbs_std": 9.18,
+          "ba_pct": 0.0,
+          "ala_mean": 0.3663,
+          "mae_mean": 16132.43
+        },
+        "4": {
+          "n": 20,
+          "fbs_mean": 26.16,
+          "fbs_std": 3.69,
+          "ba_pct": 0.0,
+          "ala_mean": 0.1783,
+          "mae_mean": 29627.82
+        },
+        "5": {
+          "n": 20,
+          "fbs_mean": 21.18,
+          "fbs_std": 5.93,
+          "ba_pct": 0.0,
+          "ala_mean": 0.1146,
+          "mae_mean": 45509.67
+        }
+      },
+      "degradation_rate_per_level": 3.94,
+      "cliff_point": "L3->L4",
+      "cliff_magnitude": 8.13,
+      "l1_fbs": 36.95,
+      "l5_fbs": 21.18,
+      "robustness_cv": 20.62
     },
     "meta-llama/llama-3.3-70b-instruct (cot)": {
       "levels": {
@@ -3419,6 +4362,106 @@
       "l1_fbs": 80.57,
       "l5_fbs": 57.63,
       "robustness_cv": 18.38
+    },
+    "qwen/qwen3-8b (cot)": {
+      "levels": {
+        "1": {
+          "n": 20,
+          "fbs_mean": 85.85,
+          "fbs_std": 3.84,
+          "ba_pct": 100.0,
+          "ala_mean": 0.65,
+          "mae_mean": 2601.67
+        },
+        "2": {
+          "n": 20,
+          "fbs_mean": 87.85,
+          "fbs_std": 8.43,
+          "ba_pct": 95.0,
+          "ala_mean": 0.7751,
+          "mae_mean": 3659.61
+        },
+        "3": {
+          "n": 20,
+          "fbs_mean": 66.13,
+          "fbs_std": 20.74,
+          "ba_pct": 45.0,
+          "ala_mean": 0.7044,
+          "mae_mean": 4487.87
+        },
+        "4": {
+          "n": 20,
+          "fbs_mean": 44.93,
+          "fbs_std": 10.8,
+          "ba_pct": 5.0,
+          "ala_mean": 0.5552,
+          "mae_mean": 9079.07
+        },
+        "5": {
+          "n": 20,
+          "fbs_mean": 46.51,
+          "fbs_std": 19.17,
+          "ba_pct": 15.0,
+          "ala_mean": 0.5173,
+          "mae_mean": 14072.02
+        }
+      },
+      "degradation_rate_per_level": 9.83,
+      "cliff_point": "L2->L3",
+      "cliff_magnitude": 21.72,
+      "l1_fbs": 85.85,
+      "l5_fbs": 46.51,
+      "robustness_cv": 27.79
+    },
+    "qwen/qwen3-8b (zero_shot)": {
+      "levels": {
+        "1": {
+          "n": 20,
+          "fbs_mean": 83.85,
+          "fbs_std": 8.4,
+          "ba_pct": 95.0,
+          "ala_mean": 0.65,
+          "mae_mean": 2599.67
+        },
+        "2": {
+          "n": 20,
+          "fbs_mean": 80.23,
+          "fbs_std": 19.07,
+          "ba_pct": 80.0,
+          "ala_mean": 0.7255,
+          "mae_mean": 4297.75
+        },
+        "3": {
+          "n": 20,
+          "fbs_mean": 71.22,
+          "fbs_std": 20.58,
+          "ba_pct": 55.0,
+          "ala_mean": 0.7392,
+          "mae_mean": 4468.29
+        },
+        "4": {
+          "n": 20,
+          "fbs_mean": 44.34,
+          "fbs_std": 9.27,
+          "ba_pct": 5.0,
+          "ala_mean": 0.5538,
+          "mae_mean": 10748.72
+        },
+        "5": {
+          "n": 20,
+          "fbs_mean": 35.94,
+          "fbs_std": 13.45,
+          "ba_pct": 5.0,
+          "ala_mean": 0.3713,
+          "mae_mean": 23663.49
+        }
+      },
+      "degradation_rate_per_level": 11.98,
+      "cliff_point": "L3->L4",
+      "cliff_magnitude": 26.88,
+      "l1_fbs": 83.85,
+      "l5_fbs": 35.94,
+      "robustness_cv": 30.72
     },
     "qwen/qwen3.5-flash-02-23 (cot)": {
       "levels": {
