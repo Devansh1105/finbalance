@@ -247,8 +247,6 @@ For clarity, the reporting protocol is split into tiers:
 
 All reported comparative runs ask the model to return three top-level
 sections: \texttt{assets}, \texttt{liabilities}, and \texttt{equity}.
-If a response contains reasoning or markdown wrappers, the parser
-extracts the final parseable JSON object before scoring.
 For submission-quality evidence, we recommend that inferential claims
 about smaller open-weight models be based on the Large-500 tier rather
 than on the Controlled-100 tier alone.
@@ -340,26 +338,6 @@ effect should be a single Retained Earnings entry of \$35{,}100.
 The model has skipped the closing-entry step entirely, exposing
 temporary accounts as if they were permanent equity items.
 
-\paragraph{Formatting failure (non-numeric expression).}
-Llama~3.3~70B under \zs{} on problem FB\_1\_00480 (Level~1) emits an
-arithmetic expression instead of a computed value:
-
-\begin{small}
-\begin{verbatim}
-"equity": {
-  "Owner's Equity": 29000+3200-2200-9400-5400-6700
-}
-\end{verbatim}
-\end{small}
-
-\noindent
-While the model identifies the right account and even enumerates
-the correct adjustments, the result is not valid JSON because the
-value is an expression rather than a number.  The harness marks this
-as a parse failure and retries with a \zs{} fallback prompt.
-Such formatting errors account for \(17\%\) of gpt-oss-120b \zs{}
-outputs and a smaller fraction of Llama runs.
-
 \subsection{Additional Figures}
 
 \begin{figure*}[h]
@@ -368,7 +346,7 @@ outputs and a smaller fraction of Llama runs.
 \caption{Error composition by model and prompt setting on the
 Controlled-100 split. The horizontal extent of each bar shows how a
 model's errors are distributed across omission, arithmetic,
-commission, constraint, formatting, and residual categories.}
+commission, constraint, and residual categories.}
 \label{fig:error-composition}
 \end{figure*}
 

@@ -22,20 +22,33 @@ FinBen~\citep{xie2024finben}, and
 FinanceBench~\citep{islam2023financebench} span tasks including
 sentiment analysis, named-entity recognition, market prediction, and
 open-book question answering.
+More recent benchmark suites continue that trend:
+BizFinBench~\citep{lu2025bizfinbench} expands coverage to business-driven
+financial tasks, FinDABench~\citep{liu2025findabench} studies financial
+data-analysis ability, INVESTORBENCH~\citep{li2025investorbench}
+targets agentic financial decision-making, and
+FinTrust~\citep{hu2025fintrust} evaluates trustworthiness in finance
+settings.
 They cover important parts of financial language understanding, yet
 they do not isolate end-to-end accounting statement preparation.
 Even MMLU~\citep{hendrycks2021mmlu}, which includes
 professional-accounting questions, measures declarative knowledge in a
 multiple-choice format rather than procedural bookkeeping.
 
-The closest adjacent setting is work that uses existing financial
-statements as inputs for downstream prediction.
-\citet{kim2024financial}, for example, provide balance sheets and income
-statements to GPT-4 and evaluate whether the model can predict earnings
-direction.
-That task is complementary to ours, but it starts from already prepared
-statements rather than asking the model to derive them from journal
-entries.
+The closest adjacent line of work studies richer financial analysis
+over existing statements or filings rather than bookkeeping from raw
+events.
+SECQUE~\citep{benyoash2025secque} evaluates real-world financial
+analysis over SEC documents; FinAR-Bench~\citep{wu2025finarbench}
+focuses on fundamental-analysis competence; FinAuditing
+~\citep{wang2025finauditing} studies taxonomy-structured auditing over
+multi-document financial disclosures; and FinRule-Bench
+~\citep{malarkkan2026finrulebench} evaluates joint reasoning over
+financial tables and accounting principles.
+These tasks are closer to professional finance workflows than QA alone,
+but they still begin from prepared financial artifacts, filings, or
+tabular statements rather than asking the model to derive a final
+balance sheet from journal entries and adjustments.
 More general multi-step arithmetic benchmarks such as
 GSM8K~\citep{cobbe2021gsm8k} test quantitative reasoning, but they do
 not impose the domain-specific conservation constraints, section
