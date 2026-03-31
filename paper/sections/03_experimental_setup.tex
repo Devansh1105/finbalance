@@ -1,20 +1,45 @@
 \section{Experimental Setup}
 
-\subsection{Controlled Study}
+\subsection{Evaluation Tiers}
 
-The main controlled evaluation uses the Small-100 split, a stratified
+The benchmark release contains 2{,}500 problems, but not every model
+should be evaluated on the same subset size.
+We therefore distinguish two reporting tiers.
+
+\paragraph{Controlled-100.}
+The main cross-model comparison in this draft uses a stratified
 100-problem subset with 20 problems from each of the five difficulty
 levels.
-We evaluate paired \zs{}/\CoT{}~\citep{wei2022chainofthought} runs for six model families:
-GPT-5.2, Gemini~3 Flash, Qwen~3.5 Flash, gpt-oss-120b, DeepSeek-v3.2, and Llama~3.3~70B.
-This is the only setting in the paper where all models are directly comparable on the same 100 problems.
+This tier is appropriate for expensive closed-source systems and large
+open-weight systems because it keeps the comparison paired and
+affordable while preserving coverage across the full difficulty range.
+All main-paper model comparisons are reported on this identical split.
+
+\paragraph{Large-500.}
+For smaller open-weight models, the target evaluation protocol is a
+500-problem subset with 100 problems from each difficulty level.
+This larger tier is important for statistical credibility: claims about
+model ranking, robustness, and prompt sensitivity are considerably more
+defensible once they are supported by 500 or more benchmark instances.
+The present manuscript defines this tier explicitly because a final
+submission should not rely on 100-problem evidence alone when cheaper
+models can be evaluated at larger scale.
+
+\subsection{Controlled Models}
+
+On the Controlled-100 split, we evaluate paired
+\zs{}/\CoT{}~\citep{wei2022chainofthought} runs for six model
+families: GPT-5.2, Gemini~3 Flash, Qwen~3.5 Flash, gpt-oss-120b,
+DeepSeek-v3.2, and Llama~3.3~70B.
+This is the only setting in the paper where all of these systems are
+directly comparable on exactly the same 100 problems.
 
 \subsection{Evaluation Harness}
 
 The evaluation harness is automated and flexible: it instantiates a
 model backend, applies a selected prompting strategy, parses the raw
 response with multiple JSON-recovery rules, computes the full metric
-suite, attaches an error report, and saves per-problem artifacts for
+suite, attaches an error report, and stores per-problem outputs for
 later analysis.
 Because prompting strategies, retry behavior, and model backends are
 decoupled, the same harness supports controlled comparisons without
@@ -29,11 +54,27 @@ rather than because it improves transaction posting or closing logic.
 Prompt-level improvements should therefore not be interpreted
 uniformly as evidence of stronger accounting reasoning.
 
-All runs use deterministic decoding settings with temperature fixed at \(0\).
-A rule-based baseline provides an oracle-style upper bound and reaches \fbs{} $=99.97$ on the held-out split.
+All runs use deterministic decoding settings with temperature fixed at
+\(0\).
+A rule-based baseline provides an oracle-style upper bound and reaches a
+FinBalance Score of \(99.97\) on the held-out Controlled-100 split.
 
-\subsection{Secondary Analysis Artifacts}
+\subsection{Statistical Reporting}
 
-Three retained result summaries are especially important for the paper: primary leaderboard metrics, a deep analysis bundle covering complexity attribution and difficulty curves, and a significance bundle with bootstrap confidence intervals and paired permutation tests.
-The significance bundle does not cover every model pair, so the paper treats some comparisons as descriptive rather than inferential.
-Where exact \(p\)-values are cited below, they come directly from the retained permutation-test output.
+Three result summaries are especially important for the paper:
+leaderboard metrics, analysis outputs covering factor sensitivity and
+difficulty curves, and a significance summary with bootstrap confidence
+intervals and paired permutation tests.
+The current significance file covers only a subset of model pairs, so
+the paper treats some comparisons as descriptive rather than
+inferential.
+Where exact \(p\)-values are cited below, they come directly from the
+paired permutation tests on the Controlled-100 split (\(n=100\)).
+
+More broadly, the statistical interpretation of the benchmark should
+follow the evaluation tier.
+The Controlled-100 split supports careful paired comparisons on a common
+set of expensive runs, but it is not the final word on model ranking.
+Whenever a smaller open-weight model can be run at acceptable cost, the
+benchmark should instead report Large-500 results so that conclusions
+rest on at least 500 problems.

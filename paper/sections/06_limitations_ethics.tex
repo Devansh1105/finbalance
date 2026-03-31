@@ -1,15 +1,40 @@
 \section{Limitations and Ethics}
 
-The current study has three main limitations.
-First, the benchmark is entirely synthetic even though the accounting mechanics are realistic.
-Synthetic control is valuable for exact scoring, but it cannot cover the full distribution of language, ambiguity, and disclosure conventions found in live corporate reporting.
+The current study has four main limitations.
+First, the benchmark is entirely synthetic even though the accounting
+mechanics are realistic.
+Synthetic control is valuable for exact scoring, but it cannot cover
+the full distribution of language, ambiguity, and disclosure
+conventions found in live corporate reporting.
 
-Second, the available significance tests cover only a subset of comparisons.
-This is enough to support a few precise claims about GPT-5.2 and Gemini prompt sensitivity, but not enough to assign formal significance labels to every model gap in the table.
+Second, the current main-paper results are concentrated on the
+Controlled-100 split.
+That design is appropriate for paired comparison across expensive
+systems, but a submission-ready benchmark should also report 500-problem
+results for smaller open-weight models so that the strongest empirical
+claims rest on 500 or more instances.
 
-Third, the benchmark focuses narrowly on balance-sheet construction.
-That makes the task scientifically clean, yet also narrower than full financial analysis, which would require income statements, cash-flow statements, narrative evidence, and cross-document grounding.
+Third, the present paper studies the constructor role but not yet the
+auditor role.
+In practical accounting workflows, a useful system must both construct
+candidate statements and audit them for inconsistencies.
+Extending \benchmark{} into a companion auditing benchmark is therefore
+an important part of the broader project scope.
 
-From an ethics perspective, the benchmark should be used as an evaluation tool rather than evidence that a model is safe for autonomous accounting use.
-Several systems produce fluent, well-structured outputs while violating the accounting equation or silently mishandling equity closure.
-That failure mode is precisely the kind that could evade casual human inspection.
+Fourth, all experiments in this draft rely on end-to-end language-model
+generation, which means the model is responsible for both selecting the
+correct accounting operations and performing the arithmetic internally.
+Because bookkeeping arithmetic is deterministic, an important next step
+is an agentic variant in which the model issues typed function calls to
+an external calculator or ledger engine while the tool performs the
+actual computation.
+That comparison would clarify how much of current failure is due to
+accounting misclassification versus arithmetic execution.
+
+From an ethics perspective, the benchmark should be used as an
+evaluation tool rather than evidence that a model is safe for autonomous
+accounting use.
+Several systems produce fluent, well-structured outputs while violating
+the accounting equation or silently mishandling equity closure.
+That failure mode is precisely the kind that could evade casual human
+inspection.

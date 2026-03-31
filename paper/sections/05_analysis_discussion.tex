@@ -1,30 +1,45 @@
-\section{Failure Analysis and Discussion}
+\section{Analysis and Discussion}
 
 \subsection{Chain-of-Thought Helps Through Different Mechanisms}
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.95\textwidth]{../figures/F3_cot_effect.pdf}
-\caption{Prompt effect by model.}
+\caption{Effect of chain-of-thought prompting by model.}
 \label{fig:cot-effect}
 \end{figure*}
 
-Figure~\ref{fig:cot-effect} shows that \CoT{} is not a universal improvement operator.
-DeepSeek-v3.2 benefits the most, followed by Llama~3.3~70B and gpt-oss-120b.
-But these gains arise for different reasons in the deeper error analysis.
-For DeepSeek-v3.2, the gain is primarily arithmetic: mean arithmetic errors drop by \(3.47\) per problem, and \(87\) of \(100\) problems improve.
-For gpt-oss-120b, the gain is partly superficial: \(17\%\) parse failures in \zs{} shrink to \(4\%\) under \CoT{}, so some of the score increase comes from output recoverability rather than better accounting.
-For GPT-5.2, \CoT{} is effectively neutral and even reduces \ala{} slightly.
+Figure~\ref{fig:cot-effect} shows that \CoT{} is not a universal
+improvement operator.
+DeepSeek-v3.2 benefits the most, followed by Llama~3.3~70B and
+gpt-oss-120b.
+These gains arise for different reasons in the deeper analysis.
+For DeepSeek-v3.2, the gain is primarily arithmetic: mean arithmetic
+errors drop by \(3.47\) per problem, and \(87\) of \(100\) problems
+improve.
+For gpt-oss-120b, the gain is partly superficial: \(17\%\) parse
+failures in \zs{} shrink to \(4\%\) under \CoT{}, so part of the score
+increase comes from output recoverability rather than better
+accounting.
+For GPT-5.2, \CoT{} is effectively neutral and even reduces
+account-level accuracy slightly.
 
 \subsection{Retained Earnings Is the Hardest Account}
 
 \input{tables/account_difficulty}
 
-Table~\ref{tab:account-difficulty} aggregates account-level behavior over all evaluated systems.
-Retained Earnings is by far the hardest account, with a \(70.4\%\) omission rate and only \(14.0\%\) correct prediction rate.
+Table~\ref{tab:account-difficulty} aggregates account-level behavior
+over all evaluated systems.
+The account difficulty index combines omission and arithmetic error
+patterns to identify which accounts are hardest to predict reliably.
+Retained Earnings is by far the hardest account, with a \(70.4\%\)
+omission rate and only a \(14.0\%\) correct prediction rate.
 The next two accounts reveal two different failure modes.
-Accumulated Depreciation is often omitted, whereas Owner's Equity is usually present but numerically wrong.
-This distinction matters: the benchmark is not only exposing missing terminology, but also confusion about how income-statement activity closes into equity.
+Accumulated Depreciation is often omitted, whereas Owner's Equity is
+usually present but numerically wrong.
+This distinction matters: the benchmark is not only exposing missing
+terminology, but also confusion about how income-statement activity
+closes into equity.
 
 \begin{figure*}[t]
 \centering
@@ -43,12 +58,23 @@ gpt-oss-120b is unusual in the opposite direction, reaching the highest \cecr{} 
 
 \input{tables/complexity_factors}
 
-Table~\ref{tab:complexity-factors} focuses on the \texttt{mixed\_funding} factor because it is the cleanest cross-model separator in the complexity-attribution analysis.
-These transactions require splitting a purchase between cash and debt, so they test whether the model can maintain multi-account consistency under partial financing.
-GPT-5.2 is nearly invariant to the factor, but every weaker family degrades.
-The combination of a large negative \(\Delta\)\fbs{} and a high difficulty-curve coefficient of variation is especially revealing for Llama~3.3~70B and gpt-oss-120b.
+Table~\ref{tab:complexity-factors} focuses on the mixed-funding
+mechanism because it is the clearest cross-model separator in the
+factor-sensitivity analysis.
+These transactions require splitting a purchase between cash and debt,
+so they test whether the model can maintain multi-account consistency
+under partial financing.
+GPT-5.2 is nearly invariant to this mechanism, but every weaker family
+degrades.
+The combination of a large negative \(\Delta\) score and a high
+difficulty-curve coefficient of variation is especially revealing for
+Llama~3.3~70B and gpt-oss-120b.
 
 \paragraph{Robustness is rare.}
-The difficulty-curve analysis shows that GPT-5.2 is the only family with a robustness CV below \(3\%\).
-Gemini \CoT{}, Qwen \CoT{}, and DeepSeek \CoT{} fall into a moderate robustness band with CV between \(6.26\%\) and \(7.29\%\).
-At the other end, DeepSeek \zs{} and Llama \CoT{} exhibit cliff behavior: their largest drops occur early and are severe enough to dominate the aggregate curve.
+The difficulty-curve analysis shows that GPT-5.2 is the only family
+with a robustness coefficient of variation below \(3\%\).
+Gemini \CoT{}, Qwen \CoT{}, and DeepSeek \CoT{} fall into a moderate
+robustness band with coefficients between \(6.26\%\) and \(7.29\%\).
+At the other end, DeepSeek \zs{} and Llama \CoT{} exhibit cliff
+behavior: their largest drops occur early and are severe enough to
+dominate the aggregate curve.

@@ -1,106 +1,96 @@
 \section{Introduction}
 
-Preparing a balance sheet from a sequence of journal entries is,
-in principle, deterministic: a correct ledger engine can do it
-without error.  Yet the same task becomes a genuine reasoning
-challenge when posed to a language model because the model
-receives only the natural-language transaction descriptions and
-must internally reconstruct the double-entry logic---choosing
-which accounts to debit and credit, accumulating running
-balances, closing revenue and expense into equity, and verifying
-that Assets~$=$~Liabilities~$+$~Equity.  No single rule or
-formula suffices; the model must chain heterogeneous accounting
-steps while maintaining a global conservation constraint across
-every account it emits.
+Large language models are already being deployed across the finance
+industry for document understanding, retrieval, drafting, and
+decision-support workflows.
+Most of that progress, however, has been measured on tasks where the
+model reads an existing financial artifact and answers questions about
+it.
+Accounting work introduces a stricter requirement: the system must
+construct a valid artifact whose entries satisfy hard numerical and
+structural constraints.
 
-\subsection{Related Work}
+Balance-sheet preparation is a particularly revealing test case.
+Given opening balances and a stream of journal entries, a correct
+system must identify the affected accounts, maintain running balances,
+apply adjusting entries, close temporary accounts into retained
+earnings, and verify that assets equal liabilities plus equity.
+The task is deterministic for a ledger engine, but it is demanding for
+a language model because it couples long-horizon state tracking with a
+global conservation law.
 
-A growing body of financial NLP benchmarks has emerged, but all
-target \emph{comprehension} of pre-existing documents rather than
-\emph{construction} of new ones.
-FinQA~\citep{chen2021finqa} and
-ConvFinQA~\citep{chen2022convfinqa} pose numerical reasoning
-questions over corporate earnings reports;
-TAT-QA~\citep{zhu2021tatqa} adds hybrid tabular--textual
-contexts; and DocFinQA~\citep{reddy2024docfinqa} embeds similar
-questions in full-length SEC filings.
-Each requires the model to \emph{read} a financial table and
-compute an answer---never to \emph{produce} one from scratch.
-Broader evaluation suites---FLUE~\citep{shah2022flueflang},
-PIXIU~\citep{xie2023pixiu}, FinBen~\citep{xie2024finben}, and
-FinanceBench~\citep{islam2023financebench}---aggregate tasks
-spanning sentiment analysis, named-entity recognition, stock-movement
-prediction, and open-book QA, yet none includes end-to-end
-financial statement preparation.
-Even MMLU~\citep{hendrycks2021mmlu}, which contains
-professional-accounting questions, tests only declarative
-knowledge through multiple choice rather than procedural
-application.
+This paper studies that setting through \benchmark{}, a benchmark of
+2{,}500 synthetic, realistic accounting problems for balance-sheet
+construction.
+Each problem contains opening balances, journal activity, and
+optionally end-of-period adjustments; the model must return a structured
+balance sheet with \texttt{assets}, \texttt{liabilities}, and
+\texttt{equity}.
+Because every instance is generated and scored against a deterministic
+ledger engine, the benchmark supports exact evaluation rather than
+approximate rubric grading.
 
-The closest prior work, \citet{kim2024financial}, feeds
-\emph{existing} balance sheets and income statements to GPT-4
-and evaluates whether the model can predict earnings
-direction---a complementary but fundamentally different task from
-generating a statement \emph{de novo}.
-Multi-step arithmetic benchmarks such as
-GSM8K~\citep{cobbe2021gsm8k} stress numerical reasoning but
-outside any domain-specific accounting structure.
-To our knowledge, no existing benchmark asks a model to construct
-a complete, internally consistent balance sheet from raw journal
-entries---the gap \benchmark{} is designed to fill.
+The broader project contains two accounting roles: a
+\emph{constructor}, which prepares a balance sheet from transactions,
+and an \emph{auditor}, which inspects a candidate statement for
+violations or inconsistencies.
+The present manuscript formalizes the constructor task first, because
+it provides the controlled benchmark needed before extending the same
+framework to balance-sheet auditing.
+Appendix~\ref{app:glossary} supplies a glossary of financial terms for
+readers who do not work in accounting.
 
-\subsection{Benchmark Overview}
+Figure~\ref{fig:overview} summarizes the benchmark pipeline.
+\benchmark{} begins with a deterministic problem generator that
+produces 2{,}500 problems across five difficulty levels.
+The evaluation layer then prompts each model, recovers the final
+structured answer, and scores it with accounting-specific metrics.
+A final analysis layer aggregates the results into leaderboard metrics,
+account-level error summaries, factor-sensitivity analyses, and
+statistical comparisons.
 
-\benchmark{} targets this generative gap directly.
-Each problem starts from opening balances, presents a sequence of
-double-entry journal events, optionally adds end-of-period
-adjustments, and asks the model to emit a JSON balance sheet with
-\texttt{assets}, \texttt{liabilities}, and \texttt{equity}.
-The benchmark is built around a deterministic ledger engine, so
-every instance has exact ground truth by construction.
-Figure~\ref{fig:overview} summarizes the pipeline.
-A \emph{dataset generator} uses templates and a random seed to
-produce 2{,}500 problems across five difficulty levels (L1--L5),
-each with deterministic ground truth.
-An \emph{evaluation harness} prompts each LLM under both \zs{} and
-\CoT{} settings, parses the JSON response with retry logic, and
-computes a metric suite (\ba{}, \ala{}, \acr{}, \cecr{}, \fbs{}).
-A \emph{post-hoc analysis} layer then extracts failure
-classifications, complexity attributions, and significance tests,
-producing the leaderboard, error taxonomy, and difficulty curves
-reported in this paper.
-
-In the controlled Small-100 study (20 problems per level),
-GPT-5.2 reaches \fbs{}\,$=90.85$ with perfect \ba{}, whereas most
-models deteriorate markedly at Levels~4--5.
-The benchmark also exposes a structural--numerical split:
-DeepSeek-v3.2 under \zs{} recalls \(96.8\%\) of expected accounts
-yet balances only \(15\%\) of statements.
-Retained Earnings emerges as the hardest account, and mixed-funding
-transactions consistently separate robust from fragile systems.
+The current draft distinguishes between two evaluation tiers.
+First, a controlled 100-problem split with 20 problems per difficulty
+level enables direct cross-model comparison for expensive closed-source
+and large open-weight systems.
+Second, a 500-problem tier is the target setting for smaller
+open-weight models, where larger sample sizes are necessary for
+statistically credible claims.
+The controlled 100-problem study reported here already exposes a sharp
+performance hierarchy: GPT-5.2 remains strong across all five levels,
+whereas DeepSeek-v3.2 under zero-shot prompting recalls most expected
+accounts but violates the accounting equation on most problems.
 
 \input{figures/benchmark_overview}
 
 Three research questions organize the paper:
 \begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=2pt,label=\textbf{RQ\arabic*:}]
-\item How well do modern language models prepare and verify balance
-  sheets as accounting mechanisms compound across five difficulty
-  levels (ranging from cash-only bookkeeping at Level~1 to problems
-  combining credit transactions, COGS, mixed funding, and
-  derived interest at Level~5; see Table~\ref{tab:dataset-summary})?
-\item When supervision increases from \zs{} prompting to reflective
-  \CoT{} prompting~\citep{wei2022chainofthought}, which models
-  improve, and do those gains reflect better accounting or merely
-  more recoverable output structure?
-\item Which accounts and transaction factors dominate benchmark
-  difficulty once per-problem outputs are retained for secondary
-  analysis?
+  \item How well do modern language models construct balance sheets as
+    accounting mechanisms compound across five difficulty levels, from
+    cash-only bookkeeping at Level~1 to dense multi-mechanism problems at
+    Level~5?
+  \item When prompting changes from direct zero-shot generation to
+    reflective chain-of-thought prompting~\citep{wei2022chainofthought},
+    which models improve, and do those gains reflect better accounting or
+    merely more recoverable output structure?
+  \item Which accounts and accounting mechanisms contribute most strongly
+    to benchmark difficulty, and what do those patterns imply for future
+    constructor and auditor systems?
 \end{enumerate}
 
 \paragraph{Contributions.}
 This paper makes five contributions:
-(1) a deterministic 2{,}500-problem dataset for balance-sheet construction from journal entries across five difficulty levels;
-(2) an automated, flexible benchmarking harness that varies model backends and prompting strategies, recovers structured outputs when possible, and retains per-problem artifacts;
-(3) an accounting-specific evaluation suite centered on \fbs{}, \ba{}, \ala{}, \acr{}, and \cecr{};
-(4) a controlled six-model Small-100 comparison under matched \zs{} and \CoT{} settings; and
-(5) an analysis of recurring failure modes, including arithmetic collapse under high structural recall, closing-entry blindness, and mixed-funding fragility.
+(1) it introduces a deterministic 2{,}500-problem benchmark for
+balance-sheet construction from journal entries across five difficulty
+levels;
+(2) it defines a reproducible evaluation protocol that separates a
+controlled 100-problem cross-model study from larger-sample evaluation
+tiers needed for stronger inferential claims;
+(3) it presents an accounting-specific metric suite covering equation
+satisfaction, account-level accuracy, account coverage, closing-entry
+compliance, and a composite FinBalance Score;
+(4) it reports matched zero-shot and chain-of-thought comparisons across
+modern closed-source and open-weight systems; and
+(5) it analyzes recurring failure modes, including arithmetic collapse
+despite high structural recall, closing-entry blindness, and
+mixed-funding fragility.

@@ -8,13 +8,13 @@ Model & Prompt & \fbs{} & \ba{} & \ala{} & \acr{} & \cecr{} & Parse fail \\
 \midrule
 Rule-based oracle & -- & 99.97 & 100 & 100.0 & -- & -- & 0 \\
 \midrule
-\multicolumn{8}{l}{\textit{Closed-source/API models, Small-100 controlled study}} \\
+\multicolumn{8}{l}{\textit{Closed-source/API models, Controlled-100 study}} \\
 GPT-5.2 & \CoT{} & 90.85 & 100 & 81.3 & 87.0 & 1 & 0 \\
 GPT-5.2 & \zs{} & 90.20 & 98 & 82.7 & 85.9 & 8 & 2 \\
 Gemini 3 Flash & \CoT{} & 83.47 & 80 & 80.1 & 91.7 & 17 & 0 \\
 Gemini 3 Flash & \zs{} & 79.04 & 73 & 71.9 & 98.2 & 15 & 0 \\
 \midrule
-\multicolumn{8}{l}{\textit{Open-weight models, Small-100 controlled study}} \\
+\multicolumn{8}{l}{\textit{Open-weight models, Controlled-100 study}} \\
 Qwen 3.5 Flash & \CoT{} & 86.72 & 91 & 78.2 & 89.1 & 7 & 0 \\
 gpt-oss-120b & \CoT{} & 86.35 & 86 & 83.4 & 88.8 & 43 & 4 \\
 DeepSeek-v3.2 & \CoT{} & 85.56 & 89 & 77.4 & 87.4 & 23 & 0 \\
@@ -25,6 +25,10 @@ Llama 3.3 70B & \CoT{} & 51.73 & 29 & 54.5 & 80.4 & 1 & 6 \\
 Llama 3.3 70B & \zs{} & 33.43 & 2 & 39.0 & 74.1 & 1 & 16 \\
 \bottomrule
 \end{tabular}
-\caption{Controlled Small-100 results. All model--prompt pairs are evaluated on the same stratified 100-problem split. The table shows a wide spread between structural recall (\acr{}) and equation satisfaction (\ba{}), most clearly for DeepSeek-v3.2 under \zs{}.}
+\caption{Controlled-100 results. All model--prompt pairs are evaluated
+on the same stratified 100-problem split, with 20 problems per
+difficulty level. The table shows a wide spread between structural
+recall and equation satisfaction, most clearly for DeepSeek-v3.2 under
+\zs{}.}
 \label{tab:main-results}
 \end{table*}

@@ -1,0 +1,46 @@
+\section{Related Work}
+
+A growing body of financial natural language processing benchmarks has
+emerged, but nearly all of them evaluate \emph{comprehension} over
+existing reports rather than \emph{construction} of new accounting
+artifacts.
+FinQA~\citep{chen2021finqa} and
+ConvFinQA~\citep{chen2022convfinqa} study numerical reasoning over
+earnings reports;
+TAT-QA~\citep{zhu2021tatqa} extends the setting to joint table--text
+reasoning; and
+DocFinQA~\citep{reddy2024docfinqa} situates similar questions within
+long-form SEC filings.
+These benchmarks require models to read a financial document and answer
+questions about it, but not to construct a balance sheet from raw
+transactions.
+
+Broader financial evaluation suites such as
+FLUE~\citep{shah2022flueflang},
+PIXIU~\citep{xie2023pixiu},
+FinBen~\citep{xie2024finben}, and
+FinanceBench~\citep{islam2023financebench} span tasks including
+sentiment analysis, named-entity recognition, market prediction, and
+open-book question answering.
+They cover important parts of financial language understanding, yet
+they do not isolate end-to-end accounting statement preparation.
+Even MMLU~\citep{hendrycks2021mmlu}, which includes
+professional-accounting questions, measures declarative knowledge in a
+multiple-choice format rather than procedural bookkeeping.
+
+The closest adjacent setting is work that uses existing financial
+statements as inputs for downstream prediction.
+\citet{kim2024financial}, for example, provide balance sheets and income
+statements to GPT-4 and evaluate whether the model can predict earnings
+direction.
+That task is complementary to ours, but it starts from already prepared
+statements rather than asking the model to derive them from journal
+entries.
+More general multi-step arithmetic benchmarks such as
+GSM8K~\citep{cobbe2021gsm8k} test quantitative reasoning, but they do
+not impose the domain-specific conservation constraints, section
+structure, and closing-entry behavior required in accounting.
+
+Our benchmark therefore occupies a distinct point in the literature:
+it evaluates whether a model can transform raw accounting events into a
+complete, internally consistent balance sheet with exact ground truth.

@@ -1,5 +1,49 @@
 \section{Appendix}
 
+\subsection{Glossary of Financial Terms}
+\label{app:glossary}
+
+\begin{description}[leftmargin=2.9cm,style=nextline,itemsep=4pt]
+\item[Journal entry]
+A bookkeeping record that specifies which accounts are debited and
+credited for a transaction.
+\item[Debit / Credit]
+The two sides of double-entry accounting.
+In this benchmark, assets and expenses increase on debits, while
+liabilities, equity, and revenue increase on credits.
+\item[Opening balances]
+The account values at the start of the period before any new
+transactions are applied.
+\item[Adjusting entry]
+An end-of-period entry used to recognize accruals, depreciation,
+expired prepaids, or other timing adjustments.
+\item[Closing entry]
+The step that transfers revenue and expense balances into Retained
+Earnings so that temporary accounts do not appear on the final balance
+sheet.
+\item[Retained Earnings]
+The cumulative net income retained in the business after closing
+temporary accounts.
+\item[Contra asset]
+An asset-linked account, such as Accumulated Depreciation, that carries
+the opposite sign of a standard asset and offsets the gross asset
+balance.
+\item[Accounts Receivable / Accounts Payable]
+Amounts owed to the firm by customers and amounts owed by the firm to
+suppliers, respectively.
+\item[Prepaid expense]
+A payment made before the related benefit is consumed; part of the
+balance may later expire into expense.
+\item[Accrued liability]
+An obligation that has been incurred but not yet paid in cash.
+\item[Cost of Goods Sold]
+The expense recognized when inventory is sold and relieved from the
+books.
+\item[Mixed-funding purchase]
+A transaction in which an asset purchase is financed partly with cash
+and partly with debt.
+\end{description}
+
 \subsection{Worked Pipeline Example}
 \label{app:worked-example}
 
@@ -184,9 +228,30 @@ Cr Prepaid Rent 1,400
 
 \subsection{Evaluation Protocol Details}
 
-The benchmark uses a deterministic synthetic generator, a stratified held-out split, and structured JSON scoring.
-All reported runs ask the model to return three top-level sections: \texttt{assets}, \texttt{liabilities}, and \texttt{equity}.
-If a response contains reasoning or markdown wrappers, the parser extracts the final parseable JSON object before scoring.
+The benchmark uses a deterministic synthetic generator, stratified
+evaluation subsets, and structured JSON scoring.
+For clarity, the reporting protocol is split into tiers:
+\begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=2pt]
+\item \textbf{Full corpus}: 2{,}500 problems used for dataset
+  characterization and benchmark release statistics.
+\item \textbf{Controlled-100}: 100 problems, with 20 per difficulty
+  level, used for paired cross-model comparison on expensive closed-source
+  and large open-weight systems.
+\item \textbf{Large-500}: 500 problems, with 100 per difficulty level,
+  intended for smaller open-weight systems where larger sample sizes are
+  feasible and statistically preferable.
+\item \textbf{Pilot subsets}: smaller smoke-test runs, such as
+  10- or 25-problem slices, which may be useful during development but
+  should not support comparative claims in the paper.
+\end{enumerate}
+
+All reported comparative runs ask the model to return three top-level
+sections: \texttt{assets}, \texttt{liabilities}, and \texttt{equity}.
+If a response contains reasoning or markdown wrappers, the parser
+extracts the final parseable JSON object before scoring.
+For submission-quality evidence, we recommend that inferential claims
+about smaller open-weight models be based on the Large-500 tier rather
+than on the Controlled-100 tier alone.
 
 \subsection{Prompted Output Format}
 
@@ -197,7 +262,7 @@ All reported runs ask the model to emit a JSON object with three top-level keys:
 \subsection{Concrete Model Failure Examples}
 \label{app:failure-examples}
 
-The following examples are drawn verbatim from retained per-problem
+The following examples are drawn verbatim from stored per-problem
 outputs.  Each illustrates a distinct failure mode discussed in the
 main paper.
 
@@ -300,7 +365,10 @@ outputs and a smaller fraction of Llama runs.
 \begin{figure*}[h]
 \centering
 \includegraphics[width=0.95\textwidth]{../figures/F2_error_composition.pdf}
-\caption{Error composition by model and prompt setting.}
+\caption{Error composition by model and prompt setting on the
+Controlled-100 split. The horizontal extent of each bar shows how a
+model's errors are distributed across omission, arithmetic,
+commission, constraint, formatting, and residual categories.}
 \label{fig:error-composition}
 \end{figure*}
 

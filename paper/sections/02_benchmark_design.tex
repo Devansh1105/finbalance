@@ -2,36 +2,54 @@
 
 \subsection{Generation Pipeline}
 
-The generator maintains a ledger whose sign convention follows normal accounting balances: assets and expenses increase on debits, while liabilities, equity, and revenue increase on credits.
-Every transaction is applied to this ledger, and the final balance sheet is derived directly from the resulting account state.
-Revenue and expense balances are folded into Retained Earnings when the final balance sheet is built, making closing-entry competence observable in the model outputs.
+The generator maintains a ledger whose sign convention follows normal
+accounting balances: assets and expenses increase on debits, while
+liabilities, equity, and revenue increase on credits.
+Every transaction is applied to this ledger, and the final balance
+sheet is derived directly from the resulting account state.
+Revenue and expense balances are folded into Retained Earnings when the
+final balance sheet is built, which makes closing-entry competence
+observable in model outputs.
 
-Transaction templates are organized by difficulty level and accounting feature.
-Lower levels emphasize basic cash bookkeeping; higher levels activate credit transactions, debt servicing, prepaids, depreciation, cost-of-goods-sold coupling, derived-interest calculations, and mixed-funding purchases.
-Adjustments are generated separately and applied before the statement is prepared.
-The full benchmark is deterministic given a random seed, and the released corpus contains 2{,}500 problems.
+Transaction templates are organized by difficulty level and accounting
+feature.
+Lower levels emphasize basic cash bookkeeping; higher levels activate
+credit transactions, debt servicing, prepaids, depreciation,
+cost-of-goods-sold coupling, derived-interest calculations, and
+mixed-funding purchases.
+Adjustments are generated separately and applied before the statement is
+prepared.
+The full benchmark is deterministic given a random seed, and the
+released corpus contains 2{,}500 problems.
 
 \input{tables/dataset_summary}
 
 Table~\ref{tab:dataset-summary} shows that difficulty is not cosmetic.
-Average transactions increase from $7.56$ at Level~1 to $79.35$ at Level~5, while average account support rises from $5.18$ to $15.22$.
-The generator therefore scales both event count and latent bookkeeping structure.
+Average transactions increase from $7.56$ at Level~1 to $79.35$ at
+Level~5, while average account support rises from $5.18$ to $15.22$.
+The generator therefore scales both event count and latent bookkeeping
+structure.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.95\textwidth]{../figures/F8_dataset_complexity.pdf}
-\caption{Dataset complexity profile. Panel (a) shows the mean number of transactions and distinct non-zero balance-sheet accounts per problem at each difficulty level. Panel (b) shows the percentage of problems at each level containing each accounting mechanism. Higher levels therefore increase both bookkeeping volume and mechanism diversity.}
+\caption{Dataset complexity profile. Panel (A) reports the mean number
+of transactions and distinct non-zero balance-sheet accounts per
+problem at each difficulty level. Panel (B) reports the percentage of
+problems at each level containing each accounting mechanism. Higher
+levels therefore increase both bookkeeping volume and mechanism
+diversity.}
 \label{fig:dataset-complexity}
 \end{figure*}
 
 Figure~\ref{fig:dataset-complexity} should be read panel by panel.
-In panel~(a), the x-axis is difficulty level (L1--L5) and the y-axis
-is a count; the blue bars show the mean number of journal
-transactions, while the orange bars show the mean number of distinct
-accounts in the expected final statement.
+In panel~(A), the x-axis is difficulty level (L1--L5) and the y-axis
+is a count; the blue bars show the mean number of journal transactions,
+while the orange bars show the mean number of distinct accounts in the
+expected final statement.
 The point is that harder levels are not just longer prompts:
 they require the model to maintain more latent account states as well.
-Panel~(b) uses the same x-axis but changes the y-axis to feature type
+Panel~(B) uses the same x-axis but changes the y-axis to feature type
 and the color scale to the percentage of problems at that level that
 contain the feature.
 \emph{Depreciation} means depreciable fixed assets together with their
@@ -67,9 +85,13 @@ for Levels~1--5.
 
 \subsection{Prompted Task}
 
-\benchmark{} evaluates whether a model can prepare a valid balance sheet from the provided ledger state and transaction stream.
-\zs{} asks for a JSON answer directly with a reminder that Assets must equal Liabilities plus Equity.
-Reflective \CoT{} asks the model to reason step by step and then emit a final JSON object after the marker \texttt{FINAL ANSWER:}.
+\benchmark{} evaluates whether a model can prepare a valid balance
+sheet from the provided ledger state and transaction stream.
+\zs{} prompting asks for a JSON answer directly with a reminder that
+assets must equal liabilities plus equity.
+Reflective \CoT{} prompting asks the model to reason step by step and
+then emit a final JSON object after the marker
+\texttt{FINAL ANSWER:}.
 These are the two evaluated prompting conditions in this paper.
 
 \begin{center}
@@ -113,65 +135,68 @@ sample problems for each of the five difficulty levels.
 
 \subsection{Metrics and Error Taxonomy}
 
-No single score captures this task well because models can produce
-the right account set while still failing the bookkeeping.
-\ba{} (balance accuracy) is therefore a hard binary check:
-it equals \(1\) only when the predicted statement satisfies
-\(|A-(L+E)| \leq 1\) currency unit.
-\ala{} (account-level accuracy) measures the fraction of expected
-non-zero accounts whose predicted values fall within a hybrid
-tolerance of \(\max(\$10, 1\%\ \text{of expected value})\); omitted
-accounts count as incorrect.
-\acr{} (account coverage rate) ignores values and asks only whether
-the expected accounts appear anywhere in the output, which isolates
-structural recall from numerical correctness.
-\cecr{} (closing-entry compliance rate) checks whether Retained
-Earnings is present in equity and numerically correct under the same
-hybrid tolerance; if Retained Earnings is not expected, the instance
-is treated as trivially compliant.
+No single score captures this task well because a model can predict the
+right account names while still violating the bookkeeping.
+We therefore report the following primary metrics:
+\begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=2pt]
+\item \textbf{Balance accuracy (\ba{})}: a hard binary check that
+  equals \(1\) only when the predicted statement satisfies
+  \(|A-(L+E)| \leq 1\) currency unit.
+\item \textbf{Account-level accuracy (\ala{})}: the fraction of
+  expected non-zero accounts whose predicted values fall within a
+  hybrid tolerance of \(\max(\$10, 1\%\ \text{of expected value})\);
+  omitted accounts count as incorrect.
+\item \textbf{Account coverage rate (\acr{})}: a structural metric that
+  asks only whether the expected accounts appear anywhere in the
+  output, regardless of value.
+\item \textbf{Closing-entry compliance rate (\cecr{})}: whether
+  Retained Earnings is present in equity and numerically correct under
+  the same hybrid tolerance; if Retained Earnings is not expected, the
+  instance is treated as trivially compliant.
+\item \textbf{FinBalance Score}: a \(0\)--\(100\) weighted aggregate of
+  \ba{}, \ala{}, constraint satisfaction, and normalized numerical
+  error \(1-\min(\text{MAE}/50{,}000, 1)\).
+\end{enumerate}
 
-We report four secondary diagnostics to make failure modes more
-interpretable.
-\textsc{BEM} (balance error magnitude) is the continuous version of
-\ba{}, defined as \(|A-(L+E)|\).
-Section placement accuracy (SPA) is the fraction of predicted
-accounts assigned to the correct top-level section
-(\texttt{assets}, \texttt{liabilities}, or \texttt{equity}).
-Hallucination rate (HR) is the fraction of predicted accounts that
-do not belong in the expected final statement.
-Constraint satisfaction rate (CSR) is the proportion of benchmark
-constraints satisfied, including the balance equation, non-negative
-non-contra assets, contra-asset sanity, non-negative total assets,
-and completeness of the expected account set.
-Numerical error is summarized with MAE and RMSE over expected
-accounts, treating missing values as zero.
+For the no-intermediate-state setting used in this paper, the composite
+score assigns weights of \(0.375\) to \ba{}, \(0.3125\) to \ala{},
+\(0.1875\) to constraint satisfaction, and \(0.125\) to normalized
+numerical error.
 
-The main scalar summary is \fbs{}, a \(0\)--\(100\) weighted
-aggregate of \ba{}, \ala{}, CSR, and normalized numerical error
-\(1-\min(\text{MAE}/50{,}000, 1)\).
-For the no-intermediate-state setting used in this paper, the
-weights are \(0.375\) for \ba{}, \(0.3125\) for \ala{},
-\(0.1875\) for CSR, and \(0.125\) for normalized numerical error.
-If intermediate ledger states are available, the transaction
-processing accuracy term receives weight \(0.20\), and the remaining
-weights revert to \(0.30\), \(0.25\), \(0.15\), and \(0.10\),
-respectively.
+We additionally report the following secondary diagnostics:
+\begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=2pt]
+\item \textbf{Balance error magnitude}: the continuous equation error
+  \(|A-(L+E)|\).
+\item \textbf{Section placement accuracy}: the fraction of predicted
+  accounts assigned to the correct top-level section
+  (\texttt{assets}, \texttt{liabilities}, or \texttt{equity}).
+\item \textbf{Hallucination rate}: the fraction of predicted accounts
+  that do not belong in the expected final statement.
+\item \textbf{Constraint satisfaction rate}: the proportion of
+  benchmark constraints satisfied, including the balance equation,
+  non-negative non-contra assets, contra-asset sanity, non-negative
+  total assets, and completeness of the expected account set.
+\item \textbf{Mean absolute error and root mean squared error} over
+  expected accounts, treating missing values as zero.
+\end{enumerate}
 
 The error taxonomy complements these metrics.
-We distinguish arithmetic errors (wrong values on present accounts,
-for example Cash reported as \(12{,}400\) instead of \(13{,}400\)),
-omission errors (missing expected accounts, such as an omitted
-Accumulated Depreciation line), hallucinations (extra unsupported
-accounts, such as Goodwill), classification errors (correct accounts in
-the wrong section, such as Notes Payable under equity), constraint
-violations (global bookkeeping breaks such as
-\(A \neq L + E\) or a positive Accumulated Depreciation balance), and
-formatting/parsing failures (malformed or non-JSON outputs that cannot
-be scored reliably).
-When intermediate states are available, repeated downstream mistakes
-are additionally marked as propagation errors, for example an early
-Accounts Receivable mistake that later distorts both cash collections
-and ending equity.
-Secondary analyses aggregate these per-problem signals into
-complexity-factor reports, account-difficulty indices, difficulty
-curves, and permutation-test summaries.
+We distinguish arithmetic errors (wrong values on present accounts),
+omission errors (missing expected accounts), hallucinations (extra
+unsupported accounts), classification errors (correct accounts in the
+wrong section), constraint violations (global bookkeeping breaks such
+as \(A \neq L + E\)), and formatting or parsing failures (malformed or
+non-JSON outputs that cannot be scored reliably).
+When intermediate states are available, repeated downstream mistakes can
+also be marked as propagation errors.
+
+To avoid undefined shorthand later in the paper, we use three aggregate
+analysis terms in a precise way.
+A \emph{factor-sensitivity analysis} reports the score difference
+between problems that do and do not contain a particular accounting
+mechanism, such as mixed-funding purchases.
+An \emph{account difficulty index} ranks accounts by how often models
+omit them or assign them incorrect values.
+A \emph{difficulty curve} is the level-wise score trajectory for a
+model across Levels~1--5, with the coefficient of variation used as a
+compact robustness summary.
