@@ -7,6 +7,7 @@ import re
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
+from pathlib import Path
 from threading import Lock
 from typing import Optional
 
@@ -16,6 +17,7 @@ from finbalance.evaluation.metrics.core import ProblemMetrics, evaluate_problem
 from finbalance.evaluation.models.base import BaseModel
 from finbalance.evaluation.prompts.strategies import (
     build_prompt,
+    describe_strategy,
     self_refine_stage1,
     self_refine_stage2,
 )
@@ -139,6 +141,9 @@ class EvalResult:
     parsed:       Optional[dict]
     metrics:      ProblemMetrics
     errors:       ErrorReport
+    model_backend: str
+    model_config: dict
+    strategy_metadata: dict
     latency_s:    float = 0.0
 
     def to_dict(self) -> dict:
@@ -150,6 +155,10 @@ class EvalResult:
             "parse_failed": self.errors.parse_failed,
             "n_errors":   self.errors.total_errors,
             "error_categories": self.errors.by_category,
+            "model_backend": self.model_backend,
+            "model_config": self.model_config,
+            "strategy_label": self.strategy_metadata.get("label", self.strategy),
+            "strategy_metadata": self.strategy_metadata,
             "raw_response": self.raw_response,
         })
         return d
@@ -237,6 +246,9 @@ class EvaluationRunner:
             parsed=parsed,
             metrics=metrics,
             errors=errors,
+            model_backend=type(self.model).__name__,
+            model_config=asdict(self.model.config),
+            strategy_metadata=describe_strategy(self.strategy),
             latency_s=round(latency, 2),
         )
 
@@ -272,8 +284,25 @@ class EvaluationRunner:
 
         return results
 
-    def save_results(self, results: list[EvalResult], path: str):
+    def save_results(self, results: list[EvalResult], path: str, run_metadata: dict | None = None):
         rows = [r.to_dict() for r in results]
         with open(path, "w") as f:
             json.dump(rows, f, indent=2)
         self._log(f"\nSaved {len(rows)} results to {path}")
+
+        if run_metadata is None:
+            return
+
+        meta_path = Path(path).with_name(f"{Path(path).stem}_meta.json")
+        payload = {
+            "result_file": str(path),
+            "model_id": self.model.config.model_id,
+            "model_backend": type(self.model).__name__,
+            "model_config": asdict(self.model.config),
+            "strategy": self.strategy,
+            "strategy_metadata": describe_strategy(self.strategy),
+            **run_metadata,
+        }
+        with open(meta_path, "w") as f:
+            json.dump(payload, f, indent=2)
+        self._log(f"Saved run metadata to {meta_path}")

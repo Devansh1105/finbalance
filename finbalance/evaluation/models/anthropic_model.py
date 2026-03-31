@@ -3,6 +3,7 @@
 import os
 import requests
 
+from finbalance.env import load_project_env
 from finbalance.evaluation.models.base import BaseModel, ModelConfig
 
 ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
@@ -13,6 +14,7 @@ class AnthropicModel(BaseModel):
 
     def __init__(self, config: ModelConfig, api_key: str | None = None):
         super().__init__(config)
+        load_project_env()
         self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY", "")
         if not self.api_key:
             raise ValueError("Set ANTHROPIC_API_KEY env var or pass api_key=")

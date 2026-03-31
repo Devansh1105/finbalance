@@ -12,6 +12,7 @@ OUTPUT_FORMAT = """{
   "liabilities": {"<account name>": <amount>, ...},
   "equity":      {"<account name>": <amount>, ...}
 }"""
+OUTPUT_KEYS = ["assets", "liabilities", "equity"]
 
 CONSTRAINT_REMINDER = (
     "IMPORTANT: The balance sheet MUST satisfy: "
@@ -169,6 +170,51 @@ STRATEGIES = {
     "zero_shot":   zero_shot,
     "few_shot":    few_shot,
     "cot":         chain_of_thought,
+    "self_refine": self_refine_stage1,
+}
+
+STRATEGY_METADATA = {
+    "zero_shot": {
+        "label": "Zero-shot",
+        "description": "Single-pass direct balance-sheet generation with a balance-equation reminder.",
+        "reasoning_style": "direct_json",
+        "n_stages": 1,
+        "uses_examples": False,
+        "uses_final_answer_marker": False,
+        "response_format": "json_only",
+        "output_keys": OUTPUT_KEYS,
+    },
+    "few_shot": {
+        "label": "Few-shot",
+        "description": "Single-pass generation after studying an in-prompt worked example.",
+        "reasoning_style": "example_conditioned_json",
+        "n_stages": 1,
+        "uses_examples": True,
+        "uses_final_answer_marker": False,
+        "response_format": "json_only",
+        "output_keys": OUTPUT_KEYS,
+    },
+    "cot": {
+        "label": "Chain-of-thought",
+        "description": "Step-by-step reasoning followed by a FINAL ANSWER JSON block.",
+        "reasoning_style": "step_by_step_then_json",
+        "n_stages": 1,
+        "uses_examples": False,
+        "uses_final_answer_marker": True,
+        "final_answer_marker": "FINAL ANSWER:",
+        "response_format": "reasoning_plus_final_json",
+        "output_keys": OUTPUT_KEYS,
+    },
+    "self_refine": {
+        "label": "Self-refine",
+        "description": "Two-stage generation: initial zero-shot JSON, then critique and correction pass.",
+        "reasoning_style": "two_pass_refinement",
+        "n_stages": 2,
+        "uses_examples": False,
+        "uses_final_answer_marker": False,
+        "response_format": "json_only_after_refinement",
+        "output_keys": OUTPUT_KEYS,
+    },
 }
 
 
@@ -176,3 +222,17 @@ def build_prompt(problem: Problem, strategy: str) -> str:
     if strategy not in STRATEGIES:
         raise ValueError(f"Unknown strategy '{strategy}'. Choose from: {list(STRATEGIES)}")
     return STRATEGIES[strategy](problem)
+
+
+def describe_strategy(strategy: str) -> dict:
+    """Return structured metadata for a configured prompting strategy."""
+    if strategy not in STRATEGY_METADATA:
+        return {
+            "strategy_id": strategy,
+            "label": strategy,
+            "description": "Unknown strategy metadata.",
+        }
+    return {
+        "strategy_id": strategy,
+        **STRATEGY_METADATA[strategy],
+    }

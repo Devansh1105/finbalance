@@ -34,12 +34,12 @@ from finbalance.data.generation.generator import ProblemGenerator
 from finbalance.data.schemas import Problem
 from finbalance.evaluation.metrics.core import aggregate
 from finbalance.evaluation.models.anthropic_model import AnthropicModel
-from finbalance.evaluation.models.base import ModelConfig
+from finbalance.evaluation.models.base import DEFAULT_MAX_TOKENS, ModelConfig
 from finbalance.evaluation.models.openrouter import OpenRouterModel
 from finbalance.evaluation.runner import EvaluationRunner
 
 
-def build_model(model_id: str, api_key: str | None, seed: int, max_tokens: int = 8192) -> AnthropicModel | OpenRouterModel:
+def build_model(model_id: str, api_key: str | None, seed: int, max_tokens: int = DEFAULT_MAX_TOKENS) -> AnthropicModel | OpenRouterModel:
     """Auto-select backend: Anthropic for claude-* models, OpenRouter for everything else."""
     config = ModelConfig(model_id=model_id, temperature=0.0, seed=seed, max_tokens=max_tokens)
     if model_id.startswith("claude-"):
@@ -161,9 +161,10 @@ def main():
     parser.add_argument("--workers",    type=int, default=1,
                         help="Concurrent API requests per model×strategy run (default 1). "
                              "5-10 is safe for OpenRouter; too high risks rate-limit errors.")
-    parser.add_argument("--max-tokens", type=int, default=8192,
-                        help="Max tokens for model completion (default 8192). "
-                             "Use 16384 or 32768 for reasoning models on L4/L5 problems.")
+    parser.add_argument("--max-tokens", type=int, default=DEFAULT_MAX_TOKENS,
+                        help=f"Max response tokens for model completion (default {DEFAULT_MAX_TOKENS}). "
+                             "This is an output budget, not the full input+output context window. "
+                             "Use 32768 if a specific model still truncates.")
     args = parser.parse_args()
 
     # Load or generate problems
@@ -208,7 +209,17 @@ def main():
             # Save
             safe_model = model_id.replace("/", "_")
             out_path = out_dir / f"{safe_model}_{strategy}.json"
-            runner.save_results(results, str(out_path))
+            runner.save_results(
+                results,
+                str(out_path),
+                run_metadata={
+                    "dataset_path": args.dataset,
+                    "quick_mode": args.quick,
+                    "n_problems": len(problems),
+                    "workers": args.workers,
+                    "api_backend": type(model).__name__,
+                },
+            )
 
             all_summaries.append({
                 "model":    model_id,

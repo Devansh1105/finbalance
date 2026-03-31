@@ -63,6 +63,7 @@ finbalance/
 │   ├── full.jsonl                        # 2,500-problem benchmark dataset
 │   ├── dev.jsonl                         # 50-problem dev split (10/level, seed 42)
 │   ├── test.jsonl                        # 100-problem test split (20/level, seed 42)
+│   ├── large500.jsonl                    # Fixed 500-problem subset (100/level) for shared OpenRouter runs
 │   └── sample.jsonl                      # Legacy 100-problem stratified sample
 │
 ├── finbalance/                           # Core Python package
@@ -77,9 +78,13 @@ finbalance/
 │   │   ├── metrics/
 │   │   │   └── core.py                  # BA, ALA, TPA, FBS metric implementations
 │   │   ├── models/
-│   │   │   ├── base.py                  # BaseModel + ModelConfig (max_tokens=8192, timeout=120)
+│   │   │   ├── base.py                  # BaseModel + ModelConfig (max_tokens=16384, timeout=120)
 │   │   │   ├── anthropic_model.py       # Anthropic Messages API backend
-│   │   │   └── openrouter.py            # OpenRouter multi-model backend
+│   │   │   └── openrouter.py            # Legacy OpenRouter requests backend
+│   │   ├── pydantic_ai/
+│   │   │   ├── config.py                # Pydantic config models for OpenRouter batch runs
+│   │   │   ├── dataset.py               # JSONL loading + stratified subset sampling
+│   │   │   └── openrouter_model.py      # PydanticAI OpenRouter backend
 │   │   └── prompts/
 │   │       └── strategies.py            # zero_shot / few_shot / cot / self_refine
 │   │
@@ -91,7 +96,9 @@ finbalance/
 ├── scripts/
 │   ├── generate_dataset.py              # CLI: generate full.jsonl / sample.jsonl
 │   ├── create_splits.py                 # CLI: create stratified dev/test splits from full.jsonl
+│   ├── create_custom_subset.py          # CLI: create a fixed stratified subset JSONL
 │   ├── run_evaluation.py                # CLI: run model evaluation
+│   ├── run_openrouter_pydanticai.py     # CLI: PydanticAI/OpenRouter evaluation on a stratified subset
 │   ├── analyze_failures.py             # CLI: run failure analysis on results
 │   ├── simulate_propagation.py         # CLI: run error propagation simulation
 │   ├── run_baseline.py                  # CLI: rule-based baseline + bootstrap CIs
@@ -130,7 +137,8 @@ finbalance/
 │   ├── F7_propagation.png             # Error propagation MAE trajectory (Haiku 3, 5 problems)
 │   └── F8_dataset_complexity.png      # Transaction/account counts and feature presence by level
 │
-└── requirements.txt
+├── pyproject.toml                     # uv-managed project metadata and dependencies
+└── uv.lock                            # Locked dependency graph for reproducible runs
 ```
 
 ---
@@ -274,38 +282,47 @@ The `_clean_json()` helper handles:
 |---------|-------|----------------|-------|
 | Anthropic | `AnthropicModel` | `ANTHROPIC_API_KEY` | Direct Messages API |
 | OpenRouter | `OpenRouterModel` | `OPENROUTER_API_KEY` | Multi-model gateway; auto-selected for non-`claude-*` model IDs |
+| PydanticAI OpenRouter | `PydanticAIOpenRouterModel` | `OPENROUTER_API_KEY` | Dedicated OpenRouter runner with Pydantic configs and a stratified subset workflow |
 
 The runner auto-detects backend: model IDs starting with `claude-` route to `AnthropicModel`; all others route to `OpenRouterModel`.
 
-**Important:** Reasoning-heavy frontier models (e.g. GPT-5.2) generate extensive chain-of-thought before emitting the final JSON even in zero_shot mode. `ModelConfig` defaults have been updated to `max_tokens=8192` and `timeout=120s` to accommodate this.
+**Important:** Reasoning-heavy frontier models (e.g. GPT-5.2) generate extensive chain-of-thought before emitting the final JSON even in zero_shot mode. `ModelConfig` defaults have been updated to `max_tokens=16384` and `timeout=120s` to reduce truncation risk. `max_tokens` here is the response budget, not the full input+output context window.
 
 ### 5.4 Running an Evaluation
 
 ```bash
 # Create stratified dev/test splits from full.jsonl
-python scripts/create_splits.py --input data/full.jsonl --seed 42
+uv run python scripts/create_splits.py --input data/full.jsonl --seed 42
 
 # Run evaluation on the held-out test set (OpenRouter)
 export OPENROUTER_API_KEY="your-key"
-python scripts/run_evaluation.py \
+uv run python scripts/run_evaluation.py \
     --dataset data/test.jsonl \
     --models openai/gpt-5.2 \
     --strategies zero_shot,cot
 
+# Run the dedicated PydanticAI/OpenRouter path on the appendix Large-500 subset.
+# Defaults:
+#   models = qwen/qwen3.6-plus-preview:free,qwen/qwen3.5-flash-02-23,deepseek/deepseek-v3.2,openai/gpt-oss-120b,google/gemini-3-flash-preview
+#   subset = 500 problems from data/full.jsonl
+uv run python scripts/run_openrouter_pydanticai.py \
+    --strategies zero_shot,cot \
+    --write-subset-path data/openrouter_subset_500.jsonl
+
 # Run with Anthropic key
 export ANTHROPIC_API_KEY="your-key"
-python scripts/run_evaluation.py \
+uv run python scripts/run_evaluation.py \
     --dataset data/test.jsonl \
     --models claude-3-5-sonnet-20241022 \
     --strategies zero_shot
 ```
 
-Results are saved to `results/<model>_<strategy>.json`.
+Results are saved to `results/<model>_<strategy>.json` for the legacy runner and `results/pydantic_ai/<model>_<strategy>.json` for the PydanticAI/OpenRouter runner.
 
 ### 5.5 Bootstrap Statistical Analysis
 
 ```bash
-python scripts/run_baseline.py \
+uv run python scripts/run_baseline.py \
     --dataset data/test.jsonl \
     --model-results results/openai_gpt-5.2_zero_shot.json \
     --stats-only \
@@ -341,7 +358,7 @@ Per-level error composition (`AE/OE/CV/CO` ratios), feature presence rates, and 
 ### Running Failure Analysis
 
 ```bash
-python scripts/analyze_failures.py \
+uv run python scripts/analyze_failures.py \
     --results results/openai_gpt-5.2_zero_shot.json \
     --dataset data/test.jsonl \
     --output results/failure_analysis_gpt52_zero_shot.json
@@ -375,7 +392,7 @@ For a problem with N transactions:
 
 ```bash
 # 1 problem per difficulty level (5 total)
-python scripts/simulate_propagation.py \
+uv run python scripts/simulate_propagation.py \
     --dataset data/sample.jsonl \
     --model claude-3-haiku-20240307 \
     --n-per-level 1 \
@@ -383,13 +400,13 @@ python scripts/simulate_propagation.py \
     --output results/propagation_haiku.json
 
 # Print summary from saved traces (no new API calls)
-python scripts/simulate_propagation.py \
+uv run python scripts/simulate_propagation.py \
     --dataset data/sample.jsonl \
     --output results/propagation_haiku.json \
     --summary-only
 
 # Every 2nd transaction checkpoint (halves API cost)
-python scripts/simulate_propagation.py \
+uv run python scripts/simulate_propagation.py \
     --dataset data/sample.jsonl \
     --n-per-level 3 \
     --checkpoint-every 2 \
@@ -703,21 +720,28 @@ MAE by progress quartile: Q0=$0 → Q25=$2,243 → Q50=$4,333 → Q75=$8,990 →
 ### Prerequisites
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+uv sync
+printf 'OPENROUTER_API_KEY=your-key\n' > .env
 ```
 
 ### Generate dataset
 
 ```bash
 # Full dataset (2,500 problems)
-python scripts/generate_dataset.py --counts 1:500,2:750,3:750,4:400,5:100 --output data/full.jsonl --seed 42
+uv run python scripts/generate_dataset.py --counts 1:500,2:750,3:750,4:400,5:100 --output data/full.jsonl --seed 42
 
 # Create stratified dev/test splits
-python scripts/create_splits.py --input data/full.jsonl --seed 42
+uv run python scripts/create_splits.py --input data/full.jsonl --seed 42
 # → data/dev.jsonl (50 problems, 10/level)
 # → data/test.jsonl (100 problems, 20/level)
+
+# Create the fixed Large-500 subset used for shared OpenRouter runs
+uv run python scripts/create_custom_subset.py \
+    --input data/full.jsonl \
+    --output data/large500.jsonl \
+    --size 500 \
+    --seed 42
+# → data/large500.jsonl (500 problems, 100/level)
 ```
 
 ### Run evaluation
@@ -725,23 +749,37 @@ python scripts/create_splits.py --input data/full.jsonl --seed 42
 ```bash
 # Anthropic model
 export ANTHROPIC_API_KEY="your-key"
-python scripts/run_evaluation.py \
+uv run python scripts/run_evaluation.py \
     --dataset data/test.jsonl \
     --models claude-3-5-sonnet-20241022 \
     --strategies zero_shot,cot
 
 # OpenRouter model (GPT, Llama, Gemini, etc.)
 export OPENROUTER_API_KEY="your-key"
-python scripts/run_evaluation.py \
+uv run python scripts/run_evaluation.py \
     --dataset data/test.jsonl \
     --models openai/gpt-5.2 \
     --strategies zero_shot,cot
+
+# PydanticAI/OpenRouter path using data/large500.jsonl by default
+# (500 problems = 100 per difficulty level) and the five default
+# OpenRouter models used in this repo.
+uv run python scripts/run_openrouter_pydanticai.py \
+    --strategies zero_shot,cot \
+    --write-subset-path data/large500.jsonl
+
+# Full batch fan-out across model×strategy jobs plus per-run request concurrency
+uv run python scripts/run_openrouter_pydanticai.py \
+    --strategies zero_shot,cot \
+    --parallel-runs 10 \
+    --workers 8 \
+    --write-subset-path data/openrouter_subset_500.jsonl
 ```
 
 ### Analyse failures
 
 ```bash
-python scripts/analyze_failures.py \
+uv run python scripts/analyze_failures.py \
     --results results/openai_gpt-5.2_zero_shot.json \
     --dataset data/test.jsonl
 ```
@@ -749,7 +787,7 @@ python scripts/analyze_failures.py \
 ### Bootstrap confidence intervals
 
 ```bash
-python scripts/run_baseline.py \
+uv run python scripts/run_baseline.py \
     --dataset data/test.jsonl \
     --model-results results/openai_gpt-5.2_cot.json \
     --stats-only \
@@ -759,7 +797,7 @@ python scripts/run_baseline.py \
 ### Simulate error propagation
 
 ```bash
-python scripts/simulate_propagation.py \
+uv run python scripts/simulate_propagation.py \
     --dataset data/sample.jsonl \
     --model claude-3-haiku-20240307 \
     --n-per-level 1 \
@@ -778,10 +816,23 @@ python scripts/simulate_propagation.py \
 | `model_id` | — | Model identifier string (e.g. `openai/gpt-5.2`, `claude-3-5-sonnet-20241022`) |
 | `temperature` | `0` | Sampling temperature (0 = near-deterministic) |
 | `seed` | `42` | Random seed for reproducible sampling |
-| `max_tokens` | `8192` | Maximum response tokens — increased from 2048 to accommodate extended reasoning in frontier models |
+| `max_tokens` | `16384` | Maximum response tokens — increased from 2048 to accommodate extended reasoning in frontier models |
 | `timeout` | `120` | API request timeout in seconds — increased from 60 for L4/L5 problems |
 
-**Note on `max_tokens`:** Models such as GPT-5.2 generate extensive internal chain-of-thought reasoning before emitting the final JSON, even under zero_shot prompting. At `max_tokens=2048` or `max_tokens=4096`, these models hit the token cap and OpenRouter returns `null` content rather than truncated text. The default of `8192` is sufficient for all tested models across all difficulty levels.
+**Note on `max_tokens`:** Models such as GPT-5.2 generate extensive internal chain-of-thought reasoning before emitting the final JSON, even under zero_shot prompting. At `max_tokens=2048` or `max_tokens=4096`, these models hit the token cap and OpenRouter can return `null` content rather than usable text. The default is now `16384` to give a larger response budget. This still does not bypass a model's total context-window limit, which includes both prompt and completion tokens.
+
+### OpenRouterBatchConfig
+
+`scripts/run_openrouter_pydanticai.py` is the separate PydanticAI-backed harness for OpenRouter runs. Its defaults align with the paper appendix `Large-500` protocol and point at the fixed dataset file `data/large500.jsonl`: `500` problems total, `100` from each difficulty level.
+
+The default model list is:
+`qwen/qwen3.6-plus-preview:free`,
+`qwen/qwen3.5-flash-02-23`,
+`deepseek/deepseek-v3.2`,
+`openai/gpt-oss-120b`,
+`google/gemini-3-flash-preview`
+
+Outputs go to `results/pydantic_ai/` by default, and `--write-subset-path` saves the exact sampled JSONL used for the run. The runner loads `OPENROUTER_API_KEY` from a repo-local `.env` file automatically. Use `--parallel-runs` to fan out model×strategy jobs and `--workers` to control concurrent requests inside each job.
 
 ### PropagationSimulator
 
@@ -825,21 +876,21 @@ python scripts/simulate_propagation.py \
 ### Adding a new model
 ```bash
 # 1. Run evaluation
-python scripts/run_evaluation.py --dataset data/test.jsonl \
+uv run python scripts/run_evaluation.py --dataset data/test.jsonl \
     --models <model_id> --strategies zero_shot,cot --workers 8 \
     --max-tokens 32768 --api-key <key>
 
 # 2. Compute extended metrics + update leaderboard.json
-python scripts/compute_extended_metrics.py
+uv run python scripts/compute_extended_metrics.py
 
 # 3. Failure analysis
-python scripts/analyze_failures.py --results results/<model>_zero_shot.json \
+uv run python scripts/analyze_failures.py --results results/<model>_zero_shot.json \
     --dataset data/test.jsonl --output results/failure_analysis_<model>_zero_shot.json
-python scripts/analyze_failures.py --results results/<model>_cot.json \
+uv run python scripts/analyze_failures.py --results results/<model>_cot.json \
     --dataset data/test.jsonl --output results/failure_analysis_<model>_cot.json
 
 # 4. Regenerate deep analysis, permutation tests, and figures
-python scripts/deep_analysis.py
-python scripts/permutation_tests.py
-python scripts/generate_figures.py
+uv run python scripts/deep_analysis.py
+uv run python scripts/permutation_tests.py
+uv run python scripts/generate_figures.py
 ```

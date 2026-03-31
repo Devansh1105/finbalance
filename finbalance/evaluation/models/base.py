@@ -3,13 +3,15 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
+DEFAULT_MAX_TOKENS = 16384
+
 
 @dataclass
 class ModelConfig:
     model_id:    str
     temperature: float = 0.0
     seed:        int   = 42
-    max_tokens:  int   = 8192
+    max_tokens:  int   = DEFAULT_MAX_TOKENS
     timeout:     int   = 120
 
 

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "finbalance"
+version = "0.1.0"
+description = "FinBalance benchmark harness for balance sheet generation."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.0",
+    "pydantic-ai>=1.74.0",
+    "python-dotenv>=1.2.2",
+    "requests>=2.31.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["finbalance"]
+
+[tool.uv]
+package = true
