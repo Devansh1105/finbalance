@@ -12,7 +12,7 @@ DEFAULT_OPENROUTER_MODELS = (
     "qwen/qwen3.5-flash-02-23",
     "deepseek/deepseek-v3.2",
     "openai/gpt-oss-120b",
-    # "google/gemini-3-flash-preview",
+    "google/gemini-3-flash-preview",
 )
 
 
@@ -29,6 +29,7 @@ class OpenRouterAgentConfig(PydanticModel):
     api_key: str | None = None
     app_url: str | None = None
     app_title: str = "FinBalance"
+    openrouter_reasoning_effort: str | None = None
 
 
 class OpenRouterBatchConfig(PydanticModel):
@@ -52,3 +53,4 @@ class OpenRouterBatchConfig(PydanticModel):
     api_key: str | None = None
     app_url: str | None = None
     app_title: str = "FinBalance"
+    cot_openrouter_reasoning_effort: str = "high"

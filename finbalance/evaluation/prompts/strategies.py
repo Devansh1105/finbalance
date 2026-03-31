@@ -196,13 +196,14 @@ STRATEGY_METADATA = {
     },
     "cot": {
         "label": "Chain-of-thought",
-        "description": "Step-by-step reasoning followed by a FINAL ANSWER JSON block.",
+        "description": "Step-by-step reasoning followed by a FINAL ANSWER JSON block. In the PydanticAI/OpenRouter runner, this condition also enables OpenRouter native reasoning by default.",
         "reasoning_style": "step_by_step_then_json",
         "n_stages": 1,
         "uses_examples": False,
         "uses_final_answer_marker": True,
         "final_answer_marker": "FINAL ANSWER:",
         "response_format": "reasoning_plus_final_json",
+        "openrouter_native_reasoning_default": "enabled_in_pydantic_openrouter_runner",
         "output_keys": OUTPUT_KEYS,
     },
     "self_refine": {
@@ -228,11 +229,7 @@ def describe_strategy(strategy: str) -> dict:
     """Return structured metadata for a configured prompting strategy."""
     if strategy not in STRATEGY_METADATA:
         return {
-            "strategy_id": strategy,
             "label": strategy,
             "description": "Unknown strategy metadata.",
         }
-    return {
-        "strategy_id": strategy,
-        **STRATEGY_METADATA[strategy],
-    }
+    return dict(STRATEGY_METADATA[strategy])

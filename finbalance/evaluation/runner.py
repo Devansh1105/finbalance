@@ -7,7 +7,6 @@ import re
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
-from pathlib import Path
 from threading import Lock
 from typing import Optional
 
@@ -157,7 +156,6 @@ class EvalResult:
             "error_categories": self.errors.by_category,
             "model_backend": self.model_backend,
             "model_config": self.model_config,
-            "strategy_label": self.strategy_metadata.get("label", self.strategy),
             "strategy_metadata": self.strategy_metadata,
             "raw_response": self.raw_response,
         })
@@ -247,12 +245,21 @@ class EvaluationRunner:
             metrics=metrics,
             errors=errors,
             model_backend=type(self.model).__name__,
-            model_config=asdict(self.model.config),
+            model_config=self.model.export_metadata(),
             strategy_metadata=describe_strategy(self.strategy),
             latency_s=round(latency, 2),
         )
 
-    def run(self, problems: list[Problem]) -> list[EvalResult]:
+    def _write_rows(self, results: list[EvalResult], path: str):
+        rows = [r.to_dict() for r in results]
+        with open(path, "w") as f:
+            json.dump(rows, f, indent=2)
+
+    def _autosave(self, results: list[Optional[EvalResult]], path: str):
+        completed = [r for r in results if r is not None]
+        self._write_rows(completed, path)
+
+    def run(self, problems: list[Problem], autosave_path: str | None = None) -> list[EvalResult]:
         n = len(problems)
         self._log(f"\nRunning {n} problems | model={self.model} | strategy={self.strategy} | workers={self.max_workers}\n")
 
@@ -261,6 +268,8 @@ class EvaluationRunner:
             for i, problem in enumerate(problems, 1):
                 self._log(f"[{i}/{n}]")
                 results.append(self.run_one(problem))
+                if autosave_path:
+                    self._autosave(results, autosave_path)
             return results
 
         # Parallel execution — preserve original problem order in output
@@ -281,28 +290,11 @@ class EvaluationRunner:
             for future in as_completed(futures):
                 idx, result = future.result()
                 results[idx] = result
+                if autosave_path:
+                    self._autosave(results, autosave_path)
 
         return results
 
-    def save_results(self, results: list[EvalResult], path: str, run_metadata: dict | None = None):
-        rows = [r.to_dict() for r in results]
-        with open(path, "w") as f:
-            json.dump(rows, f, indent=2)
-        self._log(f"\nSaved {len(rows)} results to {path}")
-
-        if run_metadata is None:
-            return
-
-        meta_path = Path(path).with_name(f"{Path(path).stem}_meta.json")
-        payload = {
-            "result_file": str(path),
-            "model_id": self.model.config.model_id,
-            "model_backend": type(self.model).__name__,
-            "model_config": asdict(self.model.config),
-            "strategy": self.strategy,
-            "strategy_metadata": describe_strategy(self.strategy),
-            **run_metadata,
-        }
-        with open(meta_path, "w") as f:
-            json.dump(payload, f, indent=2)
-        self._log(f"Saved run metadata to {meta_path}")
+    def save_results(self, results: list[EvalResult], path: str):
+        self._write_rows(results, path)
+        self._log(f"\nSaved {len(results)} results to {path}")

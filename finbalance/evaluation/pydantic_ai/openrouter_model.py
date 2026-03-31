@@ -44,6 +44,11 @@ class PydanticAIOpenRouterModel(BaseModel):
             seed=runtime_config.seed,
             max_tokens=runtime_config.max_tokens,
             timeout=runtime_config.timeout,
+            openrouter_reasoning=(
+                {"effort": runtime_config.openrouter_reasoning_effort}
+                if runtime_config.openrouter_reasoning_effort
+                else None
+            ),
         )
 
     def _build_agent(self) -> Agent:
@@ -52,3 +57,9 @@ class PydanticAIOpenRouterModel(BaseModel):
     def complete(self, prompt: str) -> str:
         result = self._build_agent().run_sync(prompt)
         return str(result.output).strip()
+
+    def export_metadata(self) -> dict:
+        metadata = super().export_metadata()
+        if self.runtime_config.openrouter_reasoning_effort:
+            metadata["openrouter_reasoning_effort"] = self.runtime_config.openrouter_reasoning_effort
+        return metadata

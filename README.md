@@ -282,7 +282,7 @@ The `_clean_json()` helper handles:
 |---------|-------|----------------|-------|
 | Anthropic | `AnthropicModel` | `ANTHROPIC_API_KEY` | Direct Messages API |
 | OpenRouter | `OpenRouterModel` | `OPENROUTER_API_KEY` | Multi-model gateway; auto-selected for non-`claude-*` model IDs |
-| PydanticAI OpenRouter | `PydanticAIOpenRouterModel` | `OPENROUTER_API_KEY` | Dedicated OpenRouter runner with Pydantic configs and a stratified subset workflow |
+| PydanticAI OpenRouter | `PydanticAIOpenRouterModel` | `OPENROUTER_API_KEY` | Dedicated OpenRouter runner with Pydantic configs, the fixed `Large-500` dataset, and OpenRouter native reasoning enabled by default for `cot` |
 
 The runner auto-detects backend: model IDs starting with `claude-` route to `AnthropicModel`; all others route to `OpenRouterModel`.
 
@@ -304,10 +304,16 @@ uv run python scripts/run_evaluation.py \
 # Run the dedicated PydanticAI/OpenRouter path on the appendix Large-500 subset.
 # Defaults:
 #   models = qwen/qwen3.6-plus-preview:free,qwen/qwen3.5-flash-02-23,deepseek/deepseek-v3.2,openai/gpt-oss-120b,google/gemini-3-flash-preview
-#   subset = 500 problems from data/full.jsonl
+#   dataset = data/large500.jsonl
+#   cot = prompt-level CoT + OpenRouter native reasoning by default
 uv run python scripts/run_openrouter_pydanticai.py \
     --strategies zero_shot,cot \
-    --write-subset-path data/openrouter_subset_500.jsonl
+    --write-subset-path data/large500.jsonl
+
+# Keep the CoT prompt but disable OpenRouter native reasoning explicitly
+uv run python scripts/run_openrouter_pydanticai.py \
+    --strategies cot \
+    --cot-reasoning-effort off
 
 # Run with Anthropic key
 export ANTHROPIC_API_KEY="your-key"
@@ -773,7 +779,7 @@ uv run python scripts/run_openrouter_pydanticai.py \
     --strategies zero_shot,cot \
     --parallel-runs 10 \
     --workers 8 \
-    --write-subset-path data/openrouter_subset_500.jsonl
+    --write-subset-path data/large500.jsonl
 ```
 
 ### Analyse failures
@@ -833,6 +839,11 @@ The default model list is:
 `google/gemini-3-flash-preview`
 
 Outputs go to `results/pydantic_ai/` by default, and `--write-subset-path` saves the exact sampled JSONL used for the run. The runner loads `OPENROUTER_API_KEY` from a repo-local `.env` file automatically. Use `--parallel-runs` to fan out model×strategy jobs and `--workers` to control concurrent requests inside each job.
+
+Prompting semantics in the PydanticAI/OpenRouter runner:
+- `zero_shot`: prompt-only direct JSON generation, with no OpenRouter native reasoning setting applied
+- `cot`: prompt-level chain-of-thought plus OpenRouter native reasoning enabled by default with `--cot-reasoning-effort high`
+- `--cot-reasoning-effort off`: keeps the CoT prompt but disables the OpenRouter native reasoning control
 
 ### PropagationSimulator
 

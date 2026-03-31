@@ -194,8 +194,10 @@ def main():
             model  = build_model(model_id, api_key=args.api_key, seed=args.seed, max_tokens=args.max_tokens)
             runner = EvaluationRunner(model, strategy=strategy, verbose=True,
                                       max_workers=args.workers)
+            safe_model = model_id.replace("/", "_")
+            out_path = out_dir / f"{safe_model}_{strategy}.json"
 
-            results = runner.run(problems)
+            results = runner.run(problems, autosave_path=str(out_path))
 
             # Aggregate
             agg = aggregate([r.metrics for r in results])
@@ -207,19 +209,7 @@ def main():
             print_summary(model_id, strategy, results, agg, err_stats)
 
             # Save
-            safe_model = model_id.replace("/", "_")
-            out_path = out_dir / f"{safe_model}_{strategy}.json"
-            runner.save_results(
-                results,
-                str(out_path),
-                run_metadata={
-                    "dataset_path": args.dataset,
-                    "quick_mode": args.quick,
-                    "n_problems": len(problems),
-                    "workers": args.workers,
-                    "api_backend": type(model).__name__,
-                },
-            )
+            runner.save_results(results, str(out_path))
 
             all_summaries.append({
                 "model":    model_id,

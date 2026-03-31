@@ -24,7 +24,7 @@ from finbalance.evaluation.pydantic_ai import (
 from finbalance.evaluation.runner import EvaluationRunner
 
 
-def build_model(config: OpenRouterBatchConfig, model_id: str) -> PydanticAIOpenRouterModel:
+def build_model(config: OpenRouterBatchConfig, model_id: str, strategy: str) -> PydanticAIOpenRouterModel:
     """Create one PydanticAI/OpenRouter-backed model instance."""
     return PydanticAIOpenRouterModel(
         OpenRouterAgentConfig(
@@ -36,6 +36,11 @@ def build_model(config: OpenRouterBatchConfig, model_id: str) -> PydanticAIOpenR
             api_key=config.api_key,
             app_url=config.app_url,
             app_title=config.app_title,
+            openrouter_reasoning_effort=(
+                config.cot_openrouter_reasoning_effort
+                if strategy == "cot" and config.cot_openrouter_reasoning_effort.lower() != "off"
+                else None
+            ),
         )
     )
 
@@ -117,6 +122,12 @@ def parse_args() -> OpenRouterBatchConfig:
     parser.add_argument("--timeout", type=int, default=120, help="Timeout per request in seconds")
     parser.add_argument("--api-key", default=None, help="Overrides OPENROUTER_API_KEY")
     parser.add_argument(
+        "--cot-reasoning-effort",
+        default="high",
+        choices=["off", "low", "medium", "high"],
+        help="OpenRouter native reasoning effort to apply when strategy=cot",
+    )
+    parser.add_argument(
         "--parallel-runs",
         type=int,
         default=1,
@@ -144,6 +155,7 @@ def parse_args() -> OpenRouterBatchConfig:
         api_key=args.api_key,
         app_url=args.app_url,
         app_title=args.app_title,
+        cot_openrouter_reasoning_effort=args.cot_reasoning_effort,
     )
 
 
@@ -184,15 +196,17 @@ def main() -> None:
         return
 
     def run_job(model_id: str, strategy: str) -> tuple[str, str]:
-        model = build_model(config, model_id)
+        model = build_model(config, model_id, strategy)
         runner = EvaluationRunner(
             model,
             strategy=strategy,
             verbose=True,
             max_workers=config.workers,
         )
+        safe_model = model_id.replace("/", "_")
+        out_path = config.output_dir / f"{safe_model}_{strategy}.json"
 
-        results = runner.run(eval_problems)
+        results = runner.run(eval_problems, autosave_path=str(out_path))
         agg = aggregate([result.metrics for result in results])
         err_stats = aggregate_errors(
             [result.errors for result in results],
@@ -201,22 +215,7 @@ def main() -> None:
 
         print_summary(model_id, strategy, results, agg, err_stats)
 
-        safe_model = model_id.replace("/", "_")
-        out_path = config.output_dir / f"{safe_model}_{strategy}.json"
-        runner.save_results(
-            results,
-            str(out_path),
-            run_metadata={
-                "dataset_path": str(config.dataset_path),
-                "subset_protocol": "Large-500" if len(eval_problems) == 500 else "custom_subset",
-                "subset_size_requested": config.subset_size,
-                "subset_seed": config.subset_seed,
-                "n_problems": len(eval_problems),
-                "difficulty_breakdown": dict(level_counts),
-                "parallel_runs": config.parallel_runs,
-                "workers": config.workers,
-            },
-        )
+        runner.save_results(results, str(out_path))
         return model_id, strategy
 
     if config.parallel_runs <= 1 or len(jobs) == 1:
