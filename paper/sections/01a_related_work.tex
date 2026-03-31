@@ -4,8 +4,7 @@ A growing body of financial natural language processing benchmarks has
 emerged, but nearly all of them evaluate \emph{comprehension} over
 existing reports rather than \emph{construction} of new accounting
 artifacts.
-FinQA~\citep{chen2021finqa} and
-ConvFinQA~\citep{chen2022convfinqa} study numerical reasoning over
+FinQA~\citep{chen2021finqa} studies numerical reasoning over
 earnings reports;
 TAT-QA~\citep{zhu2021tatqa} extends the setting to joint table--text
 reasoning; and
@@ -15,32 +14,11 @@ These benchmarks require models to read a financial document and answer
 questions about it, but not to construct a balance sheet from raw
 transactions.
 
-Broader financial evaluation suites such as
-FLUE~\citep{shah2022flueflang},
-PIXIU~\citep{xie2023pixiu},
-FinBen~\citep{xie2024finben}, and
-FinanceBench~\citep{islam2023financebench} span tasks including
-sentiment analysis, named-entity recognition, market prediction, and
-open-book question answering.
-Reasoning-centric datasets such as
-BizBench~\citep{krumdick2024bizbench},
-FinanceMATH~\citep{zhao2024financemath}, and
-XFinBench~\citep{zhang2025xfinbench} emphasize quantitative or
-knowledge-intensive finance problems, often with exact answer checking,
-but they still evaluate question answering or program synthesis rather
-than artifact construction from raw accounting events.
-More recent benchmark suites continue the broad-coverage trend:
-BizFinBench~\citep{lu2025bizfinbench} expands to business-driven
-financial tasks, FinDABench~\citep{liu2025findabench} studies financial
-data-analysis ability, INVESTORBENCH~\citep{li2025investorbench}
-targets agentic financial decision-making, FinTrust~\citep{hu2025fintrust}
-evaluates trustworthiness in finance settings, Golden
-Touchstone~\citep{wu2025goldentouchstone} emphasizes bilingual financial
-NLP evaluation, and FinMaster~\citep{jiang2025finmaster} broadens the
-scope to full-pipeline financial workflows.
-These benchmarks cover important parts of financial language
-understanding and decision support, yet they do not isolate end-to-end
-accounting statement preparation under hard bookkeeping invariants.
+Broader evaluation suites such as
+FinanceBench~\citep{islam2023financebench} covers wider portions of
+financial language understanding and decision support, while
+FinanceMATH~\citep{zhao2024financemath} emphasizes exact quantitative
+reasoning in finance settings.
 Even MMLU~\citep{hendrycks2021mmlu}, which includes
 professional-accounting questions, measures declarative knowledge in a
 multiple-choice format rather than procedural bookkeeping.
@@ -48,13 +26,9 @@ multiple-choice format rather than procedural bookkeeping.
 The closest adjacent line of work studies richer financial analysis
 over existing statements or filings rather than bookkeeping from raw
 events.
-SECQUE~\citep{benyoash2025secque} evaluates real-world financial
-analysis over SEC documents; FinAR-Bench~\citep{wu2025finarbench}
-focuses on fundamental-analysis competence; FinAuditing
+FinAuditing
 ~\citep{wang2025finauditing} studies taxonomy-structured auditing over
-multi-document financial disclosures; and FinRule-Bench
-~\citep{malarkkan2026finrulebench} evaluates joint reasoning over
-financial tables and accounting principles.
+multi-document financial disclosures.
 Wang et al.~\citep{wang2025automating} also study automated financial
 statement auditing with a benchmark that combines financial tables and
 synthesized transaction data.

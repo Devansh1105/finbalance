@@ -1,348 +1,201 @@
-% ============================================================
-% Financial QA benchmarks
-% ============================================================
-
 @inproceedings{chen2021finqa,
-  author       = {Zhiyu Chen and Wenhu Chen and Charese Smiley and Sameena Shah and
-                  Iana Borova and Dylan Langdon and Reema Moussa and Matt Beane and
-                  Ting{-}Hao Kenneth Huang and Bryan R. Routledge and William Yang Wang},
-  title        = {{FinQA}: {A} Dataset of Numerical Reasoning over Financial Data},
-  booktitle    = {Proceedings of the 2021 Conference on Empirical Methods in Natural
-                  Language Processing, {EMNLP} 2021},
-  pages        = {3697--3711},
-  publisher    = {Association for Computational Linguistics},
-  year         = {2021},
-  doi          = {10.18653/v1/2021.emnlp-main.300},
-}
-
-@inproceedings{chen2022convfinqa,
-  author       = {Zhiyu Chen and Shiyang Li and Charese Smiley and Zhiqiang Ma and
-                  Sameena Shah and William Yang Wang},
-  title        = {{ConvFinQA}: Exploring the Chain of Numerical Reasoning in Conversational
-                  Finance Question Answering},
-  booktitle    = {Proceedings of the 2022 Conference on Empirical Methods in Natural
-                  Language Processing, {EMNLP} 2022},
-  pages        = {6279--6292},
-  publisher    = {Association for Computational Linguistics},
-  year         = {2022},
-  doi          = {10.18653/v1/2022.emnlp-main.421},
+  title     = {{F}in{QA}: A Dataset of Numerical Reasoning over Financial Data},
+  author    = {Chen, Zhiyu and
+               Chen, Wenhu and
+               Smiley, Charese and
+               Shah, Sameena and
+               Borova, Iana and
+               Langdon, Dylan and
+               Moussa, Reema and
+               Beane, Matt and
+               Huang, Ting-Hao and
+               Routledge, Bryan and
+               Wang, William Yang},
+  editor    = {Moens, Marie-Francine and
+               Huang, Xuanjing and
+               Specia, Lucia and
+               Yih, Scott Wen-tau},
+  booktitle = {Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing},
+  month     = nov,
+  year      = {2021},
+  address   = {Online and Punta Cana, Dominican Republic},
+  publisher = {Association for Computational Linguistics},
+  url       = {https://aclanthology.org/2021.emnlp-main.300/},
+  doi       = {10.18653/v1/2021.emnlp-main.300},
+  pages     = {3697--3711}
 }
 
 @inproceedings{zhu2021tatqa,
-  author       = {Fengbin Zhu and Wenqiang Lei and Youcheng Huang and Chao Wang and
-                  Shuo Zhang and Jiancheng Lv and Fuli Feng and Tat{-}Seng Chua},
-  title        = {{TAT-QA}: {A} Question Answering Benchmark on a Hybrid of Tabular
-                  and Textual Content in Finance},
-  booktitle    = {Proceedings of the 59th Annual Meeting of the Association for Computational
-                  Linguistics and the 11th International Joint Conference on Natural
-                  Language Processing, {ACL/IJCNLP} 2021, (Volume 1: Long Papers)},
-  pages        = {3277--3287},
-  publisher    = {Association for Computational Linguistics},
-  year         = {2021},
-  doi          = {10.18653/v1/2021.acl-long.254},
+  title     = {{TAT}-{QA}: A Question Answering Benchmark on a Hybrid of Tabular and Textual Content in Finance},
+  author    = {Zhu, Fengbin and
+               Lei, Wenqiang and
+               Huang, Youcheng and
+               Wang, Chao and
+               Zhang, Shuo and
+               Lv, Jiancheng and
+               Feng, Fuli and
+               Chua, Tat-Seng},
+  editor    = {Zong, Chengqing and
+               Xia, Fei and
+               Li, Wenjie and
+               Navigli, Roberto},
+  booktitle = {Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers)},
+  month     = aug,
+  year      = {2021},
+  address   = {Online},
+  publisher = {Association for Computational Linguistics},
+  url       = {https://aclanthology.org/2021.acl-long.254/},
+  doi       = {10.18653/v1/2021.acl-long.254},
+  pages     = {3277--3287}
 }
 
 @inproceedings{reddy2024docfinqa,
-  author       = {Varshini Reddy and Rik Koncel{-}Kedziorski and Viet Dac Lai and
-                  Michael Krumdick and Charles Lovering and Chris Tanner},
-  title        = {{DocFinQA}: {A} Long-Context Financial Reasoning Dataset},
-  booktitle    = {Proceedings of the 62nd Annual Meeting of the Association for Computational
-                  Linguistics (Volume 2: Short Papers), {ACL} 2024},
-  pages        = {445--458},
-  publisher    = {Association for Computational Linguistics},
-  year         = {2024},
-  doi          = {10.18653/v1/2024.acl-short.42},
+  title     = {{D}oc{F}in{QA}: A Long-Context Financial Reasoning Dataset},
+  author    = {Reddy, Varshini and
+               Koncel-Kedziorski, Rik and
+               Lai, Viet Dac and
+               Krumdick, Michael and
+               Lovering, Charles and
+               Tanner, Chris},
+  editor    = {Ku, Lun-Wei and
+               Martins, Andre and
+               Srikumar, Vivek},
+  booktitle = {Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers)},
+  month     = aug,
+  year      = {2024},
+  address   = {Bangkok, Thailand},
+  publisher = {Association for Computational Linguistics},
+  url       = {https://aclanthology.org/2024.acl-short.42/},
+  doi       = {10.18653/v1/2024.acl-short.42},
+  pages     = {445--458}
 }
 
-% ============================================================
-% Financial NLU / evaluation suites
-% ============================================================
-
-@inproceedings{shah2022flueflang,
-  author       = {Raj Sanjay Shah and Kunal Chawla and Dheeraj Eidnani and Agam Shah and
-                  Wendi Du and Sudheer Chava and Natraj Raman and Charese Smiley and
-                  Jiaao Chen and Diyi Yang},
-  title        = {When {FLUE} Meets {FLANG}: Benchmarks and Large Pretrained Language
-                  Model for Financial Domain},
-  booktitle    = {Proceedings of the 2022 Conference on Empirical Methods in Natural
-                  Language Processing, {EMNLP} 2022},
-  pages        = {2322--2335},
-  publisher    = {Association for Computational Linguistics},
-  year         = {2022},
-  doi          = {10.18653/v1/2022.emnlp-main.148},
-}
-
-@inproceedings{xie2023pixiu,
-  author       = {Qianqian Xie and Weiguang Han and Xiao Zhang and Yanzhao Lai and
-                  Min Peng and Alejandro Lopez-Lira and Jimin Huang},
-  title        = {{PIXIU}: A Comprehensive Benchmark, Instruction Dataset and Large
-                  Language Model for Finance},
-  booktitle    = {Advances in Neural Information Processing Systems 36 (NeurIPS)},
-  year         = {2023},
-  url          = {http://papers.nips.cc/paper_files/paper/2023/hash/6a386d703b50f1cf1f61ab02a15967bb-Abstract-Datasets_and_Benchmarks.html},
-}
-
-@inproceedings{xie2024finben,
-  author       = {Qianqian Xie and Weiguang Han and Zhengyu Chen and Ruoyu Xiang and
-                  Xiao Zhang and Yueru He and Mengxi Xiao and Dong Li and Yongfu Dai and
-                  Duanyu Feng and others},
-  title        = {{FinBen}: {A} Holistic Financial Benchmark for Large Language Models},
-  booktitle    = {Advances in Neural Information Processing Systems 38 (NeurIPS)},
-  year         = {2024},
-}
-
-@article{islam2023financebench,
-  author       = {Pranab Islam and Anand Kannappan and Douwe Kiela and Rebecca Qian and
-                  Nino Scherrer and Bertie Vidgen},
-  title        = {{FinanceBench}: {A} New Benchmark for Financial Question Answering},
-  journal      = {CoRR},
-  volume       = {abs/2311.11944},
-  year         = {2023},
-  doi          = {10.48550/arXiv.2311.11944},
-  eprinttype   = {arXiv},
-  eprint       = {2311.11944},
-}
-
-@inproceedings{krumdick2024bizbench,
-  author       = {Michael Krumdick and Rik Koncel{-}Kedziorski and Viet Dac Lai and
-                  Varshini Reddy and Charles Lovering and Chris Tanner},
-  title        = {{BizBench}: {A} Quantitative Reasoning Benchmark for Business and Finance},
-  booktitle    = {Proceedings of the 62nd Annual Meeting of the Association for Computational
-                  Linguistics (Volume 1: Long Papers)},
-  pages        = {8309--8332},
-  publisher    = {Association for Computational Linguistics},
-  year         = {2024},
-  doi          = {10.18653/v1/2024.acl-long.452},
+@misc{islam2023financebench,
+  title     = {FinanceBench: A New Benchmark for Financial Question Answering},
+  author    = {Islam, Pranab and
+               Kannappan, Anand and
+               Kiela, Douwe and
+               Qian, Rebecca and
+               Scherrer, Nino and
+               Vidgen, Bertie},
+  year      = {2023},
+  publisher = {arXiv},
+  url       = {https://arxiv.org/abs/2311.11944},
+  doi       = {10.48550/arXiv.2311.11944}
 }
 
 @inproceedings{zhao2024financemath,
-  author       = {Yilun Zhao and Hongjun Liu and Yitao Long and Rui Zhang and
-                  Chen Zhao and Arman Cohan},
-  title        = {{FinanceMATH}: Knowledge-Intensive Math Reasoning in Finance Domains},
-  booktitle    = {Proceedings of the 62nd Annual Meeting of the Association for Computational
-                  Linguistics (Volume 1: Long Papers)},
-  pages        = {12841--12858},
-  publisher    = {Association for Computational Linguistics},
-  year         = {2024},
-  doi          = {10.18653/v1/2024.acl-long.693},
+  title     = {FinanceMATH: Knowledge-Intensive Math Reasoning in Finance Domains},
+  author    = {Zhao, Yilun and
+               Liu, Hongjun and
+               Long, Yitao and
+               Zhang, Rui and
+               Zhao, Chen and
+               Cohan, Arman},
+  booktitle = {Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
+  publisher = {Association for Computational Linguistics},
+  year      = {2024},
+  url       = {http://dx.doi.org/10.18653/v1/2024.acl-long.693},
+  doi       = {10.18653/v1/2024.acl-long.693},
+  pages     = {12841--12858}
 }
 
-@article{lu2025bizfinbench,
-  author       = {Guilong Lu and Xuntao Guo and Rongjunchen Zhang and Wenqiao Zhu and
-                  Ji Liu},
-  title        = {{BizFinBench}: {A} Business-Driven Real-World Financial Benchmark for Evaluating {LLM}s},
-  journal      = {CoRR},
-  volume       = {abs/2505.19457},
-  year         = {2025},
-  doi          = {10.48550/arXiv.2505.19457},
-  eprinttype   = {arXiv},
-  eprint       = {2505.19457},
+@misc{hendrycks2021mmlu,
+  title         = {Measuring Massive Multitask Language Understanding},
+  author        = {Hendrycks, Dan and
+                   Burns, Collin and
+                   Basart, Steven and
+                   Zou, Andy and
+                   Mazeika, Mantas and
+                   Song, Dawn and
+                   Steinhardt, Jacob},
+  year          = {2021},
+  eprint        = {2009.03300},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.CY},
+  url           = {https://arxiv.org/abs/2009.03300}
 }
 
-@inproceedings{liu2025findabench,
-  author       = {Shu Liu and Shangqing Zhao and Chenghao Jia and Xinlin Zhuang and
-                  Zhaoguang Long and Jie Zhou and Aimin Zhou and Man Lan and
-                  Yang Chong},
-  title        = {{FinDABench}: Benchmarking Financial Data Analysis Ability of Large Language Models},
-  booktitle    = {Proceedings of the 31st International Conference on Computational Linguistics},
-  pages        = {710--725},
-  publisher    = {Association for Computational Linguistics},
-  year         = {2025},
-  url          = {https://aclanthology.org/2025.coling-main.48/},
+@misc{wang2025finauditing,
+  title         = {FinAuditing: A Financial Taxonomy-Structured Multi-Document Benchmark for Evaluating LLMs},
+  author        = {Wang, Yan and
+                   Wang, Keyi and
+                   Yang, Shanshan and
+                   Patel, Jaisal and
+                   Zhao, Jeff and
+                   Mo, Fengran and
+                   Peng, Xueqing and
+                   Qian, Lingfei and
+                   Huang, Jimin and
+                   Xiong, Guojun and
+                   Chen, Yankai and
+                   Gutierrez-Basulto, Victor and
+                   Liu, Xiao-Yang and
+                   Liu, Xue and
+                   Nie, Jian-Yun},
+  year          = {2026},
+  eprint        = {2510.08886},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.CL},
+  url           = {https://arxiv.org/abs/2510.08886}
 }
 
-@inproceedings{li2025investorbench,
-  author       = {Haohang Li and Yupeng Cao and Yangyang Yu and
-                  Shashidhar Reddy Javaji and Zhiyang Deng and Yueru He and
-                  Yuechen Jiang and Zining Zhu and K. P. Subbalakshmi and
-                  Jimin Huang and Lingfei Qian and Xueqing Peng and
-                  Jordan W. Suchow and Qianqian Xie},
-  title        = {{INVESTORBENCH}: A Benchmark for Financial Decision-Making Tasks with {LLM}-based Agent},
-  booktitle    = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-  pages        = {2509--2525},
-  publisher    = {Association for Computational Linguistics},
-  year         = {2025},
-  doi          = {10.18653/v1/2025.acl-long.126},
+@misc{wang2025automating,
+  title         = {Automating Financial Statement Audits with Large Language Models},
+  author        = {Wang, Rushi and
+                   Liu, Jiateng and
+                   Zhao, Weijie and
+                   Li, Shenglan and
+                   Zhang, Denghui},
+  year          = {2025},
+  eprint        = {2506.17282},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.IR},
+  url           = {https://arxiv.org/abs/2506.17282}
 }
 
-@inproceedings{zhang2025xfinbench,
-  author       = {Zhihan Zhang and Yixin Cao and Lizi Liao},
-  title        = {{XFinBench}: Benchmarking {LLM}s in Complex Financial Problem Solving and Reasoning},
-  booktitle    = {Findings of the Association for Computational Linguistics: ACL 2025},
-  pages        = {8715--8758},
-  publisher    = {Association for Computational Linguistics},
-  year         = {2025},
-  doi          = {10.18653/v1/2025.findings-acl.457},
+@misc{cobbe2021gsm8k,
+  title         = {Training Verifiers to Solve Math Word Problems},
+  author        = {Cobbe, Karl and
+                   Kosaraju, Vineet and
+                   Bavarian, Mohammad and
+                   Chen, Mark and
+                   Jun, Heewoo and
+                   Kaiser, Lukasz and
+                   Plappert, Matthias and
+                   Tworek, Jerry and
+                   Hilton, Jacob and
+                   Nakano, Reiichiro and
+                   Hesse, Christopher and
+                   Schulman, John},
+  year          = {2021},
+  eprint        = {2110.14168},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.LG},
+  url           = {https://arxiv.org/abs/2110.14168}
 }
-
-@inproceedings{hu2025fintrust,
-  author       = {Tiansheng Hu and Tongyan Hu and Liuyang Bai and Yilun Zhao and
-                  Arman Cohan and Chen Zhao},
-  title        = {{FinTrust}: A Comprehensive Benchmark of Trustworthiness Evaluation in Finance Domain},
-  booktitle    = {Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing},
-  pages        = {10099--10128},
-  publisher    = {Association for Computational Linguistics},
-  year         = {2025},
-  doi          = {10.18653/v1/2025.emnlp-main.512},
-}
-
-@inproceedings{wu2025goldentouchstone,
-  author       = {Xiaojun Wu and Junxi Liu and Huan{-}Yi Su and Zhouchi Lin and
-                  Yiyan Qi and Chengjin Xu and Jiajun Su and Jiajie Zhong and
-                  Fuwei Wang and Saizhuo Wang and Fengrui Hua and Jia Li and
-                  Jian Guo},
-  title        = {Golden Touchstone: A Comprehensive Bilingual Benchmark for Evaluating Financial Large Language Models},
-  booktitle    = {Findings of the Association for Computational Linguistics: EMNLP 2025},
-  pages        = {22544--22560},
-  publisher    = {Association for Computational Linguistics},
-  year         = {2025},
-  doi          = {10.18653/v1/2025.findings-emnlp.1227},
-}
-
-@article{jiang2025finmaster,
-  author       = {Junzhe Jiang and Chang Yang and Aixin Cui and Sihan Jin and
-                  Ruiyu Wang and Bo Li and Xiao Huang and Dongning Sun and
-                  Xinrun Wang},
-  title        = {{FinMaster}: A Holistic Benchmark for Mastering Full-Pipeline Financial Workflows with {LLM}s},
-  journal      = {CoRR},
-  volume       = {abs/2505.13533},
-  year         = {2025},
-  doi          = {10.48550/arXiv.2505.13533},
-  eprinttype   = {arXiv},
-  eprint       = {2505.13533},
-}
-
-% ============================================================
-% Closest prior work: statement analysis (not generation)
-% ============================================================
-
-@article{kim2024financial,
-  author       = {Alex G. Kim and Maximilian Muhn and Valeri V. Nikolaev},
-  title        = {Financial Statement Analysis with Large Language Models},
-  journal      = {Working Paper},
-  year         = {2024},
-  doi          = {10.2139/ssrn.4835311},
-}
-
-@inproceedings{benyoash2025secque,
-  author       = {Noga BenYoash and Menachem Brief and Oded Ovadia and
-                  Gil Shenderovitz and Moshik Mishaeli and Rachel Lemberg and
-                  Eitam Sheetrit},
-  title        = {{SECQUE}: A Benchmark for Evaluating Real-World Financial Analysis Capabilities},
-  booktitle    = {Proceedings of the Fourth Workshop on Generation, Evaluation and Metrics (GEM{\texttwosuperior})},
-  pages        = {212--230},
-  publisher    = {Association for Computational Linguistics},
-  year         = {2025},
-  url          = {https://aclanthology.org/2025.gem-1.16/},
-}
-
-@article{wu2025finarbench,
-  author       = {Zonghan Wu and Congyuan Zou and Junlin Wang and Chenhan Wang and
-                  Hangjing Yang and Yilei Shao},
-  title        = {Towards Competent {AI} for Fundamental Analysis in Finance: A Benchmark Dataset and Evaluation},
-  journal      = {CoRR},
-  volume       = {abs/2506.07315},
-  year         = {2025},
-  doi          = {10.48550/arXiv.2506.07315},
-  eprinttype   = {arXiv},
-  eprint       = {2506.07315},
-}
-
-@article{wang2025finauditing,
-  author       = {Yan Wang and Keyi Wang and Shanshan Yang and Jaisal Patel and
-                  Jeff Zhao and Fengran Mo and Xueqing Peng and Lingfei Qian and
-                  Jimin Huang and Guojun Xiong},
-  title        = {{FinAuditing}: A Financial Taxonomy-Structured Multi-Document Benchmark for Evaluating {LLM}s},
-  journal      = {CoRR},
-  volume       = {abs/2510.08886},
-  year         = {2025},
-  doi          = {10.48550/arXiv.2510.08886},
-  eprinttype   = {arXiv},
-  eprint       = {2510.08886},
-}
-
-@article{malarkkan2026finrulebench,
-  author       = {Arun Vignesh Malarkkan and Manan Roy Choudhury and Guangwei Zhang and
-                  Vivek Gupta and Qingyun Wang and Yanjie Fu and Denghui Zhang},
-  title        = {{FinRule-Bench}: A Benchmark for Joint Reasoning over Financial Tables and Principles},
-  journal      = {CoRR},
-  volume       = {abs/2603.11339},
-  year         = {2026},
-  doi          = {10.48550/arXiv.2603.11339},
-  eprinttype   = {arXiv},
-  eprint       = {2603.11339},
-}
-
-@article{wang2025automating,
-  author       = {Rushi Wang and Jiateng Liu and Weijie Zhao and Shenglan Li and
-                  Denghui Zhang},
-  title        = {Automating Financial Statement Audits with Large Language Models},
-  journal      = {CoRR},
-  volume       = {abs/2506.17282},
-  year         = {2025},
-  doi          = {10.48550/arXiv.2506.17282},
-  eprinttype   = {arXiv},
-  eprint       = {2506.17282},
-}
-
-% ============================================================
-% General knowledge benchmark with accounting subset
-% ============================================================
-
-@inproceedings{hendrycks2021mmlu,
-  author       = {Dan Hendrycks and Collin Burns and Steven Basart and Andy Zou and
-                  Mantas Mazeika and Dawn Song and Jacob Steinhardt},
-  title        = {Measuring Massive Multitask Language Understanding},
-  booktitle    = {9th International Conference on Learning Representations (ICLR)},
-  publisher    = {OpenReview.net},
-  year         = {2021},
-  url          = {https://openreview.net/forum?id=d7KBjmI3GmQ},
-}
-
-% ============================================================
-% Methodology: prompting strategies
-% ============================================================
 
 @inproceedings{wei2022chainofthought,
-  author       = {Jason Wei and Xuezhi Wang and Dale Schuurmans and Maarten Bosma and
-                  Brian Ichter and Fei Xia and Ed H. Chi and Quoc V. Le and Denny Zhou},
-  title        = {Chain-of-Thought Prompting Elicits Reasoning in Large Language Models},
-  booktitle    = {Advances in Neural Information Processing Systems 35 (NeurIPS)},
-  year         = {2022},
-  url          = {http://papers.nips.cc/paper_files/paper/2022/hash/9d5609613524ecf4f15af0f7b31abca4-Abstract-Conference.html},
-}
-
-@article{cobbe2021gsm8k,
-  author       = {Karl Cobbe and Vineet Kosaraju and Mohammad Bavarian and Mark Chen and
-                  Heewoo Jun and Lukasz Kaiser and Matthias Plappert and Jerry Tworek and
-                  Jacob Hilton and Reiichiro Nakano and Christopher Hesse and John Schulman},
-  title        = {Training Verifiers to Solve Math Word Problems},
-  journal      = {CoRR},
-  volume       = {abs/2110.14168},
-  year         = {2021},
-  url          = {https://arxiv.org/abs/2110.14168},
-  eprinttype   = {arXiv},
-  eprint       = {2110.14168},
-}
-
-@article{chen2023programofthoughts,
-  author       = {Wenhu Chen and Xueguang Ma and Xinyi Wang and William W. Cohen},
-  title        = {Program of Thoughts Prompting: Disentangling Computation from Reasoning
-                  for Numerical Reasoning Tasks},
-  journal      = {Transactions on Machine Learning Research},
-  year         = {2023},
-  url          = {https://openreview.net/forum?id=YfZ4ZPt8zd},
-}
-
-@article{wu2023bloomberggpt,
-  author       = {Shijie Wu and Ozan Irsoy and Steven Lu and Vadim Dabravolski and
-                  Mark Dredze and Sebastian Gehrmann and Prabhanjan Kambadur and
-                  David S. Rosenberg and Gideon Mann},
-  title        = {{BloombergGPT}: A Large Language Model for Finance},
-  journal      = {CoRR},
-  volume       = {abs/2303.17564},
-  year         = {2023},
-  doi          = {10.48550/ARXIV.2303.17564},
-  eprinttype   = {arXiv},
-  eprint       = {2303.17564},
+  author    = {Wei, Jason and
+               Wang, Xuezhi and
+               Schuurmans, Dale and
+               Bosma, Maarten and
+               ichter, brian and
+               Xia, Fei and
+               Chi, Ed and
+               Le, Quoc V and
+               Zhou, Denny},
+  title     = {Chain-of-Thought Prompting Elicits Reasoning in Large Language Models},
+  booktitle = {Advances in Neural Information Processing Systems},
+  editor    = {Koyejo, S. and
+               Mohamed, S. and
+               Agarwal, A. and
+               Belgrave, D. and
+               Cho, K. and
+               Oh, A.},
+  pages     = {24824--24837},
+  publisher = {Curran Associates, Inc.},
+  volume    = {35},
+  year      = {2022},
+  url       = {https://proceedings.neurips.cc/paper_files/paper/2022/file/9d5609613524ecf4f15af0f7b31abca4-Paper-Conference.pdf}
 }
