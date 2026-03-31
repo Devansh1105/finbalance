@@ -8,11 +8,11 @@ from pydantic import ConfigDict, Field
 from finbalance.evaluation.models.base import DEFAULT_MAX_TOKENS
 
 DEFAULT_OPENROUTER_MODELS = (
-    "qwen/qwen3.6-plus-preview:free",
     "qwen/qwen3.5-flash-02-23",
     "deepseek/deepseek-v3.2",
     "openai/gpt-oss-120b",
     "google/gemini-3-flash-preview",
+    "qwen/qwen3.6-plus-preview:free",
 )
 
 

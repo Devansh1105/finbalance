@@ -143,6 +143,7 @@ class EvalResult:
     model_backend: str
     model_config: dict
     strategy_metadata: dict
+    usage:        dict
     latency_s:    float = 0.0
 
     def to_dict(self) -> dict:
@@ -157,6 +158,7 @@ class EvalResult:
             "model_backend": self.model_backend,
             "model_config": self.model_config,
             "strategy_metadata": self.strategy_metadata,
+            "usage": self.usage,
             "raw_response": self.raw_response,
         })
         return d
@@ -189,6 +191,7 @@ class EvaluationRunner:
                 print(msg, flush=True)
 
     def run_one(self, problem: Problem) -> EvalResult:
+        self.model.reset_usage()
         prompt = build_prompt(problem, self.strategy)
 
         t0 = time.perf_counter()
@@ -247,6 +250,7 @@ class EvaluationRunner:
             model_backend=type(self.model).__name__,
             model_config=self.model.export_metadata(),
             strategy_metadata=describe_strategy(self.strategy),
+            usage=self.model.export_usage(),
             latency_s=round(latency, 2),
         )
 

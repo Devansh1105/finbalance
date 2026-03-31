@@ -1,10 +1,12 @@
 """PydanticAI/OpenRouter model adapter for the FinBalance runner."""
 
 import os
+from dataclasses import asdict
 
 from pydantic_ai import Agent
 from pydantic_ai.models.openrouter import OpenRouterModel, OpenRouterModelSettings
 from pydantic_ai.providers.openrouter import OpenRouterProvider
+from pydantic_ai.usage import RunUsage
 
 from finbalance.env import load_project_env
 from finbalance.evaluation.models.base import BaseModel, ModelConfig
@@ -45,17 +47,22 @@ class PydanticAIOpenRouterModel(BaseModel):
             max_tokens=runtime_config.max_tokens,
             timeout=runtime_config.timeout,
             openrouter_reasoning=(
-                {"effort": runtime_config.openrouter_reasoning_effort}
+                {
+                    "effort": runtime_config.openrouter_reasoning_effort,
+                    **({"exclude": True} if runtime_config.openrouter_reasoning_effort == "none" else {}),
+                }
                 if runtime_config.openrouter_reasoning_effort
                 else None
             ),
         )
+        self._usage = RunUsage()
 
     def _build_agent(self) -> Agent:
         return Agent(self._model, model_settings=self._settings)
 
     def complete(self, prompt: str) -> str:
         result = self._build_agent().run_sync(prompt)
+        self._usage += result.usage()
         return str(result.output).strip()
 
     def export_metadata(self) -> dict:
@@ -63,3 +70,13 @@ class PydanticAIOpenRouterModel(BaseModel):
         if self.runtime_config.openrouter_reasoning_effort:
             metadata["openrouter_reasoning_effort"] = self.runtime_config.openrouter_reasoning_effort
         return metadata
+
+    def reset_usage(self) -> None:
+        self._usage = RunUsage()
+
+    def export_usage(self) -> dict:
+        usage = asdict(self._usage)
+        usage["total_tokens"] = usage["input_tokens"] + usage["output_tokens"]
+        if not usage.get("details"):
+            usage.pop("details", None)
+        return usage

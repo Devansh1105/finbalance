@@ -176,12 +176,13 @@ STRATEGIES = {
 STRATEGY_METADATA = {
     "zero_shot": {
         "label": "Zero-shot",
-        "description": "Single-pass direct balance-sheet generation with a balance-equation reminder.",
+        "description": "Single-pass direct balance-sheet generation with a balance-equation reminder. In the PydanticAI/OpenRouter runner, native OpenRouter reasoning is explicitly disabled.",
         "reasoning_style": "direct_json",
         "n_stages": 1,
         "uses_examples": False,
         "uses_final_answer_marker": False,
         "response_format": "json_only",
+        "openrouter_native_reasoning_default": "disabled_in_pydantic_openrouter_runner",
         "output_keys": OUTPUT_KEYS,
     },
     "few_shot": {

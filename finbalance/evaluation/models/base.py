@@ -33,5 +33,13 @@ class BaseModel(ABC):
             "timeout": self.config.timeout,
         }
 
+    def reset_usage(self) -> None:
+        """Reset any per-problem usage counters before a new evaluation item."""
+        return None
+
+    def export_usage(self) -> dict:
+        """Return accumulated per-problem usage counters for the current evaluation item."""
+        return {}
+
     def __repr__(self):
         return f"{self.__class__.__name__}({self.config.model_id})"

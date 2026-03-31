@@ -39,7 +39,7 @@ def build_model(config: OpenRouterBatchConfig, model_id: str, strategy: str) -> 
             openrouter_reasoning_effort=(
                 config.cot_openrouter_reasoning_effort
                 if strategy == "cot" and config.cot_openrouter_reasoning_effort.lower() != "off"
-                else None
+                else "none"
             ),
         )
     )

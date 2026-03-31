@@ -841,7 +841,7 @@ The default model list is:
 Outputs go to `results/pydantic_ai/` by default, and `--write-subset-path` saves the exact sampled JSONL used for the run. The runner loads `OPENROUTER_API_KEY` from a repo-local `.env` file automatically. Use `--parallel-runs` to fan out model×strategy jobs and `--workers` to control concurrent requests inside each job.
 
 Prompting semantics in the PydanticAI/OpenRouter runner:
-- `zero_shot`: prompt-only direct JSON generation, with no OpenRouter native reasoning setting applied
+- `zero_shot`: prompt-only direct JSON generation, with OpenRouter native reasoning explicitly disabled
 - `cot`: prompt-level chain-of-thought plus OpenRouter native reasoning enabled by default with `--cot-reasoning-effort high`
 - `--cot-reasoning-effort off`: keeps the CoT prompt but disables the OpenRouter native reasoning control
 
