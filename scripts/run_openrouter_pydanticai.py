@@ -27,6 +27,16 @@ MANDATORY_REASONING_MODELS = {
     "openai/gpt-oss-120b": "low",
 }
 
+def build_system_prompt(model_id: str, strategy: str) -> str | None:
+    """Provide a tighter system prompt for models that struggled with verbose CoT outputs."""
+    if strategy != "cot":
+        return None
+    return (
+        "You are a precise accountant solving ledger-based balance-sheet problems. "
+        "Use reasoning efficiently and keep the final response compact. "
+        "Return only the requested final answer format."
+    )
+
 
 def resolve_reasoning_effort(config: OpenRouterBatchConfig, model_id: str, strategy: str) -> str:
     """Map harness strategy to the OpenRouter reasoning setting for one model."""
@@ -52,6 +62,10 @@ def build_model(config: OpenRouterBatchConfig, model_id: str, strategy: str) -> 
             app_url=config.app_url,
             app_title=config.app_title,
             openrouter_reasoning_effort=resolve_reasoning_effort(config, model_id, strategy),
+            system_prompt=build_system_prompt(model_id, strategy),
+            api_retries=config.api_retries,
+            retry_base_delay_s=config.retry_base_delay_s,
+            retry_max_delay_s=config.retry_max_delay_s,
         )
     )
 
@@ -201,8 +215,26 @@ def parse_args() -> OpenRouterBatchConfig:
     )
     parser.add_argument("--workers", type=int, default=1, help="Concurrent requests per run")
     parser.add_argument("--resume", action="store_true", help="Resume from any existing partial result files")
+    parser.add_argument(
+        "--retry-failed-only",
+        action="store_true",
+        help="When resuming, rerun only rows marked parse_failed/parse_error in existing result files",
+    )
     parser.add_argument("--app-url", default=None, help="Optional OpenRouter attribution URL")
     parser.add_argument("--app-title", default="FinBalance", help="Optional OpenRouter attribution title")
+    parser.add_argument("--api-retries", type=int, default=6, help="Retries for rate-limit/transient API failures")
+    parser.add_argument(
+        "--retry-base-delay-s",
+        type=float,
+        default=2.0,
+        help="Base exponential-backoff delay in seconds for retryable API failures",
+    )
+    parser.add_argument(
+        "--retry-max-delay-s",
+        type=float,
+        default=30.0,
+        help="Max backoff delay in seconds for retryable API failures",
+    )
     args = parser.parse_args()
 
     return OpenRouterBatchConfig(
@@ -216,6 +248,7 @@ def parse_args() -> OpenRouterBatchConfig:
         parallel_runs=args.parallel_runs,
         workers=args.workers,
         resume=args.resume,
+        retry_failed_only=args.retry_failed_only,
         seed=args.seed,
         temperature=args.temperature,
         max_tokens=args.max_tokens,
@@ -224,6 +257,9 @@ def parse_args() -> OpenRouterBatchConfig:
         app_url=args.app_url,
         app_title=args.app_title,
         cot_openrouter_reasoning_effort=args.cot_reasoning_effort,
+        api_retries=args.api_retries,
+        retry_base_delay_s=args.retry_base_delay_s,
+        retry_max_delay_s=args.retry_max_delay_s,
     )
 
 
@@ -274,7 +310,18 @@ def main() -> None:
         safe_model = model_id.replace("/", "_")
         out_path = config.output_dir / f"{safe_model}_{strategy}.json"
         existing_rows = load_saved_rows(out_path) if config.resume else []
-        completed_ids = {row.get("problem_id") for row in existing_rows if row.get("problem_id")}
+        retry_ids = set()
+        if config.retry_failed_only:
+            retry_ids = {
+                row.get("problem_id")
+                for row in existing_rows
+                if row.get("problem_id") and (row.get("parse_failed") or row.get("parse_error"))
+            }
+        completed_ids = {
+            row.get("problem_id")
+            for row in existing_rows
+            if row.get("problem_id") and row.get("problem_id") not in retry_ids
+        }
         remaining_problems = [problem for problem in eval_problems if problem.problem_id not in completed_ids]
 
         if existing_rows:
@@ -282,6 +329,8 @@ def main() -> None:
                 f"Resuming {model_id} | {strategy}: "
                 f"{len(existing_rows)} completed, {len(remaining_problems)} remaining."
             )
+            if config.retry_failed_only:
+                print(f"Retry-failed-only mode: rerunning {len(retry_ids)} previously failed rows.")
         if not remaining_problems:
             print(f"Skipping {model_id} | {strategy}: all {len(eval_problems)} problems already completed.")
             return model_id, strategy

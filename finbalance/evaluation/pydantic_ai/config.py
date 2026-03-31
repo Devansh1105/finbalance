@@ -30,6 +30,10 @@ class OpenRouterAgentConfig(PydanticModel):
     app_url: str | None = None
     app_title: str = "FinBalance"
     openrouter_reasoning_effort: str | None = None
+    system_prompt: str | None = None
+    api_retries: int = 6
+    retry_base_delay_s: float = 2.0
+    retry_max_delay_s: float = 30.0
 
 
 class OpenRouterBatchConfig(PydanticModel):
@@ -47,6 +51,7 @@ class OpenRouterBatchConfig(PydanticModel):
     parallel_runs: int = 1
     workers: int = 1
     resume: bool = False
+    retry_failed_only: bool = False
     seed: int = 42
     temperature: float = 0.0
     max_tokens: int = DEFAULT_MAX_TOKENS
@@ -55,3 +60,6 @@ class OpenRouterBatchConfig(PydanticModel):
     app_url: str | None = None
     app_title: str = "FinBalance"
     cot_openrouter_reasoning_effort: str = "high"
+    api_retries: int = 6
+    retry_base_delay_s: float = 2.0
+    retry_max_delay_s: float = 30.0

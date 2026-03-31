@@ -192,7 +192,7 @@ class EvaluationRunner:
 
     def run_one(self, problem: Problem) -> EvalResult:
         self.model.reset_usage()
-        prompt = build_prompt(problem, self.strategy)
+        prompt = build_prompt(problem, self.strategy, self.model.config.model_id)
 
         t0 = time.perf_counter()
         try:
@@ -216,7 +216,7 @@ class EvaluationRunner:
         if parsed is None and self.retry and self.strategy != "zero_shot":
             self._log(f"  [RETRY] {problem.problem_id}: parse failed, retrying zero_shot")
             try:
-                raw2 = self.model.complete(build_prompt(problem, "zero_shot"))
+                raw2 = self.model.complete(build_prompt(problem, "zero_shot", self.model.config.model_id))
                 parsed = parse_response(raw2)
                 if parsed is not None:
                     raw = raw2

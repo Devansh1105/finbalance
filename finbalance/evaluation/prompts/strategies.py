@@ -136,6 +136,19 @@ Show your reasoning, then end with a line "FINAL ANSWER:" followed by the JSON o
 {OUTPUT_FORMAT}"""
 
 
+def compact_chain_of_thought(problem: Problem) -> str:
+    return f"""You are an expert accountant. Prepare a balance sheet carefully.
+
+{_body(problem)}
+
+Reason carefully and verify the final balance sheet satisfies:
+Assets = Liabilities + Equity.
+
+Respond ONLY with a line "FINAL ANSWER:" followed by the JSON object only:
+
+{OUTPUT_FORMAT}"""
+
+
 # ---------------------------------------------------------------------------
 # Strategy 4: Self-Refine  (two-stage: generate then critique + correct)
 # ---------------------------------------------------------------------------
@@ -197,13 +210,13 @@ STRATEGY_METADATA = {
     },
     "cot": {
         "label": "Chain-of-thought",
-        "description": "Step-by-step reasoning followed by a FINAL ANSWER JSON block. In the PydanticAI/OpenRouter runner, this condition also enables OpenRouter native reasoning by default.",
-        "reasoning_style": "step_by_step_then_json",
+        "description": "Compact reasoning prompt that requests only a FINAL ANSWER JSON block. In the PydanticAI/OpenRouter runner, this condition also enables OpenRouter native reasoning by default.",
+        "reasoning_style": "compact_final_answer_json",
         "n_stages": 1,
         "uses_examples": False,
         "uses_final_answer_marker": True,
         "final_answer_marker": "FINAL ANSWER:",
-        "response_format": "reasoning_plus_final_json",
+        "response_format": "final_answer_json_only",
         "openrouter_native_reasoning_default": "enabled_in_pydantic_openrouter_runner",
         "output_keys": OUTPUT_KEYS,
     },
@@ -220,9 +233,11 @@ STRATEGY_METADATA = {
 }
 
 
-def build_prompt(problem: Problem, strategy: str) -> str:
+def build_prompt(problem: Problem, strategy: str, model_id: str | None = None) -> str:
     if strategy not in STRATEGIES:
         raise ValueError(f"Unknown strategy '{strategy}'. Choose from: {list(STRATEGIES)}")
+    if strategy == "cot":
+        return compact_chain_of_thought(problem)
     return STRATEGIES[strategy](problem)
 
 
