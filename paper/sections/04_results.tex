@@ -2,10 +2,9 @@
 
 \input{tables/main_results}
 
-Table~\ref{tab:main-results} reports the Controlled-100 study and
-therefore should be read as a paired cross-model comparison with
-\(n=100\), not as the final large-sample evaluation for every system.
-Even under that controlled setting, the performance spread is wide.
+Table~\ref{tab:main-results} reports the paired cross-model comparison
+on the shared 100-problem split (\(n=100\)).
+Even in that matched setting, the performance spread is wide.
 GPT-5.2 is clearly strongest and is the only family that remains near
 the oracle ceiling in both prompt settings.
 Its best run, GPT-5.2 \CoT{}, reaches perfect balance accuracy and a
@@ -17,7 +16,7 @@ points with two-sided \(p=0.533\).
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.95\textwidth]{../figures/F1_capability_curve.pdf}
-\caption{Capability curves on the Controlled-100 split. Panel (A) shows
+\caption{Capability curves on the paired 100-problem split. Panel (A) shows
 FinBalance Score by difficulty level. Panel (B) shows balance accuracy
 by difficulty level.}
 \label{fig:capability-curve}

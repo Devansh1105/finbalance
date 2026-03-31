@@ -1,0 +1,48 @@
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{3.0cm}p{1.4cm}p{2.4cm}cccc}
+\toprule
+Benchmark & Raw Txns & Primary Setting & Exact Scoring & Global Invariants & Closing Eval & Construction Task \\
+\midrule
+FinQA / ConvFinQA / TAT-QA / DocFinQA
+& No
+& QA over reports / filings
+& Partial
+& No
+& No
+& No \\
+BizBench / FinanceMATH / XFinBench
+& No
+& Financial reasoning / program synthesis
+& Yes
+& No
+& No
+& No \\
+FinanceBench / SECQUE / FinAR-Bench
+& No
+& Analysis over prepared artifacts
+& Mixed
+& No
+& No
+& No \\
+FinAuditing / FinRule-Bench / Wang et al.~\citep{wang2025automating}
+& Mixed
+& Auditing / rule diagnosis
+& Yes
+& Partial
+& No
+& Partial \\
+\benchmark{} (ours)
+& Yes
+& Balance-sheet construction
+& Yes
+& Yes
+& Yes
+& Yes \\
+\bottomrule
+\end{tabular}
+\caption{Positioning relative to prior work. Existing financial benchmarks mostly evaluate question answering, analysis, or auditing over prepared artifacts. \benchmark{} instead starts from raw journal events and evaluates executable statement construction under exact accounting invariants, including retained-earnings closure.}
+\label{tab:prior-work-comparison}
+\end{table*}

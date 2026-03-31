@@ -8,27 +8,25 @@ the full distribution of language, ambiguity, and disclosure
 conventions found in live corporate reporting.
 
 Second, the current main-paper results are concentrated on the
-Controlled-100 split.
-That design is appropriate for paired comparison across expensive
-systems, but a submission-ready benchmark should also report 500-problem
-results for smaller open-weight models so that the strongest empirical
-claims rest on 500 or more instances.
+shared 100-problem evaluation split.
+That design supports tightly paired comparison across all evaluated
+systems, but larger samples would reduce uncertainty for model ranking
+and robustness estimates.
 
-Third, the present paper studies the constructor role but not yet the
-auditor role.
-In practical accounting workflows, a useful system must both construct
-candidate statements and audit them for inconsistencies.
-Extending \benchmark{} into a companion auditing benchmark is therefore
-an important part of the broader project scope.
+Third, the paper studies statement construction rather than statement
+auditing.
+In practical accounting workflows, construction and auditing are
+complementary, but they require different supervision signals and
+evaluation protocols.
 
 Fourth, all experiments in this draft rely on end-to-end language-model
 generation, which means the model is responsible for both selecting the
 correct accounting operations and performing the arithmetic internally.
-Because bookkeeping arithmetic is deterministic, an important next step
-is an agentic variant in which the model issues typed function calls to
-an external calculator or ledger engine while the tool performs the
-actual computation.
-That comparison would clarify how much of current failure is due to
+Because bookkeeping arithmetic is deterministic, a useful complementary
+comparison is a tool-augmented variant in which the model issues typed
+function calls to an external calculator or ledger engine while the tool
+performs the actual computation.
+Such a comparison would clarify how much of current failure is due to
 accounting misclassification versus arithmetic execution.
 
 From an ethics perspective, the benchmark should be used as an

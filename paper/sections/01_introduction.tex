@@ -30,13 +30,6 @@ Because every instance is generated and scored against a deterministic
 ledger engine, the benchmark supports exact evaluation rather than
 approximate rubric grading.
 
-The broader project contains two accounting roles: a
-\emph{constructor}, which prepares a balance sheet from transactions,
-and an \emph{auditor}, which inspects a candidate statement for
-violations or inconsistencies.
-The present manuscript formalizes the constructor task first, because
-it provides the controlled benchmark needed before extending the same
-framework to balance-sheet auditing.
 Appendix~\ref{app:glossary} supplies a glossary of financial terms for
 readers who do not work in accounting.
 
@@ -49,17 +42,15 @@ A final analysis layer aggregates the results into leaderboard metrics,
 account-level error summaries, factor-sensitivity analyses, and
 statistical comparisons.
 
-The current draft distinguishes between two evaluation tiers.
-First, a controlled 100-problem split with 20 problems per difficulty
-level enables direct cross-model comparison for expensive closed-source
-and large open-weight systems.
-Second, a 500-problem tier is the target setting for smaller
-open-weight models, where larger sample sizes are necessary for
-statistically credible claims.
-The controlled 100-problem study reported here already exposes a sharp
-performance hierarchy: GPT-5.2 remains strong across all five levels,
-whereas DeepSeek-v3.2 under zero-shot prompting recalls most expected
-accounts but violates the accounting equation on most problems.
+All main-paper comparisons are reported on a common stratified
+100-problem split with 20 problems per difficulty level.
+Even on that paired setting, the benchmark exposes a sharp capability
+split: some models recover the right account vocabulary and overall
+section structure, yet still fail the global bookkeeping invariants that
+make the final statement valid.
+DeepSeek-v3.2 under zero-shot prompting is the clearest example,
+recalling most expected accounts while violating the accounting
+equation on most problems.
 
 \input{figures/benchmark_overview}
 
@@ -82,14 +73,15 @@ This paper makes five contributions:
 (1) it introduces a deterministic 2{,}500-problem benchmark for
 balance-sheet construction from journal entries across five difficulty
 levels;
-(2) it defines a reproducible evaluation protocol that separates a
-controlled 100-problem cross-model study from larger-sample evaluation
-tiers needed for stronger inferential claims;
+(2) it defines an executable evaluation protocol in which exact
+ground truth is derived from a ledger engine rather than rubric-based
+annotation;
 (3) it presents an accounting-specific metric suite covering equation
 satisfaction, account-level accuracy, account coverage, closing-entry
 compliance, and a composite FinBalance Score;
 (4) it reports matched zero-shot and chain-of-thought comparisons across
 modern closed-source and open-weight systems; and
-(5) it analyzes recurring failure modes, including arithmetic collapse
-despite high structural recall, closing-entry blindness, and
-mixed-funding fragility.
+(5) it identifies recurrent failure modes that standard answer-only
+finance benchmarks obscure, including arithmetic collapse despite high
+structural recall, closing-entry blindness, and mixed-funding
+fragility.

@@ -22,15 +22,25 @@ FinBen~\citep{xie2024finben}, and
 FinanceBench~\citep{islam2023financebench} span tasks including
 sentiment analysis, named-entity recognition, market prediction, and
 open-book question answering.
-More recent benchmark suites continue that trend:
-BizFinBench~\citep{lu2025bizfinbench} expands coverage to business-driven
+Reasoning-centric datasets such as
+BizBench~\citep{krumdick2024bizbench},
+FinanceMATH~\citep{zhao2024financemath}, and
+XFinBench~\citep{zhang2025xfinbench} emphasize quantitative or
+knowledge-intensive finance problems, often with exact answer checking,
+but they still evaluate question answering or program synthesis rather
+than artifact construction from raw accounting events.
+More recent benchmark suites continue the broad-coverage trend:
+BizFinBench~\citep{lu2025bizfinbench} expands to business-driven
 financial tasks, FinDABench~\citep{liu2025findabench} studies financial
 data-analysis ability, INVESTORBENCH~\citep{li2025investorbench}
-targets agentic financial decision-making, and
-FinTrust~\citep{hu2025fintrust} evaluates trustworthiness in finance
-settings.
-They cover important parts of financial language understanding, yet
-they do not isolate end-to-end accounting statement preparation.
+targets agentic financial decision-making, FinTrust~\citep{hu2025fintrust}
+evaluates trustworthiness in finance settings, Golden
+Touchstone~\citep{wu2025goldentouchstone} emphasizes bilingual financial
+NLP evaluation, and FinMaster~\citep{jiang2025finmaster} broadens the
+scope to full-pipeline financial workflows.
+These benchmarks cover important parts of financial language
+understanding and decision support, yet they do not isolate end-to-end
+accounting statement preparation under hard bookkeeping invariants.
 Even MMLU~\citep{hendrycks2021mmlu}, which includes
 professional-accounting questions, measures declarative knowledge in a
 multiple-choice format rather than procedural bookkeeping.
@@ -45,15 +55,24 @@ focuses on fundamental-analysis competence; FinAuditing
 multi-document financial disclosures; and FinRule-Bench
 ~\citep{malarkkan2026finrulebench} evaluates joint reasoning over
 financial tables and accounting principles.
+Wang et al.~\citep{wang2025automating} also study automated financial
+statement auditing with a benchmark that combines financial tables and
+synthesized transaction data.
 These tasks are closer to professional finance workflows than QA alone,
-but they still begin from prepared financial artifacts, filings, or
-tabular statements rather than asking the model to derive a final
-balance sheet from journal entries and adjustments.
+but they primarily begin from prepared financial artifacts and evaluate
+analysis, diagnosis, or revision rather than direct construction of the
+final statement from journal entries and adjustments.
 More general multi-step arithmetic benchmarks such as
 GSM8K~\citep{cobbe2021gsm8k} test quantitative reasoning, but they do
 not impose the domain-specific conservation constraints, section
 structure, and closing-entry behavior required in accounting.
 
-Our benchmark therefore occupies a distinct point in the literature:
-it evaluates whether a model can transform raw accounting events into a
+\input{tables/prior_work_comparison}
+
+Our benchmark therefore occupies a distinct point in the literature.
+It evaluates whether a model can transform raw accounting events into a
 complete, internally consistent balance sheet with exact ground truth.
+That setting matters because exact invariants reveal failures that are
+easy to hide in answer-only evaluation: a model may recover the right
+accounts, sections, and financial vocabulary while still breaking the
+accounting equation or mishandling equity closure.
