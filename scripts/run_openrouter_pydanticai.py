@@ -23,6 +23,21 @@ from finbalance.evaluation.pydantic_ai import (
 )
 from finbalance.evaluation.runner import EvaluationRunner
 
+MANDATORY_REASONING_MODELS = {
+    "openai/gpt-oss-120b": "low",
+}
+
+
+def resolve_reasoning_effort(config: OpenRouterBatchConfig, model_id: str, strategy: str) -> str:
+    """Map harness strategy to the OpenRouter reasoning setting for one model."""
+    if strategy == "cot":
+        return (
+            config.cot_openrouter_reasoning_effort
+            if config.cot_openrouter_reasoning_effort.lower() != "off"
+            else MANDATORY_REASONING_MODELS.get(model_id, "none")
+        )
+    return MANDATORY_REASONING_MODELS.get(model_id, "none")
+
 
 def build_model(config: OpenRouterBatchConfig, model_id: str, strategy: str) -> PydanticAIOpenRouterModel:
     """Create one PydanticAI/OpenRouter-backed model instance."""
@@ -36,11 +51,7 @@ def build_model(config: OpenRouterBatchConfig, model_id: str, strategy: str) -> 
             api_key=config.api_key,
             app_url=config.app_url,
             app_title=config.app_title,
-            openrouter_reasoning_effort=(
-                config.cot_openrouter_reasoning_effort
-                if strategy == "cot" and config.cot_openrouter_reasoning_effort.lower() != "off"
-                else "none"
-            ),
+            openrouter_reasoning_effort=resolve_reasoning_effort(config, model_id, strategy),
         )
     )
 
@@ -76,6 +87,61 @@ def print_summary(model_id: str, strategy: str, results, agg, err_stats) -> None
         print("\n  Error breakdown:")
         for category, info in err_stats.by_category.items():
             print(f"  {'  ' + category:<30} {info['count']:>5}  ({info['pct']:.1f}%)")
+
+
+def load_saved_rows(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    raw = path.read_text()
+    try:
+        data = json.loads(raw)
+        return data if isinstance(data, list) else []
+    except Exception:
+        pass
+    decoder = json.JSONDecoder()
+    rows = []
+    raw = raw.lstrip()
+    if not raw.startswith("["):
+        return []
+    index = 1
+    length = len(raw)
+    while index < length:
+        while index < length and raw[index] in " \r\n\t,":
+            index += 1
+        if index >= length or raw[index] == "]":
+            break
+        try:
+            row, next_index = decoder.raw_decode(raw, index)
+        except json.JSONDecodeError:
+            break
+        if isinstance(row, dict):
+            rows.append(row)
+        index = next_index
+    return rows
+
+
+def write_json_atomic(path: Path, payload: list[dict]) -> None:
+    tmp_path = path.with_suffix(f"{path.suffix}.tmp")
+    with open(tmp_path, "w") as handle:
+        json.dump(payload, handle, indent=2)
+    tmp_path.replace(path)
+
+
+def write_merged_rows(
+    path: Path,
+    ordered_problems,
+    existing_rows: list[dict],
+    new_results,
+) -> None:
+    existing_by_id = {row["problem_id"]: row for row in existing_rows if "problem_id" in row}
+    new_by_id = {result.problem_id: result.to_dict() for result in new_results}
+    merged = []
+    for problem in ordered_problems:
+        if problem.problem_id in new_by_id:
+            merged.append(new_by_id[problem.problem_id])
+        elif problem.problem_id in existing_by_id:
+            merged.append(existing_by_id[problem.problem_id])
+    write_json_atomic(path, merged)
 
 
 def parse_args() -> OpenRouterBatchConfig:
@@ -134,6 +200,7 @@ def parse_args() -> OpenRouterBatchConfig:
         help="How many model×strategy jobs to run concurrently",
     )
     parser.add_argument("--workers", type=int, default=1, help="Concurrent requests per run")
+    parser.add_argument("--resume", action="store_true", help="Resume from any existing partial result files")
     parser.add_argument("--app-url", default=None, help="Optional OpenRouter attribution URL")
     parser.add_argument("--app-title", default="FinBalance", help="Optional OpenRouter attribution title")
     args = parser.parse_args()
@@ -148,6 +215,7 @@ def parse_args() -> OpenRouterBatchConfig:
         strategies=tuple(strategy.strip() for strategy in args.strategies.split(",") if strategy.strip()),
         parallel_runs=args.parallel_runs,
         workers=args.workers,
+        resume=args.resume,
         seed=args.seed,
         temperature=args.temperature,
         max_tokens=args.max_tokens,
@@ -205,17 +273,37 @@ def main() -> None:
         )
         safe_model = model_id.replace("/", "_")
         out_path = config.output_dir / f"{safe_model}_{strategy}.json"
+        existing_rows = load_saved_rows(out_path) if config.resume else []
+        completed_ids = {row.get("problem_id") for row in existing_rows if row.get("problem_id")}
+        remaining_problems = [problem for problem in eval_problems if problem.problem_id not in completed_ids]
 
-        results = runner.run(eval_problems, autosave_path=str(out_path))
+        if existing_rows:
+            print(
+                f"Resuming {model_id} | {strategy}: "
+                f"{len(existing_rows)} completed, {len(remaining_problems)} remaining."
+            )
+        if not remaining_problems:
+            print(f"Skipping {model_id} | {strategy}: all {len(eval_problems)} problems already completed.")
+            return model_id, strategy
+
+        results = runner.run(
+            remaining_problems,
+            autosave_callback=lambda current: write_merged_rows(out_path, eval_problems, existing_rows, current),
+        )
         agg = aggregate([result.metrics for result in results])
         err_stats = aggregate_errors(
             [result.errors for result in results],
             [result.difficulty for result in results],
         )
 
+        if existing_rows:
+            print("Summary below covers only the newly completed rows from this resumed segment.")
+            merged_rows = load_saved_rows(out_path)
+            print(f"Merged result file now contains {len(merged_rows)} rows.")
         print_summary(model_id, strategy, results, agg, err_stats)
 
-        runner.save_results(results, str(out_path))
+        write_merged_rows(out_path, eval_problems, existing_rows, results)
+        runner._log(f"\nSaved merged results to {out_path}")
         return model_id, strategy
 
     if config.parallel_runs <= 1 or len(jobs) == 1:

@@ -46,6 +46,7 @@ class OpenRouterBatchConfig(PydanticModel):
     strategies: tuple[str, ...] = ("zero_shot",)
     parallel_runs: int = 1
     workers: int = 1
+    resume: bool = False
     seed: int = 42
     temperature: float = 0.0
     max_tokens: int = DEFAULT_MAX_TOKENS

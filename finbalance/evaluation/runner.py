@@ -8,7 +8,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
 from threading import Lock
-from typing import Optional
+from typing import Callable, Optional
 
 from finbalance.analysis.error_detection import ErrorReport, detect_errors
 from finbalance.data.schemas import Problem
@@ -263,7 +263,12 @@ class EvaluationRunner:
         completed = [r for r in results if r is not None]
         self._write_rows(completed, path)
 
-    def run(self, problems: list[Problem], autosave_path: str | None = None) -> list[EvalResult]:
+    def run(
+        self,
+        problems: list[Problem],
+        autosave_path: str | None = None,
+        autosave_callback: Callable[[list[EvalResult]], None] | None = None,
+    ) -> list[EvalResult]:
         n = len(problems)
         self._log(f"\nRunning {n} problems | model={self.model} | strategy={self.strategy} | workers={self.max_workers}\n")
 
@@ -274,6 +279,8 @@ class EvaluationRunner:
                 results.append(self.run_one(problem))
                 if autosave_path:
                     self._autosave(results, autosave_path)
+                if autosave_callback:
+                    autosave_callback(list(results))
             return results
 
         # Parallel execution — preserve original problem order in output
@@ -296,6 +303,8 @@ class EvaluationRunner:
                 results[idx] = result
                 if autosave_path:
                     self._autosave(results, autosave_path)
+                if autosave_callback:
+                    autosave_callback([r for r in results if r is not None])
 
         return results
 
