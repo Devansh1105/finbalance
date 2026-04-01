@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Deep analysis for ACL paper -- FinBalance benchmark.
+Deep analysis for COLM paper -- FinBalance benchmark.
 
 Five analyses computed entirely from existing result files (no re-evaluation):
   1. Complexity Factor Attribution (CFA) -- which accounting operations cause failures
@@ -807,7 +807,7 @@ def _print_curves(curves):
 # Main
 # ============================================================================
 def main():
-    ap = argparse.ArgumentParser(description="Deep analysis for ACL paper")
+    ap = argparse.ArgumentParser(description="Deep analysis for COLM paper")
     ap.add_argument("--results-dir", default="results")
     ap.add_argument("--dataset", default="data/test.jsonl")
     ap.add_argument("--output", default=None)

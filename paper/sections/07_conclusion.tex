@@ -2,26 +2,15 @@
 
 \benchmark{} turns balance-sheet construction into a controlled
 structured-generation benchmark with exact ground truth.
-The experiments show that modern language models differ sharply not
-only in final score, but also in \emph{how} they fail.
-Some models miss the right accounts, some preserve structure but break
-the accounting equation, and some nearly solve the task while remaining
-weak on retained-earnings closure.
-
-Two conclusions stand out.
-First, prompt sensitivity is strongly model-specific:
-\CoT{} is transformative for DeepSeek-v3.2 and Qwen~3.5 Flash, but much
-smaller and more difficulty-conditional for Gemini~3 Flash.
-Second, account-level and factor-level analysis is necessary to
-interpret leaderboard scores.
-Without it, one would miss both the structural-versus-numerical split
-seen in DeepSeek-v3.2 \zs{} and the way retained-earnings closure,
-factor sensitivity, and hard-case robustness separate stable systems
-from brittle ones.
-\benchmark{} also now makes a methodological point:
-when model coverage is incomplete, it is better to separate a completed
-large-sample study from smaller compatibility runs than to blend them
-into a single misleading ranking.
-\benchmark{} is therefore most useful not as another finance QA suite,
-but as an executable testbed for stateful, constraint-governed
-generation in a high-stakes domain.
+Modern language models differ not only in final score but in failure
+type: some miss accounts, some preserve structure while breaking the
+accounting equation, and even strong systems remain challenged on
+retained-earnings closure.
+Chain-of-thought prompting is strongly model-dependent, with large gains for GPT-5.4 Nano,
+Grok~4.1 Fast, and DeepSeek-v3.2 and smaller gains for
+Gemini~3 Flash.
+Account-level and factor-level analysis are therefore necessary to
+interpret leaderboard scores, and separating Large-500 from
+Controlled-100 avoids misleading cross-pool rankings.
+\benchmark{} is most useful as an executable testbed for stateful,
+constraint-governed generation in a high-stakes domain.

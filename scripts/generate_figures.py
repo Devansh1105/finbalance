@@ -1,5 +1,5 @@
 """
-Generate publication-quality figures for the FinBalance ACL paper.
+Generate publication-quality figures for the FinBalance COLM paper.
 
 Figures produced:
   F1 — Capability Curve: FBS vs difficulty level (line chart per model×strategy)
@@ -52,9 +52,12 @@ MODEL_DISPLAY = {
     "deepseek/deepseek-v3.2":               "DeepSeek v3.2",
     "google/gemini-3-flash-preview":        "Gemini 3 Flash",
     "meta-llama/llama-3.3-70b-instruct":    "Llama 3.3 70B",
+    "nvidia/nemotron-3-super-120b-a12b:free": "Nemotron 3 Super",
     "openai/gpt-5.2":                       "GPT-5.2",
+    "openai/gpt-5.4-nano":                  "GPT-5.4 Nano",
     "qwen/qwen3.5-flash-02-23":             "Qwen 3.5 Flash",
     "qwen/qwen3.6-plus-preview:free":       "Qwen 3.6 Plus",
+    "x-ai/grok-4.1-fast":                   "Grok 4.1 Fast",
 }
 
 STRATEGY_LABEL = {"zero_shot": "Zero-shot", "cot": "CoT"}

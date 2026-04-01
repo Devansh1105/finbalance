@@ -6,7 +6,10 @@
 
 ## Abstract
 
-> *Prepared for submission to ACL 2025.*
+> Current paper target: COLM 2026.
+> The authoritative submission sources live in `paper/`; the broader
+> repository notes below include older exploratory context and are not a
+> line-by-line mirror of the current manuscript.
 
 We introduce **FinBalance**, a benchmark for evaluating large language models on the task of constructing GAAP-compliant balance sheets from sequences of double-entry journal transactions. Existing financial NLP benchmarks predominantly target question answering over pre-formed documents; FinBalance instead requires models to *generate* a structured financial statement by correctly accumulating, closing, and classifying every account across a full transaction sequence. The benchmark comprises 2,500 synthetically generated problems across five difficulty levels (L1–L5), with complexity scaled by transaction type, adjusting-entry depth, and inter-entry dependency. We evaluate six models — GPT-5.2, gpt-oss-120b, Qwen 3.5 Flash, DeepSeek-v3.2, Gemini 3 Flash, and Llama 3.3 70B — on a stratified 100-problem held-out test set under zero-shot and chain-of-thought prompting, reporting twelve metrics including a composite FinBalance Score (FBS) with bootstrap confidence intervals and pairwise permutation tests.
 

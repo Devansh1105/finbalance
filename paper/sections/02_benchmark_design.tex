@@ -24,7 +24,8 @@ released corpus contains 2{,}500 problems.
 
 \input{tables/dataset_summary}
 
-Table~\ref{tab:dataset-summary} shows that difficulty is not cosmetic.
+Table~\ref{tab:dataset-summary} shows that difficulty corresponds to
+substantive changes in bookkeeping complexity.
 Average transactions increase from $7.56$ at Level~1 to $79.35$ at
 Level~5, while average account support rises from $5.18$ to $15.22$.
 The generator therefore scales both event count and latent bookkeeping
@@ -42,46 +43,15 @@ structure.
   \label{fig:dataset-complexity}
 \end{figure*}
 
-Figure~\ref{fig:dataset-complexity} should be read panel by panel.
-In panel~(A), the x-axis is difficulty level (L1--L5) and the y-axis
-is a count; the blue bars show the mean number of journal transactions,
-while the orange bars show the mean number of distinct accounts in the
-expected final statement.
-The point is that harder levels are not just longer prompts:
-they require the model to maintain more latent account states as well.
-Panel~(B) uses the same x-axis but changes the y-axis to feature type
-and the color scale to the percentage of problems at that level that
-contain the feature.
-\emph{Depreciation} means depreciable fixed assets together with their
-end-of-period depreciation adjustment;
-\emph{COGS} means sales paired with inventory relief and
-cost-of-goods-sold recognition;
-\emph{Credit Txns} means receivable/payable transactions rather than
-pure cash flows;
-\emph{Debt} means loans, notes, or their repayment/accrual;
-\emph{Prepaid Items} means prepaid rent or insurance later expired into
-expense;
-\emph{Derived Interest} means interest computed from principal, rate,
-and time rather than copied directly from a stated amount; and
-\emph{Mixed Funding} means fixed-asset purchases split between cash and
-debt.
-The main takeaway is that Levels~4--5 add interacting accounting
-mechanisms, not just more rows.
-Difficulty is staged progressively across all five levels.
-Level~1 contains 5--10 mostly cash transactions and no end-of-period
-adjustments, so the task is basic ledger accumulation.
-Level~2 introduces credit sales and purchases, receivables/payables,
-debt, and a single adjustment.
-Level~3 expands to 20--35 transactions plus 1--3 adjustments such as
-depreciation, accruals, bad-debt provision, and COGS-coupled sales.
-Level~4 adds mixed-funded fixed-asset purchases and chained
-adjustments, so multiple mechanisms must be coordinated in one
-statement.
-Level~5 uses the same mechanism set at the highest density, typically
-60--100 transactions with 3--5 adjustments, making long-horizon
-bookkeeping and closing especially difficult.
+Figure~\ref{fig:dataset-complexity} shows that harder levels are not
+just longer prompts but introduce interacting accounting mechanisms.
+Level~1 uses 5--10 cash-only transactions; Level~2 adds credit
+transactions and a single adjustment; Level~3 introduces depreciation,
+COGS coupling, and bad-debt provisions; Level~4 combines mixed-funded
+purchases with chained adjustments; and Level~5 uses the full mechanism
+set at high density (60--100 transactions, 3--5 adjustments).
 Appendix~\ref{app:difficulty-samples} gives abbreviated sample problems
-for Levels~1--5.
+for each level.
 
 \subsection{Prompted Task}
 
@@ -93,38 +63,6 @@ Reflective \CoT{} prompting asks the model to reason step by step and
 then emit a final JSON object after the marker
 \texttt{FINAL ANSWER:}.
 These are the two evaluated prompting conditions in this paper.
-
-\begin{center}
-  \fbox{%
-    \begin{minipage}{0.95\columnwidth}
-      \textbf{Sample benchmark entry.}
-
-      \vspace{4pt}
-      \footnotesize
-      \texttt{Opening balances: Cash 49,400; Owner's Equity 49,400}
-
-      \texttt{Transactions:}
-
-      \texttt{1. Dr Equipment 17,700 / Cr Cash 17,700}
-
-      \texttt{2. Dr Operating Expenses 200 / Cr Cash 200}
-
-      \texttt{3. Dr Prepaid Rent 5,900 / Cr Cash 5,900}
-
-      \texttt{4. Dr Prepaid Rent 3,400 / Cr Cash 3,400}
-
-      \texttt{5. Dr Cash 20,600 / Cr Owner's Equity 20,600}
-
-      \vspace{4pt}
-      \texttt{Expected JSON output:}
-
-      \texttt{\{"assets": \{"Cash": 42800, "Equipment": 17700, "Prepaid Rent": 9300\},}
-
-        \texttt{"liabilities": \{\},}
-
-      \texttt{"equity": \{"Owner's Equity": 70000, "Retained Earnings": -200\}\}}
-  \end{minipage}}
-\end{center}
 
 Appendix~\ref{app:worked-example} provides a full worked pipeline
 example for this task, including the prompted input, intermediate
@@ -163,39 +101,19 @@ score assigns weights of \(0.375\) to \ba{}, \(0.3125\) to \ala{},
 \(0.1875\) to constraint satisfaction, and \(0.125\) to normalized
 numerical error.
 
-We additionally report the following secondary diagnostics:
-\begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=2pt]
-  \item \textbf{Balance error magnitude}: the continuous equation error
-    \(|A-(L+E)|\).
-  \item \textbf{Section placement accuracy}: the fraction of predicted
-    accounts assigned to the correct top-level section
-    (\texttt{assets}, \texttt{liabilities}, or \texttt{equity}).
-  \item \textbf{Hallucination rate}: the fraction of predicted accounts
-    that do not belong in the expected final statement.
-  \item \textbf{Constraint satisfaction rate}: the proportion of
-    benchmark constraints satisfied, including the balance equation,
-    non-negative non-contra assets, contra-asset sanity, non-negative
-    total assets, and completeness of the expected account set.
-  \item \textbf{Mean absolute error and root mean squared error} over
-    expected accounts, treating missing values as zero.
-\end{enumerate}
+Secondary diagnostics include balance error magnitude
+\(|A-(L+E)|\), section placement accuracy, hallucination rate,
+constraint satisfaction rate, and mean absolute / root mean squared
+error over expected accounts.
 
-The error taxonomy complements these metrics.
-We distinguish arithmetic errors (wrong values on present accounts),
-omission errors (missing expected accounts), hallucinations (extra
-unsupported accounts), classification errors (correct accounts in the
-wrong section), constraint violations (global bookkeeping breaks such
-as \(A \neq L + E\)).
-When intermediate states are available, repeated downstream mistakes can
-also be marked as propagation errors.
-
-To avoid undefined shorthand later in the paper, we use three aggregate
-analysis terms in a precise way.
-A \emph{factor-sensitivity analysis} reports the score difference
-between problems that do and do not contain a particular accounting
-mechanism, such as mixed-funding purchases.
-An \emph{account difficulty index} ranks accounts by how often models
-omit them or assign them incorrect values.
-A \emph{difficulty curve} is the level-wise score trajectory for a
-model across Levels~1--5, with the coefficient of variation used as a
-compact robustness summary.
+The error taxonomy distinguishes arithmetic errors (wrong values),
+omission errors (missing accounts), hallucinations (extra accounts),
+classification errors (wrong section), and constraint violations
+(\(A \neq L + E\)).
+In the analysis sections we use three aggregate terms:
+a \emph{factor-sensitivity analysis} measures score differences between
+problems with and without a given accounting mechanism;
+an \emph{account difficulty index} ranks accounts by omission and error
+rates; and
+a \emph{difficulty curve} traces level-wise scores, with the
+coefficient of variation (CV) as a robustness summary.

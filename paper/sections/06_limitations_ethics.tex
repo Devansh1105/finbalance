@@ -1,48 +1,33 @@
-\section{Limitations and Ethics}
+\section{Limitations}
 
-The current study has five main limitations.
-First, the benchmark is entirely synthetic even though the accounting
-mechanics are realistic.
-Synthetic control is valuable for exact scoring, but it cannot cover
-the full distribution of language, ambiguity, and disclosure
-conventions found in live corporate reporting.
+\benchmark{} is designed as a controlled first step toward evaluating
+accounting reliability under exact ground truth.
+Its problems are procedurally generated rather than drawn from live
+filings, which enables deterministic scoring while still modeling the
+core workflow of balance-sheet preparation from opening balances,
+journal entries, adjustments, and closing behavior.
+Future benchmark extensions can broaden the distribution of language and
+disclosure styles through de-identified real-world statements,
+expert-authored variants, or hybrid templates layered on the same ledger
+engine.
 
-Second, the paper now spans two evaluation pools rather than one fully
-matched leaderboard.
-The main analysis uses the completed 500-problem subset, whereas some
-frontier systems are currently available only on the separate
-100-problem compatibility subset.
-That split is better than mixing incomparable runs, but it means the
-paper cannot yet offer a single full-coverage ranking across all
-intended models.
+The empirical study also uses two evaluation pools---Large-500 and
+Controlled-100---to balance statistical precision with frontier-model
+coverage.
+All inferential claims are restricted to matched comparisons within a
+pool, and future work can consolidate more systems onto a single
+fully matched leaderboard as additional large-pool runs become
+available.
 
-Third, proprietary coverage at the larger scale is still incomplete.
-GPT-5.2 is currently reported only on the 100-problem compatibility
-subset, and the available Large-500 gpt-oss-120b \CoT{} rerun stopped
-after \(37\) of \(500\) problems.
-We therefore exclude that incomplete run and retain only the
-zero-shot gpt-oss-120b compatibility result in the paper.
+Our current focus is statement construction rather than downstream
+auditing or interactive financial analysis.
+That decomposition is intentional: statement construction isolates the
+core bookkeeping problem before introducing broader audit judgments.
+Future work can extend the benchmark toward audit-style tasks such as
+error localization, correction, and explanation.
 
-Fourth, the paper studies statement construction rather than statement
-auditing.
-In practical accounting workflows, construction and auditing are
-complementary, but they require different supervision signals and
-evaluation protocols.
-
-Fifth, all experiments in this draft rely on end-to-end language-model
-generation, which means the model is responsible for both selecting the
-correct accounting operations and performing the arithmetic internally.
-Because bookkeeping arithmetic is deterministic, a useful complementary
-comparison is a tool-augmented variant in which the model issues typed
-function calls to an external calculator or ledger engine while the tool
-performs the actual computation.
-Such a comparison would clarify how much of current failure is due to
-accounting misclassification versus arithmetic execution.
-
-From an ethics perspective, the benchmark should be used as an
-evaluation tool rather than evidence that a model is safe for autonomous
-accounting use.
-Several systems produce fluent, well-structured outputs while violating
-the accounting equation or silently mishandling equity closure.
-That failure mode is precisely the kind that could evade casual human
-inspection.
+Finally, all experiments use end-to-end generation without external
+calculation or ledger tools.
+This setting exposes what the models can do unaided, but tool-augmented
+variants would be useful for separating accounting classification errors
+from arithmetic execution failures.

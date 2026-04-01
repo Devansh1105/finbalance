@@ -5,7 +5,11 @@ industry for document understanding, retrieval, drafting, and
 decision-support workflows.
 Most of that progress, however, has been measured on tasks where the
 model reads an existing financial artifact and answers questions about
-it.
+it, as in benchmarks such as
+FinQA~\citep{chen2021finqa},
+TAT-QA~\citep{zhu2021tatqa},
+DocFinQA~\citep{reddy2024docfinqa}, and
+FinanceBench~\citep{islam2023financebench}.
 Accounting work introduces a stricter requirement: the system must
 construct a valid artifact whose entries satisfy hard numerical and
 structural constraints.
@@ -18,8 +22,11 @@ earnings, and verify that assets equal liabilities plus equity.
 The task is deterministic for a ledger engine, but it is demanding for
 a language model because it couples long-horizon state tracking with a
 global conservation law.
+That distinguishes it from both answer-only financial QA benchmarks and
+recent audit-oriented settings that begin from existing statements or
+disclosures~\citep{wang2025finauditing,wang2025automating}.
 
-This paper studies that setting through \benchmark{}, a benchmark of
+This paper studies that setting through \benchmark{}, a dataset of
 2{,}500 synthetic, realistic accounting problems for balance-sheet
 construction.
 Each problem contains opening balances, journal activity, and
@@ -31,33 +38,14 @@ ledger engine, the benchmark supports exact evaluation rather than
 approximate rubric grading.
 
 Appendix~\ref{app:glossary} supplies a glossary of financial terms for
-readers who do not work in accounting.
-
-Figure~\ref{fig:overview} summarizes the benchmark pipeline.
-\benchmark{} begins with a deterministic problem generator that
-produces 2{,}500 problems across five difficulty levels.
-The evaluation layer then prompts each model, recovers the final
-structured answer, and scores it with accounting-specific metrics.
-A final analysis layer aggregates the results into leaderboard metrics,
-account-level error summaries, factor-sensitivity analyses, and
-statistical comparisons.
-
-The current paper reports two empirical tiers rather than a single
-uniform comparison pool.
-The main analysis uses a completed stratified 500-problem subset with
-100 problems at each difficulty level.
-That larger study covers the model families available in the current
-OpenRouter/PydanticAI pipeline and powers the new figures, difficulty
-curves, and significance tests.
-For frontier systems that have not yet been rerun at that scale, we
-retain a separate paired 100-problem compatibility study.
+readers outside accounting.
+Figure~\ref{fig:overview} summarizes the pipeline.
+We evaluate seven model families on a stratified 500-problem study
+and report a separate 100-problem compatibility study for additional
+frontier models.
 Across both tiers, the benchmark exposes a sharp capability split:
-models can recover the right account vocabulary and overall section
-structure while still failing the bookkeeping invariants that make the
-final statement valid.
-DeepSeek-v3.2 under zero-shot prompting on the 500-problem study is the
-clearest example, with high account coverage but near-total collapse in
-equation satisfaction after the easiest level.
+models often recover the expected account set while still violating
+the accounting equation or mishandling retained-earnings closure.
 
 \input{figures/benchmark_overview}
 
@@ -76,21 +64,13 @@ Three research questions organize the paper:
 \end{enumerate}
 
 \paragraph{Contributions.}
-This paper makes five contributions:
-(1) it introduces a deterministic 2{,}500-problem benchmark for
-balance-sheet construction from journal entries across five difficulty
-levels;
-(2) it defines an executable evaluation protocol in which exact
-ground truth is derived from a ledger engine rather than rubric-based
-annotation;
-(3) it presents an accounting-specific metric suite covering equation
-satisfaction, account-level accuracy, account coverage, closing-entry
-compliance, and a composite FinBalance Score;
-(4) it reports a completed 500-problem evaluation for the models
-available in the current OpenRouter/PydanticAI pipeline, alongside a
-separate 100-problem compatibility study for frontier models that are
-not yet fully rerun at that scale; and
-(5) it identifies recurrent failure modes that standard answer-only
-finance benchmarks obscure, including arithmetic collapse despite high
-structural recall, difficulty-conditional \CoT{} effects, and
-closing-entry blindness.
+(1)~A deterministic 2{,}500-problem benchmark for balance-sheet
+construction from journal entries across five difficulty levels;
+(2)~an executable evaluation protocol with exact ledger-derived ground
+truth and an accounting-specific metric suite;
+(3)~a 500-problem study of seven model families across \zs{} and \CoT{}
+prompting, with paired significance tests on the matched runs; and
+(4)~identification of recurrent failure modes---arithmetic collapse
+despite high structural recall, difficulty-conditional \CoT{} effects,
+and closing-entry blindness---that answer-only finance benchmarks
+obscure.

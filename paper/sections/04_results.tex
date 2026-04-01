@@ -2,14 +2,14 @@
 
 \input{tables/main_results}
 
-Table~\ref{tab:main-results} reports the two evaluation pools used in
-the current paper.
+Table~\ref{tab:main-results} reports the two evaluation pools.
 Panel~A is the completed Large-500 study and supports the main
 comparative claims.
 Panel~B reports Controlled-100 compatibility runs for frontier systems
-that were not rerun to completion on the larger subset.
-Because the pools differ in both coverage and sample size, we do not use
-Table~\ref{tab:main-results} to rank models across panels.
+evaluated on the smaller pool.
+Because the pools differ in both coverage and sample size,
+Table~\ref{tab:main-results} is interpreted within panel for ranked
+comparisons.
 
 \begin{figure*}[t]
 \centering
@@ -22,48 +22,51 @@ Panel~(B) shows balance accuracy by difficulty level.}
 
 Among completed Large-500 runs, DeepSeek-v3.2 \CoT{} is the strongest
 system with \fbs{} \(=92.25\) and \ba{} \(=99.4\%\).
-Its lead over Gemini~3 Flash \CoT{} is \(+3.42\) \fbs{} points under a
-paired permutation test with \(p<0.001\), and its lead over
-Qwen~3.6 Plus \CoT{} is \(+5.33\) points with \(p<0.001\).
-Qwen~3.6 Plus \CoT{} is the strongest non-DeepSeek open model on the
-Large-500 subset, outperforming Qwen~3.5 Flash \CoT{} by \(+4.01\)
-\fbs{} points (\(p<0.001\)).
+Its lead over the second-ranked Grok~4.1 Fast \CoT{} is \(+3.26\) \fbs{}
+points (\(p<0.001\)), and its lead over Gemini~3 Flash \CoT{} is
+\(+3.42\) points (\(p<0.001\)).
+Grok~4.1 Fast \CoT{} and Gemini~3 Flash \CoT{} are statistically
+indistinguishable (\(\Delta=0.15\), \(p=0.71\)), despite Grok achieving
+higher balance accuracy (\(99.2\%\) vs.\ \(96.2\%\)) while Gemini
+achieves higher account-level accuracy (\(78.8\%\) vs.\ \(76.4\%\)).
+GPT-5.4 Nano \CoT{} and Qwen~3.6 Plus \CoT{} also form a
+statistically indistinguishable pair (\(\Delta=0.16\), \(p=0.81\)),
+both ranking just below the Grok/Gemini tier.
 On the separate Controlled-100 compatibility pool, GPT-5.2 remains very
-strong (\(90.85\) under \CoT{}, \(90.20\) under \zs{}), but those
-numbers are descriptive only relative to the Large-500 panel because
-they were obtained on a different evaluation pool.
+strong (\(90.85\) under \CoT{}, \(90.20\) under \zs{}), extending the
+coverage summary to an additional frontier model family evaluated on the
+smaller matched pool.
 
-Figure~\ref{fig:capability-curve} makes the Large-500 hierarchy more
-interpretable.
+Figure~\ref{fig:capability-curve} clarifies the Large-500 hierarchy.
 DeepSeek-v3.2 \CoT{} is the only run with a reverse difficulty curve:
 its mean \fbs{} rises from \(87.74\) at Level~1 to \(93.30\) at
 Level~5.
-Gemini~3 Flash \CoT{} is also robust, but it falls back at Level~5,
-while Qwen~3.6 Plus \CoT{} separates itself from Qwen~3.5 Flash mainly
-on the hardest problems.
-The zero-shot runs of DeepSeek-v3.2 and Qwen~3.5 Flash show the opposite
-pattern: after Level~1, balance accuracy largely collapses.
+Grok~4.1 Fast \CoT{} has the lowest difficulty-curve coefficient of
+variation (CV\(=2.0\%\)), while GPT-5.4 Nano \CoT{} and Gemini~3 Flash
+\CoT{} also remain relatively stable.
+The zero-shot runs of all models except Gemini~3 Flash show cliff-like
+degradation after Level~1, with GPT-5.4 Nano \zs{} the lowest-scoring
+zero-shot performer (\fbs{} \(=31.57\)).
 
 \paragraph{Structural recall is easier than numerical consistency.}
-The most diagnostic row in Table~\ref{tab:main-results} is
-DeepSeek-v3.2 \zs{}.
-On the Large-500 subset its account coverage rate reaches \(96.6\%\),
-which means it usually predicts the expected account set, yet its
-balance accuracy is only \(11.6\%\) and its FinBalance Score falls to
-\(50.82\).
-Its mean balance-error magnitude is also enormous
-(\(\textsc{BEM}=\$61{,}339.2\)).
-Instead, the model displays a qualitatively distinct failure mode:
-high structural fidelity combined with arithmetic collapse.
+Several models achieve high account coverage rates under zero-shot
+prompting while still recording low balance accuracy.
+DeepSeek-v3.2 \zs{} reaches \acr{} \(=96.6\%\) but \ba{} \(=11.6\%\);
+Nemotron~3 Super \zs{} shows \acr{} \(=89.3\%\) with \ba{} \(=25.2\%\);
+and Grok~4.1 Fast \zs{} reaches \acr{} \(=88.1\%\) with \ba{}
+\(=6.2\%\).
+This pattern reflects a distinct failure mode: high structural fidelity
+combined with arithmetic collapse.
 
 \paragraph{Prompt sensitivity is highly model-dependent.}
-The Large-500 paired tests show three very different \CoT{} regimes.
-DeepSeek-v3.2 gains \(+41.43\) \fbs{} points from \zs{} to \CoT{},
-Qwen~3.5 Flash gains \(+36.40\), and Gemini~3 Flash gains a much
-smaller \(+8.63\).
+The Large-500 paired tests reveal a wide range of \CoT{} benefit sizes.
+GPT-5.4 Nano gains \(+55.52\) \fbs{} points from \zs{} to \CoT{},
+Grok~4.1 Fast gains \(+45.33\), DeepSeek-v3.2 gains \(+41.43\),
+Qwen~3.5 Flash gains \(+36.40\), and Gemini~3 Flash gains a more
+modest \(+8.63\).
 Gemini's gain is also difficulty-conditional rather than uniform:
 \CoT{} is slightly worse at Level~1 (\(-0.97\) \fbs{}), but strongly
 better at Level~4 (\(+14.35\)) and Level~5 (\(+18.91\)).
-This contrast suggests that prompt sensitivity is not a single scalar
-property of a model family; it depends on which accounting mechanisms
-become active as difficulty rises.
+Prompt sensitivity is therefore not a single scalar property of a model
+family; it depends on which accounting mechanisms become active as
+difficulty rises.
