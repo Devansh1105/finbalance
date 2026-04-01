@@ -31,15 +31,15 @@ The generator therefore scales both event count and latent bookkeeping
 structure.
 
 \begin{figure*}[t]
-\centering
-\includegraphics[width=0.95\textwidth]{../figures/F8_dataset_complexity.pdf}
-\caption{Dataset complexity profile. Panel (A) reports the mean number
-of transactions and distinct non-zero balance-sheet accounts per
-problem at each difficulty level. Panel (B) reports the percentage of
-problems at each level containing each accounting mechanism. Higher
-levels therefore increase both bookkeeping volume and mechanism
-diversity.}
-\label{fig:dataset-complexity}
+  \centering
+  \includegraphics[width=0.95\textwidth]{../figures/F8_dataset_complexity.pdf}
+  \caption{Dataset complexity profile. Panel (A) reports the mean number
+    of transactions and distinct non-zero balance-sheet accounts per
+    problem at each difficulty level. Panel (B) reports the percentage of
+    problems at each level containing each accounting mechanism. Higher
+    levels therefore increase both bookkeeping volume and mechanism
+  diversity.}
+  \label{fig:dataset-complexity}
 \end{figure*}
 
 Figure~\ref{fig:dataset-complexity} should be read panel by panel.
@@ -95,35 +95,35 @@ then emit a final JSON object after the marker
 These are the two evaluated prompting conditions in this paper.
 
 \begin{center}
-\fbox{%
-\begin{minipage}{0.95\columnwidth}
-\textbf{Sample benchmark entry.}
+  \fbox{%
+    \begin{minipage}{0.95\columnwidth}
+      \textbf{Sample benchmark entry.}
 
-\vspace{4pt}
-\footnotesize
-\texttt{Opening balances: Cash 49,400; Owner's Equity 49,400}
+      \vspace{4pt}
+      \footnotesize
+      \texttt{Opening balances: Cash 49,400; Owner's Equity 49,400}
 
-\texttt{Transactions:}
+      \texttt{Transactions:}
 
-\texttt{1. Dr Equipment 17,700 / Cr Cash 17,700}
+      \texttt{1. Dr Equipment 17,700 / Cr Cash 17,700}
 
-\texttt{2. Dr Operating Expenses 200 / Cr Cash 200}
+      \texttt{2. Dr Operating Expenses 200 / Cr Cash 200}
 
-\texttt{3. Dr Prepaid Rent 5,900 / Cr Cash 5,900}
+      \texttt{3. Dr Prepaid Rent 5,900 / Cr Cash 5,900}
 
-\texttt{4. Dr Prepaid Rent 3,400 / Cr Cash 3,400}
+      \texttt{4. Dr Prepaid Rent 3,400 / Cr Cash 3,400}
 
-\texttt{5. Dr Cash 20,600 / Cr Owner's Equity 20,600}
+      \texttt{5. Dr Cash 20,600 / Cr Owner's Equity 20,600}
 
-\vspace{4pt}
-\texttt{Expected JSON output:}
+      \vspace{4pt}
+      \texttt{Expected JSON output:}
 
-\texttt{\{"assets": \{"Cash": 42800, "Equipment": 17700, "Prepaid Rent": 9300\},}
+      \texttt{\{"assets": \{"Cash": 42800, "Equipment": 17700, "Prepaid Rent": 9300\},}
 
-\texttt{"liabilities": \{\},}
+        \texttt{"liabilities": \{\},}
 
-\texttt{"equity": \{"Owner's Equity": 70000, "Retained Earnings": -200\}\}}
-\end{minipage}}
+      \texttt{"equity": \{"Owner's Equity": 70000, "Retained Earnings": -200\}\}}
+  \end{minipage}}
 \end{center}
 
 Appendix~\ref{app:worked-example} provides a full worked pipeline
@@ -139,23 +139,23 @@ No single score captures this task well because a model can predict the
 right account names while still violating the bookkeeping.
 We therefore report the following primary metrics:
 \begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=2pt]
-\item \textbf{Balance accuracy (\ba{})}: a hard binary check that
-  equals \(1\) only when the predicted statement satisfies
-  \(|A-(L+E)| \leq 1\) currency unit.
-\item \textbf{Account-level accuracy (\ala{})}: the fraction of
-  expected non-zero accounts whose predicted values fall within a
-  hybrid tolerance of \(\max(\$10, 1\%\ \text{of expected value})\);
-  omitted accounts count as incorrect.
-\item \textbf{Account coverage rate (\acr{})}: a structural metric that
-  asks only whether the expected accounts appear anywhere in the
-  output, regardless of value.
-\item \textbf{Closing-entry compliance rate (\cecr{})}: whether
-  Retained Earnings is present in equity and numerically correct under
-  the same hybrid tolerance; if Retained Earnings is not expected, the
-  instance is treated as trivially compliant.
-\item \textbf{FinBalance Score}: a \(0\)--\(100\) weighted aggregate of
-  \ba{}, \ala{}, constraint satisfaction, and normalized numerical
-  error \(1-\min(\text{MAE}/50{,}000, 1)\).
+  \item \textbf{Balance accuracy (\ba{})}: a hard binary check that
+    equals \(1\) only when the predicted statement satisfies
+    \(|A-(L+E)| \leq 1\) currency unit.
+  \item \textbf{Account-level accuracy (\ala{})}: the fraction of
+    expected non-zero accounts whose predicted values fall within a
+    hybrid tolerance of \(\max(\$10, 1\%\ \text{of expected value})\);
+    omitted accounts count as incorrect.
+  \item \textbf{Account coverage rate (\acr{})}: a structural metric that
+    asks only whether the expected accounts appear anywhere in the
+    output, regardless of value.
+  \item \textbf{Closing-entry compliance rate (\cecr{})}: whether
+    Retained Earnings is present in equity and numerically correct under
+    the same hybrid tolerance; if Retained Earnings is not expected, the
+    instance is treated as trivially compliant.
+  \item \textbf{FinBalance Score}: a \(0\)--\(100\) weighted aggregate of
+    \ba{}, \ala{}, constraint satisfaction, and normalized numerical
+    error \(1-\min(\text{MAE}/50{,}000, 1)\).
 \end{enumerate}
 
 For the no-intermediate-state setting used in this paper, the composite
@@ -165,19 +165,19 @@ numerical error.
 
 We additionally report the following secondary diagnostics:
 \begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=2pt]
-\item \textbf{Balance error magnitude}: the continuous equation error
-  \(|A-(L+E)|\).
-\item \textbf{Section placement accuracy}: the fraction of predicted
-  accounts assigned to the correct top-level section
-  (\texttt{assets}, \texttt{liabilities}, or \texttt{equity}).
-\item \textbf{Hallucination rate}: the fraction of predicted accounts
-  that do not belong in the expected final statement.
-\item \textbf{Constraint satisfaction rate}: the proportion of
-  benchmark constraints satisfied, including the balance equation,
-  non-negative non-contra assets, contra-asset sanity, non-negative
-  total assets, and completeness of the expected account set.
-\item \textbf{Mean absolute error and root mean squared error} over
-  expected accounts, treating missing values as zero.
+  \item \textbf{Balance error magnitude}: the continuous equation error
+    \(|A-(L+E)|\).
+  \item \textbf{Section placement accuracy}: the fraction of predicted
+    accounts assigned to the correct top-level section
+    (\texttt{assets}, \texttt{liabilities}, or \texttt{equity}).
+  \item \textbf{Hallucination rate}: the fraction of predicted accounts
+    that do not belong in the expected final statement.
+  \item \textbf{Constraint satisfaction rate}: the proportion of
+    benchmark constraints satisfied, including the balance equation,
+    non-negative non-contra assets, contra-asset sanity, non-negative
+    total assets, and completeness of the expected account set.
+  \item \textbf{Mean absolute error and root mean squared error} over
+    expected accounts, treating missing values as zero.
 \end{enumerate}
 
 The error taxonomy complements these metrics.

@@ -1,6 +1,6 @@
 # Paper Workspace
 
-This directory mirrors the ACL-style paper scaffold used in `llm-audit-bench/paper/`, but is specialized for the `finbalance` benchmark and its saved experiment artifacts.
+This directory contains the COLM 2026 submission scaffold specialized for the `finbalance` benchmark and its saved experiment artifacts.
 
 ## Compile
 
@@ -10,7 +10,7 @@ From this directory:
 latexmk -pdf review.tex
 ```
 
-For the camera-ready style:
+This produces the anonymized COLM 2026 submission build. For a final-format build:
 
 ```bash
 latexmk -pdf final.tex
@@ -18,7 +18,7 @@ latexmk -pdf final.tex
 
 ## Layout
 
-- `review.tex` / `final.tex`: ACL entrypoints
+- `review.tex` / `final.tex`: COLM 2026 entrypoints
 - `macros.tex`: paper-wide benchmark and formatting macros
 - `preamble/`: packages, metadata, and body includes
 - `sections/`: one file per paper section
