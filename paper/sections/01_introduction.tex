@@ -42,15 +42,22 @@ A final analysis layer aggregates the results into leaderboard metrics,
 account-level error summaries, factor-sensitivity analyses, and
 statistical comparisons.
 
-All main-paper comparisons are reported on a common stratified
-100-problem split with 20 problems per difficulty level.
-Even on that paired setting, the benchmark exposes a sharp capability
-split: some models recover the right account vocabulary and overall
-section structure, yet still fail the global bookkeeping invariants that
-make the final statement valid.
-DeepSeek-v3.2 under zero-shot prompting is the clearest example,
-recalling most expected accounts while violating the accounting
-equation on most problems.
+The current paper reports two empirical tiers rather than a single
+uniform comparison pool.
+The main analysis uses a completed stratified 500-problem subset with
+100 problems at each difficulty level.
+That larger study covers the model families available in the current
+OpenRouter/PydanticAI pipeline and powers the new figures, difficulty
+curves, and significance tests.
+For frontier systems that have not yet been rerun at that scale, we
+retain a separate paired 100-problem compatibility study.
+Across both tiers, the benchmark exposes a sharp capability split:
+models can recover the right account vocabulary and overall section
+structure while still failing the bookkeeping invariants that make the
+final statement valid.
+DeepSeek-v3.2 under zero-shot prompting on the 500-problem study is the
+clearest example, with high account coverage but near-total collapse in
+equation satisfaction after the easiest level.
 
 \input{figures/benchmark_overview}
 
@@ -79,9 +86,11 @@ annotation;
 (3) it presents an accounting-specific metric suite covering equation
 satisfaction, account-level accuracy, account coverage, closing-entry
 compliance, and a composite FinBalance Score;
-(4) it reports matched zero-shot and chain-of-thought comparisons across
-modern closed-source and open-weight systems; and
+(4) it reports a completed 500-problem evaluation for the models
+available in the current OpenRouter/PydanticAI pipeline, alongside a
+separate 100-problem compatibility study for frontier models that are
+not yet fully rerun at that scale; and
 (5) it identifies recurrent failure modes that standard answer-only
 finance benchmarks obscure, including arithmetic collapse despite high
-structural recall, closing-entry blindness, and mixed-funding
-fragility.
+structural recall, difficulty-conditional \CoT{} effects, and
+closing-entry blindness.

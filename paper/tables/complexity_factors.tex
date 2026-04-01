@@ -2,23 +2,26 @@
 \centering
 \small
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{lrrrr}
+\begin{tabular}{lllrr}
 \toprule
-Model & $\Delta$\fbs{} ZS & $\Delta$\fbs{} CoT & CV ZS & CV CoT \\
+Model & Prompt & Worst Controlled Factor & $\Delta$\fbs{} & CV \\
 \midrule
-GPT-5.2 & $-0.9$ & $+1.2$ & 2.23 & 1.47 \\
-gpt-oss-120b & $-26.7$ & $-14.5$ & 18.38 & 9.49 \\
-Qwen 3.5 Flash & $-14.7$ & $-6.5$ & 12.06 & 6.42 \\
-Gemini 3 Flash & $-12.8$ & $-9.0$ & 9.63 & 6.26 \\
-DeepSeek-v3.2 & $-18.7$ & $-12.2$ & 24.58 & 7.29 \\
-Llama 3.3 70B & $-9.8$ & $-30.7$ & 18.25 & 35.58 \\
+DeepSeek-v3.2 & \CoT{} & mixed\_funding & $-1.2$ & 2.57 \\
+DeepSeek-v3.2 & \zs{} & depreciable\_asset & $-4.6$ & 20.66 \\
+Gemini 3 Flash & \CoT{} & derived\_interest & $-1.0$ & 3.36 \\
+Gemini 3 Flash & \zs{} & cogs & $-9.2$ & 9.82 \\
+Qwen 3.5 Flash & \CoT{} & mixed\_funding & $-10.8$ & 10.05 \\
+Qwen 3.5 Flash & \zs{} & prepaid & $-17.9$ & 27.77 \\
+Qwen 3.6 Plus & \CoT{} & mixed\_funding & $-1.7$ & 5.47 \\
 \bottomrule
 \end{tabular}
 }
-\caption{Effect of the mixed-funding mechanism on FinBalance Score
-(raw difference between problems with and without the mechanism),
-together with the coefficient of variation from each model's
-difficulty curve. GPT-5.2 is nearly invariant to this mechanism;
-weaker models are not.}
+\caption{Worst controlled factor for each completed Large-500
+model--prompt pair, together with the coefficient of variation from its
+difficulty curve.
+The reported \(\Delta\)\fbs{} value is the difficulty-controlled score
+difference between problems with and without that factor; values near
+zero indicate relative invariance, while large negative values indicate
+factor-specific fragility.}
 \label{tab:complexity-factors}
 \end{table}

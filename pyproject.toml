@@ -9,6 +9,8 @@ description = "FinBalance benchmark harness for balance sheet generation."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "matplotlib>=3.10.0",
+    "numpy>=2.3.0",
     "pydantic>=2.0",
     "pydantic-ai>=1.74.0",
     "python-dotenv>=1.2.2",

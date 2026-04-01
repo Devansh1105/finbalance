@@ -1,23 +1,39 @@
 \section{Experimental Setup}
 
-\subsection{Evaluation Split}
+\subsection{Evaluation Tiers}
 
 The benchmark release contains 2{,}500 problems.
-The main cross-model comparison in this paper uses a stratified
-100-problem subset with 20 problems from each of the five difficulty
-levels.
-This design keeps the comparison strictly paired across all evaluated
-systems while preserving coverage across the full difficulty range.
-All main-paper model comparisons are reported on this identical split.
+The main empirical analysis in this paper uses a stratified
+500-problem subset, stored in \texttt{data/large500.jsonl}, with
+100 problems from each of the five difficulty levels.
+This larger pool provides substantially tighter uncertainty estimates
+for capability curves, account-difficulty analysis, and prompt-sensitivity
+measurements.
 
-\subsection{Controlled Models}
+We also retain a separate paired 100-problem compatibility subset with
+20 problems per difficulty level.
+That smaller pool is used only for models that have not yet been rerun
+to completion on the 500-problem setting.
+The paper therefore distinguishes between a \emph{Large-500} study and a
+\emph{Controlled-100} compatibility study rather than treating all runs
+as one directly comparable leaderboard.
 
-On the common 100-problem split, we evaluate paired
-\zs{}/\CoT{} runs for six model
-families: GPT-5.2, Gemini~3 Flash, Qwen~3.5 Flash, gpt-oss-120b,
-DeepSeek-v3.2, and Llama~3.3~70B.
-This is the only setting in the paper where all of these systems are
-directly comparable on exactly the same 100 problems.
+\subsection{Model Coverage}
+
+Completed Large-500 runs in the current draft are:
+DeepSeek-v3.2 (\zs{}/\CoT{}), Gemini~3 Flash (\zs{}/\CoT{}),
+Qwen~3.5 Flash (\zs{}/\CoT{}), and Qwen~3.6 Plus (\CoT{}).
+These are the only runs used for the new 500-problem figures, account
+difficulty table, factor-sensitivity analysis, and paired significance
+tests reported in the main text.
+
+Frontier proprietary coverage is narrower.
+GPT-5.2 is currently available only on the Controlled-100 subset, where
+both \zs{} and \CoT{} runs were completed.
+For gpt-oss-120b, we retain only the Controlled-100 zero-shot
+compatibility run in the paper.
+The available Large-500 \CoT{} rerun stopped after \(37/500\) problems
+and is therefore excluded from all comparative claims.
 
 \subsection{Evaluation Harness}
 
@@ -28,6 +44,9 @@ stores per-problem outputs for later analysis.
 Because prompting strategies and model backends are decoupled, the same
 harness supports controlled comparisons without changing the benchmark
 instances or scoring logic.
+The new Large-500 study uses the OpenRouter/PydanticAI pipeline already
+present in the repository, while the Controlled-100 compatibility runs
+reuse the earlier evaluation harness on the paired 100-problem subset.
 
 All runs use deterministic decoding settings with temperature fixed at
 \(0\).
@@ -40,7 +59,10 @@ Three result summaries are especially important for the paper:
 leaderboard metrics, analysis outputs covering factor sensitivity and
 difficulty curves, and a significance summary with bootstrap confidence
 intervals and paired permutation tests.
-Where exact \(p\)-values are cited below, they come directly from the
-paired permutation tests on the shared 100-problem split (\(n=100\)).
-The claims in the main paper are therefore restricted to this paired
-evaluation setting.
+Where exact \(p\)-values are cited below, they come from paired
+permutation tests performed only within a matched evaluation pool.
+The main inferential claims in the paper use the Large-500 paired tests
+among completed runs (\(n=500\)).
+Controlled-100 compatibility results are reported descriptively unless
+the comparison also stays within that same 100-problem pool.
+We do not use cross-pool comparisons to make ranked claims.

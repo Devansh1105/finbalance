@@ -1,34 +1,35 @@
 \begin{table*}[t]
 \centering
 \small
-\begin{tabular}{llrrrrr}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllrrrrrr}
 \toprule
-Model & Prompt & \fbs{} & \ba{} & \ala{} & \acr{} & \cecr{} \\
- &  &  & (\%) & (\%) & (\%) & (\%) \\
+Pool & Model & Prompt & \(n\) & \fbs{} & \ba{} & \ala{} & \acr{} & \cecr{} \\
+ &  &  &  &  & (\%) & (\%) & (\%) & (\%) \\
 \midrule
-Rule-based oracle & -- & 99.97 & 100 & 100.0 & -- & -- \\
+\multicolumn{9}{l}{\textit{Panel A: completed Large-500 study}} \\
+Large-500 & DeepSeek-v3.2 & \CoT{} & 500 & 92.25 & 99.4 & 83.7 & 91.6 & 29.4 \\
+Large-500 & Gemini 3 Flash & \CoT{} & 500 & 88.84 & 96.2 & 78.8 & 89.6 & 5.0 \\
+Large-500 & Qwen 3.6 Plus & \CoT{} & 500 & 86.92 & 90.2 & 79.8 & 89.8 & 9.4 \\
+Large-500 & Qwen 3.5 Flash & \CoT{} & 500 & 82.91 & 83.0 & 77.1 & 89.2 & 4.4 \\
+Large-500 & Gemini 3 Flash & \zs{} & 500 & 80.20 & 75.6 & 72.2 & 98.7 & 16.2 \\
+Large-500 & DeepSeek-v3.2 & \zs{} & 500 & 50.82 & 11.6 & 63.5 & 96.6 & 2.4 \\
+Large-500 & Qwen 3.5 Flash & \zs{} & 500 & 46.51 & 18.0 & 48.4 & 91.3 & 1.8 \\
 \midrule
-\multicolumn{7}{l}{\textit{Closed-source/API models, paired 100-problem study}} \\
-GPT-5.2 & \CoT{} & 90.85 & 100 & 81.3 & 87.0 & 1 \\
-GPT-5.2 & \zs{} & 90.20 & 98 & 82.7 & 85.9 & 8 \\
-Gemini 3 Flash & \CoT{} & 83.47 & 80 & 80.1 & 91.7 & 17 \\
-Gemini 3 Flash & \zs{} & 79.04 & 73 & 71.9 & 98.2 & 15 \\
-\midrule
-\multicolumn{7}{l}{\textit{Open-weight models, paired 100-problem study}} \\
-Qwen 3.5 Flash & \CoT{} & 86.72 & 91 & 78.2 & 89.1 & 7 \\
-gpt-oss-120b & \CoT{} & 86.35 & 86 & 83.4 & 88.8 & 43 \\
-DeepSeek-v3.2 & \CoT{} & 85.56 & 89 & 77.4 & 87.4 & 23 \\
-Qwen 3.5 Flash & \zs{} & 83.50 & 86 & 75.4 & 88.4 & 3 \\
-gpt-oss-120b & \zs{} & 78.12 & 81 & 73.8 & 77.8 & 51 \\
-DeepSeek-v3.2 & \zs{} & 52.96 & 15 & 64.5 & 96.8 & 2 \\
-Llama 3.3 70B & \CoT{} & 51.73 & 29 & 54.5 & 80.4 & 1 \\
-Llama 3.3 70B & \zs{} & 33.43 & 2 & 39.0 & 74.1 & 1 \\
+\multicolumn{9}{l}{\textit{Panel B: Controlled-100 compatibility runs}} \\
+Controlled-100 & GPT-5.2 & \CoT{} & 100 & 90.85 & 100.0 & 81.3 & 87.0 & 1.0 \\
+Controlled-100 & GPT-5.2 & \zs{} & 100 & 90.20 & 98.0 & 82.7 & 85.9 & 8.0 \\
+Controlled-100 & gpt-oss-120b & \zs{} & 100 & 78.12 & 81.0 & 73.8 & 77.8 & 51.0 \\
 \bottomrule
 \end{tabular}
-\caption{Paired 100-problem results. All model--prompt pairs are evaluated
-on the same stratified 100-problem split, with 20 problems per
-difficulty level. The table shows a wide spread between structural
-recall and equation satisfaction, most clearly for DeepSeek-v3.2 under
-\zs{}.}
+}
+\caption{Main paper results split across two evaluation pools.
+Panel~A reports completed 500-problem runs and is the basis for the
+paper's main comparative claims.
+Panel~B reports 100-problem compatibility runs for frontier systems not
+yet rerun to completion on the larger pool.
+Cross-panel comparisons are descriptive only.
+The gpt-oss-120b \CoT{} Large-500 rerun is excluded because it stopped
+after \(37/500\) problems.}
 \label{tab:main-results}
 \end{table*}

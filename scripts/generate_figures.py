@@ -6,7 +6,8 @@ Figures produced:
   F2 — Error Composition: AE/OE/CV/CO stacked bar chart per model×strategy
   F3 — CoT Effect: ΔFBS / ΔBA / ΔALA diverging bar chart per model
 
-Auto-discovers all primary result files in --results-dir (those with 100 test problems).
+Auto-discovers all primary result files in --results-dir (those with at least
+min-overlap scored problems).
 Adding new model result files will automatically appear in all figures.
 
 Usage:
@@ -48,9 +49,12 @@ plt.rcParams.update({
 PALETTE = ["#0072B2", "#D55E00", "#009E73", "#CC79A7", "#E69F00", "#56B4E9", "#F0E442"]
 
 MODEL_DISPLAY = {
-    "openai/gpt-5.2":                       "GPT-5.2",
+    "deepseek/deepseek-v3.2":               "DeepSeek v3.2",
     "google/gemini-3-flash-preview":        "Gemini 3 Flash",
     "meta-llama/llama-3.3-70b-instruct":    "Llama 3.3 70B",
+    "openai/gpt-5.2":                       "GPT-5.2",
+    "qwen/qwen3.5-flash-02-23":             "Qwen 3.5 Flash",
+    "qwen/qwen3.6-plus-preview:free":       "Qwen 3.6 Plus",
 }
 
 STRATEGY_LABEL = {"zero_shot": "Zero-shot", "cot": "CoT"}
@@ -679,12 +683,13 @@ def fig_dataset_complexity(dataset_path: Path, out_path: Path, fmt: str):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--results-dir", default="results")
+    ap.add_argument("--dataset",     default="data/test.jsonl")
     ap.add_argument("--out-dir",     default="figures")
     ap.add_argument("--format",      default="pdf", choices=["pdf", "png", "svg"])
     args = ap.parse_args()
 
     out_dir = Path(args.out_dir)
-    out_dir.mkdir(exist_ok=True)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     print("Loading result files...")
     records = load_primary_results(Path(args.results_dir))
@@ -711,7 +716,7 @@ def main():
     fig_bem_distribution(groups, out_dir / f"F5_bem_distribution.{args.format}", args.format)
     fig_cot_by_difficulty(groups, out_dir / f"F6_cot_by_difficulty.{args.format}", args.format)
     fig_error_propagation(Path(args.results_dir), out_dir / f"F7_propagation.{args.format}", args.format)
-    fig_dataset_complexity(Path("data/test.jsonl"), out_dir / f"F8_dataset_complexity.{args.format}", args.format)
+    fig_dataset_complexity(Path(args.dataset), out_dir / f"F8_dataset_complexity.{args.format}", args.format)
 
     print(f"\nAll figures saved to {out_dir}/")
 

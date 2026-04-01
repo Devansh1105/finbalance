@@ -5,74 +5,96 @@
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.95\textwidth]{../figures/F3_cot_effect.pdf}
-\caption{Effect of chain-of-thought prompting by model.}
+\caption{Effect of chain-of-thought prompting on the completed
+500-problem study.}
 \label{fig:cot-effect}
 \end{figure*}
 
 Figure~\ref{fig:cot-effect} shows that \CoT{} is not a universal
 improvement operator.
-DeepSeek-v3.2 benefits the most, followed by Llama~3.3~70B and
-gpt-oss-120b.
+DeepSeek-v3.2 benefits the most, followed closely by Qwen~3.5 Flash,
+while Gemini~3 Flash benefits only modestly.
 These gains arise for different reasons in the deeper analysis.
-For DeepSeek-v3.2, the gain is primarily arithmetic: mean arithmetic
-errors drop by \(3.47\) per problem, and \(87\) of \(100\) problems
-improve.
-For gpt-oss-120b, the gain is more modest and less stable than for
-DeepSeek-v3.2.
-For GPT-5.2, \CoT{} is effectively neutral and even reduces
-account-level accuracy slightly.
+For DeepSeek-v3.2, the gain is primarily arithmetic:
+mean arithmetic errors drop by \(3.78\) per problem, closing-entry
+compliance rises by \(27\) percentage points, and \(469\) of the
+\(500\) problems improve.
+Qwen~3.5 Flash shows a similarly broad gain profile, with \(477\) of
+\(500\) problems improving.
+Gemini~3 Flash is different: \(275\) problems improve but \(190\)
+degrade, and the average benefit appears only once the problems become
+hard enough for explicit intermediate reasoning to pay off.
 
 \subsection{Retained Earnings Is the Hardest Account}
 
 \input{tables/account_difficulty}
 
 Table~\ref{tab:account-difficulty} aggregates account-level behavior
-over all evaluated systems.
+over the completed Large-500 runs.
 The account difficulty index combines omission and arithmetic error
 patterns to identify which accounts are hardest to predict reliably.
-Retained Earnings is by far the hardest account, with a \(70.4\%\)
-omission rate and only a \(14.0\%\) correct prediction rate.
-The next two accounts reveal two different failure modes.
-Accumulated Depreciation is often omitted, whereas Owner's Equity is
-usually present but numerically wrong.
-This distinction matters: the benchmark is not only exposing missing
-terminology, but also confusion about how income-statement activity
-closes into equity.
+Retained Earnings is by far the hardest account, with a \(64.8\%\)
+omission rate, a \(26.3\%\) arithmetic-error rate, and only an
+\(8.9\%\) correct prediction rate.
+The next hardest account, Owner's Equity, reveals a different failure
+mode: it is almost never omitted, but it is numerically wrong on
+\(65.2\%\) of its occurrences.
+This distinction matters.
+The benchmark is not only exposing missing terminology, but also
+systematic confusion about how income-statement activity closes into
+equity.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.95\textwidth]{../figures/F4_account_heatmap.pdf}
-\caption{Account omission and arithmetic patterns by model--prompt pair.}
+\caption{Account omission and arithmetic patterns by model--prompt pair
+on the completed 500-problem study.}
 \label{fig:account-heatmap}
 \end{figure*}
 
 Figure~\ref{fig:account-heatmap} sharpens this point.
-Some models behave as if closing entries do not exist: GPT-5.2, Qwen, and Llama frequently omit Retained Earnings almost entirely.
-Other models include the account but miscompute it.
-Gemini and DeepSeek under \zs{} are the clearest examples of this second pattern.
-gpt-oss-120b is unusual in the opposite direction, reaching the highest \cecr{} values in the benchmark and therefore showing partial closing-entry awareness despite weaker overall robustness.
+The strongest \CoT{} runs often behave as if closing entries do not
+exist:
+Gemini~3 Flash \CoT{} and Qwen~3.5 Flash \CoT{} omit Retained Earnings
+on \(94.3\%\) of the problems where it is expected, and Qwen~3.6 Plus
+\CoT{} omits it on \(91.3\%\).
+The zero-shot runs of DeepSeek-v3.2 and Gemini~3 Flash show the opposite
+pattern.
+They usually include the account, but miscompute it badly, with
+Retained Earnings arithmetic-error rates of \(80.8\%\) and \(77.6\%\),
+respectively.
+The benchmark therefore distinguishes at least two closing-entry failure
+modes: omission and numeric corruption.
 
-\subsection{Mixed-Funding Transactions Separate Robust Models from Fragile Ones}
+\subsection{Factor Sensitivity Still Separates Robust Models from Fragile Ones}
 
 \input{tables/complexity_factors}
 
-Table~\ref{tab:complexity-factors} focuses on the mixed-funding
-mechanism because it is the clearest cross-model separator in the
-factor-sensitivity analysis.
-These transactions require splitting a purchase between cash and debt,
-so they test whether the model can maintain multi-account consistency
-under partial financing.
-GPT-5.2 is nearly invariant to this mechanism, but every weaker family
-degrades.
-The combination of a large negative \(\Delta\) score and a high
-difficulty-curve coefficient of variation is especially revealing for
-Llama~3.3~70B and gpt-oss-120b.
+Table~\ref{tab:complexity-factors} summarizes each model--prompt pair's
+most harmful \emph{controlled} factor, together with the coefficient of
+variation of its difficulty curve.
+No single mechanism hurts every model in the same way.
+Instead, the analysis shows that robustness and factor sensitivity must
+be read together.
+DeepSeek-v3.2 \CoT{} and Qwen~3.6 Plus \CoT{} are nearly invariant even
+to their worst factor, with controlled drops of only \(1.2\) and
+\(1.7\) \fbs{} points.
+Qwen~3.5 Flash \CoT{}, by contrast, loses \(10.8\) points on
+mixed-funding problems after controlling for difficulty, which helps
+explain why it trails Qwen~3.6 mainly on the hardest cases.
+Among the zero-shot runs, Qwen~3.5 Flash is the most fragile overall:
+its worst factor is prepaid adjustments (\(-17.9\) controlled \fbs{}
+points), and its difficulty-curve coefficient of variation reaches
+\(27.77\%\).
 
 \paragraph{Robustness is rare.}
-The difficulty-curve analysis shows that GPT-5.2 is the only family
-with a robustness coefficient of variation below \(3\%\).
-Gemini \CoT{}, Qwen \CoT{}, and DeepSeek \CoT{} fall into a moderate
-robustness band with coefficients between \(6.26\%\) and \(7.29\%\).
-At the other end, DeepSeek \zs{} and Llama \CoT{} exhibit cliff
-behavior: their largest drops occur early and are severe enough to
-dominate the aggregate curve.
+The difficulty-curve analysis shows that DeepSeek-v3.2 \CoT{} is the
+only completed run with both a robustness coefficient of variation below
+\(3\%\) and a reverse difficulty curve, ending higher at Level~5 than at
+Level~1.
+Gemini~3 Flash \CoT{} and Qwen~3.6 Plus \CoT{} form a second tier of
+reasonably stable models, while DeepSeek-v3.2 \zs{} and
+Qwen~3.5 Flash \zs{} exhibit clear cliff behavior.
+Qwen~3.6 Plus also improves over Qwen~3.5 Flash almost entirely through
+hard-case robustness, with per-level \CoT{} gains of only \(+0.75\) at
+Level~1 but \(+8.84\) at Level~4 and \(+10.03\) at Level~5.

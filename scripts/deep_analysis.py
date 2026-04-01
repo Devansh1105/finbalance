@@ -12,6 +12,7 @@ Five analyses computed entirely from existing result files (no re-evaluation):
 Usage:
     python scripts/deep_analysis.py
     python scripts/deep_analysis.py --results-dir results --dataset data/test.jsonl
+    python scripts/deep_analysis.py --results-dir results/pydantic_ai_analysis_20260401 --dataset data/large500.jsonl
 """
 
 import argparse
@@ -809,8 +810,9 @@ def main():
     ap = argparse.ArgumentParser(description="Deep analysis for ACL paper")
     ap.add_argument("--results-dir", default="results")
     ap.add_argument("--dataset", default="data/test.jsonl")
-    ap.add_argument("--output", default="results/deep_analysis.json")
+    ap.add_argument("--output", default=None)
     args = ap.parse_args()
+    results_dir = Path(args.results_dir)
 
     print("Loading ground truth...")
     gt = load_ground_truth(Path(args.dataset))
@@ -860,7 +862,7 @@ def main():
         "difficulty_curves": curves,
     }
 
-    out_path = Path(args.output)
+    out_path = Path(args.output) if args.output else results_dir / "deep_analysis.json"
     with open(out_path, "w") as f:
         json.dump(output, f, indent=2)
     print(f"\n\nFull analysis saved to {out_path}")

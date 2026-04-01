@@ -2,56 +2,68 @@
 
 \input{tables/main_results}
 
-Table~\ref{tab:main-results} reports the paired cross-model comparison
-on the shared 100-problem split (\(n=100\)).
-Even in that matched setting, the performance spread is wide.
-GPT-5.2 is clearly strongest and is the only family that remains near
-the oracle ceiling in both prompt settings.
-Its best run, GPT-5.2 \CoT{}, reaches perfect balance accuracy and a
-FinBalance Score of \(90.85\).
-The corresponding \zs{} run is effectively tied: the paired
-permutation test reports a mean score difference of only \(+0.65\)
-points with two-sided \(p=0.533\).
+Table~\ref{tab:main-results} reports the two evaluation pools used in
+the current paper.
+Panel~A is the completed Large-500 study and supports the main
+comparative claims.
+Panel~B reports Controlled-100 compatibility runs for frontier systems
+that were not rerun to completion on the larger subset.
+Because the pools differ in both coverage and sample size, we do not use
+Table~\ref{tab:main-results} to rank models across panels.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.95\textwidth]{../figures/F1_capability_curve.pdf}
-\caption{Capability curves on the paired 100-problem split. Panel (A) shows
-FinBalance Score by difficulty level. Panel (B) shows balance accuracy
-by difficulty level.}
+\caption{Capability curves on the completed 500-problem study.
+Panel~(A) shows FinBalance Score by difficulty level.
+Panel~(B) shows balance accuracy by difficulty level.}
 \label{fig:capability-curve}
 \end{figure*}
 
-Figure~\ref{fig:capability-curve} makes the performance hierarchy more
+Among completed Large-500 runs, DeepSeek-v3.2 \CoT{} is the strongest
+system with \fbs{} \(=92.25\) and \ba{} \(=99.4\%\).
+Its lead over Gemini~3 Flash \CoT{} is \(+3.42\) \fbs{} points under a
+paired permutation test with \(p<0.001\), and its lead over
+Qwen~3.6 Plus \CoT{} is \(+5.33\) points with \(p<0.001\).
+Qwen~3.6 Plus \CoT{} is the strongest non-DeepSeek open model on the
+Large-500 subset, outperforming Qwen~3.5 Flash \CoT{} by \(+4.01\)
+\fbs{} points (\(p<0.001\)).
+On the separate Controlled-100 compatibility pool, GPT-5.2 remains very
+strong (\(90.85\) under \CoT{}, \(90.20\) under \zs{}), but those
+numbers are descriptive only relative to the Large-500 panel because
+they were obtained on a different evaluation pool.
+
+Figure~\ref{fig:capability-curve} makes the Large-500 hierarchy more
 interpretable.
-Panel~(A) shows that GPT-5.2 is nearly flat across difficulty, whereas
-all other models degrade visibly at Levels~4 and~5.
-Panel~(B) shows that this degradation is not merely a mild score drop:
-for several models it corresponds to a sharp collapse in equation
-satisfaction.
-Among the open-weight systems, the strongest runs are
-Qwen~3.5 Flash \CoT{} (score \(=86.72\)),
-gpt-oss-120b \CoT{} (score \(=86.35\)), and
-DeepSeek-v3.2 \CoT{} (score \(=85.56\)).
-Gemini 3 Flash forms the strongest non-GPT closed-source baseline in
-the controlled study, while Llama~3.3~70B remains weak even with
-\CoT{}.
+DeepSeek-v3.2 \CoT{} is the only run with a reverse difficulty curve:
+its mean \fbs{} rises from \(87.74\) at Level~1 to \(93.30\) at
+Level~5.
+Gemini~3 Flash \CoT{} is also robust, but it falls back at Level~5,
+while Qwen~3.6 Plus \CoT{} separates itself from Qwen~3.5 Flash mainly
+on the hardest problems.
+The zero-shot runs of DeepSeek-v3.2 and Qwen~3.5 Flash show the opposite
+pattern: after Level~1, balance accuracy largely collapses.
 
 \paragraph{Structural recall is easier than numerical consistency.}
 The most diagnostic row in Table~\ref{tab:main-results} is
 DeepSeek-v3.2 \zs{}.
-Its account coverage rate reaches \(96.8\%\), which means it usually
-predicts the expected account set, yet its balance accuracy is only
-\(15\%\) and its FinBalance Score falls to \(52.96\).
+On the Large-500 subset its account coverage rate reaches \(96.6\%\),
+which means it usually predicts the expected account set, yet its
+balance accuracy is only \(11.6\%\) and its FinBalance Score falls to
+\(50.82\).
+Its mean balance-error magnitude is also enormous
+(\(\textsc{BEM}=\$61{,}339.2\)).
 Instead, the model displays a qualitatively distinct failure mode:
 high structural fidelity combined with arithmetic collapse.
 
 \paragraph{Prompt sensitivity is highly model-dependent.}
-Gemini 3 Flash improves modestly under \CoT{} (\(+4.43\) score
-points), and the paired permutation test labels that gain marginal
-under a two-sided test (\(p=0.062\)).
-DeepSeek-v3.2, by contrast, improves by \(+32.6\) score points and
-\(+74\) balance-accuracy points.
-This is the largest prompt-induced gain in the benchmark and indicates
-that the model's failure under \zs{} is not lack of financial
-vocabulary but failure to activate a stable accounting procedure.
+The Large-500 paired tests show three very different \CoT{} regimes.
+DeepSeek-v3.2 gains \(+41.43\) \fbs{} points from \zs{} to \CoT{},
+Qwen~3.5 Flash gains \(+36.40\), and Gemini~3 Flash gains a much
+smaller \(+8.63\).
+Gemini's gain is also difficulty-conditional rather than uniform:
+\CoT{} is slightly worse at Level~1 (\(-0.97\) \fbs{}), but strongly
+better at Level~4 (\(+14.35\)) and Level~5 (\(+18.91\)).
+This contrast suggests that prompt sensitivity is not a single scalar
+property of a model family; it depends on which accounting mechanisms
+become active as difficulty rises.

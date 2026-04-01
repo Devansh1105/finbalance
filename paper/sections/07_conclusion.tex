@@ -10,14 +10,18 @@ weak on retained-earnings closure.
 
 Two conclusions stand out.
 First, prompt sensitivity is strongly model-specific:
-\CoT{} is transformative for DeepSeek-v3.2, modest for Gemini and
-Qwen, and nearly irrelevant for GPT-5.2.
+\CoT{} is transformative for DeepSeek-v3.2 and Qwen~3.5 Flash, but much
+smaller and more difficulty-conditional for Gemini~3 Flash.
 Second, account-level and factor-level analysis is necessary to
 interpret leaderboard scores.
 Without it, one would miss both the structural-versus-numerical split
-seen in DeepSeek-v3.2 \zs{} and the central role of mixed-funding
-transactions and closing-entry behavior in separating robust systems
+seen in DeepSeek-v3.2 \zs{} and the way retained-earnings closure,
+factor sensitivity, and hard-case robustness separate stable systems
 from brittle ones.
+\benchmark{} also now makes a methodological point:
+when model coverage is incomplete, it is better to separate a completed
+large-sample study from smaller compatibility runs than to blend them
+into a single misleading ranking.
 \benchmark{} is therefore most useful not as another finance QA suite,
 but as an executable testbed for stateful, constraint-governed
 generation in a high-stakes domain.

@@ -1,25 +1,35 @@
 \section{Limitations and Ethics}
 
-The current study has four main limitations.
+The current study has five main limitations.
 First, the benchmark is entirely synthetic even though the accounting
 mechanics are realistic.
 Synthetic control is valuable for exact scoring, but it cannot cover
 the full distribution of language, ambiguity, and disclosure
 conventions found in live corporate reporting.
 
-Second, the current main-paper results are concentrated on the
-shared 100-problem evaluation split.
-That design supports tightly paired comparison across all evaluated
-systems, but larger samples would reduce uncertainty for model ranking
-and robustness estimates.
+Second, the paper now spans two evaluation pools rather than one fully
+matched leaderboard.
+The main analysis uses the completed 500-problem subset, whereas some
+frontier systems are currently available only on the separate
+100-problem compatibility subset.
+That split is better than mixing incomparable runs, but it means the
+paper cannot yet offer a single full-coverage ranking across all
+intended models.
 
-Third, the paper studies statement construction rather than statement
+Third, proprietary coverage at the larger scale is still incomplete.
+GPT-5.2 is currently reported only on the 100-problem compatibility
+subset, and the available Large-500 gpt-oss-120b \CoT{} rerun stopped
+after \(37\) of \(500\) problems.
+We therefore exclude that incomplete run and retain only the
+zero-shot gpt-oss-120b compatibility result in the paper.
+
+Fourth, the paper studies statement construction rather than statement
 auditing.
 In practical accounting workflows, construction and auditing are
 complementary, but they require different supervision signals and
 evaluation protocols.
 
-Fourth, all experiments in this draft rely on end-to-end language-model
+Fifth, all experiments in this draft rely on end-to-end language-model
 generation, which means the model is responsible for both selecting the
 correct accounting operations and performing the arithmetic internally.
 Because bookkeeping arithmetic is deterministic, a useful complementary
