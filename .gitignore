@@ -1,6 +1,13 @@
 /.venv
 .env
+.codex/
+.claude/
 __pycache__/
 *.py[cod]
 backups/
 results/
+
+# Generated docs_benchmark artifacts
+docs_benchmark/data/*.jsonl
+docs_benchmark/data/*_assets/
+docs_benchmark/results/*.json
