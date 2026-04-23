@@ -47,10 +47,12 @@ SCENARIOS = {
     "goods_receipt_purchase": make_goods_receipt_purchase_scenario(
         name="goods_receipt_purchase",
         description="Warehouse receives stock and supplier invoice arrives.",
+        apply_indirect_tax=True,
     ),
     "delivery_sale": make_delivery_sale_scenario(
         name="delivery_sale",
         description="Goods are shipped to a customer and invoiced.",
+        apply_indirect_tax=True,
     ),
     "customer_payment": make_receivable_settlement_scenario(
         name="customer_payment",
@@ -129,11 +131,13 @@ INDUSTRY_SCHEMA = IndustrySchema(
         "Inventory",
         "Equipment",
         "Office Supplies",
+        "Input Tax Receivable",
         "Accumulated Depreciation",
         "Accounts Payable",
         "Accrued Expenses",
         "Loans Payable",
         "Notes Payable",
+        "Sales Tax Payable",
         "Owner's Equity",
         "Retained Earnings",
         "Sales Revenue",

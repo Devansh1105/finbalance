@@ -114,6 +114,7 @@ class BenchmarkTests(unittest.TestCase):
             )
             self.assertEqual(evaluation["summary"]["records_evaluated"], 1)
             self.assertEqual(evaluation["summary"]["parse_success_rate"], 1.0)
+            self.assertEqual(evaluation["summary"]["journal_entries_matched_rate"], 1.0)
             self.assertEqual(evaluation["summary"]["final_balance_sheet_matches_rate"], 1.0)
             self.assertEqual(evaluation["summary"]["final_journal_entries_match_rate"], 1.0)
             self.assertEqual(evaluation["summary"]["final_journal_entries_match_no_doc_refs_rate"], 1.0)

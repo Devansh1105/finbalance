@@ -13,8 +13,10 @@ from docs_benchmark.doc_schemas.depreciation_schedule import SCHEMA as DEPRECIAT
 from docs_benchmark.doc_schemas.direct_labor_record import SCHEMA as DIRECT_LABOR_RECORD
 from docs_benchmark.doc_schemas.equipment_invoice import SCHEMA as EQUIPMENT_INVOICE
 from docs_benchmark.doc_schemas.expense_receipt import SCHEMA as EXPENSE_RECEIPT
+from docs_benchmark.doc_schemas.exchange_rate_notice import SCHEMA as EXCHANGE_RATE_NOTICE
 from docs_benchmark.doc_schemas.finished_goods_transfer_note import SCHEMA as FINISHED_GOODS_TRANSFER_NOTE
 from docs_benchmark.doc_schemas.fixed_asset_rollforward import SCHEMA as FIXED_ASSET_ROLLFORWARD
+from docs_benchmark.doc_schemas.fx_remeasurement_memo import SCHEMA as FX_REMEASUREMENT_MEMO
 from docs_benchmark.doc_schemas.goods_receipt_note import SCHEMA as GOODS_RECEIPT_NOTE
 from docs_benchmark.doc_schemas.insurance_notice import SCHEMA as INSURANCE_NOTICE
 from docs_benchmark.doc_schemas.insurer_remittance import SCHEMA as INSURER_REMITTANCE
@@ -67,6 +69,7 @@ DOC_SCHEMAS = {
         SUPPLIER_INVOICE,
         DIRECT_LABOR_RECORD,
         EXPENSE_RECEIPT,
+        EXCHANGE_RATE_NOTICE,
         INSURANCE_NOTICE,
         UTILITIES_STATEMENT,
         PAYMENT_ADVICE,
@@ -78,6 +81,7 @@ DOC_SCHEMAS = {
         EQUIPMENT_INVOICE,
         DEPRECIATION_SCHEDULE,
         FIXED_ASSET_ROLLFORWARD,
+        FX_REMEASUREMENT_MEMO,
         SALES_SUMMARY,
         POS_BATCH_REPORT,
         CARD_SETTLEMENT_REPORT,

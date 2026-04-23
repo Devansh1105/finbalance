@@ -55,13 +55,25 @@ def _matches_kind(value: Any, kind: str) -> bool:
 def _run_doc_specific_checks(seed: DocumentSeed, report: ValidationReport) -> None:
     if "line_items" in seed.fields and "total" in seed.fields and isinstance(seed.fields["line_items"], list):
         line_total = round(sum(float(item.get("amount", 0.0)) for item in seed.fields["line_items"]), 2)
-        total = round(float(seed.fields["total"]), 2)
-        if abs(line_total - total) >= 0.01:
+        expected_line_total = round(float(seed.fields.get("subtotal", seed.fields["total"])), 2)
+        if abs(line_total - expected_line_total) >= 0.01:
             report.add(
                 "error",
                 seed.doc_id,
-                f"Line items total {line_total:.2f} does not match document total {total:.2f}",
+                f"Line items total {line_total:.2f} does not match expected pre-tax amount {expected_line_total:.2f}",
             )
+
+    if all(name in seed.fields for name in ("subtotal", "tax_rate", "tax_amount", "total")):
+        subtotal = round(float(seed.fields["subtotal"]), 2)
+        tax_rate = float(seed.fields["tax_rate"])
+        tax_amount = round(float(seed.fields["tax_amount"]), 2)
+        total = round(float(seed.fields["total"]), 2)
+        expected_tax = round(subtotal * tax_rate, 2)
+        expected_total = round(subtotal + tax_amount, 2)
+        if abs(expected_tax - tax_amount) >= 0.01:
+            report.add("error", seed.doc_id, "Document tax amount does not match subtotal multiplied by the shown tax rate")
+        if abs(expected_total - total) >= 0.01:
+            report.add("error", seed.doc_id, "Document total does not match subtotal plus tax amount")
 
     if "rows" in seed.fields and seed.doc_type == "bank_statement":
         rows = seed.fields["rows"]
@@ -96,3 +108,32 @@ def _run_doc_specific_checks(seed: DocumentSeed, report: ValidationReport) -> No
         expected = round(opening_balance + additions - disposals - usage - write_down, 2)
         if abs(expected - ending) >= 0.01:
             report.add("error", seed.doc_id, f"{seed.doc_type} does not roll forward cleanly")
+
+    if seed.doc_type == "exchange_rate_notice":
+        source_amount = round(float(seed.fields.get("source_amount", 0.0)), 2)
+        exchange_rate = float(seed.fields.get("exchange_rate", 0.0))
+        functional_amount = round(float(seed.fields.get("functional_amount", 0.0)), 2)
+        expected = round(source_amount * exchange_rate, 2)
+        if abs(expected - functional_amount) >= 0.01:
+            report.add("error", seed.doc_id, "Exchange rate notice does not reconcile source amount into the stated functional amount")
+
+    if seed.doc_type == "payment_advice" and all(name in seed.fields for name in ("source_amount", "exchange_rate", "functional_amount")):
+        source_amount = round(float(seed.fields["source_amount"]), 2)
+        exchange_rate = float(seed.fields["exchange_rate"])
+        functional_amount = round(float(seed.fields["functional_amount"]), 2)
+        expected = round(source_amount * exchange_rate, 2)
+        if abs(expected - functional_amount) >= 0.01:
+            report.add("error", seed.doc_id, "Payment advice FX details do not reconcile source amount and exchange rate to the stated functional amount")
+
+    if seed.doc_type == "fx_remeasurement_memo":
+        booked_amount = round(float(seed.fields.get("booked_amount", 0.0)), 2)
+        remeasured_amount = round(float(seed.fields.get("remeasured_amount", 0.0)), 2)
+        difference_amount = round(float(seed.fields.get("difference_amount", 0.0)), 2)
+        source_amount = round(float(seed.fields.get("source_amount", 0.0)), 2)
+        closing_rate = float(seed.fields.get("closing_rate", 0.0))
+        expected_remeasured = round(source_amount * closing_rate, 2)
+        expected_difference = round(abs(remeasured_amount - booked_amount), 2)
+        if abs(expected_remeasured - remeasured_amount) >= 0.01:
+            report.add("error", seed.doc_id, "FX remeasurement memo does not reconcile the open foreign amount to the stated remeasured amount")
+        if abs(expected_difference - difference_amount) >= 0.01:
+            report.add("error", seed.doc_id, "FX remeasurement memo difference does not match booked versus remeasured amount")

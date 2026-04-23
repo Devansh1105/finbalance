@@ -1,4 +1,4 @@
-from docs_benchmark.doc_schemas.base import kv, listing, req, schema
+from docs_benchmark.doc_schemas.base import kv, listing, opt, req, schema
 
 
 SCHEMA = schema(
@@ -13,11 +13,13 @@ SCHEMA = schema(
         req("closing_balance", "number", "Closing bank balance"),
         req("rows", "list", "Statement rows"),
     ),
+    optional_fields=(opt("statement_currency", "string", "Statement currency code"),),
     sections=(
         kv(
             "Account Summary",
             ("Account Name", "account_name"),
             ("Account Number", "account_number"),
+            ("Statement Currency", "statement_currency"),
             ("Opening Balance", "opening_balance"),
             ("Closing Balance", "closing_balance"),
         ),

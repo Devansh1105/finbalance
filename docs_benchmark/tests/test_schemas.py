@@ -7,7 +7,7 @@ from docs_benchmark.generation.helpers import PERIOD_TYPES
 
 class SchemaRegistryTests(unittest.TestCase):
     def test_doc_schema_registry_has_unique_keys(self):
-        self.assertGreaterEqual(len(DOC_SCHEMAS), 50)
+        self.assertGreaterEqual(len(DOC_SCHEMAS), 52)
         self.assertEqual(len(DOC_SCHEMAS), len(set(DOC_SCHEMAS.keys())))
 
     def test_industry_plans_reference_known_scenarios(self):

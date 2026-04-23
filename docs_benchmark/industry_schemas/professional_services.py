@@ -11,6 +11,9 @@ from docs_benchmark.generation.scenario_factories import (
     make_expense_accrual_scenario,
     make_expense_receipt_scenario,
     make_fixed_asset_purchase_scenario,
+    make_fx_receivable_settlement_scenario,
+    make_fx_remeasurement_scenario,
+    make_fx_service_invoice_scenario,
     make_interbank_transfer_scenario,
     make_loan_activity_scenario,
     make_partial_multi_receivable_payment_scenario,
@@ -60,12 +63,14 @@ SCENARIOS = {
         name="service_invoice",
         description="Consulting or advisory invoice billed to a customer.",
         revenue_account="Service Revenue",
+        apply_indirect_tax=True,
     ),
     "vendor_bill": make_vendor_bill_scenario(
         name="vendor_bill",
         description="Professional-services overhead bill on credit.",
         doc_type="vendor_invoice",
         debit_account="Office Supplies Expense",
+        apply_indirect_tax=True,
     ),
     "expense_receipt": make_expense_receipt_scenario(
         name="expense_receipt",
@@ -102,6 +107,7 @@ SCENARIOS = {
         description="Client retainer billed ahead of service delivery.",
         support_doc_type="retainer_agreement_memo",
         revenue_account="Service Revenue",
+        apply_indirect_tax=True,
     ),
     "retainer_release": make_deferral_release_scenario(
         name="retainer_release",
@@ -131,6 +137,20 @@ SCENARIOS = {
         name="reissued_invoice",
         description="Earlier billing reference is withdrawn and replaced by a corrected invoice.",
         revenue_account="Service Revenue",
+    ),
+    "fx_service_invoice": make_fx_service_invoice_scenario(
+        name="fx_service_invoice",
+        description="Foreign-currency client invoice translated into functional currency at the spot rate.",
+        revenue_account="Service Revenue",
+    ),
+    "fx_customer_payment": make_fx_receivable_settlement_scenario(
+        name="fx_customer_payment",
+        description="Later settlement of a foreign-currency client invoice with an FX gain or loss.",
+    ),
+    "fx_remeasurement": make_fx_remeasurement_scenario(
+        name="fx_remeasurement",
+        description="Open foreign-currency receivable remeasured at the closing rate.",
+        target="receivable",
     ),
     "interbank_transfer": make_interbank_transfer_scenario(
         name="interbank_transfer",
@@ -169,7 +189,7 @@ QUARTER_PLANS = {
     2: copy_plan(MONTH_PLANS[2], "retainer_invoice"),
     3: copy_plan(MONTH_PLANS[3], "retainer_invoice", "retainer_release", "multi_invoice_payment", "reclassification_correction", extra_optional=("prepaid_insurance",)),
     4: copy_plan(MONTH_PLANS[4], "retainer_invoice", "retainer_release", "expense_accrual", "reissued_invoice", extra_optional=("prepaid_insurance", "utilities_bill")),
-    5: copy_plan(MONTH_PLANS[5], "retainer_invoice", "retainer_release", "expense_accrual", "bad_debt_review", "reissued_invoice", extra_optional=("prepaid_insurance", "service_invoice", "multi_invoice_payment")),
+    5: copy_plan(MONTH_PLANS[5], "retainer_invoice", "retainer_release", "expense_accrual", "bad_debt_review", "reissued_invoice", "fx_service_invoice", "fx_customer_payment", extra_optional=("prepaid_insurance", "service_invoice", "multi_invoice_payment")),
 }
 
 YEAR_PLANS = {
@@ -177,7 +197,32 @@ YEAR_PLANS = {
     2: copy_plan(QUARTER_PLANS[2], extra_optional=("retainer_release",)),
     3: copy_plan(QUARTER_PLANS[3], "expense_accrual"),
     4: copy_plan(QUARTER_PLANS[4], "bad_debt_review"),
-    5: copy_plan(QUARTER_PLANS[5], extra_optional=("retainer_release", "utilities_bill")),
+    5: DifficultyPlan(
+        mandatory=(
+            "service_invoice",
+            "vendor_bill",
+            "expense_receipt",
+            "customer_payment",
+            "supplier_payment",
+            "payroll",
+            "prepaid_rent",
+            "prepaid_insurance",
+            "utilities_bill",
+            "loan_draw",
+            "equipment_purchase",
+            "depreciation",
+            "loan_repayment",
+            "interbank_transfer",
+            "retainer_invoice",
+            "retainer_release",
+            "expense_accrual",
+            "bad_debt_review",
+            "reissued_invoice",
+            "fx_service_invoice",
+            "fx_remeasurement",
+        ),
+        optional=("service_invoice", "multi_invoice_payment", "reclassification_correction"),
+    ),
 }
 
 
@@ -197,8 +242,10 @@ INDUSTRY_SCHEMA = IndustrySchema(
         "Accumulated Depreciation",
         "Accounts Payable",
         "Accrued Expenses",
+        "Input Tax Receivable",
         "Loans Payable",
         "Notes Payable",
+        "Sales Tax Payable",
         "Unearned Revenue",
         "Owner's Equity",
         "Retained Earnings",
@@ -213,6 +260,8 @@ INDUSTRY_SCHEMA = IndustrySchema(
         "Payroll Tax Expense",
         "Depreciation Expense",
         "Interest Expense",
+        "Foreign Exchange Gain",
+        "Foreign Exchange Loss",
     ],
     opening_builder=_opening_balance,
     master_data_builder=build_master_data,

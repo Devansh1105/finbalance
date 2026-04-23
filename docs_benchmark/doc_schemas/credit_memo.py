@@ -1,4 +1,4 @@
-from docs_benchmark.doc_schemas.base import kv, req, schema
+from docs_benchmark.doc_schemas.base import kv, opt, req, schema
 
 
 SCHEMA = schema(
@@ -13,13 +13,23 @@ SCHEMA = schema(
         req("reason", "string", "Reason for credit"),
         req("amount", "number", "Credit amount"),
     ),
+    optional_fields=(
+        opt("document_currency", "string", "Document currency code"),
+        opt("tax_label", "string", "Indirect tax label"),
+        opt("tax_rate", "number", "Indirect tax rate"),
+        opt("tax_amount", "number", "Indirect tax amount"),
+    ),
     sections=(
         kv(
             "Credit Memo",
             ("Memo Number", "memo_number"),
             ("Counterparty", "counterparty"),
+            ("Currency", "document_currency"),
             ("Reference", "reference"),
             ("Reason", "reason"),
+            ("Tax Label", "tax_label"),
+            ("Tax Rate", "tax_rate"),
+            ("Tax Amount", "tax_amount"),
             ("Amount", "amount"),
         ),
     ),

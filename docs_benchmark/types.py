@@ -188,10 +188,15 @@ class BusinessState:
     period_end: str
     entity_name: str
     entity_address: str
+    functional_currency_code: str
+    functional_currency_symbol: str
+    functional_currency_format: str
     currency_code: str
     currency_symbol: str
     currency_format: str
     date_format: str
+    tax_regime: str
+    tax_label: str
     opening_balance: OpeningBalance
     master_data: dict[str, Any]
     documents: list[DocumentSeed] = field(default_factory=list)
@@ -200,6 +205,8 @@ class BusinessState:
     bank_accounts: dict[str, dict[str, Any]] = field(default_factory=dict)
     open_receivables: list[dict[str, Any]] = field(default_factory=list)
     open_payables: list[dict[str, Any]] = field(default_factory=list)
+    open_fx_receivables: list[dict[str, Any]] = field(default_factory=list)
+    open_fx_payables: list[dict[str, Any]] = field(default_factory=list)
     asset_register: list[dict[str, Any]] = field(default_factory=list)
     scenario_log: list[str] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)

@@ -90,6 +90,7 @@ def score_submission(
             "inconsistency_flag_matches": bool(parsed.has_inconsistency),
             "inconsistency_code_matches": bool(parsed.has_inconsistency and code_match),
             "inconsistency_empty_answer": bool(parsed.has_inconsistency and output_clean),
+            "journal_entries_matched": False,
             "final_balance_sheet_matches": False,
             "final_balance_sheet_and_journal_entries_match": False,
             "final_journal_entries_match": False,
@@ -112,6 +113,7 @@ def score_submission(
         "inconsistency_flag_matches": not parsed.has_inconsistency,
         "inconsistency_code_matches": not parsed.inconsistency_codes,
         "inconsistency_empty_answer": not parsed.has_inconsistency,
+        "journal_entries_matched": exact_entry_match,
         "final_balance_sheet_matches": balance_sheet_match,
         "final_balance_sheet_and_journal_entries_match": bool(balance_sheet_match and exact_entry_match),
         "final_journal_entries_match": exact_entry_match,
@@ -146,6 +148,7 @@ def _summarize_subset(results: list[dict[str, Any]]) -> dict[str, Any]:
     final_balance_sheet_and_journal_entries_match_count = sum(
         1 for result in scored_results if result["metrics"]["final_balance_sheet_and_journal_entries_match"]
     )
+    journal_entries_matched_count = sum(1 for result in scored_results if result["metrics"]["journal_entries_matched"])
     final_journal_entries_match_count = sum(1 for result in scored_results if result["metrics"]["final_journal_entries_match"])
     final_journal_entries_match_no_doc_refs_count = sum(
         1 for result in scored_results if result["metrics"]["final_journal_entries_match_no_doc_refs"]
@@ -160,6 +163,7 @@ def _summarize_subset(results: list[dict[str, Any]]) -> dict[str, Any]:
         "inconsistency_records": len(inconsistency_results),
         "parse_success_count": parse_success_count,
         "parse_success_rate": _rate(parse_success_count, total),
+        "journal_entries_matched_rate": _rate(journal_entries_matched_count, len(scored_results)) if scored_results else 0.0,
         "final_balance_sheet_matches_rate": _rate(final_balance_sheet_matches_count, len(scored_results)) if scored_results else 0.0,
         "final_balance_sheet_and_journal_entries_match_rate": _rate(
             final_balance_sheet_and_journal_entries_match_count, len(scored_results)

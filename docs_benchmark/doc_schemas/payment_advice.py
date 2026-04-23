@@ -16,16 +16,33 @@ SCHEMA = schema(
     optional_fields=(
         opt("payment_for", "string", "Narrative for the payment"),
         opt("allocations", "list", "Allocation lines for one payment against multiple references"),
+        opt("document_currency", "string", "Document currency code"),
+        opt("source_amount", "number", "Foreign-currency payment amount"),
+        opt("source_currency", "string", "Foreign currency code"),
+        opt("functional_currency", "string", "Functional currency code"),
+        opt("functional_amount", "number", "Functional-currency equivalent"),
+        opt("exchange_rate", "number", "Exchange rate applied"),
+        opt("fx_difference", "number", "FX gain or loss amount"),
     ),
     sections=(
         kv(
             "Payment Details",
             ("Advice Number", "number"),
             ("Counterparty", "counterparty"),
+            ("Currency", "document_currency"),
             ("Amount", "amount"),
             ("Reference", "reference"),
             ("Payment Method", "payment_method"),
             ("Payment For", "payment_for"),
+        ),
+        kv(
+            "Foreign Currency Details",
+            ("Source Amount", "source_amount"),
+            ("Source Currency", "source_currency"),
+            ("Functional Currency", "functional_currency"),
+            ("Functional Amount", "functional_amount"),
+            ("Exchange Rate", "exchange_rate"),
+            ("FX Difference", "fx_difference"),
         ),
         kv(
             "Allocation Details",

@@ -14,9 +14,9 @@ It also now includes a basic benchmark runner for OCR-text evaluation:
 - exact-match scoring
 - OpenRouter model execution
 
-## What Changed In V3
+## What Changed In V4
 
-The current generator is the v3 version.
+The current generator is the `v4_phase2` version.
 
 Main changes:
 
@@ -29,6 +29,8 @@ Main changes:
 - neutralized distractor document families
 - richer cross-document scenarios such as combined payments, reissued invoices, transfers, and reclassifications
 - expanded negative-control inconsistency codes
+- indirect-tax support on invoices, bills, and retail sales
+- foreign-currency invoice, settlement, and remeasurement scenarios with visible rate support
 
 The 8 industries are:
 
@@ -50,11 +52,12 @@ For each record, the generator does this:
 3. build internal master data like customers, vendors, products, tenants, patients, lenders, or subscription plans
 4. create a richer opening balance
 5. choose business scenarios from the industry schema
-6. turn those scenarios into document seeds, journal entries, and bank-account cash rows
-7. add realistic distractors and, when needed, negative-control inconsistencies
-8. render the document seeds into PDF-style files and OCR text
-9. validate the clean packet
-10. run the ledger to build the final balance sheet
+6. apply record-level tax regime and functional currency settings
+7. turn those scenarios into document seeds, journal entries, and bank-account cash rows
+8. add realistic distractors and, when needed, negative-control inconsistencies
+9. render the document seeds into PDF-style files and OCR text
+10. validate the clean packet
+11. run the ledger to build the final balance sheet
 
 The visible documents are synthetic. The expected accounting answer is made only by code.
 
@@ -69,13 +72,13 @@ The visible documents are synthetic. The expected accounting answer is made only
 - [generation/helpers.py](/home/devanshagarwal/projects/finbalance/docs_benchmark/generation/helpers.py)
   - period selection, dates, amount helpers, and common generation helpers
 - [generation/scenario_factories.py](/home/devanshagarwal/projects/finbalance/docs_benchmark/generation/scenario_factories.py)
-  - reusable business-scenario builders
+  - reusable business-scenario builders, including tax-aware and FX-aware variants
 - [generation/builder.py](/home/devanshagarwal/projects/finbalance/docs_benchmark/generation/builder.py)
   - top-level record generation
 - [rendering/renderer.py](/home/devanshagarwal/projects/finbalance/docs_benchmark/rendering/renderer.py)
   - PDF-style rendering and OCR text
 - [validation/](/home/devanshagarwal/projects/finbalance/docs_benchmark/validation)
-  - document and record checks
+  - document and record checks, including tax math and exchange-rate consistency
 - [ledger.py](/home/devanshagarwal/projects/finbalance/docs_benchmark/ledger.py)
   - deterministic ledger used to build the final balance sheet
 - [FLOW.md](/home/devanshagarwal/projects/finbalance/docs_benchmark/FLOW.md)
@@ -146,6 +149,8 @@ The benchmark currently uses:
 - strict JSON output with `entries` and `balance_sheet`
 - simple exact-match metrics with no combined score yet
 - grouped summary reporting by difficulty, period type, and industry
+- fixed inconsistency codes for negative-control records
+- functional-currency answers even when some source docs are foreign-currency
 
 Current standard-record metrics are:
 

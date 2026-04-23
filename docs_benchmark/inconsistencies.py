@@ -13,6 +13,12 @@ INCONSISTENCY_CODE_DETAILS = {
     "inventory_rollforward_mismatch": "Inventory rollforward does not reconcile from opening through ending balance.",
     "transfer_mismatch": "Inter-bank transfer support does not reconcile between the advice and bank evidence.",
     "reclassification_support_mismatch": "Correction memo details do not reconcile with the linked original posting support.",
+    "tax_total_mismatch": "Subtotal, indirect tax, and total do not reconcile on the document.",
+    "tax_rate_mismatch": "Shown indirect tax amount does not reconcile with the shown tax rate and basis.",
+    "input_tax_mismatch": "Recoverable input tax fields do not reconcile with the underlying bill amounts.",
+    "exchange_rate_mismatch": "Exchange-rate support does not reconcile the foreign amount into the stated functional amount.",
+    "fx_settlement_mismatch": "Foreign-currency settlement support does not reconcile booked amount, paid amount, and FX difference.",
+    "remeasurement_mismatch": "Closing-rate remeasurement does not reconcile the open foreign balance to the stated functional amount.",
 }
 
 INCONSISTENCY_CODES = tuple(INCONSISTENCY_CODE_DETAILS.keys())

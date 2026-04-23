@@ -1,4 +1,4 @@
-from docs_benchmark.doc_schemas.base import kv, req, schema
+from docs_benchmark.doc_schemas.base import kv, opt, req, schema
 
 
 SCHEMA = schema(
@@ -16,6 +16,10 @@ SCHEMA = schema(
         req("card_sales", "number", "Card sales"),
         req("units_sold", "number", "Units sold"),
     ),
+    optional_fields=(
+        opt("tax_label", "string", "Indirect tax label"),
+        opt("tax_amount", "number", "Indirect tax amount"),
+    ),
     sections=(
         kv(
             "Sales Summary",
@@ -24,6 +28,8 @@ SCHEMA = schema(
             ("Gross Sales", "gross_sales"),
             ("Returns", "returns"),
             ("Net Sales", "net_sales"),
+            ("Tax Label", "tax_label"),
+            ("Tax Amount", "tax_amount"),
             ("Cash Sales", "cash_sales"),
             ("Card Sales", "card_sales"),
             ("Units Sold", "units_sold"),

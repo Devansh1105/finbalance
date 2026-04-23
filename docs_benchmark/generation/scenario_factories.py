@@ -10,20 +10,78 @@ from docs_benchmark.generation.helpers import (
     amount,
     amount_scale,
     bank_row,
+    choose_exchange_rate,
+    choose_foreign_currency_profile,
+    choose_tax_rate,
+    convert_to_functional,
+    currency_metadata,
     date_plus_days,
     doc_seed,
     due_date,
     line_items,
+    merge_currency_metadata,
     pay_period_label,
     pick_date,
     posting,
     quantity_line_items,
+    tax_breakdown_from_subtotal,
+    tax_label_for_regime,
 )
 from docs_benchmark.types import BusinessScenario, BusinessState, ScenarioResult
 
 
 def _scaled_amount(state: BusinessState, rng: random.Random, lo: float, hi: float, bucket: str = "operating") -> float:
     return round(amount(rng, lo, hi) * amount_scale(state.industry, state.period_spec.period_type, state.difficulty_level, bucket), 2)
+
+
+def _tax_details(state: BusinessState, subtotal: float, rng: random.Random, tax_rate_override: float | None = None) -> dict[str, float | str]:
+    tax_label = state.tax_label or tax_label_for_regime(state.tax_regime)
+    tax_rate = tax_rate_override if tax_rate_override is not None else choose_tax_rate(state.tax_regime, rng)
+    details = tax_breakdown_from_subtotal(subtotal, tax_rate)
+    details["tax_label"] = tax_label
+    return details
+
+
+def _apply_tax_fields(fields: dict[str, object], tax_details: dict[str, float | str]) -> None:
+    fields["subtotal"] = tax_details["subtotal"]
+    fields["tax_label"] = tax_details["tax_label"]
+    fields["tax_rate"] = tax_details["tax_rate"]
+    fields["tax_amount"] = tax_details["tax_amount"]
+    fields["total"] = tax_details["total"]
+
+
+def _foreign_doc_metadata(
+    state: BusinessState,
+    foreign_profile: dict[str, str],
+    functional_profile: dict[str, str],
+    extra_overrides: dict[str, dict[str, str]] | None = None,
+) -> dict[str, object]:
+    metadata = {
+        **currency_metadata(foreign_profile),
+        "functional_currency_code": functional_profile["currency_code"],
+        "functional_currency_symbol": functional_profile["currency_symbol"],
+        "functional_currency_format": functional_profile["currency_format"],
+    }
+    if extra_overrides:
+        metadata = merge_currency_metadata(metadata, extra_overrides)
+    return metadata
+
+
+def _functional_profile(state: BusinessState) -> dict[str, str]:
+    return {
+        "currency_code": state.functional_currency_code,
+        "currency_symbol": state.functional_currency_symbol,
+        "currency_format": state.functional_currency_format,
+    }
+
+
+def _foreign_profile_for_state(state: BusinessState, rng: random.Random) -> dict[str, str]:
+    profile = state.metadata.get("foreign_currency_profile")
+    if isinstance(profile, dict):
+        return profile
+    profile = choose_foreign_currency_profile(state.functional_currency_code, rng)
+    state.metadata["foreign_currency_profile"] = profile
+    return profile
 
 
 def make_service_invoice_scenario(
@@ -33,13 +91,14 @@ def make_service_invoice_scenario(
     revenue_account: str,
     with_work_order: bool = False,
     cash_sale_rate: float = 0.0,
+    apply_indirect_tax: bool = False,
 ) -> BusinessScenario:
     doc_types = ("customer_invoice", "work_order") if with_work_order else ("customer_invoice",)
 
     def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
         issue_date = pick_date(state.period_spec, rng, "early")
         customer = rng.choice(state.master_data["customers"])
-        total = _scaled_amount(state, rng, 1800, 8200, "operating")
+        subtotal = _scaled_amount(state, rng, 1800, 8200, "operating")
         invoice_number = state.next_number("INV")
         refs: list[str] = []
         documents = []
@@ -55,21 +114,29 @@ def make_service_invoice_scenario(
                     "customer": customer,
                     "job_site": rng.choice(state.master_data["job_sites"]),
                     "scope": rng.choice(state.master_data["services"]),
-                    "approved_amount": total,
+                    "approved_amount": subtotal,
                 },
                 metadata={"footer_note": "Approved job scope supporting the related invoice."},
             )
             documents.append(work_order)
             refs.append(work_order.doc_id)
 
+        total = subtotal
         fields = {
             "number": invoice_number,
             "customer": customer,
             "due_date": due_date(issue_date, rng, 10, 24),
             "total": total,
-            "line_items": line_items(total, [rng.choice(state.master_data["services"]), "Follow-up support"], rng),
+            "line_items": line_items(subtotal, [rng.choice(state.master_data["services"]), "Follow-up support"], rng),
             "contract_ref": state.next_number("CTR"),
+            "document_currency": state.currency_code,
         }
+        tax_amount = 0.0
+        if apply_indirect_tax and state.tax_regime != "none":
+            tax_details = _tax_details(state, subtotal, rng)
+            _apply_tax_fields(fields, tax_details)
+            total = float(tax_details["total"])
+            tax_amount = float(tax_details["tax_amount"])
         if state.industry == "field_services":
             fields["job_code"] = state.next_number("JOB")
         if state.industry == "wholesale_distribution":
@@ -90,10 +157,14 @@ def make_service_invoice_scenario(
         postings = []
         bank_rows = []
         if rng.random() < cash_sale_rate:
-            postings.append(posting(refs, "Cash", revenue_account, total, issue_date, name))
+            postings.append(posting(refs, "Cash", revenue_account, subtotal, issue_date, name))
+            if tax_amount > 0:
+                postings.append(posting(refs, "Cash", "Sales Tax Payable", tax_amount, issue_date, f"{name}_tax"))
             bank_rows.append(bank_row(issue_date, f"Customer payment {invoice_number}", total))
         else:
-            postings.append(posting(refs, "Accounts Receivable", revenue_account, total, issue_date, name))
+            postings.append(posting(refs, "Accounts Receivable", revenue_account, subtotal, issue_date, name))
+            if tax_amount > 0:
+                postings.append(posting(refs, "Accounts Receivable", "Sales Tax Payable", tax_amount, issue_date, f"{name}_tax"))
             state.open_receivables.append(
                 {
                     "reference": invoice_number,
@@ -116,20 +187,29 @@ def make_vendor_bill_scenario(
     debit_account: str,
     paid_now_rate: float = 0.0,
     quantity_lines: bool = False,
+    apply_indirect_tax: bool = False,
 ) -> BusinessScenario:
     def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
         issue_date = pick_date(state.period_spec, rng, "early")
         vendor = rng.choice(state.master_data["vendors"])
-        total = _scaled_amount(state, rng, 420, 5400, "operating")
+        subtotal = _scaled_amount(state, rng, 420, 5400, "operating")
         descriptions = state.master_data["products"] if quantity_lines else [rng.choice(state.master_data["services"]), "Support fee"]
-        rows = quantity_line_items(total, descriptions[:2], rng) if quantity_lines else line_items(total, descriptions[:2], rng)
+        rows = quantity_line_items(subtotal, descriptions[:2], rng) if quantity_lines else line_items(subtotal, descriptions[:2], rng)
         fields = {
             "number": state.next_number("BILL"),
             "vendor": vendor,
             "due_date": due_date(issue_date, rng, 10, 21),
-            "total": total,
+            "total": subtotal,
             "line_items": rows,
+            "document_currency": state.currency_code,
         }
+        tax_amount = 0.0
+        total = subtotal
+        if apply_indirect_tax and state.tax_regime != "none":
+            tax_details = _tax_details(state, subtotal, rng)
+            _apply_tax_fields(fields, tax_details)
+            total = float(tax_details["total"])
+            tax_amount = float(tax_details["tax_amount"])
         if doc_type == "vendor_invoice":
             fields["expense_account_label"] = debit_account
         if doc_type == "supplier_invoice" and state.industry == "wholesale_distribution":
@@ -144,7 +224,9 @@ def make_vendor_bill_scenario(
             metadata={"counterparty_name": vendor},
         )
         credit_account = "Cash" if rng.random() < paid_now_rate else "Accounts Payable"
-        postings = [posting([bill.doc_id], debit_account, credit_account, total, issue_date, name)]
+        postings = [posting([bill.doc_id], debit_account, credit_account, subtotal, issue_date, name)]
+        if tax_amount > 0:
+            postings.append(posting([bill.doc_id], "Input Tax Receivable", credit_account, tax_amount, issue_date, f"{name}_tax"))
         bank_rows = []
         if credit_account == "Cash":
             bank_rows.append(bank_row(issue_date, f"{vendor} payment {fields['number']}", -total))
@@ -380,6 +462,390 @@ def make_payable_settlement_scenario(*, name: str, description: str) -> Business
     return BusinessScenario(name=name, description=description, doc_types=("payment_advice",), doc_count_hint=1, builder=build)
 
 
+def make_fx_service_invoice_scenario(
+    *,
+    name: str,
+    description: str,
+    revenue_account: str,
+) -> BusinessScenario:
+    def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
+        issue_date = pick_date(state.period_spec, rng, "early")
+        customer = rng.choice(state.master_data["customers"])
+        foreign_profile = _foreign_profile_for_state(state, rng)
+        functional_profile = _functional_profile(state)
+        source_total = _scaled_amount(state, rng, 1800, 7800, "operating")
+        exchange_rate = choose_exchange_rate(functional_profile["currency_code"], foreign_profile["currency_code"], rng)
+        functional_total = convert_to_functional(source_total, exchange_rate)
+        contract_ref = state.next_number("FXCTR")
+        invoice = doc_seed(
+            state,
+            doc_type="customer_invoice",
+            title=get_doc_schema("customer_invoice").title_for(state.industry),
+            date=issue_date,
+            role="posting_doc",
+            fields={
+                "number": state.next_number("FXINV"),
+                "customer": customer,
+                "due_date": due_date(issue_date, rng, 12, 24),
+                "total": source_total,
+                "line_items": line_items(source_total, [rng.choice(state.master_data["services"]), "Foreign-currency support"], rng),
+                "contract_ref": contract_ref,
+                "document_currency": foreign_profile["currency_code"],
+            },
+            metadata=_foreign_doc_metadata(state, foreign_profile, functional_profile),
+        )
+        fx_notice = doc_seed(
+            state,
+            doc_type="exchange_rate_notice",
+            title=get_doc_schema("exchange_rate_notice").title,
+            date=issue_date,
+            role="support_doc",
+            fields={
+                "notice_number": state.next_number("RATE"),
+                "reference": invoice.fields["number"],
+                "source_currency": foreign_profile["currency_code"],
+                "functional_currency": functional_profile["currency_code"],
+                "exchange_rate": exchange_rate,
+                "source_amount": source_total,
+                "functional_amount": functional_total,
+                "rate_date": issue_date,
+                "rate_type": "Spot rate at invoice date",
+            },
+            metadata=merge_currency_metadata(
+                dict(functional_profile),
+                {
+                    "source_amount": currency_metadata(foreign_profile),
+                    "functional_amount": currency_metadata(functional_profile),
+                },
+            ),
+        )
+        refs = [invoice.doc_id, fx_notice.doc_id]
+        postings = [posting(refs, "Accounts Receivable", revenue_account, functional_total, issue_date, name)]
+        state.open_fx_receivables.append(
+            {
+                "reference": invoice.fields["number"],
+                "doc_id": invoice.doc_id,
+                "counterparty": customer,
+                "source_currency": foreign_profile["currency_code"],
+                "source_symbol": foreign_profile["currency_symbol"],
+                "source_format": foreign_profile["currency_format"],
+                "source_remaining": source_total,
+                "functional_remaining": functional_total,
+                "booked_rate": exchange_rate,
+                "revenue_account": revenue_account,
+                "category": "customer",
+            }
+        )
+        return ScenarioResult(documents=[invoice, fx_notice], postings=postings)
+
+    return BusinessScenario(
+        name=name,
+        description=description,
+        doc_types=("customer_invoice", "exchange_rate_notice"),
+        doc_count_hint=2,
+        builder=build,
+        period_types=("quarter", "year"),
+    )
+
+
+def make_fx_receivable_settlement_scenario(*, name: str, description: str) -> BusinessScenario:
+    def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
+        if not state.open_fx_receivables:
+            raise ValueError(f"Scenario '{name}' needs an open foreign-currency receivable")
+        item = state.open_fx_receivables.pop(0)
+        pay_date = pick_date(state.period_spec, rng, "late")
+        functional_profile = _functional_profile(state)
+        settlement_rate = round(item["booked_rate"] * rng.uniform(0.94, 1.08), 4)
+        source_amount = round(float(item["source_remaining"]), 2)
+        booked_amount = round(float(item["functional_remaining"]), 2)
+        settled_amount = convert_to_functional(source_amount, settlement_rate)
+        fx_difference = round(settled_amount - booked_amount, 2)
+        advice = doc_seed(
+            state,
+            doc_type="payment_advice",
+            title=get_doc_schema("payment_advice").title,
+            date=pay_date,
+            role="posting_doc",
+            fields={
+                "number": state.next_number("FXPAY"),
+                "counterparty": item["counterparty"],
+                "amount": settled_amount,
+                "reference": item["reference"],
+                "payment_method": rng.choice(["Wire", "Bank transfer"]),
+                "payment_for": "Foreign-currency receivable settlement",
+                "document_currency": functional_profile["currency_code"],
+                "source_amount": source_amount,
+                "source_currency": item["source_currency"],
+                "functional_currency": functional_profile["currency_code"],
+                "functional_amount": settled_amount,
+                "exchange_rate": settlement_rate,
+                "fx_difference": abs(fx_difference),
+            },
+            metadata=merge_currency_metadata(
+                dict(functional_profile),
+                {
+                    "source_amount": {
+                        "currency_symbol": item["source_symbol"],
+                        "currency_format": item["source_format"],
+                        "currency_code": item["source_currency"],
+                    },
+                    "functional_amount": currency_metadata(functional_profile),
+                    "amount": currency_metadata(functional_profile),
+                    "fx_difference": currency_metadata(functional_profile),
+                },
+            ),
+        )
+        refs = [advice.doc_id, item["doc_id"]]
+        postings = [posting(refs, "Cash", "Accounts Receivable", min(settled_amount, booked_amount), pay_date, name)]
+        if fx_difference > 0:
+            postings.append(posting(refs, "Cash", "Foreign Exchange Gain", fx_difference, pay_date, f"{name}_gain"))
+        elif fx_difference < 0:
+            postings.append(posting(refs, "Foreign Exchange Loss", "Accounts Receivable", abs(fx_difference), pay_date, f"{name}_loss"))
+        return ScenarioResult(
+            documents=[advice],
+            postings=postings,
+            bank_rows=[bank_row(pay_date, f"Foreign receipt {item['reference']}", settled_amount)],
+        )
+
+    return BusinessScenario(
+        name=name,
+        description=description,
+        doc_types=("payment_advice",),
+        doc_count_hint=1,
+        builder=build,
+        period_types=("quarter", "year"),
+    )
+
+
+def make_fx_vendor_bill_scenario(
+    *,
+    name: str,
+    description: str,
+    debit_account: str,
+    doc_type: str = "vendor_invoice",
+) -> BusinessScenario:
+    def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
+        issue_date = pick_date(state.period_spec, rng, "early")
+        vendor = rng.choice(state.master_data["vendors"])
+        foreign_profile = _foreign_profile_for_state(state, rng)
+        functional_profile = _functional_profile(state)
+        source_total = _scaled_amount(state, rng, 850, 6200, "operating")
+        exchange_rate = choose_exchange_rate(functional_profile["currency_code"], foreign_profile["currency_code"], rng)
+        functional_total = convert_to_functional(source_total, exchange_rate)
+        bill = doc_seed(
+            state,
+            doc_type=doc_type,
+            title=get_doc_schema(doc_type).title_for(state.industry),
+            date=issue_date,
+            role="posting_doc",
+            fields={
+                "number": state.next_number("FXBILL"),
+                "vendor": vendor,
+                "due_date": due_date(issue_date, rng, 12, 24),
+                "total": source_total,
+                "line_items": line_items(source_total, [rng.choice(state.master_data["services"]), "Foreign-currency support"], rng),
+                "document_currency": foreign_profile["currency_code"],
+            },
+            metadata=_foreign_doc_metadata(state, foreign_profile, functional_profile),
+        )
+        if doc_type == "vendor_invoice":
+            bill.fields["expense_account_label"] = debit_account
+        fx_notice = doc_seed(
+            state,
+            doc_type="exchange_rate_notice",
+            title=get_doc_schema("exchange_rate_notice").title,
+            date=issue_date,
+            role="support_doc",
+            fields={
+                "notice_number": state.next_number("RATE"),
+                "reference": bill.fields["number"],
+                "source_currency": foreign_profile["currency_code"],
+                "functional_currency": functional_profile["currency_code"],
+                "exchange_rate": exchange_rate,
+                "source_amount": source_total,
+                "functional_amount": functional_total,
+                "rate_date": issue_date,
+                "rate_type": "Spot rate at bill date",
+            },
+            metadata=merge_currency_metadata(
+                dict(functional_profile),
+                {
+                    "source_amount": currency_metadata(foreign_profile),
+                    "functional_amount": currency_metadata(functional_profile),
+                },
+            ),
+        )
+        refs = [bill.doc_id, fx_notice.doc_id]
+        postings = [posting(refs, debit_account, "Accounts Payable", functional_total, issue_date, name)]
+        state.open_fx_payables.append(
+            {
+                "reference": bill.fields["number"],
+                "doc_id": bill.doc_id,
+                "counterparty": vendor,
+                "source_currency": foreign_profile["currency_code"],
+                "source_symbol": foreign_profile["currency_symbol"],
+                "source_format": foreign_profile["currency_format"],
+                "source_remaining": source_total,
+                "functional_remaining": functional_total,
+                "booked_rate": exchange_rate,
+                "debit_account": debit_account,
+                "category": "vendor",
+            }
+        )
+        return ScenarioResult(documents=[bill, fx_notice], postings=postings)
+
+    return BusinessScenario(
+        name=name,
+        description=description,
+        doc_types=(doc_type, "exchange_rate_notice"),
+        doc_count_hint=2,
+        builder=build,
+        period_types=("quarter", "year"),
+    )
+
+
+def make_fx_payable_settlement_scenario(*, name: str, description: str) -> BusinessScenario:
+    def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
+        if not state.open_fx_payables:
+            raise ValueError(f"Scenario '{name}' needs an open foreign-currency payable")
+        item = state.open_fx_payables.pop(0)
+        pay_date = pick_date(state.period_spec, rng, "late")
+        functional_profile = _functional_profile(state)
+        settlement_rate = round(item["booked_rate"] * rng.uniform(0.94, 1.08), 4)
+        source_amount = round(float(item["source_remaining"]), 2)
+        booked_amount = round(float(item["functional_remaining"]), 2)
+        paid_amount = convert_to_functional(source_amount, settlement_rate)
+        fx_difference = round(paid_amount - booked_amount, 2)
+        advice = doc_seed(
+            state,
+            doc_type="payment_advice",
+            title=get_doc_schema("payment_advice").title,
+            date=pay_date,
+            role="posting_doc",
+            fields={
+                "number": state.next_number("FXPAY"),
+                "counterparty": item["counterparty"],
+                "amount": paid_amount,
+                "reference": item["reference"],
+                "payment_method": rng.choice(["Wire", "Bank transfer"]),
+                "payment_for": "Foreign-currency payable settlement",
+                "document_currency": functional_profile["currency_code"],
+                "source_amount": source_amount,
+                "source_currency": item["source_currency"],
+                "functional_currency": functional_profile["currency_code"],
+                "functional_amount": paid_amount,
+                "exchange_rate": settlement_rate,
+                "fx_difference": abs(fx_difference),
+            },
+            metadata=merge_currency_metadata(
+                dict(functional_profile),
+                {
+                    "source_amount": {
+                        "currency_symbol": item["source_symbol"],
+                        "currency_format": item["source_format"],
+                        "currency_code": item["source_currency"],
+                    },
+                    "functional_amount": currency_metadata(functional_profile),
+                    "amount": currency_metadata(functional_profile),
+                    "fx_difference": currency_metadata(functional_profile),
+                },
+            ),
+        )
+        refs = [advice.doc_id, item["doc_id"]]
+        postings = [posting(refs, "Accounts Payable", "Cash", min(booked_amount, paid_amount), pay_date, name)]
+        if fx_difference > 0:
+            postings.append(posting(refs, "Foreign Exchange Loss", "Cash", fx_difference, pay_date, f"{name}_loss"))
+        elif fx_difference < 0:
+            postings.append(posting(refs, "Accounts Payable", "Foreign Exchange Gain", abs(fx_difference), pay_date, f"{name}_gain"))
+        return ScenarioResult(
+            documents=[advice],
+            postings=postings,
+            bank_rows=[bank_row(pay_date, f"Foreign payment {item['reference']}", -paid_amount)],
+        )
+
+    return BusinessScenario(
+        name=name,
+        description=description,
+        doc_types=("payment_advice",),
+        doc_count_hint=1,
+        builder=build,
+        period_types=("quarter", "year"),
+    )
+
+
+def make_fx_remeasurement_scenario(
+    *,
+    name: str,
+    description: str,
+    target: str = "receivable",
+) -> BusinessScenario:
+    def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
+        pool = state.open_fx_receivables if target == "receivable" else state.open_fx_payables
+        if not pool:
+            raise ValueError(f"Scenario '{name}' needs an open foreign-currency {target}")
+        item = pool[0]
+        functional_profile = _functional_profile(state)
+        closing_rate = round(float(item["booked_rate"]) * rng.uniform(0.95, 1.1), 4)
+        source_amount = round(float(item["source_remaining"]), 2)
+        booked_amount = round(float(item["functional_remaining"]), 2)
+        remeasured_amount = convert_to_functional(source_amount, closing_rate)
+        difference = round(remeasured_amount - booked_amount, 2)
+        memo = doc_seed(
+            state,
+            doc_type="fx_remeasurement_memo",
+            title=get_doc_schema("fx_remeasurement_memo").title,
+            date=state.period_end,
+            role="adjustment_doc",
+            fields={
+                "memo_id": state.next_number("FXREM"),
+                "reference": item["reference"],
+                "source_currency": item["source_currency"],
+                "functional_currency": functional_profile["currency_code"],
+                "source_amount": source_amount,
+                "booked_amount": booked_amount,
+                "closing_rate": closing_rate,
+                "remeasured_amount": remeasured_amount,
+                "difference_amount": abs(difference),
+                "narrative": "Open foreign-currency balance remeasured at the closing rate.",
+            },
+            metadata=merge_currency_metadata(
+                dict(functional_profile),
+                {
+                    "source_amount": {
+                        "currency_symbol": item["source_symbol"],
+                        "currency_format": item["source_format"],
+                        "currency_code": item["source_currency"],
+                    },
+                    "booked_amount": currency_metadata(functional_profile),
+                    "remeasured_amount": currency_metadata(functional_profile),
+                    "difference_amount": currency_metadata(functional_profile),
+                },
+            ),
+        )
+        if target == "receivable":
+            if difference > 0:
+                postings = [posting([memo.doc_id, item["doc_id"]], "Accounts Receivable", "Foreign Exchange Gain", difference, state.period_end, name)]
+            else:
+                postings = [posting([memo.doc_id, item["doc_id"]], "Foreign Exchange Loss", "Accounts Receivable", abs(difference), state.period_end, name)]
+        else:
+            if difference > 0:
+                postings = [posting([memo.doc_id, item["doc_id"]], "Foreign Exchange Loss", "Accounts Payable", difference, state.period_end, name)]
+            else:
+                postings = [posting([memo.doc_id, item["doc_id"]], "Accounts Payable", "Foreign Exchange Gain", abs(difference), state.period_end, name)]
+        item["functional_remaining"] = remeasured_amount
+        item["booked_rate"] = closing_rate
+        return ScenarioResult(documents=[memo], postings=postings)
+
+    return BusinessScenario(
+        name=name,
+        description=description,
+        doc_types=("fx_remeasurement_memo",),
+        doc_count_hint=1,
+        builder=build,
+        period_types=("year",),
+    )
+
+
 def make_interbank_transfer_scenario(*, name: str, description: str) -> BusinessScenario:
     def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
         transfer_date = pick_date(state.period_spec, rng, "late")
@@ -515,7 +981,7 @@ def make_reissued_invoice_scenario(
                 "note_number": state.next_number("CNCL"),
                 "withdrawn_reference": original_ref,
                 "replacement_reference": replacement_ref,
-                "reason": "The billing desk issued a revised reference after the review copy was withdrawn.",
+                "reason": f"{original_ref} is withdrawn and must not be posted. Use {replacement_ref} as the only valid invoice.",
             },
             metadata={"counterparty_name": customer},
         )
@@ -812,14 +1278,18 @@ def make_depreciation_scenario(*, name: str, description: str) -> BusinessScenar
     return BusinessScenario(name=name, description=description, doc_types=doc_type, doc_count_hint=1, builder=build)
 
 
-def make_retail_sale_scenario(*, name: str, description: str) -> BusinessScenario:
+def make_retail_sale_scenario(*, name: str, description: str, apply_indirect_tax: bool = False) -> BusinessScenario:
     def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
         sale_date = pick_date(state.period_spec, rng, "mid")
         gross_sales = _scaled_amount(state, rng, 2600, 12400, "inventory")
         returns = round(gross_sales * rng.uniform(0.01, 0.05), 2)
         net_sales = round(gross_sales - returns, 2)
-        cash_sales = round(net_sales * rng.uniform(0.15, 0.35), 2)
-        card_sales = round(net_sales - cash_sales, 2)
+        tax_amount = 0.0
+        if apply_indirect_tax and state.tax_regime != "none":
+            tax_amount = float(_tax_details(state, net_sales, rng)["tax_amount"])
+        gross_receipts = round(net_sales + tax_amount, 2)
+        cash_sales = round(gross_receipts * rng.uniform(0.15, 0.35), 2)
+        card_sales = round(gross_receipts - cash_sales, 2)
         cogs = round(net_sales * rng.uniform(0.48, 0.67), 2)
         sales_doc = doc_seed(
             state,
@@ -835,6 +1305,8 @@ def make_retail_sale_scenario(*, name: str, description: str) -> BusinessScenari
                 "net_sales": net_sales,
                 "cash_sales": cash_sales,
                 "card_sales": card_sales,
+                "tax_label": state.tax_label or tax_label_for_regime(state.tax_regime),
+                "tax_amount": tax_amount,
                 "units_sold": rng.randint(60, 280),
             },
         )
@@ -854,11 +1326,18 @@ def make_retail_sale_scenario(*, name: str, description: str) -> BusinessScenari
             },
         )
         refs = [sales_doc.doc_id, batch_doc.doc_id]
+        cash_revenue = round(cash_sales * (net_sales / gross_receipts), 2) if gross_receipts else 0.0
+        card_revenue = round(net_sales - cash_revenue, 2)
         postings = [
-            posting(refs, "Cash", "Sales Revenue", cash_sales, sale_date, f"{name}_cash"),
-            posting(refs, "Card Settlement Clearing", "Sales Revenue", card_sales, sale_date, f"{name}_card"),
+            posting(refs, "Cash", "Sales Revenue", cash_revenue, sale_date, f"{name}_cash"),
+            posting(refs, "Card Settlement Clearing", "Sales Revenue", card_revenue, sale_date, f"{name}_card"),
             posting(refs, "Cost of Goods Sold", "Inventory", cogs, sale_date, f"{name}_cogs"),
         ]
+        if tax_amount > 0:
+            cash_tax = round(cash_sales * (tax_amount / gross_receipts), 2) if gross_receipts else 0.0
+            card_tax = round(tax_amount - cash_tax, 2)
+            postings.append(posting(refs, "Cash", "Sales Tax Payable", cash_tax, sale_date, f"{name}_cash_tax"))
+            postings.append(posting(refs, "Card Settlement Clearing", "Sales Tax Payable", card_tax, sale_date, f"{name}_card_tax"))
         state.metadata.setdefault("card_batches", []).append(
             {
                 "batch_id": batch_doc.fields["batch_id"],
@@ -998,14 +1477,14 @@ def make_return_scenario(*, name: str, description: str) -> BusinessScenario:
     return BusinessScenario(name=name, description=description, doc_types=("return_note",), doc_count_hint=1, builder=build, allow_repeat=True)
 
 
-def make_goods_receipt_purchase_scenario(*, name: str, description: str) -> BusinessScenario:
+def make_goods_receipt_purchase_scenario(*, name: str, description: str, apply_indirect_tax: bool = False) -> BusinessScenario:
     def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
         receipt_date = pick_date(state.period_spec, rng, "early")
         vendor = rng.choice(state.master_data["vendors"])
         sku = state.next_number("SKU")
         qty = rng.randint(40, 160)
         unit_cost = _scaled_amount(state, rng, 6, 24, "inventory")
-        total = round(qty * unit_cost, 2)
+        subtotal = round(qty * unit_cost, 2)
         grn = doc_seed(
             state,
             doc_type="goods_receipt_note",
@@ -1032,21 +1511,31 @@ def make_goods_receipt_purchase_scenario(*, name: str, description: str) -> Busi
                 "number": state.next_number("SUP"),
                 "vendor": vendor,
                 "due_date": due_date(invoice_date, rng, 10, 21),
-                "total": total,
+                "total": subtotal,
                 "goods_receipt_ref": grn.fields["grn_number"],
+                "document_currency": state.currency_code,
                 "line_items": [
                     {
                         "description": grn.fields["items"][0]["description"],
                         "quantity": qty,
                         "unit_cost": unit_cost,
-                        "amount": total,
+                        "amount": subtotal,
                     }
                 ],
             },
             metadata={"counterparty_name": vendor},
         )
+        tax_amount = 0.0
+        total = subtotal
+        if apply_indirect_tax and state.tax_regime != "none":
+            tax_details = _tax_details(state, subtotal, rng)
+            _apply_tax_fields(invoice.fields, tax_details)
+            total = float(tax_details["total"])
+            tax_amount = float(tax_details["tax_amount"])
         refs = [grn.doc_id, invoice.doc_id]
-        postings = [posting(refs, "Inventory", "Accounts Payable", total, invoice_date, name)]
+        postings = [posting(refs, "Inventory", "Accounts Payable", subtotal, invoice_date, name)]
+        if tax_amount > 0:
+            postings.append(posting(refs, "Input Tax Receivable", "Accounts Payable", tax_amount, invoice_date, f"{name}_tax"))
         state.open_payables.append(
             {"reference": invoice.fields["number"], "doc_id": invoice.doc_id, "counterparty": vendor, "remaining": total, "category": "vendor"}
         )
@@ -1055,15 +1544,20 @@ def make_goods_receipt_purchase_scenario(*, name: str, description: str) -> Busi
     return BusinessScenario(name=name, description=description, doc_types=("goods_receipt_note", "supplier_invoice"), doc_count_hint=2, builder=build, allow_repeat=True)
 
 
-def make_delivery_sale_scenario(*, name: str, description: str) -> BusinessScenario:
+def make_delivery_sale_scenario(*, name: str, description: str, apply_indirect_tax: bool = False) -> BusinessScenario:
     def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
         ship_date = pick_date(state.period_spec, rng, "mid")
         customer = rng.choice(state.master_data["customers"])
         sku = state.next_number("SKU")
         qty = rng.randint(15, 70)
         unit_price = _scaled_amount(state, rng, 24, 70, "inventory")
-        billed = round(qty * unit_price, 2)
-        cogs = round(billed * rng.uniform(0.52, 0.72), 2)
+        subtotal = round(qty * unit_price, 2)
+        billed = subtotal
+        tax_amount = 0.0
+        if apply_indirect_tax and state.tax_regime != "none":
+            tax_amount = float(_tax_details(state, subtotal, rng)["tax_amount"])
+            billed = round(subtotal + tax_amount, 2)
+        cogs = round(subtotal * rng.uniform(0.52, 0.72), 2)
         delivery = doc_seed(
             state,
             doc_type="delivery_note",
@@ -1090,16 +1584,22 @@ def make_delivery_sale_scenario(*, name: str, description: str) -> BusinessScena
                 "customer": customer,
                 "due_date": due_date(ship_date, rng, 10, 20),
                 "total": billed,
-                "line_items": [{"description": delivery.fields["items"][0]["description"], "amount": billed}],
+                "line_items": [{"description": delivery.fields["items"][0]["description"], "amount": subtotal}],
                 "shipment_ref": delivery.fields["shipment_ref"],
+                "document_currency": state.currency_code,
             },
             metadata={"counterparty_name": customer},
         )
+        if tax_amount > 0:
+            tax_details = _tax_details(state, subtotal, rng, tax_amount / subtotal if subtotal else 0.0)
+            _apply_tax_fields(invoice.fields, tax_details)
         refs = [delivery.doc_id, invoice.doc_id]
         postings = [
-            posting(refs, "Accounts Receivable", "Sales Revenue", billed, ship_date, f"{name}_sale"),
+            posting(refs, "Accounts Receivable", "Sales Revenue", subtotal, ship_date, f"{name}_sale"),
             posting(refs, "Cost of Goods Sold", "Inventory", cogs, ship_date, f"{name}_cogs"),
         ]
+        if tax_amount > 0:
+            postings.append(posting(refs, "Accounts Receivable", "Sales Tax Payable", tax_amount, ship_date, f"{name}_tax"))
         state.open_receivables.append(
             {"reference": invoice.fields["number"], "doc_id": invoice.doc_id, "counterparty": customer, "remaining": billed, "category": "customer"}
         )
@@ -1417,12 +1917,15 @@ def make_customer_credit_memo_scenario(
     revenue_account: str = "Service Revenue",
 ) -> BusinessScenario:
     def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
+        tax_value = 0.0
         if against_liability and state.metadata.get("deferred_revenue"):
             item = _take_deferred_item(state)
             account = "Unearned Revenue"
             credit = "Accounts Receivable" if item["receivable_open"] else "Cash"
             amount_value = round(item["remaining"] * rng.uniform(0.1, 0.35), 2)
+            tax_value = round(float(item.get("tax_remaining", 0.0)) * (amount_value / max(float(item["remaining"]), 0.01)), 2)
             item["remaining"] = round(item["remaining"] - amount_value, 2)
+            item["tax_remaining"] = round(float(item.get("tax_remaining", 0.0)) - tax_value, 2)
             if item["remaining"] > 0.01:
                 state.metadata.setdefault("deferred_revenue", []).insert(0, item)
             refs = [item["doc_id"]]
@@ -1450,12 +1953,20 @@ def make_customer_credit_memo_scenario(
                 "reference": item["reference"],
                 "reason": rng.choice(["Pricing adjustment", "Service issue", "Contract revision"]),
                 "amount": amount_value,
+                "document_currency": state.currency_code,
             },
             metadata={"counterparty_name": counterparty},
         )
         refs.append(memo.doc_id)
         postings = [posting(refs, account, credit, amount_value, memo_date, name)]
+        if against_liability and tax_value > 0:
+            memo.fields["tax_label"] = state.tax_label or tax_label_for_regime(state.tax_regime)
+            memo.fields["tax_rate"] = 0.0
+            memo.fields["tax_amount"] = tax_value
+            postings.append(posting(refs, "Sales Tax Payable", credit, tax_value, memo_date, f"{name}_tax"))
         bank_rows = [bank_row(memo_date, f"Customer refund {memo.fields['memo_number']}", -amount_value)] if credit == "Cash" else []
+        if against_liability and tax_value > 0 and credit == "Cash":
+            bank_rows = [bank_row(memo_date, f"Customer refund {memo.fields['memo_number']}", -(amount_value + tax_value))]
         return ScenarioResult(documents=[memo], postings=postings, bank_rows=bank_rows)
 
     return BusinessScenario(name=name, description=description, doc_types=("credit_memo",), doc_count_hint=1, builder=build, period_types=("quarter", "year"))
@@ -1469,13 +1980,19 @@ def make_deferral_invoice_scenario(
     revenue_account: str = "Service Revenue",
     cash_collection_rate: float = 0.0,
     include_renewal_notice: bool = False,
+    apply_indirect_tax: bool = False,
 ) -> BusinessScenario:
     def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
         bill_date = pick_date(state.period_spec, rng, "early")
         customer = rng.choice(state.master_data["customers"])
         months = 12 if state.period_spec.period_type == "year" else rng.choice((3, 6, 12))
-        total = _scaled_amount(state, rng, 2400, 16000, "contract")
-        monthly_release = total / months
+        subtotal = _scaled_amount(state, rng, 2400, 16000, "contract")
+        total = subtotal
+        tax_amount = 0.0
+        if apply_indirect_tax and state.tax_regime != "none":
+            tax_amount = float(_tax_details(state, subtotal, rng)["tax_amount"])
+            total = round(subtotal + tax_amount, 2)
+        monthly_release = subtotal / months
         support_doc = doc_seed(
             state,
             doc_type=support_doc_type,
@@ -1516,7 +2033,7 @@ def make_deferral_invoice_scenario(
                 "due_date": due_date(bill_date, rng, 7, 18),
                 "total": total,
                 "line_items": line_items(
-                    total,
+                    subtotal,
                     [
                         rng.choice(state.master_data.get("subscription_plans", state.master_data["services"])),
                         "Service coverage under contract",
@@ -1524,17 +2041,25 @@ def make_deferral_invoice_scenario(
                     rng,
                 ),
                 "contract_ref": support_doc.fields.get("form_number", support_doc.fields.get("number", state.next_number("CTR"))),
+                "document_currency": state.currency_code,
             },
             metadata={"counterparty_name": customer},
         )
+        if tax_amount > 0:
+            tax_details = _tax_details(state, subtotal, rng, tax_amount / subtotal if subtotal else 0.0)
+            _apply_tax_fields(invoice.fields, tax_details)
         docs.append(invoice)
         refs = [doc.doc_id for doc in docs]
         if rng.random() < cash_collection_rate:
-            postings = [posting(refs, "Cash", "Unearned Revenue", total, bill_date, name)]
+            postings = [posting(refs, "Cash", "Unearned Revenue", subtotal, bill_date, name)]
+            if tax_amount > 0:
+                postings.append(posting(refs, "Cash", "Sales Tax Payable", tax_amount, bill_date, f"{name}_tax"))
             bank_rows = [bank_row(bill_date, f"Advance collection {invoice.fields['number']}", total)]
             receivable_open = False
         else:
-            postings = [posting(refs, "Accounts Receivable", "Unearned Revenue", total, bill_date, name)]
+            postings = [posting(refs, "Accounts Receivable", "Unearned Revenue", subtotal, bill_date, name)]
+            if tax_amount > 0:
+                postings.append(posting(refs, "Accounts Receivable", "Sales Tax Payable", tax_amount, bill_date, f"{name}_tax"))
             state.open_receivables.append({"reference": invoice.fields["number"], "doc_id": invoice.doc_id, "counterparty": customer, "remaining": total, "category": "customer"})
             bank_rows = []
             receivable_open = True
@@ -1543,7 +2068,8 @@ def make_deferral_invoice_scenario(
                 "reference": invoice.fields["number"],
                 "doc_id": invoice.doc_id,
                 "counterparty": customer,
-                "remaining": total,
+                "remaining": subtotal,
+                "tax_remaining": tax_amount,
                 "monthly_release": monthly_release,
                 "revenue_account": revenue_account,
                 "receivable_open": receivable_open,
@@ -1587,14 +2113,15 @@ def make_deferral_release_scenario(*, name: str, description: str, revenue_accou
     return BusinessScenario(name=name, description=description, doc_types=("revenue_recognition_schedule",), doc_count_hint=1, builder=build)
 
 
-def make_material_purchase_scenario(*, name: str, description: str) -> BusinessScenario:
+def make_material_purchase_scenario(*, name: str, description: str, apply_indirect_tax: bool = False) -> BusinessScenario:
     def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
         purchase_date = pick_date(state.period_spec, rng, "early")
         vendor = rng.choice(state.master_data["vendors"])
         material = rng.choice(state.master_data["raw_materials"])
         qty = rng.randint(120, 420)
         unit_cost = _scaled_amount(state, rng, 3, 16, "inventory")
-        total = round(qty * unit_cost, 2)
+        subtotal = round(qty * unit_cost, 2)
+        total = subtotal
         invoice = doc_seed(
             state,
             doc_type="supplier_invoice",
@@ -1605,14 +2132,23 @@ def make_material_purchase_scenario(*, name: str, description: str) -> BusinessS
                 "number": state.next_number("MAT"),
                 "vendor": vendor,
                 "due_date": due_date(purchase_date, rng, 12, 24),
-                "total": total,
-                "line_items": [{"description": material, "quantity": qty, "unit_cost": unit_cost, "amount": total}],
+                "total": subtotal,
+                "document_currency": state.currency_code,
+                "line_items": [{"description": material, "quantity": qty, "unit_cost": unit_cost, "amount": subtotal}],
             },
             metadata={"counterparty_name": vendor},
         )
-        state.metadata.setdefault("raw_material_lots", []).append({"reference": invoice.fields["number"], "doc_id": invoice.doc_id, "material": material, "qty": qty, "amount": total})
+        tax_amount = 0.0
+        if apply_indirect_tax and state.tax_regime != "none":
+            tax_details = _tax_details(state, subtotal, rng)
+            _apply_tax_fields(invoice.fields, tax_details)
+            total = float(tax_details["total"])
+            tax_amount = float(tax_details["tax_amount"])
+        state.metadata.setdefault("raw_material_lots", []).append({"reference": invoice.fields["number"], "doc_id": invoice.doc_id, "material": material, "qty": qty, "amount": subtotal})
         state.open_payables.append({"reference": invoice.fields["number"], "doc_id": invoice.doc_id, "counterparty": vendor, "remaining": total, "category": "vendor"})
-        postings = [posting([invoice.doc_id], "Raw Materials Inventory", "Accounts Payable", total, purchase_date, name)]
+        postings = [posting([invoice.doc_id], "Raw Materials Inventory", "Accounts Payable", subtotal, purchase_date, name)]
+        if tax_amount > 0:
+            postings.append(posting([invoice.doc_id], "Input Tax Receivable", "Accounts Payable", tax_amount, purchase_date, f"{name}_tax"))
         return ScenarioResult(documents=[invoice], postings=postings)
 
     return BusinessScenario(name=name, description=description, doc_types=("supplier_invoice",), doc_count_hint=1, builder=build, allow_repeat=True)
@@ -1751,7 +2287,7 @@ def make_finished_goods_transfer_scenario(*, name: str, description: str) -> Bus
     return BusinessScenario(name=name, description=description, doc_types=("finished_goods_transfer_note",), doc_count_hint=1, builder=build)
 
 
-def make_manufacturing_sale_scenario(*, name: str, description: str) -> BusinessScenario:
+def make_manufacturing_sale_scenario(*, name: str, description: str, apply_indirect_tax: bool = False) -> BusinessScenario:
     def build(state: BusinessState, rng: random.Random) -> ScenarioResult:
         lots = state.metadata.get("finished_goods_lots", [])
         if not lots:
@@ -1759,7 +2295,12 @@ def make_manufacturing_sale_scenario(*, name: str, description: str) -> Business
         lot = lots.pop(0)
         sale_date = pick_date(state.period_spec, rng, "late")
         customer = rng.choice(state.master_data["customers"])
-        sales_amount = round(lot["amount"] * rng.uniform(1.2, 1.7), 2)
+        subtotal = round(lot["amount"] * rng.uniform(1.2, 1.7), 2)
+        sales_amount = subtotal
+        tax_amount = 0.0
+        if apply_indirect_tax and state.tax_regime != "none":
+            tax_amount = float(_tax_details(state, subtotal, rng)["tax_amount"])
+            sales_amount = round(subtotal + tax_amount, 2)
         invoice = doc_seed(
             state,
             doc_type="customer_invoice",
@@ -1771,16 +2312,22 @@ def make_manufacturing_sale_scenario(*, name: str, description: str) -> Business
                 "customer": customer,
                 "due_date": due_date(sale_date, rng, 12, 24),
                 "total": sales_amount,
-                "line_items": [{"description": lot["product_name"], "amount": sales_amount}],
+                "line_items": [{"description": lot["product_name"], "amount": subtotal}],
                 "contract_ref": lot["reference"],
+                "document_currency": state.currency_code,
             },
             metadata={"counterparty_name": customer},
         )
+        if tax_amount > 0:
+            tax_details = _tax_details(state, subtotal, rng, tax_amount / subtotal if subtotal else 0.0)
+            _apply_tax_fields(invoice.fields, tax_details)
         state.open_receivables.append({"reference": invoice.fields["number"], "doc_id": invoice.doc_id, "counterparty": customer, "remaining": sales_amount, "category": "customer"})
         postings = [
-            posting([invoice.doc_id, lot["doc_id"]], "Accounts Receivable", "Sales Revenue", sales_amount, sale_date, f"{name}_sale"),
+            posting([invoice.doc_id, lot["doc_id"]], "Accounts Receivable", "Sales Revenue", subtotal, sale_date, f"{name}_sale"),
             posting([invoice.doc_id, lot["doc_id"]], "Cost of Goods Sold", "Finished Goods Inventory", lot["amount"], sale_date, f"{name}_cogs"),
         ]
+        if tax_amount > 0:
+            postings.append(posting([invoice.doc_id, lot["doc_id"]], "Accounts Receivable", "Sales Tax Payable", tax_amount, sale_date, f"{name}_tax"))
         return ScenarioResult(documents=[invoice], postings=postings)
 
     return BusinessScenario(name=name, description=description, doc_types=("customer_invoice",), doc_count_hint=1, builder=build)

@@ -12,8 +12,10 @@ from docs_benchmark.generation.helpers import (
     choose_display_profile,
     choose_nonstandard_display_profile,
     choose_period_spec,
+    choose_tax_regime,
     doc_seed,
     ensure_period_doc_range,
+    tax_label_for_regime,
 )
 from docs_benchmark.generation.master_data import default_address, default_company_name
 from docs_benchmark.industry_schemas import INDUSTRIES, get_industry_schema
@@ -55,6 +57,7 @@ class DocumentBenchmarkBuilder:
         industry_schema = get_industry_schema(industry)
         period_spec = choose_period_spec(self.rng, period_type)
         display_profile = display_profile_override or choose_display_profile(self.rng)
+        tax_regime = choose_tax_regime(industry, difficulty_level, self.rng)
         master_data = industry_schema.master_data_builder(industry, self.rng, period_spec)
         entity_name = default_company_name(self.rng)
         entity_address = default_address(self.rng)
@@ -68,10 +71,15 @@ class DocumentBenchmarkBuilder:
             period_end=period_spec.end_date,
             entity_name=entity_name,
             entity_address=entity_address,
+            functional_currency_code=display_profile["currency_code"],
+            functional_currency_symbol=display_profile["currency_symbol"],
+            functional_currency_format=display_profile["currency_format"],
             currency_code=display_profile["currency_code"],
             currency_symbol=display_profile["currency_symbol"],
             currency_format=display_profile["currency_format"],
             date_format=display_profile["date_format"],
+            tax_regime=tax_regime,
+            tax_label=tax_label_for_regime(tax_regime),
             opening_balance=opening_balance,
             master_data=master_data,
             bank_accounts={
@@ -143,7 +151,7 @@ class DocumentBenchmarkBuilder:
             expected_inconsistency_codes=inconsistency_codes,
             inconsistency_reasons=inconsistency_reasons,
             metadata={
-                "version": "v3_schema_driven",
+                "version": "v4_phase2_schema_driven",
                 "entity_name": entity_name,
                 "entity_address": entity_address,
                 "industry_label": industry_schema.display_name,
@@ -156,7 +164,12 @@ class DocumentBenchmarkBuilder:
                 "currency_code": state.currency_code,
                 "currency_symbol": state.currency_symbol,
                 "currency_format": state.currency_format,
+                "functional_currency_code": state.functional_currency_code,
+                "functional_currency_symbol": state.functional_currency_symbol,
+                "functional_currency_format": state.functional_currency_format,
                 "date_format": state.date_format,
+                "tax_regime": state.tax_regime,
+                "tax_label": state.tax_label,
                 "expected_inconsistency": expected_inconsistency,
                 "expected_inconsistency_codes": inconsistency_codes,
                 "inconsistency_reasons": inconsistency_reasons,
@@ -316,6 +329,7 @@ class DocumentBenchmarkBuilder:
                         "account_number": bank_account["account_number"],
                         "opening_balance": opening_balance,
                         "closing_balance": running_balance,
+                        "statement_currency": state.functional_currency_code,
                         "rows": rows,
                     },
                     metadata={
@@ -424,7 +438,15 @@ class DocumentBenchmarkBuilder:
         payables = [item for item in state.open_payables if item.get("category") in {"vendor", "utility"}]
         if not payables:
             return None
-        vendor = self.rng.choice(payables)["counterparty"]
+        used_vendors = {
+            doc.metadata.get("counterparty_name")
+            for doc in state.documents
+            if doc.doc_type == "vendor_statement" and doc.metadata.get("counterparty_name")
+        }
+        available_vendors = sorted({item["counterparty"] for item in payables if item["counterparty"] not in used_vendors})
+        if not available_vendors:
+            return None
+        vendor = self.rng.choice(available_vendors)
         lines = [
             {
                 "reference": item["reference"],
@@ -500,13 +522,7 @@ class DocumentBenchmarkBuilder:
                 "note_number": state.next_number("CNCL"),
                 "withdrawn_reference": f"{source_reference}-OLD",
                 "replacement_reference": source_reference,
-                "reason": self.rng.choice(
-                    [
-                        "Earlier billing reference was withdrawn after the customer requested a corrected copy.",
-                        "Prior draft billing reference was superseded during the review cycle.",
-                        "Billing desk replaced the earlier reference after an internal review.",
-                    ]
-                ),
+                "reason": f"{source_reference}-OLD is withdrawn and must not be posted. Use {source_reference} as the only valid invoice.",
             },
             metadata={"counterparty_name": source.fields.get("customer")},
         )
@@ -532,6 +548,17 @@ class DocumentBenchmarkBuilder:
             candidates.append("transfer_mismatch")
         if any(doc.doc_type == "reclassification_memo" for doc in rendered_documents):
             candidates.append("reclassification_support_mismatch")
+        if any(doc.doc_type in {"customer_invoice", "vendor_invoice", "supplier_invoice", "expense_receipt"} and "Tax Amount:" in doc.ocr_text for doc in rendered_documents):
+            candidates.append("tax_total_mismatch")
+            candidates.append("tax_rate_mismatch")
+        if any(doc.doc_type in {"vendor_invoice", "supplier_invoice"} and "Tax Amount:" in doc.ocr_text for doc in rendered_documents):
+            candidates.append("input_tax_mismatch")
+        if any(doc.doc_type == "exchange_rate_notice" for doc in rendered_documents):
+            candidates.append("exchange_rate_mismatch")
+        if any(doc.doc_type == "payment_advice" and "FX Difference:" in doc.ocr_text for doc in rendered_documents):
+            candidates.append("fx_settlement_mismatch")
+        if any(doc.doc_type == "fx_remeasurement_memo" for doc in rendered_documents):
+            candidates.append("remeasurement_mismatch")
         if not candidates:
             return rendered_documents, [], []
         issue = self.rng.choice(candidates)
@@ -569,6 +596,24 @@ class DocumentBenchmarkBuilder:
         if issue == "transfer_mismatch":
             doc = next(doc for doc in rendered_documents if doc.doc_type == "transfer_advice")
             return self._replace_in_document(rendered_documents, doc, issue, self._transfer_mismatch_replacement(doc))
+        if issue == "tax_total_mismatch":
+            doc = next(doc for doc in rendered_documents if doc.doc_type in {"customer_invoice", "vendor_invoice", "supplier_invoice", "expense_receipt"} and "Tax Amount:" in doc.ocr_text)
+            return self._replace_in_document(rendered_documents, doc, issue, self._tax_total_mismatch_replacement(doc))
+        if issue == "tax_rate_mismatch":
+            doc = next(doc for doc in rendered_documents if doc.doc_type in {"customer_invoice", "vendor_invoice", "supplier_invoice", "expense_receipt"} and "Tax Rate:" in doc.ocr_text)
+            return self._replace_in_document(rendered_documents, doc, issue, self._tax_rate_mismatch_replacement(doc))
+        if issue == "input_tax_mismatch":
+            doc = next(doc for doc in rendered_documents if doc.doc_type in {"vendor_invoice", "supplier_invoice"} and "Tax Amount:" in doc.ocr_text)
+            return self._replace_in_document(rendered_documents, doc, issue, self._input_tax_mismatch_replacement(doc))
+        if issue == "exchange_rate_mismatch":
+            doc = next(doc for doc in rendered_documents if doc.doc_type == "exchange_rate_notice")
+            return self._replace_in_document(rendered_documents, doc, issue, self._exchange_rate_mismatch_replacement(doc))
+        if issue == "fx_settlement_mismatch":
+            doc = next(doc for doc in rendered_documents if doc.doc_type == "payment_advice" and "FX Difference:" in doc.ocr_text)
+            return self._replace_in_document(rendered_documents, doc, issue, self._fx_settlement_mismatch_replacement(doc))
+        if issue == "remeasurement_mismatch":
+            doc = next(doc for doc in rendered_documents if doc.doc_type == "fx_remeasurement_memo")
+            return self._replace_in_document(rendered_documents, doc, issue, self._remeasurement_mismatch_replacement(doc))
         doc = next(doc for doc in rendered_documents if doc.doc_type == "reclassification_memo")
         return self._replace_in_document(rendered_documents, doc, issue, self._reclassification_support_mismatch_replacement(doc))
 
@@ -577,17 +622,19 @@ class DocumentBenchmarkBuilder:
         rendered_documents: list[DocumentAsset],
         target: DocumentAsset,
         inconsistency_code: str,
-        replacement: tuple[str, str],
+        replacement: tuple[str, str, str],
     ) -> tuple[list[DocumentAsset], list[str], list[str]]:
-        old_text, new_text = replacement
-        if not old_text or old_text == new_text:
+        prefix, old_text, new_text = replacement
+        if not prefix or not old_text or old_text == new_text:
             return rendered_documents, [], []
         updated_documents: list[DocumentAsset] = []
         for document in rendered_documents:
             if document.doc_id != target.doc_id:
                 updated_documents.append(document)
                 continue
-            updated_ocr = document.ocr_text.replace(old_text, new_text, 1)
+            updated_ocr, replaced = self._replace_line_value_after_prefix(document.ocr_text, prefix, old_text, new_text)
+            if not replaced:
+                return rendered_documents, [], []
             write_text_pdf(document.asset_path, updated_ocr.splitlines())
             updated_documents.append(
                 DocumentAsset(
@@ -603,85 +650,159 @@ class DocumentBenchmarkBuilder:
             )
         return updated_documents, [inconsistency_code], [inconsistency_description(inconsistency_code)]
 
-    def _invoice_total_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str]:
+    def _invoice_total_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
         old_total = self._first_money_token_after_prefix(document.ocr_text, "Total:")
         if not old_total:
-            return ("", "")
+            return ("", "", "")
         numeric = self._parse_display_amount(old_total, document.metadata)
         adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
-        return old_total, self._format_display_amount(adjusted, document.metadata)
+        return "Total:", old_total, self._format_display_amount(adjusted, document.metadata)
 
-    def _bank_closing_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str]:
+    def _bank_closing_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
         old_balance = self._first_money_token_after_prefix(document.ocr_text, "Closing Balance:")
         if not old_balance:
-            return ("", "")
+            return ("", "", "")
         numeric = self._parse_display_amount(old_balance, document.metadata)
         adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
-        return old_balance, self._format_display_amount(adjusted, document.metadata)
+        return "Closing Balance:", old_balance, self._format_display_amount(adjusted, document.metadata)
 
-    def _statement_balance_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str]:
+    def _statement_balance_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
         old_balance = self._first_money_token_after_prefix(document.ocr_text, "Closing Balance:")
         if not old_balance:
-            return ("", "")
+            return ("", "", "")
         numeric = self._parse_display_amount(old_balance, document.metadata)
         adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
-        return old_balance, self._format_display_amount(adjusted, document.metadata)
+        return "Closing Balance:", old_balance, self._format_display_amount(adjusted, document.metadata)
 
-    def _payment_allocation_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str]:
+    def _payment_allocation_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
         old_amount = self._first_money_token_after_prefix(document.ocr_text, "Amount:")
         if not old_amount:
-            return ("", "")
+            return ("", "", "")
         numeric = self._parse_display_amount(old_amount, document.metadata)
         adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
-        return old_amount, self._format_display_amount(adjusted, document.metadata)
+        return "Amount:", old_amount, self._format_display_amount(adjusted, document.metadata)
 
-    def _duplicate_reference_conflict_replacement(self, document: DocumentAsset) -> tuple[str, str]:
+    def _duplicate_reference_conflict_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
         old_total = self._first_money_token_after_prefix(document.ocr_text, "Total:")
         if not old_total:
-            return ("", "")
+            return ("", "", "")
         numeric = self._parse_display_amount(old_total, document.metadata)
         adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
-        return old_total, self._format_display_amount(adjusted, document.metadata)
+        return "Total:", old_total, self._format_display_amount(adjusted, document.metadata)
 
-    def _schedule_rollforward_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str]:
-        old_ending = self._first_money_token_after_prefix(document.ocr_text, "Ending Deferred:")
+    def _schedule_rollforward_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        prefix = "Ending Deferred:"
+        old_ending = self._first_money_token_after_prefix(document.ocr_text, prefix)
         if not old_ending:
-            old_ending = self._first_money_token_after_prefix(document.ocr_text, "Ending Balance:")
+            prefix = "Ending Balance:"
+            old_ending = self._first_money_token_after_prefix(document.ocr_text, prefix)
             if not old_ending:
-                return ("", "")
+                return ("", "", "")
         numeric = self._parse_display_amount(old_ending, document.metadata)
         adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
-        return old_ending, self._format_display_amount(adjusted, document.metadata)
+        return prefix, old_ending, self._format_display_amount(adjusted, document.metadata)
 
-    def _inventory_rollforward_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str]:
+    def _inventory_rollforward_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
         old_ending = self._first_money_token_after_prefix(document.ocr_text, "Ending Balance:")
         if not old_ending:
-            return ("", "")
+            return ("", "", "")
         numeric = self._parse_display_amount(old_ending, document.metadata)
         adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
-        return old_ending, self._format_display_amount(adjusted, document.metadata)
+        return "Ending Balance:", old_ending, self._format_display_amount(adjusted, document.metadata)
 
-    def _transfer_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str]:
+    def _transfer_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
         old_amount = self._first_money_token_after_prefix(document.ocr_text, "Amount:")
         if not old_amount:
-            return ("", "")
+            return ("", "", "")
         numeric = self._parse_display_amount(old_amount, document.metadata)
         adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
-        return old_amount, self._format_display_amount(adjusted, document.metadata)
+        return "Amount:", old_amount, self._format_display_amount(adjusted, document.metadata)
 
-    def _reclassification_support_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str]:
+    def _reclassification_support_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
         old_amount = self._first_money_token_after_prefix(document.ocr_text, "Amount:")
         if not old_amount:
-            return ("", "")
+            return ("", "", "")
         numeric = self._parse_display_amount(old_amount, document.metadata)
         adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
-        return old_amount, self._format_display_amount(adjusted, document.metadata)
+        return "Amount:", old_amount, self._format_display_amount(adjusted, document.metadata)
+
+    def _tax_total_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        old_total = self._first_money_token_after_prefix(document.ocr_text, "Total:")
+        if not old_total:
+            return ("", "", "")
+        numeric = self._parse_display_amount(old_total, document.metadata)
+        adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
+        return "Total:", old_total, self._format_display_amount(adjusted, document.metadata)
+
+    def _tax_rate_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        for line in document.ocr_text.splitlines():
+            if "Tax Rate:" in line:
+                old_rate = line.split("Tax Rate:", 1)[1].strip()
+                if old_rate.endswith("%"):
+                    try:
+                        numeric = float(old_rate[:-1].strip())
+                    except ValueError:
+                        return ("", "", "")
+                    adjusted = max(0.01, round(numeric + self.rng.choice((-1, 1)) * self.rng.uniform(0.5, 3.0), 2))
+                    return "Tax Rate:", old_rate, f"{adjusted:.2f}%"
+        return ("", "", "")
+
+    def _exchange_rate_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        old_amount = self._first_money_token_after_prefix(document.ocr_text, "Functional Amount:")
+        if not old_amount:
+            return ("", "", "")
+        numeric = self._parse_display_amount(old_amount, document.metadata)
+        adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
+        return "Functional Amount:", old_amount, self._format_display_amount(adjusted, document.metadata)
+
+    def _input_tax_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        old_amount = self._first_money_token_after_prefix(document.ocr_text, "Tax Amount:")
+        if not old_amount:
+            return ("", "", "")
+        numeric = self._parse_display_amount(old_amount, document.metadata)
+        adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
+        return "Tax Amount:", old_amount, self._format_display_amount(adjusted, document.metadata)
+
+    def _fx_settlement_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        prefix = "Functional Amount:"
+        old_amount = self._first_money_token_after_prefix(document.ocr_text, prefix)
+        if not old_amount:
+            prefix = "Amount:"
+            old_amount = self._first_money_token_after_prefix(document.ocr_text, prefix)
+            if not old_amount:
+                return ("", "", "")
+        numeric = self._parse_display_amount(old_amount, document.metadata)
+        adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
+        return prefix, old_amount, self._format_display_amount(adjusted, document.metadata)
+
+    def _remeasurement_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        old_amount = self._first_money_token_after_prefix(document.ocr_text, "Remeasured Amount:")
+        if not old_amount:
+            return ("", "", "")
+        numeric = self._parse_display_amount(old_amount, document.metadata)
+        adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
+        return "Remeasured Amount:", old_amount, self._format_display_amount(adjusted, document.metadata)
 
     def _first_money_token_after_prefix(self, text: str, prefix: str) -> str | None:
         for line in text.splitlines():
             if prefix in line:
                 return line.split(prefix, 1)[1].strip()
         return None
+
+    def _replace_line_value_after_prefix(self, text: str, prefix: str, old_value: str, new_value: str) -> tuple[str, bool]:
+        lines: list[str] = []
+        replaced = False
+        for line in text.splitlines():
+            if not replaced and prefix in line:
+                before, after = line.split(prefix, 1)
+                current_value = after.strip()
+                if current_value == old_value:
+                    spacer = " " if new_value else ""
+                    lines.append(f"{before}{prefix}{spacer}{new_value}".rstrip())
+                    replaced = True
+                    continue
+            lines.append(line)
+        return "\n".join(lines), replaced
 
     def _format_display_amount(self, value: float, metadata: dict[str, object]) -> str:
         raw = f"{value:,.2f}"
@@ -699,7 +820,7 @@ class DocumentBenchmarkBuilder:
 
     def _random_mismatch_offset(self) -> float:
         sign = self.rng.choice((-1, 1))
-        return round(sign * self.rng.uniform(80.0, 400.0), 2)
+        return round(sign * self.rng.uniform(500.0, 3000.0), 2)
 
     def _ensure_bank_account(self, state: BusinessState, account_name: str) -> dict[str, object]:
         if account_name in state.bank_accounts:

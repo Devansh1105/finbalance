@@ -17,6 +17,7 @@ ACCOUNT_TYPES = {
     "Store Fixtures": "asset",
     "Office Supplies": "asset",
     "Card Settlement Clearing": "asset",
+    "Input Tax Receivable": "asset",
     "Accumulated Depreciation": "contra_asset",
     # Liabilities
     "Accounts Payable": "liability",
@@ -27,6 +28,7 @@ ACCOUNT_TYPES = {
     "Accrued Interest Payable": "liability",
     "Unearned Revenue": "liability",
     "Security Deposits Payable": "liability",
+    "Sales Tax Payable": "liability",
     # Equity
     "Owner's Equity": "equity",
     "Share Capital": "equity",
@@ -37,6 +39,7 @@ ACCOUNT_TYPES = {
     "Service Revenue": "revenue",
     "Sales Revenue": "revenue",
     "Other Income": "revenue",
+    "Foreign Exchange Gain": "revenue",
     # Expenses
     "Bad Debt Expense": "expense",
     "Rent Expense": "expense",
@@ -54,6 +57,7 @@ ACCOUNT_TYPES = {
     "Inventory Shrinkage Expense": "expense",
     "Travel Expense": "expense",
     "Meals Expense": "expense",
+    "Foreign Exchange Loss": "expense",
 }
 
 BALANCE_SHEET_SECTIONS = {
@@ -79,6 +83,7 @@ ALLOWED_ACCOUNT_NAMES = [
     "Store Fixtures",
     "Office Supplies",
     "Card Settlement Clearing",
+    "Input Tax Receivable",
     "Accumulated Depreciation",
     "Accounts Payable",
     "Wages Payable",
@@ -88,6 +93,7 @@ ALLOWED_ACCOUNT_NAMES = [
     "Accrued Interest Payable",
     "Unearned Revenue",
     "Security Deposits Payable",
+    "Sales Tax Payable",
     "Owner's Equity",
     "Share Capital",
     "Retained Earnings",
@@ -96,6 +102,7 @@ ALLOWED_ACCOUNT_NAMES = [
     "Service Revenue",
     "Sales Revenue",
     "Other Income",
+    "Foreign Exchange Gain",
     "Bad Debt Expense",
     "Rent Expense",
     "Insurance Expense",
@@ -112,6 +119,7 @@ ALLOWED_ACCOUNT_NAMES = [
     "Inventory Shrinkage Expense",
     "Travel Expense",
     "Meals Expense",
+    "Foreign Exchange Loss",
 ]
 
 DEBIT_NORMAL_TYPES = {"asset", "expense"}

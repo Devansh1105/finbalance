@@ -57,6 +57,39 @@ DISPLAY_PROFILES = (
     },
 )
 
+FUNCTIONAL_CURRENCY_DEFAULT = DISPLAY_PROFILES[0]
+
+TAX_REGIME_LABELS = {
+    "none": "",
+    "sales_tax": "Sales Tax",
+    "vat": "VAT",
+    "gst": "GST",
+}
+
+INDUSTRY_TAX_REGIMES = {
+    "professional_services": ("sales_tax", "vat"),
+    "field_services": ("sales_tax", "gst"),
+    "retail": ("sales_tax", "gst"),
+    "wholesale_distribution": ("sales_tax", "vat"),
+    "manufacturing": ("sales_tax", "vat"),
+    "subscription_saas": ("vat", "gst"),
+}
+
+TAX_RATE_OPTIONS = {
+    "sales_tax": (0.05, 0.0725, 0.0825, 0.095),
+    "vat": (0.1, 0.125, 0.2),
+    "gst": (0.05, 0.07, 0.1),
+}
+
+FX_RATE_RANGES = {
+    ("USD", "EUR"): (1.04, 1.18),
+    ("USD", "GBP"): (1.18, 1.34),
+    ("EUR", "GBP"): (0.83, 0.94),
+    ("EUR", "USD"): (0.85, 0.96),
+    ("GBP", "USD"): (0.75, 0.85),
+    ("GBP", "EUR"): (1.06, 1.2),
+}
+
 INDUSTRY_AMOUNT_SCALES = {
     "professional_services": {"month": 1.0, "quarter": 2.2, "year": 5.5},
     "field_services": {"month": 1.3, "quarter": 3.0, "year": 7.0},
@@ -136,6 +169,64 @@ def choose_display_profile(rng: random.Random) -> dict[str, str]:
 
 def choose_nonstandard_display_profile(rng: random.Random) -> dict[str, str]:
     return dict(rng.choice(DISPLAY_PROFILES[1:]))
+
+
+def choose_tax_regime(industry: str, difficulty_level: int, rng: random.Random) -> str:
+    options = INDUSTRY_TAX_REGIMES.get(industry)
+    if not options or difficulty_level < 2:
+        return "none"
+    return rng.choice(options)
+
+
+def tax_label_for_regime(regime: str) -> str:
+    return TAX_REGIME_LABELS.get(regime, "")
+
+
+def choose_tax_rate(regime: str, rng: random.Random) -> float:
+    if regime == "none":
+        return 0.0
+    return float(rng.choice(TAX_RATE_OPTIONS[regime]))
+
+
+def tax_breakdown_from_subtotal(subtotal: float, tax_rate: float) -> dict[str, float]:
+    tax_amount = round(subtotal * tax_rate, 2)
+    total = round(subtotal + tax_amount, 2)
+    return {
+        "subtotal": round(subtotal, 2),
+        "tax_rate": round(tax_rate, 4),
+        "tax_amount": tax_amount,
+        "total": total,
+    }
+
+
+def choose_foreign_currency_profile(functional_currency_code: str, rng: random.Random) -> dict[str, str]:
+    options = [profile for profile in DISPLAY_PROFILES if profile["currency_code"] != functional_currency_code]
+    return dict(rng.choice(options))
+
+
+def choose_exchange_rate(functional_currency_code: str, source_currency_code: str, rng: random.Random) -> float:
+    low, high = FX_RATE_RANGES.get((functional_currency_code, source_currency_code), (0.7, 1.35))
+    return round(rng.uniform(low, high), 4)
+
+
+def convert_to_functional(source_amount: float, exchange_rate: float) -> float:
+    return round(source_amount * exchange_rate, 2)
+
+
+def currency_metadata(profile: dict[str, str]) -> dict[str, str]:
+    return {
+        "currency_code": profile["currency_code"],
+        "currency_symbol": profile["currency_symbol"],
+        "currency_format": profile["currency_format"],
+    }
+
+
+def merge_currency_metadata(base_metadata: dict[str, Any] | None, field_currency_overrides: dict[str, dict[str, str]]) -> dict[str, Any]:
+    metadata = dict(base_metadata or {})
+    existing = dict(metadata.get("field_currency_overrides", {}))
+    existing.update(field_currency_overrides)
+    metadata["field_currency_overrides"] = existing
+    return metadata
 
 
 def amount_scale(industry: str, period_type: str, difficulty_level: int, bucket: str = "operating") -> float:

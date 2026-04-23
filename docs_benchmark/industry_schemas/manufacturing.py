@@ -6,6 +6,9 @@ from docs_benchmark.generation.master_data import build_master_data
 from docs_benchmark.generation.scenario_factories import (
     make_depreciation_scenario,
     make_finished_goods_transfer_scenario,
+    make_fx_payable_settlement_scenario,
+    make_fx_remeasurement_scenario,
+    make_fx_vendor_bill_scenario,
     make_interbank_transfer_scenario,
     make_loan_activity_scenario,
     make_manufacturing_sale_scenario,
@@ -52,6 +55,7 @@ SCENARIOS = {
     "raw_material_purchase": make_material_purchase_scenario(
         name="raw_material_purchase",
         description="Raw materials purchased for production.",
+        apply_indirect_tax=True,
     ),
     "material_issue": make_material_issue_scenario(
         name="material_issue",
@@ -74,6 +78,22 @@ SCENARIOS = {
     "finished_goods_sale": make_manufacturing_sale_scenario(
         name="finished_goods_sale",
         description="Finished goods sold to a customer.",
+        apply_indirect_tax=True,
+    ),
+    "fx_material_purchase": make_fx_vendor_bill_scenario(
+        name="fx_material_purchase",
+        description="Imported raw-material bill denominated in a foreign currency.",
+        debit_account="Raw Materials Inventory",
+        doc_type="supplier_invoice",
+    ),
+    "fx_supplier_payment": make_fx_payable_settlement_scenario(
+        name="fx_supplier_payment",
+        description="Settlement of an imported-material bill with an FX gain or loss.",
+    ),
+    "fx_remeasurement": make_fx_remeasurement_scenario(
+        name="fx_remeasurement",
+        description="Open foreign-currency supplier payable remeasured at the closing rate.",
+        target="payable",
     ),
     "customer_payment": make_receivable_settlement_scenario(
         name="customer_payment",
@@ -133,14 +153,34 @@ QUARTER_PLANS = {
     2: copy_plan(MONTH_PLANS[2]),
     3: copy_plan(MONTH_PLANS[3], "scrap_report"),
     4: copy_plan(MONTH_PLANS[4], "scrap_report"),
-    5: copy_plan(MONTH_PLANS[5], "scrap_report"),
+    5: copy_plan(MONTH_PLANS[5], "scrap_report", "fx_material_purchase", "fx_supplier_payment"),
 }
 YEAR_PLANS = {
     1: copy_plan(QUARTER_PLANS[1]),
     2: copy_plan(QUARTER_PLANS[2]),
     3: copy_plan(QUARTER_PLANS[3]),
     4: copy_plan(QUARTER_PLANS[4], extra_optional=("finished_goods_sale",)),
-    5: copy_plan(QUARTER_PLANS[5], extra_optional=("scrap_report", "finished_goods_sale")),
+    5: DifficultyPlan(
+        mandatory=(
+            "raw_material_purchase",
+            "material_issue",
+            "direct_labor",
+            "overhead_accrual",
+            "finished_goods_transfer",
+            "finished_goods_sale",
+            "customer_payment",
+            "supplier_payment",
+            "payroll",
+            "loan_draw",
+            "depreciation",
+            "loan_repayment",
+            "interbank_transfer",
+            "scrap_report",
+            "fx_material_purchase",
+            "fx_remeasurement",
+        ),
+        optional=("finished_goods_sale", "multi_invoice_payment", "reissued_invoice"),
+    ),
 }
 
 
@@ -156,11 +196,13 @@ INDUSTRY_SCHEMA = IndustrySchema(
         "Work In Process",
         "Finished Goods Inventory",
         "Equipment",
+        "Input Tax Receivable",
         "Accumulated Depreciation",
         "Accounts Payable",
         "Accrued Expenses",
         "Loans Payable",
         "Notes Payable",
+        "Sales Tax Payable",
         "Share Capital",
         "Retained Earnings",
         "Sales Revenue",
@@ -170,6 +212,8 @@ INDUSTRY_SCHEMA = IndustrySchema(
         "Payroll Tax Expense",
         "Depreciation Expense",
         "Interest Expense",
+        "Foreign Exchange Gain",
+        "Foreign Exchange Loss",
     ],
     opening_builder=_opening_balance,
     master_data_builder=build_master_data,

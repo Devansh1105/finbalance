@@ -227,6 +227,8 @@ def _render_field(
 
 def format_scalar(value: Any, field_name: str, metadata: dict[str, Any] | None = None) -> str:
     metadata = metadata or {}
+    if isinstance(value, float) and _is_rate_field(field_name):
+        return _format_rate(value, field_name)
     if isinstance(value, float):
         return _format_numeric(value, field_name, metadata)
     if isinstance(value, int):
@@ -250,10 +252,17 @@ def format_scalar(value: Any, field_name: str, metadata: dict[str, Any] | None =
 
 def _format_numeric(value: float, field_name: str, metadata: dict[str, Any]) -> str:
     raw = f"{value:,.2f}"
-    if metadata.get("currency_format") == "symbol_prefix_eu":
+    currency_settings = _field_currency_settings(field_name, metadata)
+    if currency_settings.get("currency_format") == "symbol_prefix_eu":
         raw = raw.replace(",", "_").replace(".", ",").replace("_", ".")
-    symbol = metadata.get("currency_symbol", "$") if _is_money_field(field_name) else ""
+    symbol = currency_settings.get("currency_symbol", "$") if _is_money_field(field_name) else ""
     return f"{symbol}{raw}".strip()
+
+
+def _format_rate(value: float, field_name: str) -> str:
+    if "tax_rate" in field_name.lower():
+        return f"{value * 100:.2f}%"
+    return f"{value:.4f}"
 
 
 def _format_date_value(value: str, metadata: dict[str, Any]) -> str:
@@ -291,6 +300,21 @@ def _is_money_field(field_name: str) -> bool:
             "interest",
         )
     )
+
+
+def _is_rate_field(field_name: str) -> bool:
+    name = field_name.lower()
+    return "exchange_rate" in name or "tax_rate" in name or "closing_rate" in name
+
+
+def _field_currency_settings(field_name: str, metadata: dict[str, Any]) -> dict[str, Any]:
+    overrides = metadata.get("field_currency_overrides", {})
+    override = overrides.get(field_name)
+    if not override:
+        return metadata
+    settings = dict(metadata)
+    settings.update(override)
+    return settings
 
 
 def _looks_like_iso_date(value: str) -> bool:

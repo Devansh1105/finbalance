@@ -8,6 +8,7 @@ It covers:
 - where distractor documents are added
 - how negative-control records are made
 - how currency/date format variation works
+- how indirect tax and foreign-currency support work
 - how the benchmark asks models to report inconsistencies
 
 ## One Record In One Picture
@@ -20,6 +21,10 @@ choose period range
 choose record display format
   - currency style
   - date style
+    ->
+choose record accounting profile
+  - functional currency
+  - indirect-tax regime
     ->
 build master data
     ->
@@ -123,10 +128,14 @@ It keeps:
   - currency code
   - currency symbol/prefix
   - date format
+- accounting profile:
+  - functional currency
+  - tax regime / tax label
 - all document seeds
 - all journal entries
 - bank rows
 - open receivables and payables
+- open foreign-currency receivables and payables
 - deferred revenue items
 - inventory / batch state
 - asset register
@@ -220,6 +229,8 @@ Important:
 
 - one record uses one currency style
 - one record uses one date style
+- one record has one functional currency for the answer
+- some documents may still be shown in a different source currency when FX scenarios are present
 - the accounting truth does **not** change because of formatting
 - only the visible document surface changes
 

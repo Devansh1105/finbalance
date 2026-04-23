@@ -9,6 +9,9 @@ from docs_benchmark.generation.scenario_factories import (
     make_deferral_invoice_scenario,
     make_deferral_release_scenario,
     make_expense_accrual_scenario,
+    make_fx_payable_settlement_scenario,
+    make_fx_remeasurement_scenario,
+    make_fx_vendor_bill_scenario,
     make_interbank_transfer_scenario,
     make_loan_activity_scenario,
     make_payable_settlement_scenario,
@@ -52,6 +55,7 @@ SCENARIOS = {
         support_doc_type="subscription_order_form",
         revenue_account="Service Revenue",
         include_renewal_notice=False,
+        apply_indirect_tax=True,
     ),
     "subscription_cash_invoice": make_deferral_invoice_scenario(
         name="subscription_cash_invoice",
@@ -59,6 +63,7 @@ SCENARIOS = {
         support_doc_type="subscription_order_form",
         revenue_account="Service Revenue",
         cash_collection_rate=1.0,
+        apply_indirect_tax=True,
     ),
     "renewal_invoice": make_deferral_invoice_scenario(
         name="renewal_invoice",
@@ -66,6 +71,7 @@ SCENARIOS = {
         support_doc_type="subscription_order_form",
         revenue_account="Service Revenue",
         include_renewal_notice=True,
+        apply_indirect_tax=True,
     ),
     "revenue_release": make_deferral_release_scenario(
         name="revenue_release",
@@ -81,6 +87,22 @@ SCENARIOS = {
         description="Vendor bill for hosting or software support.",
         doc_type="vendor_invoice",
         debit_account="Utilities Expense",
+        apply_indirect_tax=True,
+    ),
+    "fx_hosting_bill": make_fx_vendor_bill_scenario(
+        name="fx_hosting_bill",
+        description="Hosting or software support bill denominated in a foreign currency.",
+        debit_account="Utilities Expense",
+        doc_type="vendor_invoice",
+    ),
+    "fx_vendor_payment": make_fx_payable_settlement_scenario(
+        name="fx_vendor_payment",
+        description="Settlement of a foreign-currency hosting bill with an FX gain or loss.",
+    ),
+    "fx_remeasurement": make_fx_remeasurement_scenario(
+        name="fx_remeasurement",
+        description="Open foreign-currency payable remeasured at the closing rate.",
+        target="payable",
     ),
     "vendor_payment": make_payable_settlement_scenario(
         name="vendor_payment",
@@ -133,14 +155,32 @@ QUARTER_PLANS = {
     2: copy_plan(MONTH_PLANS[2], "renewal_invoice"),
     3: copy_plan(MONTH_PLANS[3], "expense_accrual"),
     4: copy_plan(MONTH_PLANS[4], "expense_accrual", "credit_memo"),
-    5: copy_plan(MONTH_PLANS[5], "expense_accrual", "credit_memo", "bad_debt_review"),
+    5: copy_plan(MONTH_PLANS[5], "expense_accrual", "credit_memo", "bad_debt_review", "fx_hosting_bill", "fx_vendor_payment"),
 }
 YEAR_PLANS = {
     1: copy_plan(QUARTER_PLANS[1]),
     2: copy_plan(QUARTER_PLANS[2], extra_optional=("revenue_release",)),
     3: copy_plan(QUARTER_PLANS[3], extra_optional=("renewal_invoice",)),
     4: copy_plan(QUARTER_PLANS[4], extra_optional=("revenue_release", "subscription_cash_invoice")),
-    5: copy_plan(QUARTER_PLANS[5], extra_optional=("renewal_invoice", "revenue_release")),
+    5: DifficultyPlan(
+        mandatory=(
+            "subscription_invoice",
+            "revenue_release",
+            "customer_payment",
+            "hosting_bill",
+            "vendor_payment",
+            "payroll",
+            "loan_draw",
+            "loan_repayment",
+            "interbank_transfer",
+            "expense_accrual",
+            "credit_memo",
+            "bad_debt_review",
+            "fx_hosting_bill",
+            "fx_remeasurement",
+        ),
+        optional=("renewal_invoice", "subscription_cash_invoice", "revenue_release"),
+    ),
 }
 
 
@@ -157,7 +197,9 @@ INDUSTRY_SCHEMA = IndustrySchema(
         "Equipment",
         "Accounts Payable",
         "Accrued Expenses",
+        "Input Tax Receivable",
         "Loans Payable",
+        "Sales Tax Payable",
         "Unearned Revenue",
         "Share Capital",
         "Retained Earnings",
@@ -168,6 +210,8 @@ INDUSTRY_SCHEMA = IndustrySchema(
         "Salaries Expense",
         "Payroll Tax Expense",
         "Interest Expense",
+        "Foreign Exchange Gain",
+        "Foreign Exchange Loss",
     ],
     opening_builder=_opening_balance,
     master_data_builder=build_master_data,
