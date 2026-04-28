@@ -308,3 +308,39 @@ class GenerationTests(unittest.TestCase):
             self.assertTrue(record.inconsistency_reasons)
             self.assertEqual(record.expected_entries, [])
             self.assertEqual(record.expected_balance_sheet.assets, {})
+
+    def test_forced_negative_control_code_is_respected(self):
+        builder = DocumentBenchmarkBuilder(seed=42)
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            clean_record = builder.generate_record(
+                record_id="TEST_FORCED_NEG_CLEAN",
+                industry="subscription_saas",
+                difficulty_level=5,
+                assets_root=tmp_dir,
+                period_type="year",
+            )
+            self.assertIn("remeasurement_mismatch", clean_record.metadata["available_inconsistency_codes"])
+            forced_record = builder.generate_record(
+                record_id="TEST_FORCED_NEG",
+                industry="subscription_saas",
+                difficulty_level=5,
+                assets_root=tmp_dir,
+                period_type="year",
+                negative_control=True,
+                negative_control_code="remeasurement_mismatch",
+            )
+            self.assertEqual(forced_record.expected_inconsistency_codes, ["remeasurement_mismatch"])
+
+    def test_tax_regime_override_is_respected(self):
+        builder = DocumentBenchmarkBuilder(seed=42)
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            record = builder.generate_record(
+                record_id="TEST_TAX_OVERRIDE",
+                industry="professional_services",
+                difficulty_level=3,
+                assets_root=tmp_dir,
+                period_type="quarter",
+                tax_regime_override="vat",
+            )
+            self.assertEqual(record.metadata["tax_regime"], "vat")
+            self.assertIn("vat", record.metadata["tax_label"].lower())

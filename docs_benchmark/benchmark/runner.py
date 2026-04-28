@@ -5,10 +5,11 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
+from docs_benchmark.benchmark.analysis import analyze_submission, summarize_results
+from docs_benchmark.benchmark.manifests import record_manifest_row
 from docs_benchmark.benchmark.model import OpenRouterClient
 from docs_benchmark.benchmark.parser import SubmissionParseError, parse_submission
 from docs_benchmark.benchmark.prompt import build_prompt
-from docs_benchmark.benchmark.scoring import score_submission, summarize_results
 from docs_benchmark.schemas import DocumentRecord, ParsedSubmission
 
 
@@ -57,7 +58,8 @@ def run_openrouter_evaluation(
         except Exception as exc:  # pragma: no cover - exercised by integration runs
             error_message = str(exc)
 
-        metrics = score_submission(record, parsed, parse_success=parse_success)
+        analysis = analyze_submission(record, parsed, parse_success=parse_success)
+        usage = dict(response_payload.get("usage", {})) if isinstance(response_payload, dict) else {}
         results.append(
             {
                 "record_id": record.record_id,
@@ -65,7 +67,20 @@ def run_openrouter_evaluation(
                 "difficulty_level": record.difficulty_level,
                 "period_type": record.metadata.get("period_type"),
                 "period_label": record.metadata.get("period_label"),
-                "metrics": metrics,
+                "document_index": {
+                    document.doc_id: {"doc_type": document.doc_type, "role": document.role}
+                    for document in record.documents
+                },
+                "record_features": record_manifest_row(record),
+                "metrics": analysis["metrics"],
+                "parsed_submission": analysis["parsed_submission"],
+                "reconstructed_balance_sheet": analysis["reconstructed_balance_sheet"],
+                "entry_diagnostics": analysis["entry_diagnostics"],
+                "usage": usage,
+                "cost": float(usage.get("cost", 0.0)) if usage else 0.0,
+                "prompt_tokens": int(usage.get("prompt_tokens", 0)) if usage else 0,
+                "completion_tokens": int(usage.get("completion_tokens", 0)) if usage else 0,
+                "total_tokens": int(usage.get("total_tokens", 0)) if usage else 0,
                 "error": error_message,
                 "raw_response": response_text,
                 "raw_provider_payload": response_payload,

@@ -97,11 +97,13 @@ def filter_records(
     industries: Iterable[str] | None = None,
     period_types: Iterable[str] | None = None,
     levels: Iterable[int] | None = None,
+    record_ids: Iterable[str] | None = None,
     max_records: int | None = None,
 ) -> list[DocumentRecord]:
     industry_set = set(industries or [])
     period_set = set(period_types or [])
     level_set = {int(level) for level in levels or []}
+    record_id_set = set(record_ids or [])
 
     selected: list[DocumentRecord] = []
     for record in records:
@@ -110,6 +112,8 @@ def filter_records(
         if period_set and record.metadata.get("period_type") not in period_set:
             continue
         if level_set and record.difficulty_level not in level_set:
+            continue
+        if record_id_set and record.record_id not in record_id_set:
             continue
         selected.append(record)
         if max_records is not None and len(selected) >= max_records:

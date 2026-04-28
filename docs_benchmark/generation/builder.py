@@ -43,7 +43,9 @@ class DocumentBenchmarkBuilder:
         assets_root: str | Path,
         period_type: str = "month",
         negative_control: bool = False,
+        negative_control_code: str | None = None,
         display_profile_override: dict[str, str] | None = None,
+        tax_regime_override: str | None = None,
     ) -> DocumentRecord:
         if industry not in INDUSTRIES:
             raise ValueError(f"Unknown industry '{industry}'")
@@ -57,7 +59,7 @@ class DocumentBenchmarkBuilder:
         industry_schema = get_industry_schema(industry)
         period_spec = choose_period_spec(self.rng, period_type)
         display_profile = display_profile_override or choose_display_profile(self.rng)
-        tax_regime = choose_tax_regime(industry, difficulty_level, self.rng)
+        tax_regime = tax_regime_override or choose_tax_regime(industry, difficulty_level, self.rng)
         master_data = industry_schema.master_data_builder(industry, self.rng, period_spec)
         entity_name = default_company_name(self.rng)
         entity_address = default_address(self.rng)
@@ -108,6 +110,7 @@ class DocumentBenchmarkBuilder:
         ordered_documents = self._sorted_documents(state.documents)
         asset_dir = Path(assets_root) / record_id
         rendered_documents = [render_document(seed, asset_dir, self.rng, industry) for seed in ordered_documents]
+        available_inconsistency_codes = self._available_inconsistency_codes(rendered_documents)
 
         ledger = Ledger(opening_balance)
         ledger.apply_all(state.postings)
@@ -131,7 +134,14 @@ class DocumentBenchmarkBuilder:
         inconsistency_codes: list[str] = []
         inconsistency_reasons: list[str] = []
         if negative_control:
-            rendered_documents, inconsistency_codes, inconsistency_reasons = self._inject_negative_control(rendered_documents, state)
+            rendered_documents, inconsistency_codes, inconsistency_reasons = self._inject_negative_control(
+                rendered_documents,
+                state,
+                forced_code=negative_control_code,
+            )
+            if not inconsistency_codes:
+                requested = negative_control_code or "random"
+                raise ValueError(f"Record '{record_id}' could not inject negative-control code '{requested}'")
             expected_entries = []
             expected_balance_sheet = self._empty_balance_sheet(state.period_end)
             expected_inconsistency = True
@@ -170,6 +180,9 @@ class DocumentBenchmarkBuilder:
                 "date_format": state.date_format,
                 "tax_regime": state.tax_regime,
                 "tax_label": state.tax_label,
+                "available_inconsistency_codes": available_inconsistency_codes,
+                "underlying_posting_labels": [posting.label for posting in state.postings if posting.label],
+                "underlying_expected_entry_count": len(state.postings),
                 "expected_inconsistency": expected_inconsistency,
                 "expected_inconsistency_codes": inconsistency_codes,
                 "inconsistency_reasons": inconsistency_reasons,
@@ -527,43 +540,28 @@ class DocumentBenchmarkBuilder:
             metadata={"counterparty_name": source.fields.get("customer")},
         )
 
-    def _inject_negative_control(self, rendered_documents: list[DocumentAsset], state: BusinessState) -> tuple[list[DocumentAsset], list[str], list[str]]:
+    def _inject_negative_control(
+        self,
+        rendered_documents: list[DocumentAsset],
+        state: BusinessState,
+        forced_code: str | None = None,
+    ) -> tuple[list[DocumentAsset], list[str], list[str]]:
         invoice_docs = [doc for doc in rendered_documents if doc.doc_type in {"customer_invoice", "vendor_invoice", "supplier_invoice", "patient_invoice"}]
-        candidates = []
-        if invoice_docs:
-            candidates.append("invoice_total_mismatch")
-        if any(doc.doc_type == "bank_statement" for doc in rendered_documents):
-            candidates.append("bank_closing_mismatch")
-        if any(doc.doc_type == "vendor_statement" for doc in rendered_documents):
-            candidates.append("statement_balance_mismatch")
-        if any(doc.doc_type == "payment_advice" and "Allocation Details" in doc.ocr_text for doc in rendered_documents):
-            candidates.append("payment_allocation_mismatch")
-        if any(doc.doc_type == "secondary_copy" for doc in rendered_documents):
-            candidates.append("duplicate_reference_conflict")
-        if any(doc.doc_type in {"revenue_recognition_schedule", "fixed_asset_rollforward"} for doc in rendered_documents):
-            candidates.append("schedule_rollforward_mismatch")
-        if any(doc.doc_type == "inventory_rollforward" for doc in rendered_documents):
-            candidates.append("inventory_rollforward_mismatch")
-        if any(doc.doc_type == "transfer_advice" for doc in rendered_documents):
-            candidates.append("transfer_mismatch")
-        if any(doc.doc_type == "reclassification_memo" for doc in rendered_documents):
-            candidates.append("reclassification_support_mismatch")
-        if any(doc.doc_type in {"customer_invoice", "vendor_invoice", "supplier_invoice", "expense_receipt"} and "Tax Amount:" in doc.ocr_text for doc in rendered_documents):
-            candidates.append("tax_total_mismatch")
-            candidates.append("tax_rate_mismatch")
-        if any(doc.doc_type in {"vendor_invoice", "supplier_invoice"} and "Tax Amount:" in doc.ocr_text for doc in rendered_documents):
-            candidates.append("input_tax_mismatch")
-        if any(doc.doc_type == "exchange_rate_notice" for doc in rendered_documents):
-            candidates.append("exchange_rate_mismatch")
-        if any(doc.doc_type == "payment_advice" and "FX Difference:" in doc.ocr_text for doc in rendered_documents):
-            candidates.append("fx_settlement_mismatch")
-        if any(doc.doc_type == "fx_remeasurement_memo" for doc in rendered_documents):
-            candidates.append("remeasurement_mismatch")
+        candidates = self._available_inconsistency_codes(rendered_documents)
         if not candidates:
             return rendered_documents, [], []
-        issue = self.rng.choice(candidates)
+        if forced_code:
+            if forced_code not in candidates:
+                raise ValueError(
+                    f"Record '{state.record_id}' does not support inconsistency code '{forced_code}'. "
+                    f"Available codes: {candidates}"
+                )
+            issue = forced_code
+        else:
+            issue = self.rng.choice(candidates)
         if issue == "invoice_total_mismatch":
-            doc = self.rng.choice(invoice_docs)
+            valid_docs = [doc for doc in invoice_docs if self._replacement_is_valid(self._invoice_total_mismatch_replacement(doc))]
+            doc = self.rng.choice(valid_docs)
             return self._replace_in_document(
                 rendered_documents,
                 doc,
@@ -571,7 +569,10 @@ class DocumentBenchmarkBuilder:
                 self._invoice_total_mismatch_replacement(doc),
             )
         if issue == "bank_closing_mismatch":
-            bank_doc = next(doc for doc in rendered_documents if doc.doc_type == "bank_statement")
+            bank_doc = next(
+                doc for doc in rendered_documents
+                if doc.doc_type == "bank_statement" and self._replacement_is_valid(self._bank_closing_mismatch_replacement(doc))
+            )
             return self._replace_in_document(
                 rendered_documents,
                 bank_doc,
@@ -579,43 +580,171 @@ class DocumentBenchmarkBuilder:
                 self._bank_closing_mismatch_replacement(bank_doc),
             )
         if issue == "statement_balance_mismatch":
-            doc = next(doc for doc in rendered_documents if doc.doc_type == "vendor_statement")
+            doc = next(
+                doc for doc in rendered_documents
+                if doc.doc_type == "vendor_statement" and self._replacement_is_valid(self._statement_balance_mismatch_replacement(doc))
+            )
             return self._replace_in_document(rendered_documents, doc, issue, self._statement_balance_mismatch_replacement(doc))
         if issue == "payment_allocation_mismatch":
-            doc = next(doc for doc in rendered_documents if doc.doc_type == "payment_advice" and "Allocation Details" in doc.ocr_text)
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type == "payment_advice"
+                and "Allocation Details" in doc.ocr_text
+                and self._replacement_is_valid(self._payment_allocation_mismatch_replacement(doc))
+            )
             return self._replace_in_document(rendered_documents, doc, issue, self._payment_allocation_mismatch_replacement(doc))
         if issue == "duplicate_reference_conflict":
-            doc = next(doc for doc in rendered_documents if doc.doc_type == "secondary_copy")
+            doc = next(
+                doc for doc in rendered_documents
+                if doc.doc_type == "secondary_copy" and self._replacement_is_valid(self._duplicate_reference_conflict_replacement(doc))
+            )
             return self._replace_in_document(rendered_documents, doc, issue, self._duplicate_reference_conflict_replacement(doc))
         if issue == "schedule_rollforward_mismatch":
-            doc = next(doc for doc in rendered_documents if doc.doc_type in {"revenue_recognition_schedule", "fixed_asset_rollforward"})
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type in {"revenue_recognition_schedule", "fixed_asset_rollforward"}
+                and self._replacement_is_valid(self._schedule_rollforward_mismatch_replacement(doc))
+            )
             return self._replace_in_document(rendered_documents, doc, issue, self._schedule_rollforward_mismatch_replacement(doc))
         if issue == "inventory_rollforward_mismatch":
-            doc = next(doc for doc in rendered_documents if doc.doc_type == "inventory_rollforward")
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type == "inventory_rollforward" and self._replacement_is_valid(self._inventory_rollforward_mismatch_replacement(doc))
+            )
             return self._replace_in_document(rendered_documents, doc, issue, self._inventory_rollforward_mismatch_replacement(doc))
         if issue == "transfer_mismatch":
-            doc = next(doc for doc in rendered_documents if doc.doc_type == "transfer_advice")
+            doc = next(
+                doc for doc in rendered_documents
+                if doc.doc_type == "transfer_advice" and self._replacement_is_valid(self._transfer_mismatch_replacement(doc))
+            )
             return self._replace_in_document(rendered_documents, doc, issue, self._transfer_mismatch_replacement(doc))
         if issue == "tax_total_mismatch":
-            doc = next(doc for doc in rendered_documents if doc.doc_type in {"customer_invoice", "vendor_invoice", "supplier_invoice", "expense_receipt"} and "Tax Amount:" in doc.ocr_text)
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type in {"customer_invoice", "vendor_invoice", "supplier_invoice", "expense_receipt"}
+                and "Tax Amount:" in doc.ocr_text
+                and self._replacement_is_valid(self._tax_total_mismatch_replacement(doc))
+            )
             return self._replace_in_document(rendered_documents, doc, issue, self._tax_total_mismatch_replacement(doc))
         if issue == "tax_rate_mismatch":
-            doc = next(doc for doc in rendered_documents if doc.doc_type in {"customer_invoice", "vendor_invoice", "supplier_invoice", "expense_receipt"} and "Tax Rate:" in doc.ocr_text)
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type in {"customer_invoice", "vendor_invoice", "supplier_invoice", "expense_receipt"}
+                and "Tax Rate:" in doc.ocr_text
+                and self._replacement_is_valid(self._tax_rate_mismatch_replacement(doc))
+            )
             return self._replace_in_document(rendered_documents, doc, issue, self._tax_rate_mismatch_replacement(doc))
         if issue == "input_tax_mismatch":
-            doc = next(doc for doc in rendered_documents if doc.doc_type in {"vendor_invoice", "supplier_invoice"} and "Tax Amount:" in doc.ocr_text)
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type in {"vendor_invoice", "supplier_invoice"}
+                and "Tax Amount:" in doc.ocr_text
+                and self._replacement_is_valid(self._input_tax_mismatch_replacement(doc))
+            )
             return self._replace_in_document(rendered_documents, doc, issue, self._input_tax_mismatch_replacement(doc))
         if issue == "exchange_rate_mismatch":
-            doc = next(doc for doc in rendered_documents if doc.doc_type == "exchange_rate_notice")
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type == "exchange_rate_notice" and self._replacement_is_valid(self._exchange_rate_mismatch_replacement(doc))
+            )
             return self._replace_in_document(rendered_documents, doc, issue, self._exchange_rate_mismatch_replacement(doc))
         if issue == "fx_settlement_mismatch":
-            doc = next(doc for doc in rendered_documents if doc.doc_type == "payment_advice" and "FX Difference:" in doc.ocr_text)
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type == "payment_advice"
+                and "FX Difference:" in doc.ocr_text
+                and self._replacement_is_valid(self._fx_settlement_mismatch_replacement(doc))
+            )
             return self._replace_in_document(rendered_documents, doc, issue, self._fx_settlement_mismatch_replacement(doc))
         if issue == "remeasurement_mismatch":
-            doc = next(doc for doc in rendered_documents if doc.doc_type == "fx_remeasurement_memo")
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type == "fx_remeasurement_memo" and self._replacement_is_valid(self._remeasurement_mismatch_replacement(doc))
+            )
             return self._replace_in_document(rendered_documents, doc, issue, self._remeasurement_mismatch_replacement(doc))
-        doc = next(doc for doc in rendered_documents if doc.doc_type == "reclassification_memo")
+        doc = next(
+            doc
+            for doc in rendered_documents
+            if doc.doc_type == "reclassification_memo" and self._replacement_is_valid(self._reclassification_support_mismatch_replacement(doc))
+        )
         return self._replace_in_document(rendered_documents, doc, issue, self._reclassification_support_mismatch_replacement(doc))
+
+    def _available_inconsistency_codes(self, rendered_documents: list[DocumentAsset]) -> list[str]:
+        invoice_docs = [doc for doc in rendered_documents if doc.doc_type in {"customer_invoice", "vendor_invoice", "supplier_invoice", "patient_invoice"}]
+        candidates = []
+        if any(self._replacement_is_valid(self._invoice_total_mismatch_replacement(doc)) for doc in invoice_docs):
+            candidates.append("invoice_total_mismatch")
+        if any(doc.doc_type == "bank_statement" and self._replacement_is_valid(self._bank_closing_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("bank_closing_mismatch")
+        if any(doc.doc_type == "vendor_statement" and self._replacement_is_valid(self._statement_balance_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("statement_balance_mismatch")
+        if any(
+            doc.doc_type == "payment_advice"
+            and "Allocation Details" in doc.ocr_text
+            and self._replacement_is_valid(self._payment_allocation_mismatch_replacement(doc))
+            for doc in rendered_documents
+        ):
+            candidates.append("payment_allocation_mismatch")
+        if any(doc.doc_type == "secondary_copy" and self._replacement_is_valid(self._duplicate_reference_conflict_replacement(doc)) for doc in rendered_documents):
+            candidates.append("duplicate_reference_conflict")
+        if any(
+            doc.doc_type in {"revenue_recognition_schedule", "fixed_asset_rollforward"}
+            and self._replacement_is_valid(self._schedule_rollforward_mismatch_replacement(doc))
+            for doc in rendered_documents
+        ):
+            candidates.append("schedule_rollforward_mismatch")
+        if any(doc.doc_type == "inventory_rollforward" and self._replacement_is_valid(self._inventory_rollforward_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("inventory_rollforward_mismatch")
+        if any(doc.doc_type == "transfer_advice" and self._replacement_is_valid(self._transfer_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("transfer_mismatch")
+        if any(doc.doc_type == "reclassification_memo" and self._replacement_is_valid(self._reclassification_support_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("reclassification_support_mismatch")
+        if any(
+            doc.doc_type in {"customer_invoice", "vendor_invoice", "supplier_invoice", "expense_receipt"}
+            and "Tax Amount:" in doc.ocr_text
+            and self._replacement_is_valid(self._tax_total_mismatch_replacement(doc))
+            for doc in rendered_documents
+        ):
+            candidates.append("tax_total_mismatch")
+        if any(
+            doc.doc_type in {"customer_invoice", "vendor_invoice", "supplier_invoice", "expense_receipt"}
+            and "Tax Rate:" in doc.ocr_text
+            and self._replacement_is_valid(self._tax_rate_mismatch_replacement(doc))
+            for doc in rendered_documents
+        ):
+            candidates.append("tax_rate_mismatch")
+        if any(
+            doc.doc_type in {"vendor_invoice", "supplier_invoice"}
+            and "Tax Amount:" in doc.ocr_text
+            and self._replacement_is_valid(self._input_tax_mismatch_replacement(doc))
+            for doc in rendered_documents
+        ):
+            candidates.append("input_tax_mismatch")
+        if any(doc.doc_type == "exchange_rate_notice" and self._replacement_is_valid(self._exchange_rate_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("exchange_rate_mismatch")
+        if any(
+            doc.doc_type == "payment_advice"
+            and "FX Difference:" in doc.ocr_text
+            and self._replacement_is_valid(self._fx_settlement_mismatch_replacement(doc))
+            for doc in rendered_documents
+        ):
+            candidates.append("fx_settlement_mismatch")
+        if any(doc.doc_type == "fx_remeasurement_memo" and self._replacement_is_valid(self._remeasurement_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("remeasurement_mismatch")
+        return candidates
+
+    def _replacement_is_valid(self, replacement: tuple[str, str, str]) -> bool:
+        prefix, old_text, new_text = replacement
+        return bool(prefix and old_text and new_text and old_text != new_text)
 
     def _replace_in_document(
         self,
