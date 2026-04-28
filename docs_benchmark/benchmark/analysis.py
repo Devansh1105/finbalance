@@ -25,6 +25,35 @@ ENTRY_STATUS_ORDER = (
     ENTRY_STATUS_EXTRA,
 )
 
+ENTRY_REASONING_SINGLE_DOC_VISIBLE = "single_doc_visible"
+ENTRY_REASONING_MULTI_DOC_VISIBLE = "multi_doc_visible"
+ENTRY_REASONING_DERIVED_COMPUTATION = "derived_computation"
+ENTRY_REASONING_ADJUSTMENT_SUPPORT = "adjustment_support"
+
+ENTRY_ERROR_FAMILY_EXACT = "exact"
+ENTRY_ERROR_FAMILY_DOC_REF_LINKING = "doc_ref_linking"
+ENTRY_ERROR_FAMILY_PARSE_OUTPUT = "parse_or_output"
+ENTRY_ERROR_FAMILY_DIRECT_REASONING = "direct_doc_reasoning"
+ENTRY_ERROR_FAMILY_DERIVED_REASONING = "derived_reasoning"
+ENTRY_ERROR_FAMILY_EXTRA = "extra_predicted_entry"
+
+DERIVED_LABEL_TOKENS = (
+    "_cogs",
+    "depreciation",
+    "revenue_release",
+    "retainer_release",
+    "expense_accrual",
+    "bad_debt_review",
+    "fx_remeasurement",
+    "stock_adjustment",
+    "inventory_adjustment",
+    "material_issue",
+    "finished_goods_transfer",
+    "scrap_report",
+    "overhead_accrual",
+    "direct_labor",
+)
+
 LEDGER_FAMILY_RULES: tuple[tuple[str, Callable[[str], bool]], ...] = (
     ("tax", lambda label: label.endswith("_tax") or "tax" in label),
     ("foreign_exchange", lambda label: label.startswith("fx_")),
@@ -182,6 +211,10 @@ def analyze_submission(
     amount_tol: float = 0.01,
     balance_tol: float = 0.01,
 ) -> dict[str, Any]:
+    document_index = {
+        document.doc_id: {"doc_type": document.doc_type, "role": document.role}
+        for document in record.documents
+    }
     predicted_balance_sheet = _balance_sheet_sections(parsed.balance_sheet)
     predicted_balance_sheet_serialized = serialize_balance_sheet(predicted_balance_sheet)
     reconstructed_balance_sheet = reconstruct_balance_sheet(record, parsed.entries) if parse_success else reconstruct_balance_sheet(record, [])
@@ -232,6 +265,18 @@ def analyze_submission(
         }
 
     expected_details, predicted_details = _match_entries(record.expected_entries, parsed.entries, amount_tol)
+    for entry in expected_details:
+        reasoning_type = _entry_reasoning_type(entry["posting"], document_index)
+        entry["reasoning_type"] = reasoning_type
+        entry["error_family"] = _entry_error_family(
+            entry["status"],
+            reasoning_type=reasoning_type,
+            parse_success=parse_success,
+        )
+    for entry in predicted_details:
+        entry["error_family"] = (
+            ENTRY_ERROR_FAMILY_EXTRA if entry["status"] == ENTRY_STATUS_EXTRA else ENTRY_ERROR_FAMILY_EXACT
+        )
     status_counts = Counter(item["status"] for item in expected_details)
     exact_match_count = status_counts[ENTRY_STATUS_EXACT]
     doc_refs_mismatch_count = status_counts[ENTRY_STATUS_DOC_REFS_MISMATCH]
@@ -445,6 +490,14 @@ def summarize_expected_entry_groups(
         document_index = result.get("document_index", {})
         for entry in result.get("entry_diagnostics", {}).get("expected_entries", []):
             status = entry["status"]
+            error_family = entry.get(
+                "error_family",
+                _entry_error_family(
+                    status,
+                    reasoning_type=_entry_reasoning_type(entry["posting"], document_index),
+                    parse_success=bool(result["metrics"].get("parse_success")),
+                ),
+            )
             posting = entry["posting"]
             keys: list[str]
             if group_name == "posting_label":
@@ -465,12 +518,20 @@ def summarize_expected_entry_groups(
             for key in keys:
                 groups[key]["expected_entries"] += 1
                 groups[key][status] += 1
+                groups[key][error_family] += 1
 
     summary: dict[str, dict[str, Any]] = {}
     for key, counter in sorted(groups.items()):
         expected_entries = counter["expected_entries"]
         exact = counter[ENTRY_STATUS_EXACT]
         accounting = exact + counter[ENTRY_STATUS_DOC_REFS_MISMATCH]
+        failure_counts = {
+            ENTRY_ERROR_FAMILY_PARSE_OUTPUT: counter[ENTRY_ERROR_FAMILY_PARSE_OUTPUT],
+            ENTRY_ERROR_FAMILY_DOC_REF_LINKING: counter[ENTRY_ERROR_FAMILY_DOC_REF_LINKING],
+            ENTRY_ERROR_FAMILY_DIRECT_REASONING: counter[ENTRY_ERROR_FAMILY_DIRECT_REASONING],
+            ENTRY_ERROR_FAMILY_DERIVED_REASONING: counter[ENTRY_ERROR_FAMILY_DERIVED_REASONING],
+        }
+        dominant_failure_mode = max(failure_counts.items(), key=lambda item: item[1])[0]
         summary[key] = {
             "expected_entries": expected_entries,
             "exact_entry_rate": _rate(exact, expected_entries),
@@ -479,11 +540,20 @@ def summarize_expected_entry_groups(
             "wrong_amount_rate": _rate(counter[ENTRY_STATUS_WRONG_AMOUNT], expected_entries),
             "wrong_account_rate": _rate(counter[ENTRY_STATUS_WRONG_ACCOUNT], expected_entries),
             "missing_rate": _rate(counter[ENTRY_STATUS_MISSING], expected_entries),
+            "parse_or_output_failure_rate": _rate(counter[ENTRY_ERROR_FAMILY_PARSE_OUTPUT], expected_entries),
+            "doc_ref_linking_failure_rate": _rate(counter[ENTRY_ERROR_FAMILY_DOC_REF_LINKING], expected_entries),
+            "direct_doc_reasoning_failure_rate": _rate(counter[ENTRY_ERROR_FAMILY_DIRECT_REASONING], expected_entries),
+            "derived_reasoning_failure_rate": _rate(counter[ENTRY_ERROR_FAMILY_DERIVED_REASONING], expected_entries),
             "exact_entry_count": exact,
             "doc_refs_mismatch_count": counter[ENTRY_STATUS_DOC_REFS_MISMATCH],
             "wrong_amount_count": counter[ENTRY_STATUS_WRONG_AMOUNT],
             "wrong_account_count": counter[ENTRY_STATUS_WRONG_ACCOUNT],
             "missing_count": counter[ENTRY_STATUS_MISSING],
+            "parse_or_output_failure_count": counter[ENTRY_ERROR_FAMILY_PARSE_OUTPUT],
+            "doc_ref_linking_failure_count": counter[ENTRY_ERROR_FAMILY_DOC_REF_LINKING],
+            "direct_doc_reasoning_failure_count": counter[ENTRY_ERROR_FAMILY_DIRECT_REASONING],
+            "derived_reasoning_failure_count": counter[ENTRY_ERROR_FAMILY_DERIVED_REASONING],
+            "dominant_failure_mode": dominant_failure_mode if failure_counts[dominant_failure_mode] else "none",
         }
     return summary
 
@@ -625,3 +695,33 @@ def _apply_matches(
         item["matched_predicted_index"] = matched["index"]
         matched["status"] = status
         matched["matched_expected_index"] = item["index"]
+
+
+def _entry_reasoning_type(posting: dict[str, Any], document_index: dict[str, dict[str, str]]) -> str:
+    label = str(posting.get("label", "")).strip().lower()
+    if any(token in label for token in DERIVED_LABEL_TOKENS):
+        return ENTRY_REASONING_DERIVED_COMPUTATION
+    doc_roles = [
+        str(document_index.get(doc_ref, {}).get("role", "unknown"))
+        for doc_ref in posting.get("doc_refs", [])
+    ]
+    if any(role in {"adjustment_doc", "support_doc"} for role in doc_roles) and not any(role == "posting_doc" for role in doc_roles):
+        return ENTRY_REASONING_ADJUSTMENT_SUPPORT
+    posting_doc_count = sum(1 for role in doc_roles if role == "posting_doc")
+    if posting_doc_count <= 1 and len(posting.get("doc_refs", [])) <= 1:
+        return ENTRY_REASONING_SINGLE_DOC_VISIBLE
+    if posting_doc_count >= 1:
+        return ENTRY_REASONING_MULTI_DOC_VISIBLE
+    return ENTRY_REASONING_ADJUSTMENT_SUPPORT
+
+
+def _entry_error_family(status: str, *, reasoning_type: str, parse_success: bool) -> str:
+    if status == ENTRY_STATUS_EXACT:
+        return ENTRY_ERROR_FAMILY_EXACT
+    if status == ENTRY_STATUS_DOC_REFS_MISMATCH:
+        return ENTRY_ERROR_FAMILY_DOC_REF_LINKING
+    if not parse_success:
+        return ENTRY_ERROR_FAMILY_PARSE_OUTPUT
+    if reasoning_type in {ENTRY_REASONING_DERIVED_COMPUTATION, ENTRY_REASONING_ADJUSTMENT_SUPPORT}:
+        return ENTRY_ERROR_FAMILY_DERIVED_REASONING
+    return ENTRY_ERROR_FAMILY_DIRECT_REASONING

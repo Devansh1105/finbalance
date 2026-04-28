@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from docs_benchmark.benchmark.analysis import analyze_submission, ledger_family_for_label
+from docs_benchmark.benchmark.analysis import analyze_submission, ledger_family_for_label, summarize_expected_entry_groups
 from docs_benchmark.benchmark.dataset import load_records
 from docs_benchmark.benchmark.parser import parse_submission
 from docs_benchmark.benchmark.prompt import build_prompt
@@ -272,6 +272,35 @@ class BenchmarkTests(unittest.TestCase):
                     labels.update(record.metadata.get("underlying_posting_labels", []))
             uncovered = sorted(label for label in labels if ledger_family_for_label(label) == "other")
             self.assertEqual(uncovered, [])
+
+    def test_expected_entry_group_summary_reports_derived_reasoning_failures(self):
+        grouped = summarize_expected_entry_groups(
+            [
+                {
+                    "metrics": {"parse_success": True},
+                    "document_index": {"D001": {"doc_type": "customer_invoice", "role": "posting_doc"}},
+                    "entry_diagnostics": {
+                        "expected_entries": [
+                            {
+                                "status": "missing",
+                                "posting": {
+                                    "doc_refs": ["D001"],
+                                    "debit_account": "Cost of Goods Sold",
+                                    "credit_account": "Inventory",
+                                    "amount": 100.0,
+                                    "posting_date": "2024-01-31",
+                                    "label": "delivery_sale_cogs",
+                                },
+                            }
+                        ]
+                    },
+                }
+            ],
+            "posting_label",
+        )
+        self.assertEqual(grouped["delivery_sale_cogs"]["dominant_failure_mode"], "derived_reasoning")
+        self.assertEqual(grouped["delivery_sale_cogs"]["derived_reasoning_failure_rate"], 1.0)
+        self.assertEqual(grouped["delivery_sale_cogs"]["doc_ref_linking_failure_rate"], 0.0)
 
 
 if __name__ == "__main__":

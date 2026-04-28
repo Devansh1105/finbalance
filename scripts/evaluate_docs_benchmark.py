@@ -209,11 +209,20 @@ def _write_expected_entry_csv(path: Path, grouped: dict[str, dict[str, Any]]) ->
         "wrong_amount_rate",
         "wrong_account_rate",
         "missing_rate",
+        "parse_or_output_failure_rate",
+        "doc_ref_linking_failure_rate",
+        "direct_doc_reasoning_failure_rate",
+        "derived_reasoning_failure_rate",
         "exact_entry_count",
         "doc_refs_mismatch_count",
         "wrong_amount_count",
         "wrong_account_count",
         "missing_count",
+        "parse_or_output_failure_count",
+        "doc_ref_linking_failure_count",
+        "direct_doc_reasoning_failure_count",
+        "derived_reasoning_failure_count",
+        "dominant_failure_mode",
     ]
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=headers)
@@ -476,16 +485,19 @@ def _write_summary_markdown(path: Path, model: str, dataset_path: Path, summary:
         "",
         "## Worst Posting Labels",
         "",
+        "_These rows now include the dominant failure mode for the missed expected entries._",
+        "",
         _markdown_table(
             [
                 "Posting Label",
                 "Expected Entries",
                 "Exact Entry Rate",
                 "Accounting Entry Rate",
-                "Doc Refs Mismatch",
-                "Wrong Amount",
-                "Wrong Account",
-                "Missing",
+                "Dominant Failure Mode",
+                "Doc Ref Linking",
+                "Direct Reasoning",
+                "Derived Reasoning",
+                "Parse / Output",
             ],
             [
                 [
@@ -493,10 +505,11 @@ def _write_summary_markdown(path: Path, model: str, dataset_path: Path, summary:
                     values["expected_entries"],
                     values["exact_entry_rate"],
                     values["accounting_entry_rate"],
-                    values["doc_refs_mismatch_rate"],
-                    values["wrong_amount_rate"],
-                    values["wrong_account_rate"],
-                    values["missing_rate"],
+                    values["dominant_failure_mode"],
+                    values["doc_ref_linking_failure_rate"],
+                    values["direct_doc_reasoning_failure_rate"],
+                    values["derived_reasoning_failure_rate"],
+                    values["parse_or_output_failure_rate"],
                 ]
                 for group, values in sorted(
                     summary["expected_entries_by_posting_label"].items(),
