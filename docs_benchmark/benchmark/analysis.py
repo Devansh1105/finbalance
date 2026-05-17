@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections import Counter, defaultdict, deque
 from typing import Any, Callable
 
+from docs_benchmark.accounts import ACCOUNT_TYPES
 from docs_benchmark.ledger import Ledger
 from docs_benchmark.schemas import BalanceSheet, DocumentRecord, ParsedSubmission, Posting
 
@@ -44,7 +45,12 @@ DERIVED_LABEL_TOKENS = (
     "retainer_release",
     "expense_accrual",
     "bad_debt_review",
+    "bundled_contract_allocation",
     "fx_remeasurement",
+    "asset_disposal",
+    "deferred_tax",
+    "baseline_lease",
+    "lease_modification",
     "stock_adjustment",
     "inventory_adjustment",
     "material_issue",
@@ -76,7 +82,9 @@ LEDGER_FAMILY_RULES: tuple[tuple[str, Callable[[str], bool]], ...] = (
     ),
     ("financing", lambda label: label.startswith("loan_")),
     ("depreciation", lambda label: label == "depreciation"),
-    ("fixed_assets", lambda label: label.startswith("equipment_purchase")),
+    ("fixed_assets", lambda label: label.startswith("equipment_purchase") or label.startswith("asset_disposal")),
+    ("leases", lambda label: label.startswith("baseline_lease") or label.startswith("lease_modification")),
+    ("deferred_tax", lambda label: label.startswith("deferred_tax") or label.startswith("asset_disposal_with_deferred_tax")),
     (
         "inventory_and_cogs",
         lambda label: any(
@@ -115,6 +123,7 @@ LEDGER_FAMILY_RULES: tuple[tuple[str, Callable[[str], bool]], ...] = (
                 "subscription_invoice",
                 "subscription_cash_invoice",
                 "renewal_invoice",
+                "bundled_contract_allocation",
             )
         ),
     ),
@@ -199,7 +208,7 @@ def serialize_balance_sheet(balance_sheet: BalanceSheet | dict[str, dict[str, fl
 
 def reconstruct_balance_sheet(record: DocumentRecord, entries: list[Posting]) -> BalanceSheet:
     ledger = Ledger(record.opening_balance)
-    ledger.apply_all(entries)
+    ledger.apply_all([entry for entry in entries if not _unknown_entry_accounts(entry)])
     return ledger.build_balance_sheet(record.period_end)
 
 
@@ -217,6 +226,14 @@ def analyze_submission(
     }
     predicted_balance_sheet = _balance_sheet_sections(parsed.balance_sheet)
     predicted_balance_sheet_serialized = serialize_balance_sheet(predicted_balance_sheet)
+    invalid_account_entries = _invalid_account_entries(parsed.entries)
+    invalid_accounts = sorted(
+        {
+            account
+            for item in invalid_account_entries
+            for account in item["unknown_accounts"]
+        }
+    )
     reconstructed_balance_sheet = reconstruct_balance_sheet(record, parsed.entries) if parse_success else reconstruct_balance_sheet(record, [])
     reconstructed_balance_sheet_serialized = serialize_balance_sheet(reconstructed_balance_sheet)
 
@@ -251,6 +268,8 @@ def analyze_submission(
             "extra_entry_count": 0,
             "expected_entry_count": 0,
             "predicted_entry_count": len(parsed.entries),
+            "invalid_account_entry_count": len(invalid_account_entries),
+            "invalid_accounts": invalid_accounts,
             "entry_exact_posting_rate": 0.0,
             "entry_accounting_posting_rate": 0.0,
         }
@@ -261,6 +280,7 @@ def analyze_submission(
             "entry_diagnostics": {
                 "expected_entries": [],
                 "predicted_entries": [],
+                "invalid_account_entries": invalid_account_entries,
             },
         }
 
@@ -331,6 +351,8 @@ def analyze_submission(
         "extra_entry_count": extra_entry_count,
         "expected_entry_count": expected_entry_count,
         "predicted_entry_count": predicted_entry_count,
+        "invalid_account_entry_count": len(invalid_account_entries),
+        "invalid_accounts": invalid_accounts,
         "entry_exact_posting_rate": _rate(exact_match_count, expected_entry_count),
         "entry_accounting_posting_rate": _rate(exact_match_count + doc_refs_mismatch_count, expected_entry_count),
     }
@@ -342,6 +364,7 @@ def analyze_submission(
         "entry_diagnostics": {
             "expected_entries": expected_details,
             "predicted_entries": predicted_details,
+            "invalid_account_entries": invalid_account_entries,
         },
     }
 
@@ -385,6 +408,14 @@ def summarize_result_subset(results: list[dict[str, Any]]) -> dict[str, Any]:
     total_missing = sum(result["metrics"]["missing_entry_count"] for result in scored_results)
     total_extra = sum(result["metrics"]["extra_entry_count"] for result in scored_results)
     total_predicted_entries = sum(result["metrics"]["predicted_entry_count"] for result in scored_results)
+    total_invalid_account_entries = sum(result["metrics"].get("invalid_account_entry_count", 0) for result in results)
+    invalid_accounts = sorted(
+        {
+            account
+            for result in results
+            for account in result["metrics"].get("invalid_accounts", [])
+        }
+    )
 
     total_cost = round(sum(float(result.get("cost", 0.0)) for result in results), 6)
     prompt_tokens = sum(int(result.get("prompt_tokens", 0)) for result in results)
@@ -438,6 +469,8 @@ def summarize_result_subset(results: list[dict[str, Any]]) -> dict[str, Any]:
         "extra_entry_count": total_extra,
         "expected_entry_count": total_expected_entries,
         "predicted_entry_count": total_predicted_entries,
+        "invalid_account_entry_count": total_invalid_account_entries,
+        "invalid_accounts": invalid_accounts,
         "average_missing_entries_per_standard_record": round(total_missing / len(scored_results), 2) if scored_results else 0.0,
         "average_extra_entries_per_standard_record": round(total_extra / len(scored_results), 2) if scored_results else 0.0,
         "cost_total": total_cost,
@@ -562,6 +595,29 @@ def _rate(numerator: int, denominator: int) -> float:
     if denominator <= 0:
         return 0.0
     return round(numerator / denominator, 4)
+
+
+def _unknown_entry_accounts(posting: Posting) -> list[str]:
+    return [
+        account
+        for account in (posting.debit_account, posting.credit_account)
+        if account not in ACCOUNT_TYPES
+    ]
+
+
+def _invalid_account_entries(entries: list[Posting]) -> list[dict[str, Any]]:
+    invalid_entries = []
+    for index, posting in enumerate(entries):
+        unknown_accounts = _unknown_entry_accounts(posting)
+        if unknown_accounts:
+            invalid_entries.append(
+                {
+                    "index": index,
+                    "unknown_accounts": unknown_accounts,
+                    "posting": posting_to_dict(posting),
+                }
+            )
+    return invalid_entries
 
 
 def _amount_key(posting: Posting, amount_tol: float) -> int:

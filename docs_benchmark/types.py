@@ -207,7 +207,11 @@ class BusinessState:
     open_payables: list[dict[str, Any]] = field(default_factory=list)
     open_fx_receivables: list[dict[str, Any]] = field(default_factory=list)
     open_fx_payables: list[dict[str, Any]] = field(default_factory=list)
+    contract_subledger: list[dict[str, Any]] = field(default_factory=list)
     asset_register: list[dict[str, Any]] = field(default_factory=list)
+    lease_subledger: list[dict[str, Any]] = field(default_factory=list)
+    jurisdiction_profile: dict[str, Any] = field(default_factory=dict)
+    tax_context: dict[str, Any] = field(default_factory=dict)
     scenario_log: list[str] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
     expected_inconsistency: bool = False

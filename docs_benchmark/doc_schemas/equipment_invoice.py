@@ -1,4 +1,4 @@
-from docs_benchmark.doc_schemas.base import kv, req, schema
+from docs_benchmark.doc_schemas.base import kv, opt, req, schema
 
 
 SCHEMA = schema(
@@ -16,6 +16,10 @@ SCHEMA = schema(
         req("paid_cash", "number", "Cash paid now"),
         req("financed_amount", "number", "Amount financed"),
     ),
+    optional_fields=(
+        opt("note_reference", "string", "Promissory note reference"),
+        opt("financing_instrument", "string", "Financing instrument description"),
+    ),
     sections=(
         kv(
             "Asset Purchase",
@@ -27,6 +31,8 @@ SCHEMA = schema(
             ("Total", "total"),
             ("Paid Cash", "paid_cash"),
             ("Financed Amount", "financed_amount"),
+            ("Note Reference", "note_reference"),
+            ("Financing Instrument", "financing_instrument"),
         ),
     ),
     visible_fields=("number", "asset_name", "total"),

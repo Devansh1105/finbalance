@@ -5,13 +5,45 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
+import tempfile
+from pathlib import Path
 
 from docs_benchmark.benchmark import build_prompt, filter_records, load_records, run_openrouter_evaluation
+from docs_benchmark.benchmark.manifests import dataset_manifest, record_manifest_row, write_jsonl
 from docs_benchmark.benchmark.model import OpenRouterClient
 from docs_benchmark.generation.builder import DocumentBenchmarkBuilder
-from docs_benchmark.generation.helpers import PERIOD_TYPES
+from docs_benchmark.generation.helpers import DISPLAY_PROFILES, PERIOD_TYPES
 from docs_benchmark.industry_schemas import INDUSTRIES
+from docs_benchmark.inconsistencies import INCONSISTENCY_CODES
 from docs_benchmark.schemas import ensure_parent
+
+
+FORCED_INCONSISTENCY_CANDIDATES = {
+    "invoice_total_mismatch": (("professional_services", "month", 2, None),),
+    "bank_closing_mismatch": (("professional_services", "month", 1, None),),
+    "statement_balance_mismatch": (("professional_services", "year", 5, None), ("manufacturing", "year", 5, None)),
+    "payment_allocation_mismatch": (("professional_services", "quarter", 3, None),),
+    "duplicate_reference_conflict": (("professional_services", "year", 5, None), ("subscription_saas", "year", 5, None)),
+    "schedule_rollforward_mismatch": (("professional_services", "quarter", 3, None), ("subscription_saas", "month", 4, None)),
+    "inventory_rollforward_mismatch": (("wholesale_distribution", "year", 5, None), ("retail", "year", 5, None)),
+    "transfer_mismatch": (("subscription_saas", "quarter", 4, None), ("professional_services", "month", 4, None)),
+    "reclassification_support_mismatch": (("professional_services", "quarter", 3, None),),
+    "tax_total_mismatch": (("professional_services", "month", 2, "sales_tax"),),
+    "tax_rate_mismatch": (("professional_services", "month", 2, "sales_tax"),),
+    "input_tax_mismatch": (("professional_services", "month", 2, "sales_tax"),),
+    "jurisdiction_tax_mismatch": (("wholesale_distribution", "month", 4, "us_sales_tax"),),
+    "tax_exemption_conflict": (("wholesale_distribution", "month", 4, "us_sales_tax"),),
+    "ssp_allocation_mismatch": (("subscription_saas", "month", 4, None),),
+    "performance_obligation_release_mismatch": (("subscription_saas", "month", 4, None),),
+    "asset_disposal_mismatch": (("professional_services", "month", 4, None),),
+    "deferred_tax_rollforward_mismatch": (("professional_services", "month", 5, None),),
+    "lease_schedule_mismatch": (("professional_services", "month", 4, None),),
+    "lease_remeasurement_mismatch": (("professional_services", "month", 5, None),),
+    "exchange_rate_mismatch": (("professional_services", "year", 5, None), ("subscription_saas", "year", 5, None)),
+    "fx_settlement_mismatch": (("professional_services", "quarter", 5, None), ("subscription_saas", "quarter", 5, None)),
+    "remeasurement_mismatch": (("subscription_saas", "year", 5, None), ("professional_services", "year", 5, None)),
+}
 
 
 def main() -> None:
@@ -25,6 +57,12 @@ def main() -> None:
     generate.add_argument("--period-types", nargs="+", choices=PERIOD_TYPES, default=list(PERIOD_TYPES))
     generate.add_argument("--seed", type=int, default=42)
     generate.add_argument("--negative-control-rate", type=float, default=0.05)
+
+    standard = subparsers.add_parser("generate-standard-datasets", help="Regenerate docs_benchmark coverage and main datasets with manifests")
+    standard.add_argument("--base-dir", default="docs_benchmark/data")
+    standard.add_argument("--seed", type=int, default=42)
+    standard.add_argument("--records-per-combo", type=int, default=8)
+    standard.add_argument("--negative-controls-per-code", type=int, default=4)
 
     inspect = subparsers.add_parser("inspect", help="Generate one sample record and print a summary")
     inspect.add_argument("--industry", choices=INDUSTRIES, default="professional_services")
@@ -72,6 +110,16 @@ def main() -> None:
             "period_types": sorted({record.metadata.get("period_type", "month") for record in records}),
             "avg_docs": round(sum(len(record.documents) for record in records) / len(records), 2) if records else 0.0,
         }
+        print(json.dumps(summary, indent=2))
+        return
+
+    if args.command == "generate-standard-datasets":
+        summary = regenerate_standard_datasets(
+            base_dir=args.base_dir,
+            seed=args.seed,
+            records_per_combo=args.records_per_combo,
+            negative_controls_per_code=args.negative_controls_per_code,
+        )
         print(json.dumps(summary, indent=2))
         return
 
@@ -138,6 +186,146 @@ def main() -> None:
         "scenario_sequence": record.metadata.get("scenario_sequence", []),
     }
     print(json.dumps(summary, indent=2))
+
+
+def regenerate_standard_datasets(
+    *,
+    base_dir: str | Path = "docs_benchmark/data",
+    seed: int = 42,
+    records_per_combo: int = 8,
+    negative_controls_per_code: int = 4,
+) -> dict[str, object]:
+    base_path = Path(base_dir)
+    coverage_dir = base_path / "coverage"
+    main_dir = base_path / "main"
+    for dataset_dir in (coverage_dir, main_dir):
+        if dataset_dir.exists():
+            shutil.rmtree(dataset_dir)
+
+    coverage_records = _build_coverage_dataset(coverage_dir, seed)
+    _write_dataset_bundle(
+        coverage_dir,
+        "coverage",
+        coverage_records,
+        config={
+            "base_seed": seed,
+            "selection_strategy": "all_combos_plus_forced_inconsistency_and_display_tax_coverage",
+            "forced_inconsistency_codes": list(INCONSISTENCY_CODES),
+        },
+    )
+
+    total_main = len(INDUSTRIES) * len(PERIOD_TYPES) * 5 * records_per_combo
+    negative_target = len(INCONSISTENCY_CODES) * negative_controls_per_code
+    main_builder = DocumentBenchmarkBuilder(seed=seed)
+    counts = {
+        industry: {
+            period_type: {level: records_per_combo for level in range(1, 6)}
+            for period_type in PERIOD_TYPES
+        }
+        for industry in INDUSTRIES
+    }
+    main_records = main_builder.generate_dataset(
+        counts,
+        main_dir / "records.jsonl",
+        main_dir / "assets",
+        negative_control_rate=0.0,
+    )
+    for code_index, code in enumerate(INCONSISTENCY_CODES):
+        for ordinal in range(negative_controls_per_code):
+            main_records.append(_forced_negative_record(code, code_index, ordinal, main_dir / "assets", seed, prefix="MAIN_NEG"))
+    _write_dataset_bundle(
+        main_dir,
+        "main",
+        main_records,
+        config={
+            "base_seed": seed,
+            "records_per_combo": records_per_combo,
+            "negative_controls_per_code": negative_controls_per_code,
+            "base_combo_records": total_main,
+            "nonstandard_display_target_rate": 0.05,
+        },
+    )
+    return {
+        "coverage_records": len(coverage_records),
+        "main_records": len(main_records),
+        "main_negative_target": negative_target,
+    }
+
+
+def _build_coverage_dataset(dataset_dir: Path, seed: int) -> list:
+    records = []
+    assets_dir = dataset_dir / "assets"
+    tax_cycle = ("none", "sales_tax", "vat", "gst", "us_sales_tax", "india_gst")
+    combo_index = 0
+    for industry in INDUSTRIES:
+        for period_type in PERIOD_TYPES:
+            for level in range(1, 6):
+                display_profile = dict(DISPLAY_PROFILES[combo_index % len(DISPLAY_PROFILES)])
+                tax_override = "none" if level == 1 else tax_cycle[combo_index % len(tax_cycle)]
+                builder = DocumentBenchmarkBuilder(seed=seed + combo_index)
+                record_id = f"COV_{industry[:3].upper()}_{period_type[0].upper()}{level}_{combo_index:04d}"
+                records.append(
+                    builder.generate_record(
+                        record_id,
+                        industry,
+                        level,
+                        assets_dir,
+                        period_type=period_type,
+                        display_profile_override=display_profile,
+                        tax_regime_override=tax_override,
+                    )
+                )
+                combo_index += 1
+
+    for code_index, code in enumerate(INCONSISTENCY_CODES):
+        records.append(_forced_negative_record(code, code_index, 0, assets_dir, seed, prefix="COV_NEG"))
+    return records
+
+
+def _forced_negative_record(code: str, code_index: int, ordinal: int, assets_dir: Path, seed: int, *, prefix: str):
+    candidates = FORCED_INCONSISTENCY_CANDIDATES.get(code, ())
+    for seed_offset in range(20):
+        for industry, period_type, level, tax_override in candidates:
+            record_seed = seed + 1000 + code_index * 97 + ordinal * 1009 + seed_offset
+            probe_builder = DocumentBenchmarkBuilder(seed=record_seed)
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                probe = probe_builder.generate_record(
+                    f"PROBE_{code}",
+                    industry,
+                    level,
+                    tmp_dir,
+                    period_type=period_type,
+                    tax_regime_override=tax_override,
+                )
+            if code not in probe.metadata.get("available_inconsistency_codes", []):
+                continue
+            builder = DocumentBenchmarkBuilder(seed=record_seed)
+            return builder.generate_record(
+                f"{prefix}_{ordinal:02d}_{code.upper()[:32]}",
+                industry,
+                level,
+                assets_dir,
+                period_type=period_type,
+                negative_control=True,
+                negative_control_code=code,
+                tax_regime_override=tax_override,
+            )
+    raise RuntimeError(f"Could not generate forced negative-control record for {code}")
+
+
+def _write_dataset_bundle(dataset_dir: Path, dataset_name: str, records: list, *, config: dict[str, object]) -> None:
+    output_path = ensure_parent(dataset_dir / "records.jsonl")
+    with output_path.open("w", encoding="utf-8") as handle:
+        for record in records:
+            handle.write(json.dumps(record.to_dict(), ensure_ascii=True) + "\n")
+    _write_dataset_sidecars(dataset_dir, dataset_name, records, config=config)
+
+
+def _write_dataset_sidecars(dataset_dir: Path, dataset_name: str, records: list, *, config: dict[str, object]) -> None:
+    rows = [record_manifest_row(record) for record in records]
+    write_jsonl(dataset_dir / "record_manifest.jsonl", rows)
+    manifest = dataset_manifest(dataset_name, records, rows, config=config)
+    ensure_parent(dataset_dir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
 
 if __name__ == "__main__":

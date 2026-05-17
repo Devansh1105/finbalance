@@ -14,9 +14,12 @@ from docs_benchmark.schemas import DocumentRecord, ensure_parent
 ROLLFORWARD_DOC_TYPES = frozenset(
     {
         "ar_aging_summary",
+        "deferred_tax_memo",
         "fixed_asset_rollforward",
         "fx_remeasurement_memo",
         "inventory_rollforward",
+        "lease_amortization_schedule",
+        "performance_obligation_schedule",
         "revenue_recognition_schedule",
         "service_period_memo",
     }
@@ -41,6 +44,11 @@ def record_feature_flags(record: DocumentRecord) -> dict[str, bool]:
         "has_reclassification": "reclassification_correction" in scenario_sequence
         or any(label.startswith("reclassification_correction") for label in posting_labels),
         "has_rollforward": bool(doc_types & ROLLFORWARD_DOC_TYPES),
+        "has_asc606": bool(record.metadata.get("has_asc606") or "bundled_contract_allocation" in scenario_sequence),
+        "has_asset_disposal": bool(record.metadata.get("has_asset_disposal") or "asset_disposal" in scenario_sequence),
+        "has_deferred_tax": bool(record.metadata.get("has_deferred_tax") or "deferred_tax_depreciation" in scenario_sequence),
+        "has_lease": bool(record.metadata.get("has_lease") or {"baseline_lease", "lease_modification"} & scenario_sequence),
+        "has_tax_exemption": bool(record.metadata.get("has_tax_exemption") or "tax_exemption_certificate" in doc_types),
     }
 
 
@@ -81,6 +89,11 @@ def record_manifest_row(record: DocumentRecord) -> dict[str, Any]:
         "tax_regime": record.metadata.get("tax_regime", "none"),
         "currency_code": record.metadata.get("currency_code", "USD"),
         "date_format": record.metadata.get("date_format", "YYYY-MM-DD"),
+        "reasoning_depth": int(record.metadata.get("reasoning_depth", record.difficulty_level)),
+        "doc_dependency_depth": int(record.metadata.get("doc_dependency_depth", 1)),
+        "subledger_count": int(record.metadata.get("subledger_count", 0)),
+        "jurisdictional_depth": int(record.metadata.get("jurisdictional_depth", 0)),
+        "temporal_lookback_depth": int(record.metadata.get("temporal_lookback_depth", 1)),
         **feature_flags,
     }
 
@@ -144,6 +157,11 @@ def dataset_manifest(
         for key, value in row.items()
         if key.startswith("has_") and value
     )
+    reasoning_depths = Counter(str(row.get("reasoning_depth", "")) for row in record_rows)
+    doc_dependency_depths = Counter(str(row.get("doc_dependency_depth", "")) for row in record_rows)
+    subledger_counts = Counter(str(row.get("subledger_count", "")) for row in record_rows)
+    jurisdictional_depths = Counter(str(row.get("jurisdictional_depth", "")) for row in record_rows)
+    temporal_lookback_depths = Counter(str(row.get("temporal_lookback_depth", "")) for row in record_rows)
 
     total_documents = sum(len(record.documents) for record in records)
     total_expected_entries = sum(int(row["expected_entry_count"]) for row in record_rows)
@@ -176,6 +194,11 @@ def dataset_manifest(
             "records_with_posting_label": _counter_to_dict(posting_labels),
             "records_with_ledger_family": _counter_to_dict(ledger_families),
             "records_with_feature_flag": _counter_to_dict(feature_flag_counts),
+            "by_reasoning_depth": _counter_to_dict(reasoning_depths),
+            "by_doc_dependency_depth": _counter_to_dict(doc_dependency_depths),
+            "by_subledger_count": _counter_to_dict(subledger_counts),
+            "by_jurisdictional_depth": _counter_to_dict(jurisdictional_depths),
+            "by_temporal_lookback_depth": _counter_to_dict(temporal_lookback_depths),
         },
     }
 

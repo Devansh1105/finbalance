@@ -62,23 +62,27 @@ FUNCTIONAL_CURRENCY_DEFAULT = DISPLAY_PROFILES[0]
 TAX_REGIME_LABELS = {
     "none": "",
     "sales_tax": "Sales Tax",
+    "us_sales_tax": "US Sales Tax",
     "vat": "VAT",
     "gst": "GST",
+    "india_gst": "India GST",
 }
 
 INDUSTRY_TAX_REGIMES = {
     "professional_services": ("sales_tax", "vat"),
     "field_services": ("sales_tax", "gst"),
     "retail": ("sales_tax", "gst"),
-    "wholesale_distribution": ("sales_tax", "vat"),
+    "wholesale_distribution": ("sales_tax", "vat", "us_sales_tax", "india_gst"),
     "manufacturing": ("sales_tax", "vat"),
-    "subscription_saas": ("vat", "gst"),
+    "subscription_saas": ("vat", "gst", "us_sales_tax"),
 }
 
 TAX_RATE_OPTIONS = {
     "sales_tax": (0.05, 0.0725, 0.0825, 0.095),
+    "us_sales_tax": (0.0625, 0.0725, 0.0825, 0.095),
     "vat": (0.1, 0.125, 0.2),
     "gst": (0.05, 0.07, 0.1),
+    "india_gst": (0.05, 0.12, 0.18),
 }
 
 FX_RATE_RANGES = {

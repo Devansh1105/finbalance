@@ -14,9 +14,9 @@ It also now includes a basic benchmark runner for OCR-text evaluation:
 - exact-match scoring
 - OpenRouter model execution
 
-## What Changed In V4
+## Current Dataset Scope
 
-The current generator is the `v4_phase2` version.
+The current generator keeps the internal `v4_phase2_schema_driven` record version and adds the deep-first accounting expansion used by the standard datasets in `docs_benchmark/data/`.
 
 Main changes:
 
@@ -31,6 +31,37 @@ Main changes:
 - expanded negative-control inconsistency codes
 - indirect-tax support on invoices, bills, and retail sales
 - foreign-currency invoice, settlement, and remeasurement scenarios with visible rate support
+- jurisdictional tax packets for US sales tax and India GST, including exemption certificates
+- ASC 606 bundled SaaS contracts with SSP allocation and performance-obligation release
+- fixed asset disposals with NBV and gain/loss computation
+- deferred tax from book/tax depreciation differences
+- lease accounting, including baseline ROU asset/liability schedules and lease modifications
+
+The standard datasets are:
+
+- `docs_benchmark/data/coverage`
+  - 143 records
+  - one clean record for every industry, period type, and difficulty level
+  - one forced negative-control record for every inconsistency code
+  - covers every scenario family, document type, tax regime, display currency/date variant, and complexity flag
+- `docs_benchmark/data/main`
+  - 1,052 records
+  - 960 clean base records, with 8 records per `industry x period_type x difficulty_level`
+  - 92 forced negative controls, with 4 records per inconsistency code
+  - balanced nonstandard display variants and full advanced-scenario coverage
+
+Each record manifest includes complexity metadata:
+
+- `reasoning_depth`
+- `doc_dependency_depth`
+- `subledger_count`
+- `jurisdictional_depth`
+- `temporal_lookback_depth`
+- `has_asc606`
+- `has_asset_disposal`
+- `has_deferred_tax`
+- `has_lease`
+- `has_tax_exemption`
 
 The 8 industries are:
 
@@ -53,11 +84,12 @@ For each record, the generator does this:
 4. create a richer opening balance
 5. choose business scenarios from the industry schema
 6. apply record-level tax regime and functional currency settings
-7. turn those scenarios into document seeds, journal entries, and bank-account cash rows
-8. add realistic distractors and, when needed, negative-control inconsistencies
-9. render the document seeds into PDF-style files and OCR text
-10. validate the clean packet
-11. run the ledger to build the final balance sheet
+7. maintain deterministic subledgers for contracts, assets, leases, jurisdictions, and tax context
+8. turn scenarios into document seeds, journal entries, and bank-account cash rows
+9. add realistic distractors and, when needed, negative-control inconsistencies
+10. render the document seeds into PDF-style files and OCR text
+11. validate the clean packet
+12. run the ledger to build the final balance sheet
 
 The visible documents are synthetic. The expected accounting answer is made only by code.
 
@@ -72,13 +104,13 @@ The visible documents are synthetic. The expected accounting answer is made only
 - [generation/helpers.py](/home/devanshagarwal/projects/finbalance/docs_benchmark/generation/helpers.py)
   - period selection, dates, amount helpers, and common generation helpers
 - [generation/scenario_factories.py](/home/devanshagarwal/projects/finbalance/docs_benchmark/generation/scenario_factories.py)
-  - reusable business-scenario builders, including tax-aware and FX-aware variants
+  - reusable business-scenario builders, including tax, FX, ASC 606, asset disposal, deferred tax, and lease variants
 - [generation/builder.py](/home/devanshagarwal/projects/finbalance/docs_benchmark/generation/builder.py)
   - top-level record generation
 - [rendering/renderer.py](/home/devanshagarwal/projects/finbalance/docs_benchmark/rendering/renderer.py)
   - PDF-style rendering and OCR text
 - [validation/](/home/devanshagarwal/projects/finbalance/docs_benchmark/validation)
-  - document and record checks, including tax math and exchange-rate consistency
+  - document and record checks, including tax math, exchange-rate consistency, ASC 606 schedules, disposal math, deferred tax rollforwards, and lease schedules
 - [ledger.py](/home/devanshagarwal/projects/finbalance/docs_benchmark/ledger.py)
   - deterministic ledger used to build the final balance sheet
 - [FLOW.md](/home/devanshagarwal/projects/finbalance/docs_benchmark/FLOW.md)
@@ -103,12 +135,22 @@ Instead, a year packet includes:
 
 ## Commands
 
+Regenerate the standard coverage and main datasets:
+
+```bash
+python -m docs_benchmark generate-standard-datasets \
+  --base-dir docs_benchmark/data \
+  --seed 42 \
+  --records-per-combo 8 \
+  --negative-controls-per-code 4
+```
+
 Generate a mixed pilot dataset:
 
 ```bash
 python -m docs_benchmark generate \
-  --output /tmp/docs_benchmark_v3_pilot.jsonl \
-  --assets-dir /tmp/docs_benchmark_v3_assets \
+  --output /tmp/docs_benchmark_pilot.jsonl \
+  --assets-dir /tmp/docs_benchmark_assets \
   --records-per-combo 1 \
   --period-types month quarter year \
   --seed 42
@@ -121,7 +163,7 @@ python -m docs_benchmark inspect \
   --industry manufacturing \
   --level 4 \
   --period-type year \
-  --assets-dir /tmp/docs_benchmark_v3_inspect \
+  --assets-dir /tmp/docs_benchmark_inspect \
   --seed 42
 ```
 
@@ -129,15 +171,15 @@ Preview the exact OCR-text prompt that the benchmark will send to a model:
 
 ```bash
 python -m docs_benchmark prompt-preview \
-  --dataset docs_benchmark/data/v3_preview.jsonl \
-  --record-id PREVIEW_PRO_M3
+  --dataset docs_benchmark/data/main/records.jsonl \
+  --record-id DB_PRO_M4_00025
 ```
 
 Run the basic benchmark against one OpenRouter model:
 
 ```bash
 python -m docs_benchmark evaluate-openrouter \
-  --dataset docs_benchmark/data/v3_preview.jsonl \
+  --dataset docs_benchmark/data/main/records.jsonl \
   --output docs_benchmark/results/openrouter_eval.json \
   --model openai/gpt-4.1-mini \
   --max-records 15
@@ -151,6 +193,7 @@ The benchmark currently uses:
 - grouped summary reporting by difficulty, period type, and industry
 - fixed inconsistency codes for negative-control records
 - functional-currency answers even when some source docs are foreign-currency
+- prompt instructions for ASC 606 SSP allocation, jurisdictional tax, tax exemptions, fixed asset disposals, deferred tax, lease schedules, and lease modifications
 
 Current standard-record metrics are:
 

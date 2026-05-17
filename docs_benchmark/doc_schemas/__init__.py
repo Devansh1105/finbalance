@@ -2,13 +2,16 @@
 
 from docs_benchmark.doc_schemas.ap_aging_summary import SCHEMA as AP_AGING_SUMMARY
 from docs_benchmark.doc_schemas.ar_aging_summary import SCHEMA as AR_AGING_SUMMARY
+from docs_benchmark.doc_schemas.asset_disposal_notice import SCHEMA as ASSET_DISPOSAL_NOTICE
 from docs_benchmark.doc_schemas.bank_statement import SCHEMA as BANK_STATEMENT
 from docs_benchmark.doc_schemas.card_settlement_report import SCHEMA as CARD_SETTLEMENT_REPORT
 from docs_benchmark.doc_schemas.cancellation_note import SCHEMA as CANCELLATION_NOTE
 from docs_benchmark.doc_schemas.copay_receipt import SCHEMA as COPAY_RECEIPT
 from docs_benchmark.doc_schemas.credit_memo import SCHEMA as CREDIT_MEMO
 from docs_benchmark.doc_schemas.customer_invoice import SCHEMA as CUSTOMER_INVOICE
+from docs_benchmark.doc_schemas.customer_tax_profile import SCHEMA as CUSTOMER_TAX_PROFILE
 from docs_benchmark.doc_schemas.delivery_note import SCHEMA as DELIVERY_NOTE
+from docs_benchmark.doc_schemas.deferred_tax_memo import SCHEMA as DEFERRED_TAX_MEMO
 from docs_benchmark.doc_schemas.depreciation_schedule import SCHEMA as DEPRECIATION_SCHEDULE
 from docs_benchmark.doc_schemas.direct_labor_record import SCHEMA as DIRECT_LABOR_RECORD
 from docs_benchmark.doc_schemas.equipment_invoice import SCHEMA as EQUIPMENT_INVOICE
@@ -20,14 +23,20 @@ from docs_benchmark.doc_schemas.fx_remeasurement_memo import SCHEMA as FX_REMEAS
 from docs_benchmark.doc_schemas.goods_receipt_note import SCHEMA as GOODS_RECEIPT_NOTE
 from docs_benchmark.doc_schemas.insurance_notice import SCHEMA as INSURANCE_NOTICE
 from docs_benchmark.doc_schemas.insurer_remittance import SCHEMA as INSURER_REMITTANCE
+from docs_benchmark.doc_schemas.implementation_acceptance_memo import SCHEMA as IMPLEMENTATION_ACCEPTANCE_MEMO
 from docs_benchmark.doc_schemas.inventory_adjustment_note import SCHEMA as INVENTORY_ADJUSTMENT_NOTE
 from docs_benchmark.doc_schemas.inventory_rollforward import SCHEMA as INVENTORY_ROLLFORWARD
+from docs_benchmark.doc_schemas.lease_agreement import SCHEMA as LEASE_AGREEMENT
+from docs_benchmark.doc_schemas.lease_amortization_schedule import SCHEMA as LEASE_AMORTIZATION_SCHEDULE
+from docs_benchmark.doc_schemas.lease_modification_notice import SCHEMA as LEASE_MODIFICATION_NOTICE
+from docs_benchmark.doc_schemas.lease_payment_notice import SCHEMA as LEASE_PAYMENT_NOTICE
 from docs_benchmark.doc_schemas.loan_statement import SCHEMA as LOAN_STATEMENT
 from docs_benchmark.doc_schemas.material_requisition_slip import SCHEMA as MATERIAL_REQUISITION_SLIP
 from docs_benchmark.doc_schemas.memo import SCHEMA as MEMO
 from docs_benchmark.doc_schemas.opening_trial_balance import SCHEMA as OPENING_TRIAL_BALANCE
 from docs_benchmark.doc_schemas.overhead_accrual_memo import SCHEMA as OVERHEAD_ACCRUAL_MEMO
 from docs_benchmark.doc_schemas.patient_invoice import SCHEMA as PATIENT_INVOICE
+from docs_benchmark.doc_schemas.performance_obligation_schedule import SCHEMA as PERFORMANCE_OBLIGATION_SCHEDULE
 from docs_benchmark.doc_schemas.payment_advice import SCHEMA as PAYMENT_ADVICE
 from docs_benchmark.doc_schemas.payroll_summary import SCHEMA as PAYROLL_SUMMARY
 from docs_benchmark.doc_schemas.pos_batch_report import SCHEMA as POS_BATCH_REPORT
@@ -39,6 +48,7 @@ from docs_benchmark.doc_schemas.retainer_agreement_memo import SCHEMA as RETAINE
 from docs_benchmark.doc_schemas.renewal_notice import SCHEMA as RENEWAL_NOTICE
 from docs_benchmark.doc_schemas.revenue_recognition_schedule import SCHEMA as REVENUE_RECOGNITION_SCHEDULE
 from docs_benchmark.doc_schemas.return_note import SCHEMA as RETURN_NOTE
+from docs_benchmark.doc_schemas.sale_proceeds_advice import SCHEMA as SALE_PROCEEDS_ADVICE
 from docs_benchmark.doc_schemas.sales_summary import SCHEMA as SALES_SUMMARY
 from docs_benchmark.doc_schemas.scrap_report import SCHEMA as SCRAP_REPORT
 from docs_benchmark.doc_schemas.security_deposit_notice import SCHEMA as SECURITY_DEPOSIT_NOTICE
@@ -47,6 +57,10 @@ from docs_benchmark.doc_schemas.service_period_memo import SCHEMA as SERVICE_PER
 from docs_benchmark.doc_schemas.stock_count_sheet import SCHEMA as STOCK_COUNT_SHEET
 from docs_benchmark.doc_schemas.subscription_order_form import SCHEMA as SUBSCRIPTION_ORDER_FORM
 from docs_benchmark.doc_schemas.supplier_invoice import SCHEMA as SUPPLIER_INVOICE
+from docs_benchmark.doc_schemas.ssp_rate_card import SCHEMA as SSP_RATE_CARD
+from docs_benchmark.doc_schemas.tax_depreciation_schedule import SCHEMA as TAX_DEPRECIATION_SCHEDULE
+from docs_benchmark.doc_schemas.tax_exemption_certificate import SCHEMA as TAX_EXEMPTION_CERTIFICATE
+from docs_benchmark.doc_schemas.tax_regime_notice import SCHEMA as TAX_REGIME_NOTICE
 from docs_benchmark.doc_schemas.transfer_advice import SCHEMA as TRANSFER_ADVICE
 from docs_benchmark.doc_schemas.utilities_statement import SCHEMA as UTILITIES_STATEMENT
 from docs_benchmark.doc_schemas.vendor_invoice import SCHEMA as VENDOR_INVOICE
@@ -64,6 +78,7 @@ DOC_SCHEMAS = {
         CANCELLATION_NOTE,
         CREDIT_MEMO,
         CUSTOMER_INVOICE,
+        CUSTOMER_TAX_PROFILE,
         VENDOR_INVOICE,
         VENDOR_STATEMENT,
         SUPPLIER_INVOICE,
@@ -72,15 +87,25 @@ DOC_SCHEMAS = {
         EXCHANGE_RATE_NOTICE,
         INSURANCE_NOTICE,
         UTILITIES_STATEMENT,
+        TAX_REGIME_NOTICE,
+        TAX_EXEMPTION_CERTIFICATE,
         PAYMENT_ADVICE,
         PAYROLL_SUMMARY,
         RENT_NOTICE,
         SERVICE_PERIOD_MEMO,
         RETAINER_AGREEMENT_MEMO,
         LOAN_STATEMENT,
+        LEASE_AGREEMENT,
+        LEASE_AMORTIZATION_SCHEDULE,
+        LEASE_PAYMENT_NOTICE,
+        LEASE_MODIFICATION_NOTICE,
         EQUIPMENT_INVOICE,
         DEPRECIATION_SCHEDULE,
         FIXED_ASSET_ROLLFORWARD,
+        ASSET_DISPOSAL_NOTICE,
+        SALE_PROCEEDS_ADVICE,
+        TAX_DEPRECIATION_SCHEDULE,
+        DEFERRED_TAX_MEMO,
         FX_REMEASUREMENT_MEMO,
         SALES_SUMMARY,
         POS_BATCH_REPORT,
@@ -93,6 +118,9 @@ DOC_SCHEMAS = {
         DELIVERY_NOTE,
         PATIENT_INVOICE,
         INSURER_REMITTANCE,
+        SSP_RATE_CARD,
+        IMPLEMENTATION_ACCEPTANCE_MEMO,
+        PERFORMANCE_OBLIGATION_SCHEDULE,
         MEMO,
         COPAY_RECEIPT,
         RENT_ROLL,

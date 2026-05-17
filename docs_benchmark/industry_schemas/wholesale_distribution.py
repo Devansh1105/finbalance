@@ -10,6 +10,7 @@ from docs_benchmark.generation.scenario_factories import (
     make_fixed_asset_purchase_scenario,
     make_goods_receipt_purchase_scenario,
     make_inventory_adjustment_scenario,
+    make_jurisdictional_tax_invoice_scenario,
     make_loan_activity_scenario,
     make_payable_settlement_scenario,
     make_payroll_scenario,
@@ -96,14 +97,18 @@ SCENARIOS = {
         name="depreciation",
         description="Depreciation on warehouse equipment.",
     ),
+    "jurisdictional_tax_invoice": make_jurisdictional_tax_invoice_scenario(
+        name="jurisdictional_tax_invoice",
+        description="Jurisdictional tax packet with US sales tax, India GST split/input credit, and exemption override evidence.",
+    ),
 }
 
 MONTH_PLANS = {
     1: DifficultyPlan(mandatory=("goods_receipt_purchase", "delivery_sale"), optional=("delivery_sale",)),
     2: DifficultyPlan(mandatory=("goods_receipt_purchase", "delivery_sale", "customer_payment", "supplier_payment"), optional=("delivery_sale", "goods_receipt_purchase")),
     3: DifficultyPlan(mandatory=("goods_receipt_purchase", "delivery_sale", "customer_payment", "supplier_payment", "inventory_adjustment", "payroll"), optional=("delivery_sale", "inventory_adjustment")),
-    4: DifficultyPlan(mandatory=("goods_receipt_purchase", "delivery_sale", "customer_payment", "supplier_payment", "inventory_adjustment", "payroll", "utilities_bill", "loan_draw", "equipment_purchase", "depreciation"), optional=("delivery_sale", "goods_receipt_purchase")),
-    5: DifficultyPlan(mandatory=("goods_receipt_purchase", "delivery_sale", "customer_payment", "supplier_payment", "inventory_adjustment", "payroll", "utilities_bill", "loan_draw", "equipment_purchase", "depreciation", "loan_repayment"), optional=("delivery_sale", "goods_receipt_purchase", "inventory_adjustment")),
+    4: DifficultyPlan(mandatory=("goods_receipt_purchase", "delivery_sale", "customer_payment", "supplier_payment", "inventory_adjustment", "payroll", "utilities_bill", "loan_draw", "equipment_purchase", "depreciation", "jurisdictional_tax_invoice"), optional=("delivery_sale", "goods_receipt_purchase")),
+    5: DifficultyPlan(mandatory=("goods_receipt_purchase", "delivery_sale", "customer_payment", "supplier_payment", "inventory_adjustment", "payroll", "utilities_bill", "loan_draw", "equipment_purchase", "depreciation", "jurisdictional_tax_invoice", "loan_repayment"), optional=("delivery_sale", "goods_receipt_purchase", "inventory_adjustment")),
 }
 QUARTER_PLANS = {
     1: copy_plan(MONTH_PLANS[1]),
@@ -132,12 +137,18 @@ INDUSTRY_SCHEMA = IndustrySchema(
         "Equipment",
         "Office Supplies",
         "Input Tax Receivable",
+        "Input CGST Receivable",
+        "Input SGST Receivable",
+        "Input IGST Receivable",
         "Accumulated Depreciation",
         "Accounts Payable",
         "Accrued Expenses",
         "Loans Payable",
         "Notes Payable",
         "Sales Tax Payable",
+        "CGST Payable",
+        "SGST Payable",
+        "IGST Payable",
         "Owner's Equity",
         "Retained Earnings",
         "Sales Revenue",

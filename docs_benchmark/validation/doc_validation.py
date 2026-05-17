@@ -137,3 +137,67 @@ def _run_doc_specific_checks(seed: DocumentSeed, report: ValidationReport) -> No
             report.add("error", seed.doc_id, "FX remeasurement memo does not reconcile the open foreign amount to the stated remeasured amount")
         if abs(expected_difference - difference_amount) >= 0.01:
             report.add("error", seed.doc_id, "FX remeasurement memo difference does not match booked versus remeasured amount")
+
+    if seed.doc_type == "performance_obligation_schedule":
+        transaction_price = round(float(seed.fields.get("transaction_price", 0.0)), 2)
+        allocation_total = round(float(seed.fields.get("allocation_total", 0.0)), 2)
+        released = round(float(seed.fields.get("released_this_period", 0.0)), 2)
+        ending = round(float(seed.fields.get("ending_deferred", 0.0)), 2)
+        obligations = seed.fields.get("obligations", [])
+        allocated_total = round(sum(float(item.get("allocated_transaction_price", 0.0)) for item in obligations), 2)
+        release_total = round(sum(float(item.get("released_this_period", 0.0)) for item in obligations), 2)
+        if abs(allocated_total - allocation_total) >= 0.01 or abs(allocation_total - transaction_price) >= 0.01:
+            report.add("error", seed.doc_id, "Performance obligation allocation does not tie to transaction price")
+        if abs(release_total - released) >= 0.01:
+            report.add("error", seed.doc_id, "Performance obligation release does not tie to schedule total")
+        if abs(round(transaction_price - released, 2) - ending) >= 0.01:
+            report.add("error", seed.doc_id, "Performance obligation ending deferred amount does not tie")
+
+    if seed.doc_type == "asset_disposal_notice":
+        cost = round(float(seed.fields.get("original_cost", 0.0)), 2)
+        accumulated = round(float(seed.fields.get("accumulated_depreciation", 0.0)), 2)
+        nbv = round(float(seed.fields.get("net_book_value", 0.0)), 2)
+        proceeds = round(float(seed.fields.get("proceeds_amount", 0.0)), 2)
+        gain_loss = round(float(seed.fields.get("gain_loss_amount", 0.0)), 2)
+        if abs(round(cost - accumulated, 2) - nbv) >= 0.01:
+            report.add("error", seed.doc_id, "Asset disposal NBV does not equal cost less accumulated depreciation")
+        if abs(abs(round(proceeds - nbv, 2)) - gain_loss) >= 0.01:
+            report.add("error", seed.doc_id, "Asset disposal gain/loss does not equal proceeds less NBV")
+
+    if seed.doc_type == "tax_depreciation_schedule":
+        book = round(float(seed.fields.get("book_depreciation_amount", 0.0)), 2)
+        tax = round(float(seed.fields.get("tax_depreciation_amount", 0.0)), 2)
+        difference = round(float(seed.fields.get("temporary_difference_amount", 0.0)), 2)
+        if abs(round(tax - book, 2) - difference) >= 0.01:
+            report.add("error", seed.doc_id, "Tax depreciation schedule temporary difference does not tie")
+
+    if seed.doc_type == "deferred_tax_memo":
+        opening = round(float(seed.fields.get("opening_deferred_tax_liability", 0.0)), 2)
+        movement = round(float(seed.fields.get("current_period_deferred_tax_movement", 0.0)), 2)
+        ending = round(float(seed.fields.get("deferred_tax_liability_ending", 0.0)), 2)
+        expense = round(float(seed.fields.get("deferred_tax_expense_amount", 0.0)), 2)
+        if abs(round(opening + movement, 2) - ending) >= 0.01:
+            report.add("error", seed.doc_id, "Deferred tax memo rollforward does not tie")
+        if abs(movement - expense) >= 0.01:
+            report.add("error", seed.doc_id, "Deferred tax expense does not equal current-period movement")
+
+    if seed.doc_type == "lease_amortization_schedule":
+        opening = round(float(seed.fields.get("opening_liability_balance", 0.0)), 2)
+        payment = round(float(seed.fields.get("payment_amount", 0.0)), 2)
+        interest = round(float(seed.fields.get("interest_amount", 0.0)), 2)
+        principal = round(float(seed.fields.get("principal_amount", 0.0)), 2)
+        ending = round(float(seed.fields.get("ending_liability_balance", 0.0)), 2)
+        if abs(round(interest + principal, 2) - payment) >= 0.01:
+            report.add("error", seed.doc_id, "Lease schedule payment does not equal interest plus principal")
+        if abs(round(opening - principal, 2) - ending) >= 0.01:
+            report.add("error", seed.doc_id, "Lease schedule ending liability does not tie")
+
+    if seed.doc_type == "lease_modification_notice":
+        old = round(float(seed.fields.get("old_liability_balance", 0.0)), 2)
+        remeasured = round(float(seed.fields.get("remeasured_liability_balance", 0.0)), 2)
+        delta = round(float(seed.fields.get("liability_remeasurement_delta_amount", 0.0)), 2)
+        rou_delta = round(float(seed.fields.get("rou_asset_adjustment_amount", 0.0)), 2)
+        if abs(round(remeasured - old, 2) - delta) >= 0.01:
+            report.add("error", seed.doc_id, "Lease modification remeasurement delta does not tie")
+        if abs(delta - rou_delta) >= 0.01:
+            report.add("error", seed.doc_id, "Lease modification ROU asset adjustment does not equal liability delta")

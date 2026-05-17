@@ -19,6 +19,11 @@ SCHEMA = schema(
     optional_fields=(
         opt("tax_label", "string", "Indirect tax label"),
         opt("tax_amount", "number", "Indirect tax amount"),
+        opt("cgst_amount", "number", "India GST central component"),
+        opt("sgst_amount", "number", "India GST state component"),
+        opt("igst_amount", "number", "India GST integrated component"),
+        opt("cogs_amount", "number", "Cost of goods sold for the period"),
+        opt("cogs_source", "string", "Source of inventory cost basis"),
     ),
     sections=(
         kv(
@@ -30,6 +35,11 @@ SCHEMA = schema(
             ("Net Sales", "net_sales"),
             ("Tax Label", "tax_label"),
             ("Tax Amount", "tax_amount"),
+            ("CGST Amount", "cgst_amount"),
+            ("SGST Amount", "sgst_amount"),
+            ("IGST Amount", "igst_amount"),
+            ("COGS Amount", "cogs_amount"),
+            ("COGS Source", "cogs_source"),
             ("Cash Sales", "cash_sales"),
             ("Card Sales", "card_sales"),
             ("Units Sold", "units_sold"),

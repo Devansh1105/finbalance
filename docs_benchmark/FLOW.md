@@ -8,7 +8,7 @@ It covers:
 - where distractor documents are added
 - how negative-control records are made
 - how currency/date format variation works
-- how indirect tax and foreign-currency support work
+- how indirect tax, ASC 606, fixed assets, deferred tax, lease accounting, and foreign-currency support work
 - how the benchmark asks models to report inconsistencies
 
 ## One Record In One Picture
@@ -138,7 +138,11 @@ It keeps:
 - open foreign-currency receivables and payables
 - deferred revenue items
 - inventory / batch state
-- asset register
+- contract subledger for ASC 606 bundled allocations
+- enriched asset register for depreciation, disposals, and deferred tax
+- lease subledger for ROU asset and lease liability schedules
+- jurisdiction profile for company/customer/vendor tax jurisdiction
+- tax context for regime, rate, account mapping, and exemption treatment
 - inconsistency metadata when needed
 
 ## A Concrete Example
@@ -327,11 +331,21 @@ hosting_bill
 vendor_payment
 payroll
 loan_draw
+bundled_contract_allocation
+interbank_transfer
 expense_accrual
 credit_memo
 renewal_invoice
 subscription_cash_invoice
 ```
+
+Difficulty levels remain public `1` through `5`:
+
+- Level 1: one-step visible postings
+- Level 2: simple two-doc support chains and directly visible tax or FX arithmetic
+- Level 3: one schedule, partial settlement, simple correction, or simple rollforward
+- Level 4: one subledger-driven multi-step scenario such as jurisdictional tax, ASC 606, asset disposal, or baseline lease accounting
+- Level 5: multi-schedule compositional reasoning, including deferred tax, lease modification, and disposal plus deferred tax
 
 ## Step 7: Each Scenario Creates Documents And Entries
 
@@ -396,6 +410,40 @@ Debit  Cash
 Credit Accounts Receivable
 Amount <payment amount>
 ```
+
+### Example: `bundled_contract_allocation`
+
+Output:
+
+- `subscription_order_form`
+- `customer_invoice`
+- `ssp_rate_card`
+- `implementation_acceptance_memo`
+- `performance_obligation_schedule`
+
+The invoice line split is intentionally not the accounting allocation. The schedule allocates the contract transaction price using visible SSPs. Implementation revenue is released on acceptance; platform revenue is released ratably.
+
+### Example: `jurisdictional_tax_invoice`
+
+Output:
+
+- `tax_regime_notice`
+- `supplier_invoice`
+- `tax_exemption_certificate`
+- `customer_tax_profile`
+- `customer_invoice`
+
+US sales tax on purchases is embedded in inventory cost. India GST uses `Input CGST Receivable` plus `Input SGST Receivable` for same-state purchases and `Input IGST Receivable` for different-state purchases. Valid exemption certificates override default tax on the exempt sale.
+
+### Example: `asset_disposal`, `deferred_tax_depreciation`, and leases
+
+The professional-services level 4 and 5 plans add:
+
+- fixed asset disposal notices and sale proceeds advice
+- deferred tax schedules and memos for book/tax depreciation differences
+- lease agreements, lease amortization schedules, payment notices, and modification notices
+
+These scenarios drive the `asset_register`, `tax_context`, and `lease_subledger` rather than relying on only one visible invoice.
 
 ## Step 8: Amounts Are Scaled
 
@@ -552,6 +600,11 @@ Checks include:
 - same-account debit/credit is rejected
 - balance sheet balances
 - year records include at least one summary/close doc
+- tax totals, tax rates, and exchange-rate computations tie
+- ASC 606 allocation totals and release amounts tie to the schedule
+- asset disposal NBV and gain/loss computations tie
+- deferred tax movement ties to the ending deferred tax liability
+- lease payments split into interest/principal and lease modifications adjust liability and ROU asset by the same delta
 
 This is why normal records stay sound.
 
@@ -609,6 +662,20 @@ Current inconsistency codes:
 - `inventory_rollforward_mismatch`
 - `transfer_mismatch`
 - `reclassification_support_mismatch`
+- `tax_total_mismatch`
+- `tax_rate_mismatch`
+- `input_tax_mismatch`
+- `jurisdiction_tax_mismatch`
+- `tax_exemption_conflict`
+- `ssp_allocation_mismatch`
+- `performance_obligation_release_mismatch`
+- `asset_disposal_mismatch`
+- `deferred_tax_rollforward_mismatch`
+- `lease_schedule_mismatch`
+- `lease_remeasurement_mismatch`
+- `exchange_rate_mismatch`
+- `fx_settlement_mismatch`
+- `remeasurement_mismatch`
 
 Examples:
 
@@ -660,13 +727,21 @@ The prompt explicitly tells the model:
 - one payment can settle several invoices
 - some cash movements are inter-bank transfers with no revenue or expense
 - some entries are internal reclassifications or corrections
+- packets may contain ASC 606 bundled contracts where SSP rate cards and performance-obligation schedules drive revenue recognition
+- country-specific tax rules may apply; US sales tax purchases are not recoverable input tax, while India GST uses CGST/SGST or IGST based on jurisdiction
+- exemption certificates can override default tax treatment
+- fixed asset disposals require NBV, accumulated depreciation removal, proceeds, and gain/loss computation
+- deferred tax comes only from visible book/tax depreciation differences and tax rates
+- lease accounting uses visible lease agreements, payment notices, amortization schedules, and modification notices
 - some packets may be inconsistent
 - if inconsistent:
   - set `has_inconsistency = true`
   - choose from the fixed `inconsistency_codes` list
   - leave `entries = []`
   - leave `balance_sheet` empty
-- do not round off values
+- use only visible rates, SSPs, tax rules, schedules, and support docs
+- do not invent assumptions
+- do not round except to cents for final monetary amounts
 
 Current inconsistency output shape:
 
@@ -753,6 +828,7 @@ industry schema
   -> build master data
   -> build opening balance
   -> pick scenarios
+  -> maintain contract, asset, lease, jurisdiction, and tax subledgers
   -> create clean document seeds + journal entries + bank rows
   -> add distractor docs
   -> add opening trial balance + bank statement

@@ -5,6 +5,7 @@ from __future__ import annotations
 from docs_benchmark.generation.master_data import build_master_data
 from docs_benchmark.generation.scenario_factories import (
     make_bad_debt_review_scenario,
+    make_bundled_contract_allocation_scenario,
     make_customer_credit_memo_scenario,
     make_deferral_invoice_scenario,
     make_deferral_release_scenario,
@@ -141,14 +142,18 @@ SCENARIOS = {
         name="interbank_transfer",
         description="Treasury transfer between the operating account and reserve account.",
     ),
+    "bundled_contract_allocation": make_bundled_contract_allocation_scenario(
+        name="bundled_contract_allocation",
+        description="ASC 606 bundled implementation and platform contract allocated using SSP rather than invoice-line split.",
+    ),
 }
 
 MONTH_PLANS = {
     1: DifficultyPlan(mandatory=("subscription_invoice", "revenue_release"), optional=("subscription_cash_invoice",)),
     2: DifficultyPlan(mandatory=("subscription_invoice", "revenue_release", "customer_payment", "hosting_bill", "vendor_payment"), optional=("subscription_cash_invoice",)),
     3: DifficultyPlan(mandatory=("subscription_invoice", "revenue_release", "customer_payment", "hosting_bill", "vendor_payment", "payroll"), optional=("subscription_cash_invoice", "renewal_invoice")),
-    4: DifficultyPlan(mandatory=("subscription_invoice", "revenue_release", "customer_payment", "hosting_bill", "vendor_payment", "payroll", "loan_draw", "interbank_transfer"), optional=("subscription_cash_invoice", "renewal_invoice")),
-    5: DifficultyPlan(mandatory=("subscription_invoice", "revenue_release", "customer_payment", "hosting_bill", "vendor_payment", "payroll", "loan_draw", "loan_repayment", "interbank_transfer"), optional=("subscription_cash_invoice", "renewal_invoice")),
+    4: DifficultyPlan(mandatory=("subscription_invoice", "revenue_release", "customer_payment", "hosting_bill", "vendor_payment", "payroll", "loan_draw", "bundled_contract_allocation", "interbank_transfer"), optional=("subscription_cash_invoice", "renewal_invoice")),
+    5: DifficultyPlan(mandatory=("subscription_invoice", "revenue_release", "customer_payment", "hosting_bill", "vendor_payment", "payroll", "loan_draw", "loan_repayment", "bundled_contract_allocation", "interbank_transfer"), optional=("subscription_cash_invoice", "renewal_invoice")),
 }
 QUARTER_PLANS = {
     1: copy_plan(MONTH_PLANS[1], "renewal_invoice"),
@@ -173,6 +178,7 @@ YEAR_PLANS = {
             "loan_draw",
             "loan_repayment",
             "interbank_transfer",
+            "bundled_contract_allocation",
             "expense_accrual",
             "credit_memo",
             "bad_debt_review",
@@ -198,8 +204,14 @@ INDUSTRY_SCHEMA = IndustrySchema(
         "Accounts Payable",
         "Accrued Expenses",
         "Input Tax Receivable",
+        "Input CGST Receivable",
+        "Input SGST Receivable",
+        "Input IGST Receivable",
         "Loans Payable",
         "Sales Tax Payable",
+        "CGST Payable",
+        "SGST Payable",
+        "IGST Payable",
         "Unearned Revenue",
         "Share Capital",
         "Retained Earnings",

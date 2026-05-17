@@ -64,6 +64,12 @@ class BenchmarkTests(unittest.TestCase):
             self.assertIn("has_inconsistency", prompt)
             self.assertIn('inconsistency_codes": ["bank_closing_mismatch"]', prompt)
             self.assertIn("ISO currency prefixes such as GBP or EUR", prompt)
+            self.assertIn("ASC 606 bundled contracts", prompt)
+            self.assertIn("US sales tax on purchases is embedded", prompt)
+            self.assertIn("India GST uses CGST plus SGST", prompt)
+            self.assertIn("fixed asset disposals", prompt)
+            self.assertIn("lease modifications", prompt)
+            self.assertIn("do not invent missing exchange rates, tax rates, SSPs, lease rates, or assumptions", prompt)
             self.assertIn(record.record_id, prompt)
             self.assertIn(record.documents[0].doc_id, prompt)
             self.assertIn(record.documents[0].ocr_text.splitlines()[0], prompt)
@@ -254,6 +260,75 @@ class BenchmarkTests(unittest.TestCase):
             self.assertFalse(analysis["metrics"]["final_balance_sheet_matches"])
             self.assertTrue(analysis["metrics"]["entries_correct_but_final_balance_sheet_wrong"])
             self.assertTrue(analysis["metrics"]["predicted_entries_reconstruct_correct_final_balance_sheet"])
+            self.assertFalse(analysis["metrics"]["predicted_balance_sheet_matches_reconstructed_balance_sheet"])
+
+    def test_unknown_predicted_account_does_not_crash_analysis(self):
+        builder = DocumentBenchmarkBuilder(seed=42)
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            record = builder.generate_record(
+                record_id="UNKNOWN_ACCOUNT_TEST",
+                industry="retail",
+                difficulty_level=3,
+                assets_root=tmp_dir,
+                period_type="month",
+            )
+            posting = record.expected_entries[0]
+            parsed = parse_submission(
+                json.dumps(
+                    {
+                        "has_inconsistency": False,
+                        "inconsistency_codes": [],
+                        "inconsistency_notes": [],
+                        "entries": [
+                            {
+                                "doc_refs": posting.doc_refs,
+                                "debit_account": "InventoryShrinkage Expense",
+                                "credit_account": posting.credit_account,
+                                "amount": posting.amount,
+                            }
+                        ],
+                        "balance_sheet": {
+                            "assets": record.expected_balance_sheet.assets,
+                            "liabilities": record.expected_balance_sheet.liabilities,
+                            "equity": record.expected_balance_sheet.equity,
+                        },
+                    }
+                )
+            )
+            analysis = analyze_submission(record, parsed, parse_success=True)
+            self.assertTrue(analysis["metrics"]["parse_success"])
+            self.assertEqual(analysis["metrics"]["invalid_account_entry_count"], 1)
+            self.assertEqual(analysis["metrics"]["invalid_accounts"], ["InventoryShrinkage Expense"])
+            self.assertEqual(analysis["entry_diagnostics"]["invalid_account_entries"][0]["index"], 0)
+            self.assertGreaterEqual(analysis["metrics"]["wrong_account_count"], 1)
+
+    def test_unknown_predicted_balance_sheet_account_does_not_crash_analysis(self):
+        builder = DocumentBenchmarkBuilder(seed=42)
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            record = builder.generate_record(
+                record_id="UNKNOWN_BALANCE_ACCOUNT_TEST",
+                industry="professional_services",
+                difficulty_level=1,
+                assets_root=tmp_dir,
+                period_type="month",
+            )
+            parsed = parse_submission(
+                json.dumps(
+                    {
+                        "has_inconsistency": False,
+                        "inconsistency_codes": [],
+                        "inconsistency_notes": [],
+                        "entries": [],
+                        "balance_sheet": {
+                            "assets": {"Imaginary Asset": 10.0},
+                            "liabilities": {},
+                            "equity": {},
+                        },
+                    }
+                )
+            )
+            analysis = analyze_submission(record, parsed, parse_success=True)
+            self.assertFalse(analysis["metrics"]["final_balance_sheet_matches"])
             self.assertFalse(analysis["metrics"]["predicted_balance_sheet_matches_reconstructed_balance_sheet"])
 
     def test_ledger_family_mapper_covers_observed_labels(self):

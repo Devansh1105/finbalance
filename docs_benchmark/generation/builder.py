@@ -146,6 +146,7 @@ class DocumentBenchmarkBuilder:
             expected_balance_sheet = self._empty_balance_sheet(state.period_end)
             expected_inconsistency = True
 
+        complexity_metadata = self._complexity_metadata(state, rendered_documents)
         return DocumentRecord(
             record_id=record_id,
             industry=industry,
@@ -181,11 +182,13 @@ class DocumentBenchmarkBuilder:
                 "tax_regime": state.tax_regime,
                 "tax_label": state.tax_label,
                 "available_inconsistency_codes": available_inconsistency_codes,
+                "scenario_notes": state.metadata.get("scenario_notes", {}),
                 "underlying_posting_labels": [posting.label for posting in state.postings if posting.label],
                 "underlying_expected_entry_count": len(state.postings),
                 "expected_inconsistency": expected_inconsistency,
                 "expected_inconsistency_codes": inconsistency_codes,
                 "inconsistency_reasons": inconsistency_reasons,
+                **complexity_metadata,
             },
         )
 
@@ -207,6 +210,7 @@ class DocumentBenchmarkBuilder:
         )
         negative_target = max(1, round(total_records * negative_control_rate)) if total_records and negative_control_rate > 0 else 0
         negative_indices = set(self.rng.sample(range(total_records), k=min(negative_target, total_records))) if negative_target else set()
+        self._negative_control_code_counts = {}
         nonstandard_target = max(1, round(total_records * 0.05)) if total_records else 0
         nonstandard_indices = set(self.rng.sample(range(total_records), k=min(nonstandard_target, total_records))) if nonstandard_target else set()
         current_index = 0
@@ -232,6 +236,7 @@ class DocumentBenchmarkBuilder:
                             current_index += 1
                             handle.write(json.dumps(record.to_dict(), ensure_ascii=True) + "\n")
                             records.append(record)
+        self._negative_control_code_counts = {}
         return records
 
     def _normalize_counts(self, counts_for_industry):
@@ -275,6 +280,46 @@ class DocumentBenchmarkBuilder:
             if current_docs >= target_max and self.rng.random() < 0.7:
                 break
         return selected
+
+    def _complexity_metadata(self, state: BusinessState, rendered_documents: list[DocumentAsset]) -> dict[str, object]:
+        scenario_sequence = set(state.scenario_log)
+        doc_types = {document.doc_type for document in rendered_documents}
+        subledger_count = sum(
+            1
+            for value in (
+                state.contract_subledger,
+                state.asset_register,
+                state.lease_subledger,
+                state.jurisdiction_profile,
+                state.tax_context,
+            )
+            if value
+        )
+        doc_dependency_depth = max((len(posting.doc_refs) for posting in state.postings), default=1)
+        temporal_lookback_depth = state.period_spec.month_count
+        if any(name in scenario_sequence for name in {"asset_disposal", "deferred_tax_depreciation", "baseline_lease", "lease_modification"}):
+            temporal_lookback_depth += 1
+        jurisdictional_depth = 0
+        if state.tax_regime != "none":
+            jurisdictional_depth = 1
+        if state.jurisdiction_profile:
+            jurisdictional_depth = 2 if state.jurisdiction_profile.get("same_state") else 3
+        reasoning_depth = max(
+            state.difficulty_level,
+            min(5, 1 + subledger_count + (1 if doc_dependency_depth >= 3 else 0) + (1 if jurisdictional_depth >= 2 else 0)),
+        )
+        return {
+            "reasoning_depth": reasoning_depth,
+            "doc_dependency_depth": doc_dependency_depth,
+            "subledger_count": subledger_count,
+            "jurisdictional_depth": jurisdictional_depth,
+            "temporal_lookback_depth": temporal_lookback_depth,
+            "has_asc606": bool(state.contract_subledger or state.metadata.get("has_asc606") or "performance_obligation_schedule" in doc_types),
+            "has_asset_disposal": bool(state.metadata.get("has_asset_disposal") or "asset_disposal_notice" in doc_types),
+            "has_deferred_tax": bool(state.metadata.get("has_deferred_tax") or "deferred_tax_memo" in doc_types),
+            "has_lease": bool(state.lease_subledger or state.metadata.get("has_lease") or "lease_agreement" in doc_types),
+            "has_tax_exemption": bool(state.metadata.get("has_tax_exemption") or "tax_exemption_certificate" in doc_types),
+        }
 
     def _opening_trial_balance_doc(self, state: BusinessState):
         rows = []
@@ -374,10 +419,13 @@ class DocumentBenchmarkBuilder:
             state.asset_register.append(
                 {
                     "asset_name": account,
+                    "asset_account": account,
                     "asset_tag": f"OPEN-{account[:3].upper()}",
                     "cost": cost,
                     "useful_life_months": life,
                     "monthly_charge": round(cost / life, 2),
+                    "accumulated_depreciation": 0.0,
+                    "book_depreciation_current_period": 0.0,
                 }
             )
 
@@ -558,7 +606,8 @@ class DocumentBenchmarkBuilder:
                 )
             issue = forced_code
         else:
-            issue = self.rng.choice(candidates)
+            code_counts = getattr(self, "_negative_control_code_counts", {})
+            issue = min(candidates, key=lambda code: (code_counts.get(code, 0), candidates.index(code)))
         if issue == "invoice_total_mismatch":
             valid_docs = [doc for doc in invoice_docs if self._replacement_is_valid(self._invoice_total_mismatch_replacement(doc))]
             doc = self.rng.choice(valid_docs)
@@ -648,6 +697,62 @@ class DocumentBenchmarkBuilder:
                 and self._replacement_is_valid(self._input_tax_mismatch_replacement(doc))
             )
             return self._replace_in_document(rendered_documents, doc, issue, self._input_tax_mismatch_replacement(doc))
+        if issue == "jurisdiction_tax_mismatch":
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type == "tax_regime_notice" and self._replacement_is_valid(self._jurisdiction_tax_mismatch_replacement(doc))
+            )
+            return self._replace_in_document(rendered_documents, doc, issue, self._jurisdiction_tax_mismatch_replacement(doc))
+        if issue == "tax_exemption_conflict":
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type == "tax_exemption_certificate" and self._replacement_is_valid(self._tax_exemption_conflict_replacement(doc))
+            )
+            return self._replace_in_document(rendered_documents, doc, issue, self._tax_exemption_conflict_replacement(doc))
+        if issue == "ssp_allocation_mismatch":
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type == "performance_obligation_schedule" and self._replacement_is_valid(self._ssp_allocation_mismatch_replacement(doc))
+            )
+            return self._replace_in_document(rendered_documents, doc, issue, self._ssp_allocation_mismatch_replacement(doc))
+        if issue == "performance_obligation_release_mismatch":
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type == "performance_obligation_schedule" and self._replacement_is_valid(self._performance_obligation_release_mismatch_replacement(doc))
+            )
+            return self._replace_in_document(rendered_documents, doc, issue, self._performance_obligation_release_mismatch_replacement(doc))
+        if issue == "asset_disposal_mismatch":
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type == "asset_disposal_notice" and self._replacement_is_valid(self._asset_disposal_mismatch_replacement(doc))
+            )
+            return self._replace_in_document(rendered_documents, doc, issue, self._asset_disposal_mismatch_replacement(doc))
+        if issue == "deferred_tax_rollforward_mismatch":
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type == "deferred_tax_memo" and self._replacement_is_valid(self._deferred_tax_rollforward_mismatch_replacement(doc))
+            )
+            return self._replace_in_document(rendered_documents, doc, issue, self._deferred_tax_rollforward_mismatch_replacement(doc))
+        if issue == "lease_schedule_mismatch":
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type == "lease_amortization_schedule" and self._replacement_is_valid(self._lease_schedule_mismatch_replacement(doc))
+            )
+            return self._replace_in_document(rendered_documents, doc, issue, self._lease_schedule_mismatch_replacement(doc))
+        if issue == "lease_remeasurement_mismatch":
+            doc = next(
+                doc
+                for doc in rendered_documents
+                if doc.doc_type == "lease_modification_notice" and self._replacement_is_valid(self._lease_remeasurement_mismatch_replacement(doc))
+            )
+            return self._replace_in_document(rendered_documents, doc, issue, self._lease_remeasurement_mismatch_replacement(doc))
         if issue == "exchange_rate_mismatch":
             doc = next(
                 doc
@@ -729,6 +834,22 @@ class DocumentBenchmarkBuilder:
             for doc in rendered_documents
         ):
             candidates.append("input_tax_mismatch")
+        if any(doc.doc_type == "tax_regime_notice" and self._replacement_is_valid(self._jurisdiction_tax_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("jurisdiction_tax_mismatch")
+        if any(doc.doc_type == "tax_exemption_certificate" and self._replacement_is_valid(self._tax_exemption_conflict_replacement(doc)) for doc in rendered_documents):
+            candidates.append("tax_exemption_conflict")
+        if any(doc.doc_type == "performance_obligation_schedule" and self._replacement_is_valid(self._ssp_allocation_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("ssp_allocation_mismatch")
+        if any(doc.doc_type == "performance_obligation_schedule" and self._replacement_is_valid(self._performance_obligation_release_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("performance_obligation_release_mismatch")
+        if any(doc.doc_type == "asset_disposal_notice" and self._replacement_is_valid(self._asset_disposal_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("asset_disposal_mismatch")
+        if any(doc.doc_type == "deferred_tax_memo" and self._replacement_is_valid(self._deferred_tax_rollforward_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("deferred_tax_rollforward_mismatch")
+        if any(doc.doc_type == "lease_amortization_schedule" and self._replacement_is_valid(self._lease_schedule_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("lease_schedule_mismatch")
+        if any(doc.doc_type == "lease_modification_notice" and self._replacement_is_valid(self._lease_remeasurement_mismatch_replacement(doc)) for doc in rendered_documents):
+            candidates.append("lease_remeasurement_mismatch")
         if any(doc.doc_type == "exchange_rate_notice" and self._replacement_is_valid(self._exchange_rate_mismatch_replacement(doc)) for doc in rendered_documents):
             candidates.append("exchange_rate_mismatch")
         if any(
@@ -777,6 +898,9 @@ class DocumentBenchmarkBuilder:
                     metadata=dict(document.metadata),
                 )
             )
+        code_counts = getattr(self, "_negative_control_code_counts", None)
+        if isinstance(code_counts, dict):
+            code_counts[inconsistency_code] = code_counts.get(inconsistency_code, 0) + 1
         return updated_documents, [inconsistency_code], [inconsistency_description(inconsistency_code)]
 
     def _invoice_total_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
@@ -891,6 +1015,70 @@ class DocumentBenchmarkBuilder:
         numeric = self._parse_display_amount(old_amount, document.metadata)
         adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
         return "Tax Amount:", old_amount, self._format_display_amount(adjusted, document.metadata)
+
+    def _jurisdiction_tax_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        old_amount = self._first_money_token_after_prefix(document.ocr_text, "Jurisdiction Tax Amount:")
+        if not old_amount:
+            return ("", "", "")
+        numeric = self._parse_display_amount(old_amount, document.metadata)
+        adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
+        return "Jurisdiction Tax Amount:", old_amount, self._format_display_amount(adjusted, document.metadata)
+
+    def _tax_exemption_conflict_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        for line in document.ocr_text.splitlines():
+            if "Exemption Status:" in line:
+                old_status = line.split("Exemption Status:", 1)[1].strip()
+                if old_status:
+                    return "Exemption Status:", old_status, "Expired"
+        return ("", "", "")
+
+    def _ssp_allocation_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        old_amount = self._first_money_token_after_prefix(document.ocr_text, "Allocation Total:")
+        if not old_amount:
+            return ("", "", "")
+        numeric = self._parse_display_amount(old_amount, document.metadata)
+        adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
+        return "Allocation Total:", old_amount, self._format_display_amount(adjusted, document.metadata)
+
+    def _performance_obligation_release_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        old_amount = self._first_money_token_after_prefix(document.ocr_text, "Released This Period:")
+        if not old_amount:
+            return ("", "", "")
+        numeric = self._parse_display_amount(old_amount, document.metadata)
+        adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
+        return "Released This Period:", old_amount, self._format_display_amount(adjusted, document.metadata)
+
+    def _asset_disposal_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        old_amount = self._first_money_token_after_prefix(document.ocr_text, "Net Book Value:")
+        if not old_amount:
+            return ("", "", "")
+        numeric = self._parse_display_amount(old_amount, document.metadata)
+        adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
+        return "Net Book Value:", old_amount, self._format_display_amount(adjusted, document.metadata)
+
+    def _deferred_tax_rollforward_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        old_amount = self._first_money_token_after_prefix(document.ocr_text, "Deferred Tax Liability Ending:")
+        if not old_amount:
+            return ("", "", "")
+        numeric = self._parse_display_amount(old_amount, document.metadata)
+        adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
+        return "Deferred Tax Liability Ending:", old_amount, self._format_display_amount(adjusted, document.metadata)
+
+    def _lease_schedule_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        old_amount = self._first_money_token_after_prefix(document.ocr_text, "Ending Liability Balance:")
+        if not old_amount:
+            return ("", "", "")
+        numeric = self._parse_display_amount(old_amount, document.metadata)
+        adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
+        return "Ending Liability Balance:", old_amount, self._format_display_amount(adjusted, document.metadata)
+
+    def _lease_remeasurement_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
+        old_amount = self._first_money_token_after_prefix(document.ocr_text, "Liability Remeasurement Delta Amount:")
+        if not old_amount:
+            return ("", "", "")
+        numeric = self._parse_display_amount(old_amount, document.metadata)
+        adjusted = round(max(0.01, numeric + self._random_mismatch_offset()), 2)
+        return "Liability Remeasurement Delta Amount:", old_amount, self._format_display_amount(adjusted, document.metadata)
 
     def _fx_settlement_mismatch_replacement(self, document: DocumentAsset) -> tuple[str, str, str]:
         prefix = "Functional Amount:"
