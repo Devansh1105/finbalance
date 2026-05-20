@@ -46,6 +46,21 @@ class OpenRouterClient:
         max_tokens: int = 8192,
         timeout: int = 180,
     ) -> tuple[str, dict[str, Any]]:
+        return self.complete_messages(
+            [{"role": "user", "content": prompt}],
+            temperature=temperature,
+            max_tokens=max_tokens,
+            timeout=timeout,
+        )
+
+    def complete_messages(
+        self,
+        messages: list[dict[str, str]],
+        *,
+        temperature: float = 0.0,
+        max_tokens: int = 8192,
+        timeout: int = 180,
+    ) -> tuple[str, dict[str, Any]]:
         response = requests.post(
             self.base_url,
             headers={
@@ -57,7 +72,7 @@ class OpenRouterClient:
                 "model": self.model,
                 "temperature": temperature,
                 "max_tokens": max_tokens,
-                "messages": [{"role": "user", "content": prompt}],
+                "messages": messages,
             },
             timeout=timeout,
         )

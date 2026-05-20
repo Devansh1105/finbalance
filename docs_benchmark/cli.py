@@ -9,7 +9,15 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from docs_benchmark.benchmark import build_prompt, filter_records, load_records, run_openrouter_evaluation
+from docs_benchmark.benchmark import (
+    build_prompt,
+    filter_records,
+    load_records,
+    run_openrouter_evaluation,
+    select_ablation_specs,
+    run_ablation_evaluation,
+    write_ablation_outputs,
+)
 from docs_benchmark.benchmark.manifests import dataset_manifest, record_manifest_row, write_jsonl
 from docs_benchmark.benchmark.model import OpenRouterClient
 from docs_benchmark.generation.builder import DocumentBenchmarkBuilder
@@ -93,6 +101,23 @@ def main() -> None:
     evaluate.add_argument("--max-output-tokens", type=int, default=8192)
     evaluate.add_argument("--timeout", type=int, default=180)
 
+    ablations = subparsers.add_parser("evaluate-ablations", help="Run provider-neutral benchmark ablations")
+    ablations.add_argument("--dataset", default="docs_benchmark/data/coverage/records.jsonl")
+    ablations.add_argument("--output-dir", default="docs_benchmark/results/ablations")
+    ablations.add_argument("--backend", choices=["openrouter"], default="openrouter")
+    ablations.add_argument("--model", required=True)
+    ablations.add_argument("--api-key")
+    ablations.add_argument("--matrix", choices=["coverage"], default="coverage")
+    ablations.add_argument("--ablations", nargs="+")
+    ablations.add_argument("--industries", nargs="+", choices=INDUSTRIES)
+    ablations.add_argument("--period-types", nargs="+", choices=PERIOD_TYPES)
+    ablations.add_argument("--levels", nargs="+", type=int)
+    ablations.add_argument("--max-records", type=int, default=15)
+    ablations.add_argument("--temperature", type=float, default=0.0)
+    ablations.add_argument("--max-output-tokens", type=int, default=8192)
+    ablations.add_argument("--timeout", type=int, default=180)
+    ablations.add_argument("--agent-max-steps", type=int, default=8)
+
     args = parser.parse_args()
     if args.command == "generate":
         builder = DocumentBenchmarkBuilder(seed=args.seed)
@@ -169,6 +194,55 @@ def main() -> None:
         output_path.write_text(json.dumps(evaluation, indent=2), encoding="utf-8")
         print(json.dumps(evaluation["summary"], indent=2))
         print(f"Saved detailed results to {output_path}")
+        return
+
+    if args.command == "evaluate-ablations":
+        api_key = args.api_key or os.environ.get("OPENROUTER_API_KEY")
+        if not api_key:
+            raise SystemExit("OpenRouter API key is required via --api-key or OPENROUTER_API_KEY")
+
+        records = filter_records(
+            load_records(args.dataset),
+            industries=args.industries,
+            period_types=args.period_types,
+            levels=args.levels,
+            max_records=args.max_records,
+        )
+        if not records:
+            raise SystemExit("No matching records found in dataset")
+
+        specs = select_ablation_specs(matrix=args.matrix, names=args.ablations)
+        client = OpenRouterClient(api_key=api_key, model=args.model)
+        output_dirs = []
+        for spec in specs:
+            evaluation = run_ablation_evaluation(
+                records,
+                client=client,
+                dataset_path=args.dataset,
+                spec=spec,
+                backend_name=args.backend,
+                temperature=args.temperature,
+                max_tokens=args.max_output_tokens,
+                timeout=args.timeout,
+                agent_max_steps=args.agent_max_steps,
+            )
+            output_dir = write_ablation_outputs(evaluation, args.output_dir)
+            output_dirs.append(str(output_dir))
+            print(
+                json.dumps(
+                    {
+                        "ablation_name": spec.name,
+                        "records_evaluated": evaluation["summary"]["records_evaluated"],
+                        "parse_success_rate": evaluation["summary"]["parse_success_rate"],
+                        "final_balance_sheet_and_journal_entries_match_rate": evaluation["summary"][
+                            "final_balance_sheet_and_journal_entries_match_rate"
+                        ],
+                        "output_dir": str(output_dir),
+                    },
+                    indent=2,
+                )
+            )
+        print(json.dumps({"ablations_completed": len(output_dirs), "output_dirs": output_dirs}, indent=2))
         return
 
     builder = DocumentBenchmarkBuilder(seed=args.seed)

@@ -3,12 +3,47 @@
 from __future__ import annotations
 
 import json
+from typing import Final
 
 from docs_benchmark.inconsistencies import INCONSISTENCY_CODE_DETAILS
 from docs_benchmark.schemas import DocumentRecord
 
 
-def build_prompt(record: DocumentRecord) -> str:
+PROMPT_VARIANT_BASELINE: Final = "baseline"
+PROMPT_VARIANT_GUIDED_PRIVATE_SOLVE: Final = "guided_private_solve"
+PROMPT_VARIANT_SELF_CHECK: Final = "self_check"
+PROMPT_VARIANTS: Final = (
+    PROMPT_VARIANT_BASELINE,
+    PROMPT_VARIANT_GUIDED_PRIVATE_SOLVE,
+    PROMPT_VARIANT_SELF_CHECK,
+)
+
+VISIBILITY_VARIANT_NORMAL: Final = "normal"
+VISIBILITY_VARIANT_OCR_ONLY: Final = "ocr_only"
+VISIBILITY_VARIANT_NO_DISTRACTORS_ORACLE: Final = "no_distractors_oracle"
+VISIBILITY_VARIANT_SUPPORT_DOCS_REMOVED: Final = "support_docs_removed"
+VISIBILITY_VARIANT_NO_ALLOWED_ACCOUNTS: Final = "no_allowed_accounts"
+VISIBILITY_VARIANTS: Final = (
+    VISIBILITY_VARIANT_NORMAL,
+    VISIBILITY_VARIANT_OCR_ONLY,
+    VISIBILITY_VARIANT_NO_DISTRACTORS_ORACLE,
+    VISIBILITY_VARIANT_SUPPORT_DOCS_REMOVED,
+    VISIBILITY_VARIANT_NO_ALLOWED_ACCOUNTS,
+)
+
+
+def build_prompt(
+    record: DocumentRecord,
+    *,
+    prompt_variant: str = PROMPT_VARIANT_BASELINE,
+    visibility_variant: str = VISIBILITY_VARIANT_NORMAL,
+) -> str:
+    if prompt_variant not in PROMPT_VARIANTS:
+        raise ValueError(f"Unknown prompt variant '{prompt_variant}'")
+    if visibility_variant not in VISIBILITY_VARIANTS:
+        raise ValueError(f"Unknown visibility variant '{visibility_variant}'")
+
+    include_allowed_accounts = visibility_variant != VISIBILITY_VARIANT_NO_ALLOWED_ACCOUNTS and bool(record.allowed_accounts)
     account_list = json.dumps(record.allowed_accounts, indent=2)
     inconsistency_code_list = json.dumps(INCONSISTENCY_CODE_DETAILS, indent=2)
     lines = [
@@ -59,73 +94,121 @@ def build_prompt(record: DocumentRecord) -> str:
         "- Use the document ids that are primary evidence for the posting; support-only docs may also be included when needed.",
         "- The final balance sheet must balance: assets = liabilities + equity.",
         "- The balance_sheet object must have exactly these keys: assets, liabilities, equity.",
-        "",
-        "Record context:",
-        f"- Record ID: {record.record_id}",
-        f"- Industry: {record.industry}",
-        f"- Difficulty level: {record.difficulty_level}",
-        f"- Period: {record.metadata.get('period_label', record.period_end)}",
-        f"- Period start: {record.period_start}",
-        f"- Period end: {record.period_end}",
-        f"- Entity: {record.metadata.get('entity_name', 'Unknown Entity')}",
-        f"- Document display currency: {record.metadata.get('currency_code', 'USD')} ({record.metadata.get('currency_symbol', '$')})",
-        f"- Functional currency for the answer: {record.metadata.get('functional_currency_code', record.metadata.get('currency_code', 'USD'))}",
-        f"- Document date format: {record.metadata.get('date_format', 'YYYY-MM-DD')}",
-        f"- Indirect tax regime for this packet: {record.metadata.get('tax_regime', 'none')}",
-        "- Some packets may show ISO currency prefixes such as GBP or EUR instead of symbols like $ or £.",
-        "",
-        "Allowed account names:",
-        account_list,
-        "",
-        "Allowed inconsistency codes:",
-        inconsistency_code_list,
-        "",
-        "Output JSON shape:",
-        "{",
-        '  "has_inconsistency": false,',
-        '  "inconsistency_codes": [],',
-        '  "inconsistency_notes": [],',
-        '  "entries": [',
-        "    {",
-        '      "doc_refs": ["D003"],',
-        '      "debit_account": "Accounts Receivable",',
-        '      "credit_account": "Service Revenue",',
-        '      "amount": 1250.0',
-        "    }",
-        "  ],",
-        '  "balance_sheet": {',
-        '    "assets": {},',
-        '    "liabilities": {},',
-        '    "equity": {}',
-        "  }",
-        "}",
-        "",
-        "Example for an inconsistent packet:",
-        "{",
-        '  "has_inconsistency": true,',
-        '  "inconsistency_codes": ["bank_closing_mismatch"],',
-        '  "inconsistency_notes": ["Bank closing balance does not tie to the listed statement rows."],',
-        '  "entries": [],',
-        '  "balance_sheet": {',
-        '    "assets": {},',
-        '    "liabilities": {},',
-        '    "equity": {}',
-        "  }",
-        "}",
-        "",
-        "Documents:",
     ]
-
-    for document in record.documents:
+    if not include_allowed_accounts:
+        lines.remove("- Use only the allowed account names.")
+    if prompt_variant in {PROMPT_VARIANT_GUIDED_PRIVATE_SOLVE, PROMPT_VARIANT_SELF_CHECK}:
         lines.extend(
             [
                 "",
-                f"Document ID: {document.doc_id}",
-                f"Document Type: {document.doc_type}",
-                f"Document Title: {document.title}",
-                "Document OCR Text:",
-                document.ocr_text.strip() or "(empty document text)",
+                "Private workflow before the final JSON:",
+                "- Identify posting documents, support documents, adjustment documents, and distractors.",
+                "- Link each posting to the primary and support documents that determine it.",
+                "- Compute journal entries from visible amounts, rates, allocations, schedules, and rollforwards.",
+                "- Reconstruct the balance sheet from the opening trial balance plus proposed entries.",
+                "- Check whether visible documents contradict each other before deciding inconsistency codes.",
+                "- Return only the strict JSON answer after this private workflow.",
             ]
         )
+    if prompt_variant == PROMPT_VARIANT_SELF_CHECK:
+        lines.extend(
+            [
+                "",
+                "Private final verification:",
+                "- Verify that the journal entries reconstruct the submitted balance sheet.",
+                "- Verify that any inconsistency code is supported by a visible contradiction.",
+                "- Verify that reconcilable packets have no missing or extra period activity.",
+            ]
+        )
+    lines.extend(
+        [
+            "",
+            "Record context:",
+            f"- Record ID: {record.record_id}",
+            f"- Industry: {record.industry}",
+            f"- Difficulty level: {record.difficulty_level}",
+            f"- Period: {record.metadata.get('period_label', record.period_end)}",
+            f"- Period start: {record.period_start}",
+            f"- Period end: {record.period_end}",
+            f"- Entity: {record.metadata.get('entity_name', 'Unknown Entity')}",
+            f"- Document display currency: {record.metadata.get('currency_code', 'USD')} ({record.metadata.get('currency_symbol', '$')})",
+            f"- Functional currency for the answer: {record.metadata.get('functional_currency_code', record.metadata.get('currency_code', 'USD'))}",
+            f"- Document date format: {record.metadata.get('date_format', 'YYYY-MM-DD')}",
+            f"- Indirect tax regime for this packet: {record.metadata.get('tax_regime', 'none')}",
+            "- Some packets may show ISO currency prefixes such as GBP or EUR instead of symbols like $ or £.",
+            "",
+        ]
+    )
+    if include_allowed_accounts:
+        lines.extend(
+            [
+                "Allowed account names:",
+                account_list,
+                "",
+            ]
+        )
+    lines.extend(
+        [
+            "Allowed inconsistency codes:",
+            inconsistency_code_list,
+            "",
+            "Output JSON shape:",
+            "{",
+            '  "has_inconsistency": false,',
+            '  "inconsistency_codes": [],',
+            '  "inconsistency_notes": [],',
+            '  "entries": [',
+            "    {",
+            '      "doc_refs": ["D003"],',
+            '      "debit_account": "Accounts Receivable",',
+            '      "credit_account": "Service Revenue",',
+            '      "amount": 1250.0',
+            "    }",
+            "  ],",
+            '  "balance_sheet": {',
+            '    "assets": {},',
+            '    "liabilities": {},',
+            '    "equity": {}',
+            "  }",
+            "}",
+            "",
+            "Example for an inconsistent packet:",
+            "{",
+            '  "has_inconsistency": true,',
+            '  "inconsistency_codes": ["bank_closing_mismatch"],',
+            '  "inconsistency_notes": ["Bank closing balance does not tie to the listed statement rows."],',
+            '  "entries": [],',
+            '  "balance_sheet": {',
+            '    "assets": {},',
+            '    "liabilities": {},',
+            '    "equity": {}',
+            "  }",
+            "}",
+            "",
+            "Documents:",
+        ]
+    )
+
+    for document in record.documents:
+        if visibility_variant == VISIBILITY_VARIANT_OCR_ONLY:
+            lines.extend(
+                [
+                    "",
+                    f"Document ID: {document.doc_id}",
+                    "Document OCR Text:",
+                    document.ocr_text.strip() or "(empty document text)",
+                ]
+            )
+        else:
+            lines.extend(
+                [
+                    "",
+                    f"Document ID: {document.doc_id}",
+                    f"Document Type: {document.doc_type}",
+                    f"Document Title: {document.title}",
+                    "Document OCR Text:",
+                    document.ocr_text.strip() or "(empty document text)",
+                ]
+            )
 
     return "\n".join(lines).strip() + "\n"
