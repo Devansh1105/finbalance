@@ -8,6 +8,7 @@ from docs_benchmark.benchmark.ablations import (
     summarize_ablation_results,
     write_ablation_outputs,
 )
+from docs_benchmark.benchmark.bootstrap import analyze_ablation_bootstrap
 from docs_benchmark.benchmark.analysis import (
     analyze_submission,
     group_results_by_feature_flags,
@@ -17,7 +18,7 @@ from docs_benchmark.benchmark.analysis import (
     summarize_result_subset,
     summarize_expected_entry_groups,
 )
-from docs_benchmark.benchmark.dataset import filter_records, load_records
+from docs_benchmark.benchmark.dataset import filter_records, load_records, stratified_sample_records
 from docs_benchmark.benchmark.manifests import dataset_manifest, record_manifest_row, record_feature_flags, write_jsonl
 from docs_benchmark.benchmark.model import OpenRouterClient
 from docs_benchmark.benchmark.parser import SubmissionParseError, parse_submission
@@ -28,6 +29,7 @@ from docs_benchmark.benchmark.tools import TOOL_VARIANTS
 
 __all__ = [
     "analyze_submission",
+    "analyze_ablation_bootstrap",
     "AblationSpec",
     "apply_visibility_variant",
     "dataset_manifest",
@@ -48,6 +50,7 @@ __all__ = [
     "run_openrouter_evaluation",
     "select_ablation_specs",
     "score_submission",
+    "stratified_sample_records",
     "summarize_ablation_results",
     "summarize_result_subset",
     "summarize_expected_entry_groups",

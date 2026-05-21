@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from typing import Any, Protocol
 
 from docs_benchmark.accounts import ACCOUNT_TYPES
-from docs_benchmark.benchmark.analysis import serialize_balance_sheet
+from docs_benchmark.benchmark.analysis import posting_to_dict, serialize_balance_sheet
 from docs_benchmark.benchmark.parser import _extract_json_blob, parse_submission
 from docs_benchmark.inconsistencies import INCONSISTENCY_CODES
 from docs_benchmark.ledger import Ledger
@@ -22,12 +22,16 @@ TOOL_VARIANT_CALCULATOR = "calculator"
 TOOL_VARIANT_DOCUMENT_SEARCH = "document_search"
 TOOL_VARIANT_LEDGER_CHECK = "ledger_check"
 TOOL_VARIANT_FULL_TOOL_AGENT = "full_tool_agent"
+TOOL_VARIANT_FORCED_LEDGER_VERIFIER = "forced_ledger_verifier"
+TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS = "forced_ledger_verifier_2pass"
 TOOL_VARIANTS = (
     TOOL_VARIANT_NO_TOOLS,
     TOOL_VARIANT_CALCULATOR,
     TOOL_VARIANT_DOCUMENT_SEARCH,
     TOOL_VARIANT_LEDGER_CHECK,
     TOOL_VARIANT_FULL_TOOL_AGENT,
+    TOOL_VARIANT_FORCED_LEDGER_VERIFIER,
+    TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS,
 )
 
 TOOL_CALCULATOR = "calculator"
@@ -46,6 +50,8 @@ TOOLS_BY_VARIANT = {
         TOOL_LEDGER_CHECK,
         TOOL_INCONSISTENCY_CHECK,
     ),
+    TOOL_VARIANT_FORCED_LEDGER_VERIFIER: (TOOL_LEDGER_CHECK,),
+    TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS: (TOOL_LEDGER_CHECK,),
 }
 
 
@@ -70,6 +76,8 @@ class ToolAgentResult:
     tool_calls: list[dict[str, Any]] = field(default_factory=list)
     tool_call_failures: int = 0
     latency_seconds: float = 0.0
+    verifier_passes: int = 0
+    verifier_feedback: list[dict[str, Any]] = field(default_factory=list)
 
 
 def run_no_tool_completion(
@@ -198,6 +206,78 @@ def run_tool_agent_completion(
     )
 
 
+def run_forced_ledger_verifier_completion(
+    record: DocumentRecord,
+    client: ChatClient,
+    prompt: str,
+    *,
+    verifier_passes: int = 1,
+    temperature: float,
+    max_tokens: int,
+    timeout: int,
+) -> ToolAgentResult:
+    started = time.monotonic()
+    tool_calls: list[dict[str, Any]] = []
+    feedback_items: list[dict[str, Any]] = []
+    payloads: list[dict[str, Any]] = []
+    messages = [
+        {
+            "role": "user",
+            "content": (
+                prompt
+                + "\n\nReturn a strict JSON draft answer. A deterministic ledger verifier "
+                "will check whether your entries reconstruct your submitted balance sheet, "
+                f"then you will get up to {max(0, int(verifier_passes))} revision pass(es)."
+            ),
+        }
+    ]
+
+    response_text, response_payload = _complete_messages(
+        client,
+        messages,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        timeout=timeout,
+    )
+    payloads.append(response_payload)
+    messages.append({"role": "assistant", "content": response_text})
+
+    for pass_index in range(max(0, int(verifier_passes))):
+        feedback, tool_call = _ledger_verifier_feedback(record, response_text, pass_index + 1)
+        feedback_items.append(feedback)
+        tool_calls.append(tool_call)
+        messages.append(
+            {
+                "role": "user",
+                "content": (
+                    "Deterministic ledger verifier feedback:\n"
+                    + json.dumps(feedback, sort_keys=True)
+                    + "\nRevise if needed, then return only the final strict benchmark JSON answer. "
+                    "Do not include tool-call JSON or explanatory prose."
+                ),
+            }
+        )
+        response_text, response_payload = _complete_messages(
+            client,
+            messages,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            timeout=timeout,
+        )
+        payloads.append(response_payload)
+        messages.append({"role": "assistant", "content": response_text})
+
+    return ToolAgentResult(
+        response_text=response_text,
+        response_payload=_payload_with_combined_usage(response_payload, payloads),
+        tool_calls=tool_calls,
+        tool_call_failures=0,
+        latency_seconds=round(time.monotonic() - started, 4),
+        verifier_passes=len(feedback_items),
+        verifier_feedback=feedback_items,
+    )
+
+
 def execute_tool(tool_name: str, arguments: dict[str, Any], record: DocumentRecord) -> dict[str, Any]:
     if tool_name == TOOL_CALCULATOR:
         return calculator_tool(arguments)
@@ -308,6 +388,116 @@ def inconsistency_check_tool(arguments: dict[str, Any]) -> dict[str, Any]:
         "claimed_codes": codes,
         "unknown_codes": unknown,
         "note": "This deterministic check validates code names; document-specific contradiction checks are limited.",
+    }
+
+
+def _ledger_verifier_feedback(
+    record: DocumentRecord,
+    response_text: str,
+    pass_number: int,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    try:
+        parsed = parse_submission(response_text)
+    except Exception as exc:
+        feedback = {
+            "pass_number": pass_number,
+            "parse_success": False,
+            "parse_error": str(exc),
+            "ledger_check": None,
+            "submitted_balance_sheet_matches_reconstructed": False,
+            "balance_sheet_deltas": [],
+            "note": (
+                "The draft could not be parsed. Return the required top-level JSON object "
+                "with has_inconsistency, inconsistency_codes, inconsistency_notes, entries, and balance_sheet."
+            ),
+        }
+        return feedback, {"tool": TOOL_LEDGER_CHECK, "arguments": {}, "result": feedback}
+
+    entries = [posting_to_dict(entry) for entry in parsed.entries]
+    ledger_result = ledger_check_tool({"entries": entries}, record)
+    submitted_balance_sheet = serialize_balance_sheet(parsed.balance_sheet)
+    reconstructed_balance_sheet = ledger_result.get("reconstructed_balance_sheet")
+    if parsed.has_inconsistency:
+        comparison = {"matches": None, "deltas": [], "delta_count": 0}
+        comparison_note = "Balance-sheet replay comparison skipped because the draft claims inconsistency."
+    else:
+        comparison = _compare_balance_sheets(
+            submitted_balance_sheet,
+            reconstructed_balance_sheet if isinstance(reconstructed_balance_sheet, dict) else None,
+        )
+        comparison_note = (
+            "This verifier only checks whether the submitted entries replay through the ledger "
+            "and whether the submitted balance sheet equals that replayed balance sheet. It does "
+            "not prove that the chosen entries or inconsistency decision are correct."
+        )
+    feedback = {
+        "pass_number": pass_number,
+        "parse_success": True,
+        "claimed_inconsistency": parsed.has_inconsistency,
+        "entry_count": len(entries),
+        "ledger_check": ledger_result,
+        "submitted_balance_sheet": submitted_balance_sheet,
+        "submitted_balance_sheet_matches_reconstructed": comparison["matches"],
+        "balance_sheet_deltas": comparison["deltas"],
+        "balance_sheet_delta_count": comparison["delta_count"],
+        "note": comparison_note,
+    }
+    return feedback, {"tool": TOOL_LEDGER_CHECK, "arguments": {"entries": entries}, "result": feedback}
+
+
+def _compare_balance_sheets(
+    submitted: dict[str, Any],
+    reconstructed: dict[str, Any] | None,
+    *,
+    tolerance: float = 0.01,
+    limit: int = 30,
+) -> dict[str, Any]:
+    if reconstructed is None:
+        return {"matches": False, "deltas": [], "delta_count": 0}
+
+    deltas: list[dict[str, Any]] = []
+    for section in ("assets", "liabilities", "equity"):
+        submitted_accounts = submitted.get(section, {}) if isinstance(submitted.get(section), dict) else {}
+        reconstructed_accounts = (
+            reconstructed.get(section, {}) if isinstance(reconstructed.get(section), dict) else {}
+        )
+        accounts = sorted(set(submitted_accounts) | set(reconstructed_accounts))
+        for account in accounts:
+            submitted_amount = float(submitted_accounts.get(account, 0.0))
+            reconstructed_amount = float(reconstructed_accounts.get(account, 0.0))
+            delta = round(submitted_amount - reconstructed_amount, 2)
+            if abs(delta) <= tolerance:
+                continue
+            deltas.append(
+                {
+                    "section": section,
+                    "account": account,
+                    "submitted": round(submitted_amount, 2),
+                    "reconstructed": round(reconstructed_amount, 2),
+                    "delta": delta,
+                }
+            )
+
+    total_deltas = list(deltas)
+    for total_key in ("total_assets", "total_liabilities", "total_equity"):
+        submitted_total = float(submitted.get(total_key, 0.0))
+        reconstructed_total = float(reconstructed.get(total_key, 0.0))
+        delta = round(submitted_total - reconstructed_total, 2)
+        if abs(delta) > tolerance:
+            total_deltas.append(
+                {
+                    "section": "totals",
+                    "account": total_key,
+                    "submitted": round(submitted_total, 2),
+                    "reconstructed": round(reconstructed_total, 2),
+                    "delta": delta,
+                }
+            )
+
+    return {
+        "matches": not total_deltas,
+        "deltas": total_deltas[:limit],
+        "delta_count": len(total_deltas),
     }
 
 

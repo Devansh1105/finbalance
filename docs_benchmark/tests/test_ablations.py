@@ -1,6 +1,7 @@
 import json
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 from docs_benchmark.accounts import ALLOWED_ACCOUNT_NAMES
@@ -11,8 +12,14 @@ from docs_benchmark.benchmark.ablations import (
     select_ablation_specs,
     write_ablation_outputs,
 )
+from docs_benchmark.benchmark.bootstrap import analyze_ablation_bootstrap
+from docs_benchmark.benchmark.dataset import stratified_sample_records
 from docs_benchmark.benchmark.prompt import (
+    PROMPT_VARIANT_BALANCE_RECONSTRUCTION,
     PROMPT_VARIANTS,
+    VISIBILITY_VARIANT_EVIDENCE_ONLY,
+    VISIBILITY_VARIANT_EVIDENCE_PLUS_5_DISTRACTORS,
+    VISIBILITY_VARIANT_EVIDENCE_RELEVANT_LAST,
     VISIBILITY_VARIANT_NO_ALLOWED_ACCOUNTS,
     VISIBILITY_VARIANT_NO_DISTRACTORS_ORACLE,
     VISIBILITY_VARIANT_NORMAL,
@@ -22,8 +29,10 @@ from docs_benchmark.benchmark.prompt import (
 )
 from docs_benchmark.benchmark.tools import (
     TOOL_CALCULATOR,
+    TOOL_VARIANT_FORCED_LEDGER_VERIFIER,
     calculator_tool,
     ledger_check_tool,
+    run_forced_ledger_verifier_completion,
     run_tool_agent_completion,
 )
 from docs_benchmark.ledger import Ledger
@@ -157,6 +166,42 @@ def _submission(record: DocumentRecord) -> str:
     )
 
 
+def _wrong_balance_submission(record: DocumentRecord) -> str:
+    payload = json.loads(_submission(record))
+    payload["balance_sheet"]["assets"] = {"Cash": 1.0}
+    return json.dumps(payload)
+
+
+def _inconsistency_submission() -> str:
+    return json.dumps(
+        {
+            "has_inconsistency": True,
+            "inconsistency_codes": ["bank_closing_mismatch"],
+            "inconsistency_notes": ["Bank closing balance does not tie."],
+            "entries": [],
+            "balance_sheet": {"assets": {}, "liabilities": {}, "equity": {}},
+        }
+    )
+
+
+def _record_with_extra_distractors(record_id: str = "DISTRACTOR_SOURCE", count: int = 6) -> DocumentRecord:
+    record = _record(record_id)
+    documents = []
+    for index in range(count):
+        documents.append(
+            DocumentAsset(
+                doc_id=f"X{index + 1:03d}",
+                doc_type="memo",
+                role="distractor_doc",
+                title=f"Injected Distractor {index + 1}",
+                date="2024-01-20",
+                asset_path=f"assets/X{index + 1:03d}.pdf",
+                ocr_text=f"External distractor memo {index + 1}.",
+            )
+        )
+    return replace(record, documents=documents)
+
+
 class AblationTests(unittest.TestCase):
     def test_prompt_registry_builds_all_variants(self):
         record = _record()
@@ -165,6 +210,8 @@ class AblationTests(unittest.TestCase):
             self.assertIn("has_inconsistency", prompt)
             self.assertIn(record.record_id, prompt)
         self.assertIn("Private workflow before the final JSON", build_prompt(record, prompt_variant="self_check"))
+        reconstruction_prompt = build_prompt(record, prompt_variant=PROMPT_VARIANT_BALANCE_RECONSTRUCTION)
+        self.assertIn("Private balance reconstruction workflow", reconstruction_prompt)
 
     def test_visibility_transforms_preserve_ground_truth_and_doc_ids(self):
         record = _record()
@@ -179,6 +226,32 @@ class AblationTests(unittest.TestCase):
         transformed, _ = apply_visibility_variant(record, VISIBILITY_VARIANT_NO_ALLOWED_ACCOUNTS)
         self.assertEqual(transformed.allowed_accounts, [])
         self.assertGreater(len(record.allowed_accounts), 0)
+
+    def test_context_visibility_variants_keep_evidence_and_pad_deterministically(self):
+        record = _record()
+        source = _record_with_extra_distractors()
+        evidence_only, metadata = apply_visibility_variant(record, VISIBILITY_VARIANT_EVIDENCE_ONLY)
+        self.assertEqual([doc.doc_id for doc in evidence_only.documents], ["D001", "D002"])
+        self.assertEqual(metadata["kept_evidence_doc_ids"], ["D001", "D002"])
+        self.assertEqual(metadata["removed_document_ids"], ["D003", "D004"])
+        self.assertEqual(record.expected_entries[0].doc_refs, ["D001", "D002"])
+
+        padded, metadata = apply_visibility_variant(
+            record,
+            VISIBILITY_VARIANT_EVIDENCE_PLUS_5_DISTRACTORS,
+            corpus_records=[record, source],
+        )
+        self.assertEqual([doc.doc_id for doc in padded.documents[:3]], ["D001", "D002", "D004"])
+        self.assertEqual(metadata["padding_doc_ids"], ["D004", "PX001", "PX002", "PX003", "PX004"])
+        self.assertEqual(len(metadata["injected_documents"]), 4)
+
+        relevant_last, metadata = apply_visibility_variant(
+            record,
+            VISIBILITY_VARIANT_EVIDENCE_RELEVANT_LAST,
+            corpus_records=[record, source],
+        )
+        self.assertEqual([doc.doc_id for doc in relevant_last.documents[-2:]], ["D001", "D002"])
+        self.assertEqual(metadata["padding_doc_ids"][0], "D004")
 
     def test_ocr_only_and_account_visibility_prompt_rendering(self):
         record = _record()
@@ -251,6 +324,66 @@ class AblationTests(unittest.TestCase):
         self.assertEqual(len(exhausted.tool_calls), 1)
         self.assertEqual(exhausted.tool_call_failures, 1)
 
+    def test_forced_ledger_verifier_runs_draft_feedback_and_revision(self):
+        record = _record()
+        final_answer = _submission(record)
+        client = _SequenceClient([_wrong_balance_submission(record), final_answer])
+        result = run_forced_ledger_verifier_completion(
+            record,
+            client,
+            "Return the answer.",
+            verifier_passes=1,
+            temperature=0.0,
+            max_tokens=1024,
+            timeout=30,
+        )
+        self.assertEqual(result.response_text, final_answer)
+        self.assertEqual(result.verifier_passes, 1)
+        self.assertEqual(len(result.tool_calls), 1)
+        self.assertFalse(result.verifier_feedback[0]["submitted_balance_sheet_matches_reconstructed"])
+        self.assertGreater(result.verifier_feedback[0]["balance_sheet_delta_count"], 0)
+        self.assertEqual(result.response_payload["usage"]["cost"], 0.02)
+
+    def test_forced_ledger_verifier_handles_malformed_draft(self):
+        record = _record()
+        final_answer = _submission(record)
+        client = _SequenceClient(["not json", final_answer])
+        result = run_forced_ledger_verifier_completion(
+            record,
+            client,
+            "Return the answer.",
+            verifier_passes=1,
+            temperature=0.0,
+            max_tokens=1024,
+            timeout=30,
+        )
+        self.assertFalse(result.verifier_feedback[0]["parse_success"])
+        self.assertIn("parse_error", result.verifier_feedback[0])
+
+    def test_forced_ledger_verifier_skips_balance_comparison_for_inconsistency_claims(self):
+        record = replace(
+            _record(),
+            expected_inconsistency=True,
+            expected_inconsistency_codes=["bank_closing_mismatch"],
+            expected_entries=[],
+        )
+        final_answer = _inconsistency_submission()
+        client = _SequenceClient([final_answer, final_answer])
+        result = run_forced_ledger_verifier_completion(
+            record,
+            client,
+            "Return the answer.",
+            verifier_passes=1,
+            temperature=0.0,
+            max_tokens=1024,
+            timeout=30,
+        )
+        feedback = result.verifier_feedback[0]
+        self.assertTrue(feedback["claimed_inconsistency"])
+        self.assertIsNone(feedback["submitted_balance_sheet_matches_reconstructed"])
+        self.assertEqual(feedback["balance_sheet_delta_count"], 0)
+        self.assertIn("skipped", feedback["note"])
+
     def test_tools_are_deterministic_and_robust(self):
         record = _record()
         self.assertEqual(calculator_tool({"expression": "(40 + 60) / 2"})["result"], 50.0)
@@ -298,13 +431,114 @@ class AblationTests(unittest.TestCase):
             rows = (output_dir / "per_record_results.jsonl").read_text(encoding="utf-8").strip().splitlines()
             self.assertEqual(len(rows), 2)
 
+    def test_ablation_runner_records_forced_verifier_metadata(self):
+        record = _record("ABLATION_VERIFY")
+        client = _SequenceClient([_wrong_balance_submission(record), _submission(record)])
+        evaluation = run_ablation_evaluation(
+            [record],
+            client=client,
+            dataset_path="unit.jsonl",
+            spec=AblationSpec("forced_unit", tool_variant=TOOL_VARIANT_FORCED_LEDGER_VERIFIER),
+            temperature=0.0,
+            max_tokens=1024,
+            timeout=30,
+        )
+        result = evaluation["results"][0]
+        self.assertEqual(result["verifier_passes"], 1)
+        self.assertEqual(evaluation["summary"]["verifier_passes_total"], 1)
+        self.assertEqual(evaluation["summary"]["tool_call_count_total"], 1)
+        self.assertIn("verifier_feedback", result)
+
     def test_coverage_matrix_names_are_selectable(self):
         names = [spec.name for spec in select_ablation_specs()]
         self.assertIn("prompt_self_check", names)
         self.assertIn("visibility_no_allowed_accounts", names)
         self.assertIn("tool_full_tool_agent", names)
+        targeted_names = [spec.name for spec in select_ablation_specs(matrix="targeted")]
+        self.assertIn("forced_ledger_verifier", targeted_names)
+        self.assertIn("evidence_plus_30_distractors", targeted_names)
+        context_names = [spec.name for spec in select_ablation_specs(matrix="context_stress")]
+        self.assertEqual(context_names[0], "prompt_baseline")
+        self.assertIn("evidence_relevant_last", context_names)
         selected = select_ablation_specs(names=["prompt_baseline", "tool_calculator"])
         self.assertEqual([spec.name for spec in selected], ["prompt_baseline", "tool_calculator"])
+        selected = select_ablation_specs(names=["forced_ledger_verifier"])
+        self.assertEqual(selected[0].tool_variant, TOOL_VARIANT_FORCED_LEDGER_VERIFIER)
+
+    def test_bootstrap_analysis_outputs_paired_comparisons(self):
+        baseline = [
+            {
+                "record_id": "R1",
+                "metrics": {
+                    "expected_inconsistency": False,
+                    "predicted_entries_reconstruct_correct_final_balance_sheet": True,
+                    "final_balance_sheet_matches": False,
+                    "final_journal_entries_match_no_doc_refs": True,
+                    "final_balance_sheet_and_journal_entries_match": False,
+                    "doc_refs_mismatch_count": 1,
+                    "expected_entry_count": 2,
+                },
+            },
+            {
+                "record_id": "R2",
+                "metrics": {
+                    "expected_inconsistency": True,
+                    "inconsistency_code_matches": True,
+                },
+            },
+        ]
+        variant = [
+            {
+                "record_id": "R1",
+                "metrics": {
+                    "expected_inconsistency": False,
+                    "predicted_entries_reconstruct_correct_final_balance_sheet": True,
+                    "final_balance_sheet_matches": True,
+                    "final_journal_entries_match_no_doc_refs": True,
+                    "final_balance_sheet_and_journal_entries_match": True,
+                    "doc_refs_mismatch_count": 0,
+                    "expected_entry_count": 2,
+                },
+            },
+            {
+                "record_id": "R2",
+                "metrics": {
+                    "expected_inconsistency": True,
+                    "inconsistency_code_matches": False,
+                },
+            },
+        ]
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            (root / "prompt_baseline").mkdir()
+            (root / "forced_ledger_verifier").mkdir()
+            (root / "prompt_baseline" / "per_record_results.jsonl").write_text(
+                "\n".join(json.dumps(row) for row in baseline) + "\n",
+                encoding="utf-8",
+            )
+            (root / "forced_ledger_verifier" / "per_record_results.jsonl").write_text(
+                "\n".join(json.dumps(row) for row in variant) + "\n",
+                encoding="utf-8",
+            )
+            summary = analyze_ablation_bootstrap(root, iterations=20, seed=3)
+            metrics = {(row["ablation_name"], row["metric"]): row for row in summary["comparisons"]}
+            self.assertEqual(
+                metrics[
+                    ("forced_ledger_verifier", "final_balance_sheet_and_journal_entries_match_rate")
+                ]["diff"],
+                1.0,
+            )
+            self.assertTrue((root / "bootstrap_summary.json").exists())
+            self.assertTrue((root / "bootstrap_summary.csv").exists())
+
+    def test_stratified_sample_records_round_robins_groups(self):
+        records = [
+            replace(_record(f"R{index}"), difficulty_level=(index % 2) + 1, industry=f"industry_{index % 3}")
+            for index in range(12)
+        ]
+        sampled = stratified_sample_records(records, 5)
+        self.assertEqual(len(sampled), 5)
+        self.assertEqual(len({(record.difficulty_level, record.industry) for record in sampled}), 5)
 
 
 if __name__ == "__main__":

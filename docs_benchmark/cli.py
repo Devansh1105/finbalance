@@ -10,11 +10,13 @@ import tempfile
 from pathlib import Path
 
 from docs_benchmark.benchmark import (
+    analyze_ablation_bootstrap,
     build_prompt,
     filter_records,
     load_records,
     run_openrouter_evaluation,
     select_ablation_specs,
+    stratified_sample_records,
     run_ablation_evaluation,
     write_ablation_outputs,
 )
@@ -107,16 +109,25 @@ def main() -> None:
     ablations.add_argument("--backend", choices=["openrouter"], default="openrouter")
     ablations.add_argument("--model", required=True)
     ablations.add_argument("--api-key")
-    ablations.add_argument("--matrix", choices=["coverage"], default="coverage")
+    ablations.add_argument("--matrix", choices=["coverage", "targeted", "context_stress"], default="coverage")
     ablations.add_argument("--ablations", nargs="+")
     ablations.add_argument("--industries", nargs="+", choices=INDUSTRIES)
     ablations.add_argument("--period-types", nargs="+", choices=PERIOD_TYPES)
     ablations.add_argument("--levels", nargs="+", type=int)
     ablations.add_argument("--max-records", type=int, default=15)
+    ablations.add_argument("--sample-strategy", choices=["ordered", "stratified"], default="ordered")
     ablations.add_argument("--temperature", type=float, default=0.0)
     ablations.add_argument("--max-output-tokens", type=int, default=8192)
     ablations.add_argument("--timeout", type=int, default=180)
     ablations.add_argument("--agent-max-steps", type=int, default=8)
+
+    analyze_ablations = subparsers.add_parser("analyze-ablations", help="Bootstrap compare ablation result directories")
+    analyze_ablations.add_argument("--results-dir", required=True)
+    analyze_ablations.add_argument("--baseline", default="prompt_baseline")
+    analyze_ablations.add_argument("--iterations", type=int, default=5000)
+    analyze_ablations.add_argument("--confidence", type=float, default=0.95)
+    analyze_ablations.add_argument("--seed", type=int, default=1)
+    analyze_ablations.add_argument("--output-dir")
 
     args = parser.parse_args()
     if args.command == "generate":
@@ -206,8 +217,10 @@ def main() -> None:
             industries=args.industries,
             period_types=args.period_types,
             levels=args.levels,
-            max_records=args.max_records,
+            max_records=None if args.sample_strategy == "stratified" else args.max_records,
         )
+        if args.sample_strategy == "stratified":
+            records = stratified_sample_records(records, args.max_records)
         if not records:
             raise SystemExit("No matching records found in dataset")
 
@@ -243,6 +256,28 @@ def main() -> None:
                 )
             )
         print(json.dumps({"ablations_completed": len(output_dirs), "output_dirs": output_dirs}, indent=2))
+        return
+
+    if args.command == "analyze-ablations":
+        summary = analyze_ablation_bootstrap(
+            args.results_dir,
+            baseline_name=args.baseline,
+            iterations=args.iterations,
+            confidence=args.confidence,
+            seed=args.seed,
+            output_dir=args.output_dir,
+        )
+        output_root = args.output_dir or args.results_dir
+        print(
+            json.dumps(
+                {
+                    "comparisons": len(summary["comparisons"]),
+                    "baseline_ablation": summary["baseline_ablation"],
+                    "output_dir": output_root,
+                },
+                indent=2,
+            )
+        )
         return
 
     builder = DocumentBenchmarkBuilder(seed=args.seed)

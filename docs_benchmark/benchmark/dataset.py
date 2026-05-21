@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from collections import defaultdict
 from pathlib import Path
 from typing import Iterable, Sequence
 
@@ -119,3 +120,45 @@ def filter_records(
         if max_records is not None and len(selected) >= max_records:
             break
     return selected
+
+
+def stratified_sample_records(
+    records: Sequence[DocumentRecord],
+    max_records: int | None,
+    *,
+    fields: Sequence[str] = ("difficulty_level", "industry"),
+) -> list[DocumentRecord]:
+    if max_records is None or max_records >= len(records):
+        return list(records)
+    if max_records <= 0:
+        return []
+
+    groups: dict[tuple[str, ...], list[DocumentRecord]] = defaultdict(list)
+    for record in records:
+        groups[tuple(_record_field(record, field) for field in fields)].append(record)
+
+    selected: list[DocumentRecord] = []
+    cursors = {key: 0 for key in groups}
+    group_keys = sorted(groups)
+    while len(selected) < max_records:
+        added = False
+        for key in group_keys:
+            if len(selected) >= max_records:
+                break
+            cursor = cursors[key]
+            group = groups[key]
+            if cursor >= len(group):
+                continue
+            selected.append(group[cursor])
+            cursors[key] = cursor + 1
+            added = True
+        if not added:
+            break
+    return selected
+
+
+def _record_field(record: DocumentRecord, field: str) -> str:
+    value = getattr(record, field, None)
+    if value is None:
+        value = record.metadata.get(field)
+    return str(value if value is not None else "unknown")

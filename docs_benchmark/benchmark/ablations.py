@@ -21,9 +21,15 @@ from docs_benchmark.benchmark.manifests import record_manifest_row, write_jsonl
 from docs_benchmark.benchmark.parser import SubmissionParseError, parse_submission
 from docs_benchmark.benchmark.prompt import (
     PROMPT_VARIANT_BASELINE,
+    PROMPT_VARIANT_BALANCE_RECONSTRUCTION,
     PROMPT_VARIANT_GUIDED_PRIVATE_SOLVE,
     PROMPT_VARIANT_SELF_CHECK,
     PROMPT_VARIANTS,
+    VISIBILITY_VARIANT_EVIDENCE_ONLY,
+    VISIBILITY_VARIANT_EVIDENCE_PLUS_15_DISTRACTORS,
+    VISIBILITY_VARIANT_EVIDENCE_PLUS_30_DISTRACTORS,
+    VISIBILITY_VARIANT_EVIDENCE_PLUS_5_DISTRACTORS,
+    VISIBILITY_VARIANT_EVIDENCE_RELEVANT_LAST,
     VISIBILITY_VARIANT_NO_ALLOWED_ACCOUNTS,
     VISIBILITY_VARIANT_NO_DISTRACTORS_ORACLE,
     VISIBILITY_VARIANT_NORMAL,
@@ -35,6 +41,8 @@ from docs_benchmark.benchmark.prompt import (
 from docs_benchmark.benchmark.tools import (
     TOOL_VARIANT_CALCULATOR,
     TOOL_VARIANT_DOCUMENT_SEARCH,
+    TOOL_VARIANT_FORCED_LEDGER_VERIFIER,
+    TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS,
     TOOL_VARIANT_FULL_TOOL_AGENT,
     TOOL_VARIANT_LEDGER_CHECK,
     TOOL_VARIANT_NO_TOOLS,
@@ -42,6 +50,7 @@ from docs_benchmark.benchmark.tools import (
     TOOLS_BY_VARIANT,
     ChatClient,
     ToolAgentResult,
+    run_forced_ledger_verifier_completion,
     run_no_tool_completion,
     run_tool_agent_completion,
 )
@@ -79,6 +88,45 @@ COVERAGE_ABLATION_SPECS = (
     AblationSpec("tool_full_tool_agent", tool_variant=TOOL_VARIANT_FULL_TOOL_AGENT),
 )
 
+TARGETED_ABLATION_SPECS = (
+    AblationSpec("prompt_baseline"),
+    AblationSpec("forced_ledger_verifier", tool_variant=TOOL_VARIANT_FORCED_LEDGER_VERIFIER),
+    AblationSpec("forced_ledger_verifier_2pass", tool_variant=TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS),
+    AblationSpec("prompt_balance_reconstruction", prompt_variant=PROMPT_VARIANT_BALANCE_RECONSTRUCTION),
+    AblationSpec("evidence_only", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_ONLY),
+    AblationSpec("evidence_plus_5_distractors", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_PLUS_5_DISTRACTORS),
+    AblationSpec("evidence_plus_15_distractors", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_PLUS_15_DISTRACTORS),
+    AblationSpec("evidence_plus_30_distractors", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_PLUS_30_DISTRACTORS),
+    AblationSpec("evidence_relevant_last", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_RELEVANT_LAST),
+)
+
+CONTEXT_STRESS_ABLATION_SPECS = (
+    AblationSpec("prompt_baseline"),
+    AblationSpec("evidence_only", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_ONLY),
+    AblationSpec("evidence_plus_5_distractors", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_PLUS_5_DISTRACTORS),
+    AblationSpec("evidence_plus_15_distractors", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_PLUS_15_DISTRACTORS),
+    AblationSpec("evidence_plus_30_distractors", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_PLUS_30_DISTRACTORS),
+    AblationSpec("evidence_relevant_last", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_RELEVANT_LAST),
+)
+
+ABLATION_MATRICES = {
+    "coverage": COVERAGE_ABLATION_SPECS,
+    "targeted": TARGETED_ABLATION_SPECS,
+    "context_stress": CONTEXT_STRESS_ABLATION_SPECS,
+}
+
+ALL_ABLATION_SPECS = tuple(
+    {spec.name: spec for specs in ABLATION_MATRICES.values() for spec in specs}.values()
+)
+
+CONTEXT_PADDING_BY_VARIANT = {
+    VISIBILITY_VARIANT_EVIDENCE_ONLY: 0,
+    VISIBILITY_VARIANT_EVIDENCE_PLUS_5_DISTRACTORS: 5,
+    VISIBILITY_VARIANT_EVIDENCE_PLUS_15_DISTRACTORS: 15,
+    VISIBILITY_VARIANT_EVIDENCE_PLUS_30_DISTRACTORS: 30,
+    VISIBILITY_VARIANT_EVIDENCE_RELEVANT_LAST: 15,
+}
+
 
 SLICE_FIELDS = (
     "difficulty_level",
@@ -87,6 +135,7 @@ SLICE_FIELDS = (
     "tax_regime",
     "expected_inconsistency_code",
     "document_count",
+    "visible_document_count",
     "expected_entry_count",
     "doc_dependency_depth",
     "subledger_count",
@@ -118,12 +167,12 @@ def select_ablation_specs(
     matrix: str = "coverage",
     names: list[str] | None = None,
 ) -> list[AblationSpec]:
-    if matrix != "coverage":
+    if matrix not in ABLATION_MATRICES:
         raise ValueError(f"Unknown ablation matrix '{matrix}'")
-    specs = list(COVERAGE_ABLATION_SPECS)
+    specs = list(ABLATION_MATRICES[matrix])
     if not names:
         return specs
-    by_name = {spec.name: spec for spec in specs}
+    by_name = {spec.name: spec for spec in ALL_ABLATION_SPECS}
     missing = [name for name in names if name not in by_name]
     if missing:
         raise ValueError(f"Unknown ablation names: {', '.join(missing)}")
@@ -133,18 +182,32 @@ def select_ablation_specs(
 def apply_visibility_variant(
     record: DocumentRecord,
     visibility_variant: str,
+    *,
+    corpus_records: list[DocumentRecord] | None = None,
 ) -> tuple[DocumentRecord, dict[str, Any]]:
     if visibility_variant not in VISIBILITY_VARIANTS:
         raise ValueError(f"Unknown visibility variant '{visibility_variant}'")
 
     documents = list(record.documents)
     allowed_accounts = list(record.allowed_accounts)
+    injected_documents: list[dict[str, Any]] = []
+    kept_evidence_doc_ids: list[str] = []
+    padding_doc_ids: list[str] = []
     if visibility_variant == VISIBILITY_VARIANT_NO_DISTRACTORS_ORACLE:
         documents = [document for document in documents if document.role != "distractor_doc"]
     elif visibility_variant == VISIBILITY_VARIANT_SUPPORT_DOCS_REMOVED:
         documents = [document for document in documents if document.role != "support_doc"]
     elif visibility_variant == VISIBILITY_VARIANT_NO_ALLOWED_ACCOUNTS:
         allowed_accounts = []
+    elif visibility_variant in CONTEXT_PADDING_BY_VARIANT:
+        documents, context_metadata = _context_documents_for_variant(
+            record,
+            visibility_variant,
+            corpus_records=corpus_records or [record],
+        )
+        kept_evidence_doc_ids = context_metadata["kept_evidence_doc_ids"]
+        padding_doc_ids = context_metadata["padding_doc_ids"]
+        injected_documents = context_metadata["injected_documents"]
 
     transformed = replace(
         record,
@@ -159,9 +222,98 @@ def apply_visibility_variant(
         "removed_document_ids": [
             document.doc_id for document in record.documents if document.doc_id not in visible_doc_ids
         ],
+        "kept_evidence_doc_ids": kept_evidence_doc_ids,
+        "padding_doc_ids": padding_doc_ids,
+        "injected_documents": injected_documents,
         "original_allowed_account_count": len(record.allowed_accounts),
         "visible_allowed_account_count": len(allowed_accounts),
     }
+
+
+def _context_documents_for_variant(
+    record: DocumentRecord,
+    visibility_variant: str,
+    *,
+    corpus_records: list[DocumentRecord],
+) -> tuple[list[Any], dict[str, Any]]:
+    target_padding = CONTEXT_PADDING_BY_VARIANT[visibility_variant]
+    relevant_last = visibility_variant == VISIBILITY_VARIANT_EVIDENCE_RELEVANT_LAST
+    evidence_doc_ids = _evidence_document_ids(record)
+    original_by_id = {document.doc_id: document for document in record.documents}
+    evidence_documents = [document for document in record.documents if document.doc_id in evidence_doc_ids]
+
+    padding_documents: list[Any] = []
+    for document in record.documents:
+        if len(padding_documents) >= target_padding:
+            break
+        if document.doc_id in evidence_doc_ids or document.role != "distractor_doc":
+            continue
+        padding_documents.append(document)
+
+    injected_documents: list[dict[str, Any]] = []
+    injected_index = 1
+    if len(padding_documents) < target_padding:
+        for source_record in corpus_records:
+            if len(padding_documents) >= target_padding:
+                break
+            if source_record.record_id == record.record_id:
+                continue
+            for source_document in source_record.documents:
+                if len(padding_documents) >= target_padding:
+                    break
+                if source_document.role != "distractor_doc":
+                    continue
+                new_doc_id = f"PX{injected_index:03d}"
+                while new_doc_id in original_by_id:
+                    injected_index += 1
+                    new_doc_id = f"PX{injected_index:03d}"
+                injected_index += 1
+                padding_documents.append(
+                    replace(
+                        source_document,
+                        doc_id=new_doc_id,
+                        metadata={
+                            **source_document.metadata,
+                            "injected_from_record_id": source_record.record_id,
+                            "injected_from_doc_id": source_document.doc_id,
+                        },
+                    )
+                )
+                injected_documents.append(
+                    {
+                        "new_doc_id": new_doc_id,
+                        "source_record_id": source_record.record_id,
+                        "source_doc_id": source_document.doc_id,
+                    }
+                )
+
+    if relevant_last:
+        documents = padding_documents + evidence_documents
+    else:
+        documents = evidence_documents + padding_documents
+    return documents, {
+        "kept_evidence_doc_ids": [document.doc_id for document in evidence_documents],
+        "padding_doc_ids": [document.doc_id for document in padding_documents],
+        "injected_documents": injected_documents,
+    }
+
+
+def _evidence_document_ids(record: DocumentRecord) -> set[str]:
+    evidence_doc_ids = {
+        document.doc_id
+        for document in record.documents
+        if document.doc_type == "opening_trial_balance"
+        or document.title.strip().lower() == "opening trial balance"
+    }
+    for entry in record.expected_entries:
+        evidence_doc_ids.update(str(doc_ref) for doc_ref in entry.doc_refs)
+
+    if record.expected_inconsistency and not record.expected_entries:
+        evidence_doc_ids.update(
+            document.doc_id for document in record.documents if document.role != "distractor_doc"
+        )
+
+    return evidence_doc_ids
 
 
 def run_ablation_evaluation(
@@ -180,7 +332,11 @@ def run_ablation_evaluation(
     results: list[dict[str, Any]] = []
 
     for record in records:
-        visible_record, visibility_metadata = apply_visibility_variant(record, spec.visibility_variant)
+        visible_record, visibility_metadata = apply_visibility_variant(
+            record,
+            spec.visibility_variant,
+            corpus_records=records,
+        )
         prompt = build_prompt(
             visible_record,
             prompt_variant=spec.prompt_variant,
@@ -196,6 +352,21 @@ def run_ablation_evaluation(
                 completion = run_no_tool_completion(
                     client,
                     prompt,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                    timeout=timeout,
+                )
+            elif spec.tool_variant in {
+                TOOL_VARIANT_FORCED_LEDGER_VERIFIER,
+                TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS,
+            }:
+                completion = run_forced_ledger_verifier_completion(
+                    visible_record,
+                    client,
+                    prompt,
+                    verifier_passes=2
+                    if spec.tool_variant == TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS
+                    else 1,
                     temperature=temperature,
                     max_tokens=max_tokens,
                     timeout=timeout,
@@ -227,6 +398,7 @@ def run_ablation_evaluation(
             "difficulty_level": record.difficulty_level,
             "period_type": record.metadata.get("period_type"),
             "period_label": record.metadata.get("period_label"),
+            "visible_document_count": visibility_metadata["visible_document_count"],
             "ablation_name": spec.name,
             "prompt_variant": spec.prompt_variant,
             "visibility_variant": spec.visibility_variant,
@@ -234,6 +406,8 @@ def run_ablation_evaluation(
             "agent_max_steps": int(agent_max_steps),
             "tool_calls": completion.tool_calls,
             "tool_call_failures": completion.tool_call_failures,
+            "verifier_passes": completion.verifier_passes,
+            "verifier_feedback": completion.verifier_feedback,
             "latency_seconds": completion.latency_seconds,
             "document_index": {
                 document.doc_id: {"doc_type": document.doc_type, "role": document.role}
@@ -300,6 +474,7 @@ def summarize_ablation_results(results: list[dict[str, Any]]) -> dict[str, Any]:
     summary["concept_failures"] = summarize_concept_failures(results)
     summary["tool_call_count_total"] = sum(len(result.get("tool_calls", [])) for result in results)
     summary["tool_call_failures_total"] = sum(int(result.get("tool_call_failures", 0)) for result in results)
+    summary["verifier_passes_total"] = sum(int(result.get("verifier_passes", 0)) for result in results)
     summary["latency_seconds_total"] = round(sum(float(result.get("latency_seconds", 0.0)) for result in results), 4)
     summary["latency_seconds_average"] = round(summary["latency_seconds_total"] / len(results), 4) if results else 0.0
     return summary

@@ -12,10 +12,12 @@ from docs_benchmark.schemas import DocumentRecord
 PROMPT_VARIANT_BASELINE: Final = "baseline"
 PROMPT_VARIANT_GUIDED_PRIVATE_SOLVE: Final = "guided_private_solve"
 PROMPT_VARIANT_SELF_CHECK: Final = "self_check"
+PROMPT_VARIANT_BALANCE_RECONSTRUCTION: Final = "balance_reconstruction_prompt"
 PROMPT_VARIANTS: Final = (
     PROMPT_VARIANT_BASELINE,
     PROMPT_VARIANT_GUIDED_PRIVATE_SOLVE,
     PROMPT_VARIANT_SELF_CHECK,
+    PROMPT_VARIANT_BALANCE_RECONSTRUCTION,
 )
 
 VISIBILITY_VARIANT_NORMAL: Final = "normal"
@@ -23,12 +25,22 @@ VISIBILITY_VARIANT_OCR_ONLY: Final = "ocr_only"
 VISIBILITY_VARIANT_NO_DISTRACTORS_ORACLE: Final = "no_distractors_oracle"
 VISIBILITY_VARIANT_SUPPORT_DOCS_REMOVED: Final = "support_docs_removed"
 VISIBILITY_VARIANT_NO_ALLOWED_ACCOUNTS: Final = "no_allowed_accounts"
+VISIBILITY_VARIANT_EVIDENCE_ONLY: Final = "evidence_only"
+VISIBILITY_VARIANT_EVIDENCE_PLUS_5_DISTRACTORS: Final = "evidence_plus_5_distractors"
+VISIBILITY_VARIANT_EVIDENCE_PLUS_15_DISTRACTORS: Final = "evidence_plus_15_distractors"
+VISIBILITY_VARIANT_EVIDENCE_PLUS_30_DISTRACTORS: Final = "evidence_plus_30_distractors"
+VISIBILITY_VARIANT_EVIDENCE_RELEVANT_LAST: Final = "evidence_relevant_last"
 VISIBILITY_VARIANTS: Final = (
     VISIBILITY_VARIANT_NORMAL,
     VISIBILITY_VARIANT_OCR_ONLY,
     VISIBILITY_VARIANT_NO_DISTRACTORS_ORACLE,
     VISIBILITY_VARIANT_SUPPORT_DOCS_REMOVED,
     VISIBILITY_VARIANT_NO_ALLOWED_ACCOUNTS,
+    VISIBILITY_VARIANT_EVIDENCE_ONLY,
+    VISIBILITY_VARIANT_EVIDENCE_PLUS_5_DISTRACTORS,
+    VISIBILITY_VARIANT_EVIDENCE_PLUS_15_DISTRACTORS,
+    VISIBILITY_VARIANT_EVIDENCE_PLUS_30_DISTRACTORS,
+    VISIBILITY_VARIANT_EVIDENCE_RELEVANT_LAST,
 )
 
 
@@ -118,6 +130,17 @@ def build_prompt(
                 "- Verify that the journal entries reconstruct the submitted balance sheet.",
                 "- Verify that any inconsistency code is supported by a visible contradiction.",
                 "- Verify that reconcilable packets have no missing or extra period activity.",
+            ]
+        )
+    if prompt_variant == PROMPT_VARIANT_BALANCE_RECONSTRUCTION:
+        lines.extend(
+            [
+                "",
+                "Private balance reconstruction workflow:",
+                "- First derive the journal entries from the visible documents.",
+                "- Compute the final balance sheet only by applying those entries to the opening trial balance.",
+                "- Do not independently estimate or restate the final balance sheet.",
+                "- Verify that assets equal liabilities plus equity before returning the strict JSON answer.",
             ]
         )
     lines.extend(
