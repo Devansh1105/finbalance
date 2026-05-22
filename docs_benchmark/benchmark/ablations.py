@@ -18,10 +18,12 @@ from docs_benchmark.benchmark.analysis import (
     summarize_results,
 )
 from docs_benchmark.benchmark.manifests import record_manifest_row, write_jsonl
+from docs_benchmark.benchmark.model import OpenRouterRequestError
 from docs_benchmark.benchmark.parser import SubmissionParseError, parse_submission
 from docs_benchmark.benchmark.prompt import (
     PROMPT_VARIANT_BASELINE,
     PROMPT_VARIANT_BALANCE_RECONSTRUCTION,
+    PROMPT_VARIANT_DOC_REFS_STRICT,
     PROMPT_VARIANT_GUIDED_PRIVATE_SOLVE,
     PROMPT_VARIANT_SELF_CHECK,
     PROMPT_VARIANTS,
@@ -46,15 +48,24 @@ from docs_benchmark.benchmark.tools import (
     TOOL_VARIANT_FULL_TOOL_AGENT,
     TOOL_VARIANT_LEDGER_CHECK,
     TOOL_VARIANT_NO_TOOLS,
+    TOOL_VARIANT_SELF_CONSISTENCY_K3,
     TOOL_VARIANTS,
     TOOLS_BY_VARIANT,
     ChatClient,
     ToolAgentResult,
     run_forced_ledger_verifier_completion,
     run_no_tool_completion,
+    run_self_consistency_completion,
     run_tool_agent_completion,
 )
 from docs_benchmark.schemas import DocumentRecord, ParsedSubmission, ensure_parent
+
+
+FATAL_PROVIDER_STATUS_CODES = {401, 402, 403, 404}
+
+
+class FatalAblationRunError(RuntimeError):
+    """Provider failure that should stop the run instead of producing parse-zero rows."""
 
 
 @dataclass(frozen=True)
@@ -92,7 +103,9 @@ TARGETED_ABLATION_SPECS = (
     AblationSpec("prompt_baseline"),
     AblationSpec("forced_ledger_verifier", tool_variant=TOOL_VARIANT_FORCED_LEDGER_VERIFIER),
     AblationSpec("forced_ledger_verifier_2pass", tool_variant=TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS),
+    AblationSpec("self_consistency_k3", tool_variant=TOOL_VARIANT_SELF_CONSISTENCY_K3),
     AblationSpec("prompt_balance_reconstruction", prompt_variant=PROMPT_VARIANT_BALANCE_RECONSTRUCTION),
+    AblationSpec("prompt_doc_refs_strict", prompt_variant=PROMPT_VARIANT_DOC_REFS_STRICT),
     AblationSpec("evidence_only", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_ONLY),
     AblationSpec("evidence_plus_5_distractors", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_PLUS_5_DISTRACTORS),
     AblationSpec("evidence_plus_15_distractors", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_PLUS_15_DISTRACTORS),
@@ -327,11 +340,25 @@ def run_ablation_evaluation(
     max_tokens: int = 8192,
     timeout: int = 180,
     agent_max_steps: int = 8,
+    existing_results: list[dict[str, Any]] | None = None,
+    checkpoint_output_root: str | Path | None = None,
+    checkpoint_every: int = 0,
+    abort_on_max_token_parse_failure: bool = False,
 ) -> dict[str, Any]:
     started_at = datetime.now(timezone.utc).isoformat()
     results: list[dict[str, Any]] = []
+    existing_by_record_id = {
+        str(result.get("record_id")): result
+        for result in (existing_results or [])
+        if result.get("record_id")
+    }
+    checkpoint_every = max(int(checkpoint_every), 0)
 
     for record in records:
+        if record.record_id in existing_by_record_id:
+            results.append(existing_by_record_id[record.record_id])
+            continue
+
         visible_record, visibility_metadata = apply_visibility_variant(
             record,
             spec.visibility_variant,
@@ -371,6 +398,16 @@ def run_ablation_evaluation(
                     max_tokens=max_tokens,
                     timeout=timeout,
                 )
+            elif spec.tool_variant == TOOL_VARIANT_SELF_CONSISTENCY_K3:
+                completion = run_self_consistency_completion(
+                    visible_record,
+                    client,
+                    prompt,
+                    samples=3,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                    timeout=timeout,
+                )
             else:
                 completion = run_tool_agent_completion(
                     visible_record,
@@ -387,10 +424,52 @@ def run_ablation_evaluation(
         except SubmissionParseError as exc:
             error_message = str(exc)
         except Exception as exc:  # pragma: no cover - exercised by integration runs
+            if _is_fatal_provider_error(exc):
+                if checkpoint_output_root is not None and results:
+                    _write_ablation_checkpoint(
+                        records=results,
+                        client=client,
+                        dataset_path=dataset_path,
+                        spec=spec,
+                        backend_name=backend_name,
+                        started_at=started_at,
+                        temperature=temperature,
+                        max_tokens=max_tokens,
+                        timeout=timeout,
+                        agent_max_steps=agent_max_steps,
+                        output_root=checkpoint_output_root,
+                    )
+                raise FatalAblationRunError(
+                    f"Stopping {spec.name} on record {record.record_id}: {exc}"
+                ) from exc
             error_message = str(exc)
 
-        analysis = analyze_submission(record, parsed, parse_success=parse_success)
         usage = dict(completion.response_payload.get("usage", {})) if isinstance(completion.response_payload, dict) else {}
+        if (
+            abort_on_max_token_parse_failure
+            and not parse_success
+            and int(usage.get("completion_tokens", 0)) >= int(max_tokens)
+        ):
+            if checkpoint_output_root is not None and results:
+                _write_ablation_checkpoint(
+                    records=results,
+                    client=client,
+                    dataset_path=dataset_path,
+                    spec=spec,
+                    backend_name=backend_name,
+                    started_at=started_at,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                    timeout=timeout,
+                    agent_max_steps=agent_max_steps,
+                    output_root=checkpoint_output_root,
+                )
+            raise FatalAblationRunError(
+                f"Stopping {spec.name} on record {record.record_id}: response hit max_tokens={max_tokens} "
+                "and did not parse as benchmark JSON"
+            )
+
+        analysis = analyze_submission(record, parsed, parse_success=parse_success)
         record_features = record_manifest_row(record)
         result = {
             "record_id": record.record_id,
@@ -433,8 +512,22 @@ def run_ablation_evaluation(
             "raw_provider_payload": completion.response_payload,
         }
         results.append(result)
+        if checkpoint_output_root is not None and checkpoint_every and len(results) % checkpoint_every == 0:
+            _write_ablation_checkpoint(
+                records=results,
+                client=client,
+                dataset_path=dataset_path,
+                spec=spec,
+                backend_name=backend_name,
+                started_at=started_at,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                timeout=timeout,
+                agent_max_steps=agent_max_steps,
+                output_root=checkpoint_output_root,
+            )
 
-    return {
+    evaluation = {
         "dataset_path": dataset_path,
         "model": client.model,
         "backend": backend_name,
@@ -442,6 +535,7 @@ def run_ablation_evaluation(
         "prompt_variant": spec.prompt_variant,
         "visibility_variant": spec.visibility_variant,
         "tool_variant": spec.tool_variant,
+        "reasoning_effort": getattr(client, "reasoning_effort", None),
         "agent_max_steps": int(agent_max_steps),
         "run_started_at": started_at,
         "run_completed_at": datetime.now(timezone.utc).isoformat(),
@@ -451,6 +545,72 @@ def run_ablation_evaluation(
         "summary": summarize_ablation_results(results),
         "results": results,
     }
+    if checkpoint_output_root is not None:
+        write_ablation_outputs(evaluation, checkpoint_output_root)
+    return evaluation
+
+
+def load_existing_ablation_results(
+    output_root: str | Path,
+    ablation_name: str,
+    *,
+    parse_success_only: bool = False,
+) -> list[dict[str, Any]]:
+    path = Path(output_root) / ablation_name / "per_record_results.jsonl"
+    if not path.exists():
+        return []
+    results = []
+    with path.open(encoding="utf-8") as handle:
+        for line in handle:
+            stripped = line.strip()
+            if stripped:
+                result = json.loads(stripped)
+                if parse_success_only and not result.get("metrics", {}).get("parse_success", False):
+                    continue
+                results.append(result)
+    return results
+
+
+def _write_ablation_checkpoint(
+    *,
+    records: list[dict[str, Any]],
+    client: ChatClient,
+    dataset_path: str,
+    spec: AblationSpec,
+    backend_name: str,
+    started_at: str,
+    temperature: float,
+    max_tokens: int,
+    timeout: int,
+    agent_max_steps: int,
+    output_root: str | Path,
+) -> None:
+    evaluation = {
+        "dataset_path": dataset_path,
+        "model": client.model,
+        "backend": backend_name,
+        "ablation_name": spec.name,
+        "prompt_variant": spec.prompt_variant,
+        "visibility_variant": spec.visibility_variant,
+        "tool_variant": spec.tool_variant,
+        "reasoning_effort": getattr(client, "reasoning_effort", None),
+        "agent_max_steps": int(agent_max_steps),
+        "run_started_at": started_at,
+        "run_completed_at": datetime.now(timezone.utc).isoformat(),
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+        "timeout": timeout,
+        "summary": summarize_ablation_results(records),
+        "results": records,
+    }
+    write_ablation_outputs(evaluation, output_root)
+
+
+def _is_fatal_provider_error(exc: Exception) -> bool:
+    status_code = getattr(exc, "status_code", None)
+    if isinstance(exc, OpenRouterRequestError):
+        status_code = exc.status_code
+    return int(status_code) in FATAL_PROVIDER_STATUS_CODES if status_code is not None else False
 
 
 def summarize_ablation_results(results: list[dict[str, Any]]) -> dict[str, Any]:

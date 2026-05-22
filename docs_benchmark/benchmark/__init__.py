@@ -3,6 +3,7 @@
 from docs_benchmark.benchmark.ablations import (
     AblationSpec,
     apply_visibility_variant,
+    load_existing_ablation_results,
     run_ablation_evaluation,
     select_ablation_specs,
     summarize_ablation_results,
@@ -37,6 +38,7 @@ __all__ = [
     "group_results_by_field",
     "group_results_by_membership",
     "ledger_family_for_label",
+    "load_existing_ablation_results",
     "OpenRouterClient",
     "PROMPT_VARIANTS",
     "record_feature_flags",

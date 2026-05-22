@@ -7,15 +7,19 @@ from pathlib import Path
 from docs_benchmark.accounts import ALLOWED_ACCOUNT_NAMES
 from docs_benchmark.benchmark.ablations import (
     AblationSpec,
+    FatalAblationRunError,
     apply_visibility_variant,
+    load_existing_ablation_results,
     run_ablation_evaluation,
     select_ablation_specs,
     write_ablation_outputs,
 )
 from docs_benchmark.benchmark.bootstrap import analyze_ablation_bootstrap
 from docs_benchmark.benchmark.dataset import stratified_sample_records
+from docs_benchmark.benchmark.model import OpenRouterRequestError
 from docs_benchmark.benchmark.prompt import (
     PROMPT_VARIANT_BALANCE_RECONSTRUCTION,
+    PROMPT_VARIANT_DOC_REFS_STRICT,
     PROMPT_VARIANTS,
     VISIBILITY_VARIANT_EVIDENCE_ONLY,
     VISIBILITY_VARIANT_EVIDENCE_PLUS_5_DISTRACTORS,
@@ -30,6 +34,7 @@ from docs_benchmark.benchmark.prompt import (
 from docs_benchmark.benchmark.tools import (
     TOOL_CALCULATOR,
     TOOL_VARIANT_FORCED_LEDGER_VERIFIER,
+    TOOL_VARIANT_SELF_CONSISTENCY_K3,
     calculator_tool,
     ledger_check_tool,
     run_forced_ledger_verifier_completion,
@@ -59,6 +64,26 @@ class _SequenceClient:
             raise AssertionError("fake client ran out of responses")
         text = self.responses.pop(0)
         return text, {"usage": {"prompt_tokens": 1, "completion_tokens": 2, "total_tokens": 3, "cost": 0.01}}
+
+
+class _FailingClient:
+    model = "fake/model"
+
+    def complete(self, prompt: str, *, temperature: float, max_tokens: int, timeout: int):
+        raise OpenRouterRequestError(403, "Key limit exceeded")
+
+    def complete_messages(self, messages: list[dict[str, str]], *, temperature: float, max_tokens: int, timeout: int):
+        raise OpenRouterRequestError(403, "Key limit exceeded")
+
+
+class _MaxTokenClient:
+    model = "fake/model"
+
+    def complete(self, prompt: str, *, temperature: float, max_tokens: int, timeout: int):
+        return "{", {"usage": {"prompt_tokens": 1, "completion_tokens": max_tokens, "total_tokens": max_tokens + 1, "cost": 0.02}}
+
+    def complete_messages(self, messages: list[dict[str, str]], *, temperature: float, max_tokens: int, timeout: int):
+        return self.complete("", temperature=temperature, max_tokens=max_tokens, timeout=timeout)
 
 
 def _record(record_id: str = "ABLATION_TEST") -> DocumentRecord:
@@ -212,6 +237,9 @@ class AblationTests(unittest.TestCase):
         self.assertIn("Private workflow before the final JSON", build_prompt(record, prompt_variant="self_check"))
         reconstruction_prompt = build_prompt(record, prompt_variant=PROMPT_VARIANT_BALANCE_RECONSTRUCTION)
         self.assertIn("Private balance reconstruction workflow", reconstruction_prompt)
+        doc_refs_prompt = build_prompt(record, prompt_variant=PROMPT_VARIANT_DOC_REFS_STRICT)
+        self.assertIn("Strict document citation requirements", doc_refs_prompt)
+        self.assertIn("graded on doc_refs", doc_refs_prompt)
 
     def test_visibility_transforms_preserve_ground_truth_and_doc_ids(self):
         record = _record()
@@ -431,6 +459,79 @@ class AblationTests(unittest.TestCase):
             rows = (output_dir / "per_record_results.jsonl").read_text(encoding="utf-8").strip().splitlines()
             self.assertEqual(len(rows), 2)
 
+    def test_ablation_runner_checkpoints_and_resumes_existing_records(self):
+        records = [_record("ABLATION_RESUME_1"), _record("ABLATION_RESUME_2")]
+        spec = AblationSpec("resume_unit")
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            first_client = _SequenceClient([_submission(records[0])])
+            first = run_ablation_evaluation(
+                [records[0]],
+                client=first_client,
+                dataset_path="unit.jsonl",
+                spec=spec,
+                temperature=0.0,
+                max_tokens=1024,
+                timeout=30,
+                checkpoint_output_root=tmp_dir,
+                checkpoint_every=1,
+            )
+            self.assertEqual(first["summary"]["records_evaluated"], 1)
+            existing = load_existing_ablation_results(tmp_dir, spec.name)
+            self.assertEqual([row["record_id"] for row in existing], ["ABLATION_RESUME_1"])
+            self.assertEqual(
+                [row["record_id"] for row in load_existing_ablation_results(tmp_dir, spec.name, parse_success_only=True)],
+                ["ABLATION_RESUME_1"],
+            )
+
+            resume_client = _SequenceClient([_submission(records[1])])
+            resumed = run_ablation_evaluation(
+                records,
+                client=resume_client,
+                dataset_path="unit.jsonl",
+                spec=spec,
+                temperature=0.0,
+                max_tokens=1024,
+                timeout=30,
+                existing_results=existing,
+                checkpoint_output_root=tmp_dir,
+                checkpoint_every=1,
+            )
+            self.assertEqual([row["record_id"] for row in resumed["results"]], ["ABLATION_RESUME_1", "ABLATION_RESUME_2"])
+            self.assertEqual(len(resume_client.prompts), 1)
+
+    def test_ablation_runner_aborts_on_fatal_provider_error(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            with self.assertRaises(FatalAblationRunError):
+                run_ablation_evaluation(
+                    [_record("ABLATION_FATAL")],
+                    client=_FailingClient(),
+                    dataset_path="unit.jsonl",
+                    spec=AblationSpec("fatal_unit"),
+                    temperature=0.0,
+                    max_tokens=1024,
+                    timeout=30,
+                    checkpoint_output_root=tmp_dir,
+                    checkpoint_every=1,
+                )
+            self.assertFalse((Path(tmp_dir) / "fatal_unit" / "per_record_results.jsonl").exists())
+
+    def test_ablation_runner_aborts_on_max_token_parse_failure_without_checkpointing_bad_row(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            with self.assertRaises(FatalAblationRunError):
+                run_ablation_evaluation(
+                    [_record("ABLATION_MAXTOK")],
+                    client=_MaxTokenClient(),
+                    dataset_path="unit.jsonl",
+                    spec=AblationSpec("maxtok_unit"),
+                    temperature=0.0,
+                    max_tokens=8,
+                    timeout=30,
+                    checkpoint_output_root=tmp_dir,
+                    checkpoint_every=1,
+                    abort_on_max_token_parse_failure=True,
+                )
+            self.assertFalse((Path(tmp_dir) / "maxtok_unit" / "per_record_results.jsonl").exists())
+
     def test_ablation_runner_records_forced_verifier_metadata(self):
         record = _record("ABLATION_VERIFY")
         client = _SequenceClient([_wrong_balance_submission(record), _submission(record)])
@@ -456,6 +557,8 @@ class AblationTests(unittest.TestCase):
         self.assertIn("tool_full_tool_agent", names)
         targeted_names = [spec.name for spec in select_ablation_specs(matrix="targeted")]
         self.assertIn("forced_ledger_verifier", targeted_names)
+        self.assertIn("self_consistency_k3", targeted_names)
+        self.assertIn("prompt_doc_refs_strict", targeted_names)
         self.assertIn("evidence_plus_30_distractors", targeted_names)
         context_names = [spec.name for spec in select_ablation_specs(matrix="context_stress")]
         self.assertEqual(context_names[0], "prompt_baseline")
@@ -464,6 +567,8 @@ class AblationTests(unittest.TestCase):
         self.assertEqual([spec.name for spec in selected], ["prompt_baseline", "tool_calculator"])
         selected = select_ablation_specs(names=["forced_ledger_verifier"])
         self.assertEqual(selected[0].tool_variant, TOOL_VARIANT_FORCED_LEDGER_VERIFIER)
+        selected = select_ablation_specs(names=["self_consistency_k3"])
+        self.assertEqual(selected[0].tool_variant, TOOL_VARIANT_SELF_CONSISTENCY_K3)
 
     def test_bootstrap_analysis_outputs_paired_comparisons(self):
         baseline = [

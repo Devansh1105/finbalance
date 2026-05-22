@@ -13,11 +13,13 @@ PROMPT_VARIANT_BASELINE: Final = "baseline"
 PROMPT_VARIANT_GUIDED_PRIVATE_SOLVE: Final = "guided_private_solve"
 PROMPT_VARIANT_SELF_CHECK: Final = "self_check"
 PROMPT_VARIANT_BALANCE_RECONSTRUCTION: Final = "balance_reconstruction_prompt"
+PROMPT_VARIANT_DOC_REFS_STRICT: Final = "doc_refs_strict"
 PROMPT_VARIANTS: Final = (
     PROMPT_VARIANT_BASELINE,
     PROMPT_VARIANT_GUIDED_PRIVATE_SOLVE,
     PROMPT_VARIANT_SELF_CHECK,
     PROMPT_VARIANT_BALANCE_RECONSTRUCTION,
+    PROMPT_VARIANT_DOC_REFS_STRICT,
 )
 
 VISIBILITY_VARIANT_NORMAL: Final = "normal"
@@ -141,6 +143,18 @@ def build_prompt(
                 "- Compute the final balance sheet only by applying those entries to the opening trial balance.",
                 "- Do not independently estimate or restate the final balance sheet.",
                 "- Verify that assets equal liabilities plus equity before returning the strict JSON answer.",
+            ]
+        )
+    if prompt_variant == PROMPT_VARIANT_DOC_REFS_STRICT:
+        lines.extend(
+            [
+                "",
+                "Strict document citation requirements:",
+                "- Each journal entry will be graded on doc_refs as well as accounts and amount.",
+                "- For every entry, include all visible document ids needed to support the amount, account choice, timing, tax treatment, allocation, settlement, or adjustment.",
+                "- If an entry depends on both a primary posting document and a support document such as a rate card, schedule, certificate, statement, or acceptance memo, cite both.",
+                "- Do not cite distractors, unrelated documents, or documents that merely appear near the relevant evidence.",
+                "- Before returning the final JSON, privately verify that every doc_refs list contains the precise supporting document ids for that entry.",
             ]
         )
     lines.extend(

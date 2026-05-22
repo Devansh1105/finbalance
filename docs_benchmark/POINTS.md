@@ -27,11 +27,39 @@ Source-of-truth bullet list of every finding worth using in the paper. Organized
 
 ### 2.2 Forced ledger verifier closes the aggregation gap completely
 
-- **+32.5pp BS_exact, CI [+24.0, +40.8]** for 1-pass verifier; **+35.8pp [+26.9, +44.9]** for 2-pass. Both highly significant.
+- **+32.5pp BS_exact, CI [+24.0, +40.8]** for 1-pass verifier on gemini-3-flash; **+35.8pp [+26.9, +44.9]** for 2-pass. Both highly significant.
 - After verifier feedback: BS_recon ≈ BS_exact at every difficulty level (gap < 4pp). 2-pass closes gap to 0pp.
 - The model converges its self-reported BS to its own replayed BS when given deterministic feedback showing the deltas.
 - **Mechanism is self-correction of aggregation, not of entries.** Entry-level metrics (BS_recon, JE_strict, account/amount accuracy) are *unchanged* by the verifier. Error taxonomy shows arithmetic and account-selection errors basically constant; only the surface BS_exact metric moves.
 - **Interpretation:** the aggregation gap is a self-consistency failure, not a capability failure. This is the paper's reframing of the headline finding.
+
+### 2.2a Verifier transferability — replicated on 4 model families
+
+| Model | n | baseline BS_exact | verifier BS_exact | Δ BS_exact | CI / notes |
+|---|---|---|---|---|---|
+| gemini-3-flash | 143 | 0.250 | 0.575 | **+32.5pp** | [+24.0, +40.8] ✅ sig |
+| claude-haiku-4.5 | 143 | 0.042 | 0.350 | **+30.8pp** | [+22.6, +39.2] ✅ sig |
+| deepseek-v3.2 | 143 | 0.075 | 0.342 | **+26.7pp** | [+17.6, +35.7] ✅ sig |
+| qwen-3-235b | 85 (std-only) | 0.011 | 0.379 | **+36.8pp** | partial run (60% coverage); 87 standard records only |
+
+- 4 distinct model families, all gap-having models tested, all show large + significant BS_exact gains.
+- Closed-form ledger feedback transfers as a deterministic intervention regardless of model family.
+- For gpt-5-low and grok-4.3 (gap = 0), the verifier is uninformative by design (nothing to correct) — not tested.
+
+### 2.2b Verifier has a real inconsistency-detection cost
+
+- Bootstrap on **inconsistency_code_match_rate** (denominator = 23 forced-inconsistency records):
+
+| Model | baseline | verifier | Δ inc_code | CI |
+|---|---|---|---|---|
+| gemini-3-flash (1-pass) | 0.870 | 0.739 | −13.0pp | [−31.8, +5.3] not sig |
+| gemini-3-flash (2-pass) | 0.870 | 0.652 | −21.7pp | [−40.0, −5.3] ✅ sig |
+| claude-haiku-4.5 | 0.565 | 0.043 | **−52.2pp** | [−72.7, −31.2] ✅ sig |
+| deepseek-v3.2 | (prior) | (prior) | **−60.9pp** | [−80.8, −39.1] ✅ sig |
+
+- Across smaller / weaker models, the verifier severely degrades inconsistency detection (−52 to −61pp). Gemini-flash is the lone exception (mild, not significant on 1-pass).
+- **Mechanism (suspected):** the deterministic ledger feedback pushes the model toward "fix the entries" rather than "flag the inconsistency." The inconsistency-skip patch in `_ledger_verifier_feedback` only fires if the model already claims `has_inconsistency=True`; if it doesn't (and the verifier offers ledger deltas), the model is biased toward reconciling rather than detecting.
+- **Frame this as a clear trade-off, not a clean win.** "Forced verifier transfers BS_exact gains across 4 model families but costs inconsistency detection on smaller models" is the honest claim.
 
 ### 2.3 Doc-linking is the dominant entry-level failure mode
 
@@ -39,6 +67,15 @@ Source-of-truth bullet list of every finding worth using in the paper. Organized
 - This single failure mode is why strict joint BS+JE metric collapses to 5.0% despite 56.7% entry-accounting record-match.
 - `entries_accounting_correct_but_doc_refs_wrong_rate` = 0.50 in baseline.
 - Decouple strict-doc-refs and lenient-doc-refs as two separate metrics in the paper. The 5% strict number is not "the model fails" — it's "the model can't cite."
+
+### 2.3a Doc-linking failure is NOT a prompt-following artifact
+
+- New ablation `prompt_doc_refs_strict` (gemini-3-flash, n=143) — adds explicit "you will be graded on doc_refs, cite all supporting documents" instructions to the baseline prompt.
+- **Strict doc-ref mismatch rate: 0.524 → 0.510, Δ −1.4pp [−2.9, 0.0]** — borderline, effect size negligible.
+- BS_exact: 0.250 → 0.208 (−4.2pp [−10.2, +1.6]) — slight degradation, not significant.
+- Entry-level accuracy and inconsistency code-match also slightly degraded (each −5 to −9pp), all borderline.
+- **Conclusion:** explicit citation pressure does not move doc-linking failure. The 52% baseline doc_refs failure persists under strong prompting, which means doc-linking is a *retrieval / disambiguation* capability gap, not a prompting / compliance issue.
+- This strengthens the Section 2.4 oracle-retrieval finding: the improvement under `evidence_only` is *not* because oracle hides documents the model would have cited differently under pressure — it's because the model genuinely cannot disambiguate among candidate docs when given the full set.
 
 ### 2.4 Evidence-only context (oracle retrieval) confirms doc-linking is a retrieval problem
 
@@ -89,6 +126,16 @@ Source-of-truth bullet list of every finding worth using in the paper. Organized
 - 2-pass vs 1-pass: BS_exact +3.3pp, BS_recon +1.6pp. Cost +56%.
 - 2-pass inc_code_match: **−21.7pp [−40.0, −5.3]** significant degradation.
 - 1-pass is the practical sweet spot. Recommend dropping 2-pass from headline tables.
+
+### 3.5 Best-of-3 sampling with ledger-aware selection closes ~⅓ of the verifier's gap and is not a substitute
+
+- `self_consistency_k3` ablation: 3 independent samples at temperature=0.7, then a deterministic selector picks one. Selector ranking (lexicographic): `parse_success > !has_inconsistency > submitted_matches_reconstructed > balanced > reconstructed_balanced > balance-sheet majority_vote > fewer ledger deltas > smaller delta_abs_total`.
+- Run on n=45 standard records, gemini-3-flash.
+- **Paired on baseline overlap (n=15): BS_exact 0.133 → 0.267, Δ +13.3pp.** Full n=45 SC rate is 0.289 — broadly consistent.
+- For comparison: forced verifier on gemini-flash closes +32.5pp BS_exact on n=143. Best-of-3 closes ~40% of that, at 3× the inference cost.
+- **Methodology caveat — to disclose honestly in the paper:** the selector's primary signal is `submitted_matches_reconstructed` (a verifier-style check), not vanilla majority voting. On 13/45 records the selector picked a sample because *that sample already had a closed aggregation gap*; on the remaining 32/45 it broke ties via fewer ledger deltas (also a verifier-derived signal). Majority voting is the 6th priority and rarely the decisive one.
+- **Honest framing for the paper:** label this as "**best-of-3 with ledger-guided selection**," not "self-consistency." A pure vanilla self-consistency baseline (majority vote on final BS, with no ledger-side selection) was not run. We are not making a "more compute closes the gap" claim — we are making a "even when allowed to choose from 3 verifier-validated drafts, the model can only close ~⅓ of the gap; *iteratively correcting* via verifier feedback recovers another ~20pp."
+- **Scientific interpretation:** the verifier's advantage over sampling is not the ledger check per se (both have it) — it is the **ability to revise** the draft given the feedback, vs. only being able to *pick* among existing drafts. Picking is necessary but insufficient.
 
 ---
 
@@ -161,31 +208,41 @@ Baseline error counts on 120 standard records:
 
 ## 7. Methodology notes (Section: Limitations / Reproducibility)
 
-- **Single-seed runs at temp=0.0.** Bootstrap CIs are on the 143 records, not across seeds. For variance under stochastic decoding, additional seeds are needed. Recommend n=3 seeds for headline conditions before camera-ready.
-- **Single-model results.** All numbers above are gemini-3-flash. Multi-model sweep is the highest-priority missing experiment. Even n=40 stratified per model would suffice to claim generality of the aggregation gap.
+- **Single-seed runs at temp=0.0.** Bootstrap CIs are on the 143 records, not across seeds. For variance under stochastic decoding, additional seeds are needed. Defer to rebuttal if reviewers push.
+- **Multi-model coverage (status).** 6 models with full n=143: gemini-3-flash, gpt-5-low, claude-haiku-4.5, grok-4.3, deepseek-v3.2, qwen-3-235b. Verifier replication on 3 of those (gemini-flash, claude-haiku, deepseek-v3.2) at full n=143, plus qwen-3-235b on partial n≈85. Other pilots (gemini-3-pro, claude-sonnet-4.6, gpt-5-default, qwen-3.5-397b, llama-3.3-70b) are partial (n=4–14) and should be excluded from the paper or revisited at rebuttal stage.
+- **Aggregation gap is not universal.** GPT-5-low and Grok-4.3 baselines show essentially no gap (BS_recon ≈ BS_exact). Honest framing: "present in 4 of 6 frontier models tested." Why these two are different is an open question worth a paragraph (not a blocker).
+- **Llama-3.3-70b parse rate is 33%.** Drop from the model panel. Open-weights story is currently broken; can be replaced post-rebuttal.
 - **Evidence_only is an oracle condition.** It uses GT `doc_refs` to filter visible documents. Frame in methods section as an upper bound, not a realistic deployment condition.
-- **Verifier feedback bias on inconsistency packets** is patched: when `parsed.has_inconsistency=True`, BS-comparison is skipped (returns `matches=None, delta_count=0`). Verified by per-record inspection: only 1/19 (1-pass) and 2/19 (2-pass) inconsistency drafts were flipped to non-inconsistency in the final answer.
+- **Verifier feedback bias on inconsistency packets** is patched: when `parsed.has_inconsistency=True`, BS-comparison is skipped (returns `matches=None, delta_count=0`). Verified by per-record inspection on gemini-flash: only 1/19 (1-pass) and 2/19 (2-pass) inconsistency drafts were flipped. The much larger inc_code_match degradation on claude-haiku-4.5 (−52pp) and deepseek-v3.2 (−61pp) occurs through a different path — these models initially do not flag inconsistency, so the skip patch does not fire, and the ledger feedback then biases them further away from raising an inconsistency claim. Disclose this honestly.
+- **self_consistency_k3 selector is verifier-aware (not vanilla majority).** Section 3.5 explains. Either rename in the paper or run a vanilla-SC baseline at rebuttal time; do not call it "self-consistency" in the abstract.
 - **OpenRouter determinism is not guaranteed even at temp=0.0.** Differences smaller than ~3pp between conditions should be reported as not robust.
+- **Qwen-3-235b verifier run is partial (n=85 of 143, standard records only).** Report as partial; verifier transferability is still publishable. Re-run to completion at rebuttal if requested.
 
 ---
 
-## 8. Recommended additional experiments before submission
+## 8. Status of additional experiments (and what to defer to rebuttal)
 
-### Must-do
-1. **Multi-model sweep.** gemini-3-pro, Claude Sonnet 4.6, GPT-5, DeepSeek-V3, Llama-3.3-70B, and one small open model (Qwen-2.5-32B). Run at minimum the headline set: baseline, forced_ledger_verifier (1-pass), evidence_only, evidence_plus_15_distractors.
-2. **Variance.** n=3 seeds on baseline + forced_ledger_verifier. Report mean ± std on BS_recon, BS_exact, inc_code_match.
-3. **Per-concept ablation.** Filter the 143 records by concept flag (lease, ASC 606, deferred tax, asset disposal, tax exemption) and report per-concept BS_recon. Reviewers will ask "which accounting concepts does the model fail at?"
+### Already done since last revision
+- ✅ Multi-model sweep — baseline on 6 models at n=143 each (gemini-flash, gpt-5-low, claude-haiku, grok-4.3, deepseek-v3.2, qwen-3-235b).
+- ✅ Verifier transferability — replicated on 3 models at full n=143 (gemini-flash, claude-haiku, deepseek-v3.2) + 1 model on partial n≈85 (qwen).
+- ✅ Best-of-3 ledger-guided selection (called `self_consistency_k3` in code) — frames the contrast between picking and revising.
+- ✅ Doc-linking-as-prompt-issue rebuttal — `prompt_doc_refs_strict` shows the failure persists under explicit citation pressure.
+- ✅ Difficulty decomposition data (context-stress matrix covers L1–L5 × {0,5,15,30 distractors}); analysis figure pending.
 
-### Should-do
-4. **Forced-verifier with entry-level feedback** — current verifier only checks BS aggregation. A variant that also flags `doc_refs` mismatches or amount discrepancies against the deterministic ledger would test whether stronger feedback also fixes entries (not just aggregation).
-5. **Self-consistency (k=5 majority vote)** at temp=0.7 on baseline. If BS_recon jumps to 80%+, the model is making lucky-bad guesses; if flat, errors are systematic.
-6. **Account-naming robustness.** Replace `Accounts Receivable` → `Trade Debtors`, etc. (UK/IFRS naming). Isolates accounting-conceptual failure from US-GAAP string-matching.
+### Optional / defer to rebuttal
+- **Vanilla self-consistency baseline (no ledger-aware selection).** If a reviewer flags 3.5's selection rule, run k=5 majority vote with NO ledger signal as a clean SC baseline. ~$3-5.
+- **Seed variance.** n=3 seeds on baseline + verifier for one model. ~$3.
+- **More models with full ablation set.** gemini-3-pro, claude-sonnet-4.6, gpt-5-default at higher reasoning. Cost: $20-30. Defer to rebuttal.
+- **Per-concept ablation table.** Pure analysis on existing per-record data; no new runs. Should be done pre-submission as part of writing.
+- **Doc-order shuffling beyond `evidence_relevant_last`.** Useful but partially covered.
+- **OCR-degradation, few-shot, account-naming-robustness, tool-quality ablations.** Nice-to-have. Defer.
 
-### Nice-to-have
-7. **OCR-degradation ablation** (1–3% char noise on OCR text). Real-world deployment story.
-8. **Few-shot ablation** (0-shot / 1-shot / 3-shot). Reviewers expect this; cheap to run.
-9. **Doc-order shuffling** (already partially covered by `evidence_relevant_last`).
-10. **Tool quality ablation** — return a noisy ledger 20% of the time. Tests model's rejection of bad oracle feedback.
+### Critical analyses to do during writing (no new runs)
+1. **Per-concept BS_exact** by concept flag (ASC 606, lease, deferred tax, asset disposal, etc.) — 1 day.
+2. **Why GPT-5-low and Grok-4.3 lack the aggregation gap.** Compare entries and BS-construction paths against gap-having models. 1 day.
+3. **Difficulty decomposition figure** (context-length effect ~17pp + accounting-complexity effect ~37pp). 2 hours.
+4. **Cost-per-correct Pareto** across the 6 models. 1 hour.
+5. **Error-type distribution per model** (missing / wrong account / wrong amount / extra). ½ day.
 
 ---
 

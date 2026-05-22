@@ -6,6 +6,7 @@ import ast
 import json
 import re
 import time
+from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any, Protocol
 
@@ -24,6 +25,7 @@ TOOL_VARIANT_LEDGER_CHECK = "ledger_check"
 TOOL_VARIANT_FULL_TOOL_AGENT = "full_tool_agent"
 TOOL_VARIANT_FORCED_LEDGER_VERIFIER = "forced_ledger_verifier"
 TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS = "forced_ledger_verifier_2pass"
+TOOL_VARIANT_SELF_CONSISTENCY_K3 = "self_consistency_k3"
 TOOL_VARIANTS = (
     TOOL_VARIANT_NO_TOOLS,
     TOOL_VARIANT_CALCULATOR,
@@ -32,6 +34,7 @@ TOOL_VARIANTS = (
     TOOL_VARIANT_FULL_TOOL_AGENT,
     TOOL_VARIANT_FORCED_LEDGER_VERIFIER,
     TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS,
+    TOOL_VARIANT_SELF_CONSISTENCY_K3,
 )
 
 TOOL_CALCULATOR = "calculator"
@@ -52,6 +55,7 @@ TOOLS_BY_VARIANT = {
     ),
     TOOL_VARIANT_FORCED_LEDGER_VERIFIER: (TOOL_LEDGER_CHECK,),
     TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS: (TOOL_LEDGER_CHECK,),
+    TOOL_VARIANT_SELF_CONSISTENCY_K3: (),
 }
 
 
@@ -278,6 +282,85 @@ def run_forced_ledger_verifier_completion(
     )
 
 
+def run_self_consistency_completion(
+    record: DocumentRecord,
+    client: ChatClient,
+    prompt: str,
+    *,
+    samples: int = 3,
+    temperature: float,
+    max_tokens: int,
+    timeout: int,
+) -> ToolAgentResult:
+    started = time.monotonic()
+    payloads: list[dict[str, Any]] = []
+    candidates: list[dict[str, Any]] = []
+    sample_prompt = (
+        prompt
+        + "\n\nGenerate one independent candidate answer for self-consistency sampling. "
+        "Return only the strict benchmark JSON answer."
+    )
+
+    for index in range(max(1, int(samples))):
+        response_text, response_payload = client.complete(
+            sample_prompt,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            timeout=timeout,
+        )
+        payloads.append(response_payload)
+        candidates.append(_score_self_consistency_candidate(record, response_text, index))
+
+    balance_counts = Counter(
+        candidate["balance_sheet_key"]
+        for candidate in candidates
+        if candidate.get("parse_success") and candidate.get("balance_sheet_key")
+    )
+
+    def rank(candidate: dict[str, Any]) -> tuple[Any, ...]:
+        majority_count = balance_counts.get(candidate.get("balance_sheet_key"), 0)
+        return (
+            bool(candidate.get("parse_success")),
+            not bool(candidate.get("has_inconsistency")),
+            bool(candidate.get("submitted_matches_reconstructed")),
+            bool(candidate.get("submitted_balance_sheet_balanced")),
+            bool(candidate.get("reconstructed_balance_sheet_balanced")),
+            int(majority_count),
+            -int(candidate.get("delta_count", 10**9)),
+            -float(candidate.get("delta_abs_total", 10**9)),
+            int(candidate.get("accepted_entry_count", 0)),
+            -int(candidate.get("sample_index", 0)),
+        )
+
+    selected_index = max(range(len(candidates)), key=lambda idx: rank(candidates[idx]))
+    selected = candidates[selected_index]
+    selected_payload = payloads[selected_index] if selected_index < len(payloads) else {}
+    combined_payload = _payload_with_combined_usage(selected_payload, payloads)
+    combined_payload["self_consistency"] = {
+        "samples": len(candidates),
+        "selected_sample_index": selected_index,
+        "selection_rule": (
+            "parse-valid, non-inconsistency, submitted balance sheet matches ledger replay, "
+            "balanced sheets, balance-sheet majority, fewer replay deltas"
+        ),
+        "candidates": [_candidate_metadata(candidate) for candidate in candidates],
+    }
+
+    return ToolAgentResult(
+        response_text=str(selected.get("response_text", "")),
+        response_payload=combined_payload,
+        tool_calls=[
+            {
+                "tool": "self_consistency_selector",
+                "arguments": {"samples": len(candidates)},
+                "result": combined_payload["self_consistency"],
+            }
+        ],
+        tool_call_failures=sum(1 for candidate in candidates if not candidate.get("parse_success")),
+        latency_seconds=round(time.monotonic() - started, 4),
+    )
+
+
 def execute_tool(tool_name: str, arguments: dict[str, Any], record: DocumentRecord) -> dict[str, Any]:
     if tool_name == TOOL_CALCULATOR:
         return calculator_tool(arguments)
@@ -443,6 +526,87 @@ def _ledger_verifier_feedback(
         "note": comparison_note,
     }
     return feedback, {"tool": TOOL_LEDGER_CHECK, "arguments": {"entries": entries}, "result": feedback}
+
+
+def _score_self_consistency_candidate(
+    record: DocumentRecord,
+    response_text: str,
+    sample_index: int,
+) -> dict[str, Any]:
+    candidate: dict[str, Any] = {
+        "sample_index": int(sample_index),
+        "response_text": response_text,
+        "parse_success": False,
+        "parse_error": "",
+        "has_inconsistency": False,
+        "submitted_matches_reconstructed": False,
+        "submitted_balance_sheet_balanced": False,
+        "reconstructed_balance_sheet_balanced": False,
+        "delta_count": 10**9,
+        "delta_abs_total": 10**9,
+        "accepted_entry_count": 0,
+        "balance_sheet_key": "",
+    }
+    try:
+        parsed = parse_submission(response_text)
+    except Exception as exc:
+        candidate["parse_error"] = str(exc)
+        return candidate
+
+    submitted_balance_sheet = serialize_balance_sheet(parsed.balance_sheet)
+    candidate.update(
+        {
+            "parse_success": True,
+            "has_inconsistency": bool(parsed.has_inconsistency),
+            "submitted_balance_sheet_balanced": bool(submitted_balance_sheet.get("balanced")),
+            "balance_sheet_key": json.dumps(_normalize_for_vote(submitted_balance_sheet), sort_keys=True),
+        }
+    )
+    if parsed.has_inconsistency:
+        candidate["delta_count"] = 0
+        candidate["delta_abs_total"] = 0.0
+        return candidate
+
+    entries = [posting_to_dict(entry) for entry in parsed.entries]
+    ledger_result = ledger_check_tool({"entries": entries}, record)
+    reconstructed_balance_sheet = ledger_result.get("reconstructed_balance_sheet")
+    candidate["accepted_entry_count"] = int(ledger_result.get("accepted_entry_count", 0))
+    if isinstance(reconstructed_balance_sheet, dict):
+        candidate["reconstructed_balance_sheet_balanced"] = bool(reconstructed_balance_sheet.get("balanced"))
+    comparison = _compare_balance_sheets(
+        submitted_balance_sheet,
+        reconstructed_balance_sheet if isinstance(reconstructed_balance_sheet, dict) else None,
+    )
+    deltas = comparison.get("deltas", [])
+    candidate.update(
+        {
+            "submitted_matches_reconstructed": bool(comparison.get("matches")),
+            "delta_count": int(comparison.get("delta_count", 0)),
+            "delta_abs_total": round(
+                sum(abs(float(delta.get("delta", 0.0))) for delta in deltas if isinstance(delta, dict)),
+                2,
+            ),
+        }
+    )
+    return candidate
+
+
+def _candidate_metadata(candidate: dict[str, Any]) -> dict[str, Any]:
+    return {
+        key: value
+        for key, value in candidate.items()
+        if key not in {"response_text", "balance_sheet_key"}
+    }
+
+
+def _normalize_for_vote(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {key: _normalize_for_vote(value[key]) for key in sorted(value)}
+    if isinstance(value, list):
+        return [_normalize_for_vote(item) for item in value]
+    if isinstance(value, (int, float)):
+        return round(float(value), 2)
+    return value
 
 
 def _compare_balance_sheets(

@@ -13,6 +13,7 @@ from docs_benchmark.benchmark import (
     analyze_ablation_bootstrap,
     build_prompt,
     filter_records,
+    load_existing_ablation_results,
     load_records,
     run_openrouter_evaluation,
     select_ablation_specs,
@@ -54,6 +55,35 @@ FORCED_INCONSISTENCY_CANDIDATES = {
     "fx_settlement_mismatch": (("professional_services", "quarter", 5, None), ("subscription_saas", "quarter", 5, None)),
     "remeasurement_mismatch": (("subscription_saas", "year", 5, None), ("professional_services", "year", 5, None)),
 }
+
+
+def _aggregation_gap_record_ids(path: Path) -> set[str]:
+    if path.is_dir():
+        path = path / "per_record_results.jsonl"
+    if not path.exists():
+        raise SystemExit(f"Aggregation-gap source not found: {path}")
+
+    if path.suffix == ".jsonl":
+        with path.open(encoding="utf-8") as handle:
+            rows = [json.loads(line) for line in handle if line.strip()]
+    else:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        rows = list(payload.get("results", []))
+
+    record_ids = {str(row.get("record_id")) for row in rows if _is_aggregation_gap_row(row)}
+    if not record_ids:
+        raise SystemExit(f"No aggregation-gap records found in {path}")
+    return record_ids
+
+
+def _is_aggregation_gap_row(row: dict) -> bool:
+    metrics = row.get("metrics", {})
+    return bool(
+        metrics.get("parse_success")
+        and not metrics.get("expected_inconsistency")
+        and metrics.get("predicted_entries_reconstruct_correct_final_balance_sheet")
+        and not metrics.get("final_balance_sheet_matches")
+    )
 
 
 def main() -> None:
@@ -102,6 +132,7 @@ def main() -> None:
     evaluate.add_argument("--temperature", type=float, default=0.0)
     evaluate.add_argument("--max-output-tokens", type=int, default=8192)
     evaluate.add_argument("--timeout", type=int, default=180)
+    evaluate.add_argument("--reasoning-effort", choices=["none", "minimal", "low", "medium", "high", "xhigh"])
 
     ablations = subparsers.add_parser("evaluate-ablations", help="Run provider-neutral benchmark ablations")
     ablations.add_argument("--dataset", default="docs_benchmark/data/coverage/records.jsonl")
@@ -116,10 +147,35 @@ def main() -> None:
     ablations.add_argument("--levels", nargs="+", type=int)
     ablations.add_argument("--max-records", type=int, default=15)
     ablations.add_argument("--sample-strategy", choices=["ordered", "stratified"], default="ordered")
+    ablations.add_argument(
+        "--aggregation-gap-from-results",
+        help=(
+            "Filter to record IDs from a baseline ablation result where predicted entries "
+            "reconstruct the expected balance sheet but the submitted balance sheet is wrong."
+        ),
+    )
     ablations.add_argument("--temperature", type=float, default=0.0)
     ablations.add_argument("--max-output-tokens", type=int, default=8192)
     ablations.add_argument("--timeout", type=int, default=180)
+    ablations.add_argument("--reasoning-effort", choices=["none", "minimal", "low", "medium", "high", "xhigh"])
     ablations.add_argument("--agent-max-steps", type=int, default=8)
+    ablations.add_argument("--resume", action="store_true", help="Skip records already present in per_record_results.jsonl")
+    ablations.add_argument(
+        "--resume-valid-only",
+        action="store_true",
+        help="With --resume, skip only prior rows that parsed successfully",
+    )
+    ablations.add_argument(
+        "--checkpoint-every",
+        type=int,
+        default=0,
+        help="Write partial ablation outputs every N records; use with --resume for safe continuation",
+    )
+    ablations.add_argument(
+        "--abort-on-max-token-parse-failure",
+        action="store_true",
+        help="Stop the run if a response hits max output tokens and cannot be parsed",
+    )
 
     analyze_ablations = subparsers.add_parser("analyze-ablations", help="Bootstrap compare ablation result directories")
     analyze_ablations.add_argument("--results-dir", required=True)
@@ -192,7 +248,7 @@ def main() -> None:
         if not records:
             raise SystemExit("No matching records found in dataset")
 
-        client = OpenRouterClient(api_key=api_key, model=args.model)
+        client = OpenRouterClient(api_key=api_key, model=args.model, reasoning_effort=args.reasoning_effort)
         evaluation = run_openrouter_evaluation(
             records,
             client=client,
@@ -221,13 +277,36 @@ def main() -> None:
         )
         if args.sample_strategy == "stratified":
             records = stratified_sample_records(records, args.max_records)
+        if args.aggregation_gap_from_results:
+            record_ids = _aggregation_gap_record_ids(Path(args.aggregation_gap_from_results))
+            records = [record for record in records if record.record_id in record_ids]
         if not records:
             raise SystemExit("No matching records found in dataset")
 
         specs = select_ablation_specs(matrix=args.matrix, names=args.ablations)
-        client = OpenRouterClient(api_key=api_key, model=args.model)
+        client = OpenRouterClient(api_key=api_key, model=args.model, reasoning_effort=args.reasoning_effort)
         output_dirs = []
         for spec in specs:
+            existing_results = (
+                load_existing_ablation_results(
+                    args.output_dir,
+                    spec.name,
+                    parse_success_only=args.resume_valid_only,
+                )
+                if args.resume
+                else []
+            )
+            if args.resume:
+                print(
+                    json.dumps(
+                        {
+                            "ablation_name": spec.name,
+                            "resuming_records": len(existing_results),
+                            "resume_valid_only": bool(args.resume_valid_only),
+                        },
+                        indent=2,
+                    )
+                )
             evaluation = run_ablation_evaluation(
                 records,
                 client=client,
@@ -238,6 +317,10 @@ def main() -> None:
                 max_tokens=args.max_output_tokens,
                 timeout=args.timeout,
                 agent_max_steps=args.agent_max_steps,
+                existing_results=existing_results,
+                checkpoint_output_root=args.output_dir if args.checkpoint_every else None,
+                checkpoint_every=args.checkpoint_every,
+                abort_on_max_token_parse_failure=args.abort_on_max_token_parse_failure,
             )
             output_dir = write_ablation_outputs(evaluation, args.output_dir)
             output_dirs.append(str(output_dir))
