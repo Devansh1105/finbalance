@@ -1,0 +1,95 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R ] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1478 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(OPENING TRIAL BALANCE) Tj
+T*
+(=====================) Tj
+T*
+() Tj
+T*
+(Summary) Tj
+T*
+(-------) Tj
+T*
+(Statement Date: 01/01/2024) Tj
+T*
+(Prepared By: Synthetic finance engine) Tj
+T*
+() Tj
+T*
+(Account Lines) Tj
+T*
+(-------------) Tj
+T*
+(Accounts:) Tj
+T*
+(  - Section assets | Account Cash | Amount EUR 84.883,79) Tj
+T*
+(  - Section assets | Account Accounts Receivable | Amount EUR 11.217,79) Tj
+T*
+(  - Section assets | Account Prepaid Rent | Amount EUR 10.555,09) Tj
+T*
+(  - Section assets | Account Prepaid Insurance | Amount EUR 5.219,80) Tj
+T*
+(  - Section assets | Account Office Supplies | Amount EUR 3.383,67) Tj
+T*
+(  - Section assets | Account Equipment | Amount EUR 30.099,85) Tj
+T*
+(  - Section assets | Account Furniture | Amount EUR 20.807,52) Tj
+T*
+(  - Section liabilities | Account Accounts Payable | Amount EUR 10.413,25) Tj
+T*
+(  - Section liabilities | Account Accrued Expenses | Amount EUR 2.088,37) Tj
+T*
+(  - Section liabilities | Account Unearned Revenue | Amount EUR 12.680,95) Tj
+T*
+(  - Section liabilities | Account Loans Payable | Amount EUR 22.337,74) Tj
+T*
+(  - Section liabilities | Account Notes Payable | Amount EUR 18.843,70) Tj
+T*
+(  - Section equity | Account Retained Earnings | Amount EUR 22.024,09) Tj
+T*
+(  - Section equity | Account Owner's Equity | Amount EUR 77.779,41) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Opening balances are source inputs and should tie to the rest of the packet.) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000117 00000 n 
+0000000187 00000 n 
+0000000313 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1843
+%%EOF

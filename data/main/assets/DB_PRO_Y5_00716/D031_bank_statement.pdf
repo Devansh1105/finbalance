@@ -1,0 +1,169 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1809 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Granite Advisors) Tj
+T*
+(18 Marina Avenue, Chennai) Tj
+T*
+(Date: 2026-03-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D031) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: FY 2025-26) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0716) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $281,021.95) Tj
+T*
+(Closing Balance: $181,652.55) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2025-04-18 | Description Insurance coverage prepayment PRE-0001 | Amount ) Tj
+T*
+($-29,457.10 | Running Balance $251,564.85) Tj
+T*
+(  - Date 2025-04-21 | Description Security deposit DEP-0004 | Amount $31,474.48 | Running ) Tj
+T*
+(Balance $283,039.33) Tj
+T*
+(  - Date 2025-06-11 | Description Security deposit DEP-0003 | Amount $35,285.99 | Running ) Tj
+T*
+(Balance $318,325.32) Tj
+T*
+(  - Date 2025-06-12 | Description Security deposit DEP-0001 | Amount $16,825.77 | Running ) Tj
+T*
+(Balance $335,151.09) Tj
+T*
+(  - Date 2025-06-16 | Description Security deposit DEP-0005 | Amount $29,951.88 | Running ) Tj
+T*
+(Balance $365,102.97) Tj
+T*
+(  - Date 2025-09-26 | Description Asset purchase ASSET-0001 | Amount $-125,685.90 | Running ) Tj
+T*
+(Balance $239,417.07) Tj
+T*
+(  - Date 2025-10-22 | Description Loan draw LOAN-0001 | Amount $127,085.41 | Running Balance) Tj
+T*
+( $366,502.48) Tj
+T*
+(  - Date 2025-12-20 | Description Security deposit refund DEP-0001 | Amount $-14,223.43 | ) Tj
+T*
+(Running Balance $352,279.05) Tj
+T*
+(  - Date 2025-12-29 | Description Customer settlement ROLL-0001 | Amount $16,183.30 | ) Tj
+T*
+(Running Balance $368,462.35) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 650 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2026-01-06 | Description Loan payment LOAN-0002 | Amount $-60,771.41 | Running ) Tj
+T*
+(Balance $307,690.94) Tj
+T*
+(  - Date 2026-02-08 | Description Supplier settlement BILL-0001 | Amount $-6,232.55 | ) Tj
+T*
+(Running Balance $301,458.39) Tj
+T*
+(  - Date 2026-02-21 | Description Payroll PAYRUN-0001 | Amount $-119,805.84 | Running ) Tj
+T*
+(Balance $181,652.55) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D031) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002180 00000 n 
+0000002306 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+3007
+%%EOF

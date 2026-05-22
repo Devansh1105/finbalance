@@ -1,0 +1,169 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1797 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Pioneer Builders) Tj
+T*
+(90 Hill Park, Hyderabad) Tj
+T*
+(Document Date: 2026-03-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D049) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: FY 2025-26) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-ATCH) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $140,913.91) Tj
+T*
+(Closing Balance: $152,136.56) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2025-04-16 | Description Insurance coverage prepayment PRE-0002 | Amount ) Tj
+T*
+($-41,843.56 | Running Balance $99,070.35) Tj
+T*
+(  - Date 2025-04-23 | Description Rent prepayment PRE-0001 | Amount $-44,320.41 | Running ) Tj
+T*
+(Balance $54,749.94) Tj
+T*
+(  - Date 2025-11-13 | Description Asset purchase ASSET-0001 | Amount $-97,026.49 | Running ) Tj
+T*
+(Balance $-42,276.55) Tj
+T*
+(  - Date 2025-12-01 | Description Loan draw LOAN-0001 | Amount $224,701.52 | Running Balance) Tj
+T*
+( $182,424.97) Tj
+T*
+(  - Date 2025-12-04 | Description Prime Utility Desk receipt RCPT-0001 | Amount $-265.89 | ) Tj
+T*
+(Running Balance $182,159.08) Tj
+T*
+(  - Date 2025-12-13 | Description Transfer out TRX-0001 | Amount $-97,035.77 | Running ) Tj
+T*
+(Balance $85,123.31) Tj
+T*
+(  - Date 2025-12-19 | Description Payroll PAYRUN-0001 | Amount $-76,672.03 | Running Balance) Tj
+T*
+( $8,451.28) Tj
+T*
+(  - Date 2026-01-05 | Description Loan payment LOAN-0002 | Amount $-36,829.41 | Running ) Tj
+T*
+(Balance $-28,378.13) Tj
+T*
+(  - Date 2026-01-18 | Description Lease payment LEASE-0001 | Amount $-37,792.65 | Running ) Tj
+T*
+(Balance $-66,170.78) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 673 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2026-01-18 | Description Supplier settlement BILL-0001 | Amount $-12,052.48 | ) Tj
+T*
+(Running Balance $-78,223.26) Tj
+T*
+(  - Date 2026-01-22 | Description Asset sale TAG-0001 | Amount $204,230.59 | Running Balance) Tj
+T*
+( $126,007.33) Tj
+T*
+(  - Date 2026-01-29 | Description Customer settlement INV-0001 | Amount $26,129.23 | Running) Tj
+T*
+( Balance $152,136.56) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Generated for synthetic accounting research use.) Tj
+T*
+(Page marker: D049) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002168 00000 n 
+0000002294 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+3018
+%%EOF

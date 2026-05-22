@@ -1,0 +1,115 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R ] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1416 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(PERFORMANCE OBLIGATION SCHEDULE) Tj
+T*
+(===============================) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Pioneer Property Services) Tj
+T*
+(75 Market Road, Mumbai) Tj
+T*
+(Document Date: 2025-06-30) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D015) Tj
+T*
+(Document Type: performance_obligation_schedule) Tj
+T*
+(Period: Q1 FY 2025-26) Tj
+T*
+() Tj
+T*
+(Allocation Summary) Tj
+T*
+(------------------) Tj
+T*
+(Schedule ID: POB-0001) Tj
+T*
+(Contract Reference: ASC606-0001) Tj
+T*
+(Transaction Price: $1,217,000.90) Tj
+T*
+(Total SSP: $1,469,824.68) Tj
+T*
+(Allocation Total: $1,217,000.90) Tj
+T*
+(Released This Period: 510,620.80) Tj
+T*
+(Ending Deferred: $706,380.10) Tj
+T*
+() Tj
+T*
+(Performance Obligations) Tj
+T*
+(-----------------------) Tj
+T*
+(Obligations:) Tj
+T*
+(  - Obligation Implementation | Ssp Amount $332,323.56 | Invoice Line Amount $182,550.13 | ) Tj
+T*
+(Allocated Transaction Price $275,160.76 | Release Pattern On acceptance | Released This ) Tj
+T*
+(Period 275,160.76) Tj
+T*
+(  - Obligation Platform access | Ssp Amount $1,137,501.12 | Invoice Line Amount ) Tj
+T*
+($1,034,450.77 | Allocated Transaction Price $941,840.14 | Release Pattern Ratable over 12 ) Tj
+T*
+(months | Released This Period 235,460.04) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Generated for synthetic accounting research use.) Tj
+T*
+(Page marker: D015) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000117 00000 n 
+0000000187 00000 n 
+0000000313 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1781
+%%EOF

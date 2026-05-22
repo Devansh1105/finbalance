@@ -1,5 +1,0 @@
-"""Generation helpers for docs_benchmark."""
-
-from docs_benchmark.generation.builder import DocumentBenchmarkBuilder
-
-__all__ = ["DocumentBenchmarkBuilder"]

@@ -1,0 +1,157 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1799 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Silverline Advisors) Tj
+T*
+(14 King Street, Pune) Tj
+T*
+(Date: 2024-12-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D019) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: Q4 FY 2024) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0668) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $76,867.73) Tj
+T*
+(Closing Balance: $149,131.13) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2024-10-08 | Description Insurance coverage prepayment PRE-0001 | Amount ) Tj
+T*
+($-11,540.10 | Running Balance $65,327.63) Tj
+T*
+(  - Date 2024-10-18 | Description Security deposit DEP-0001 | Amount $8,542.21 | Running ) Tj
+T*
+(Balance $73,869.84) Tj
+T*
+(  - Date 2024-10-19 | Description Security deposit DEP-0003 | Amount $12,551.28 | Running ) Tj
+T*
+(Balance $86,421.12) Tj
+T*
+(  - Date 2024-11-07 | Description Loan draw LOAN-0001 | Amount $163,413.13 | Running Balance) Tj
+T*
+( $249,834.25) Tj
+T*
+(  - Date 2024-12-01 | Description Asset purchase ASSET-0001 | Amount $-50,474.38 | Running ) Tj
+T*
+(Balance $199,359.87) Tj
+T*
+(  - Date 2024-12-10 | Description Supplier settlement BILL-0001 | Amount $-6,309.87 | ) Tj
+T*
+(Running Balance $193,050.00) Tj
+T*
+(  - Date 2024-12-14 | Description Customer settlement ROLL-0001 | Amount $10,550.97 | ) Tj
+T*
+(Running Balance $203,600.97) Tj
+T*
+(  - Date 2024-12-18 | Description Payroll PAYRUN-0001 | Amount $-46,643.54 | Running Balance) Tj
+T*
+( $156,957.43) Tj
+T*
+(  - Date 2024-12-19 | Description Security deposit refund DEP-0001 | Amount $-7,826.30 | ) Tj
+T*
+(Running Balance $149,131.13) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 271 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D019) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002170 00000 n 
+0000002296 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2618
+%%EOF

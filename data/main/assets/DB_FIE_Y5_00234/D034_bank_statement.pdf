@@ -1,0 +1,157 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1812 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Beacon Manufacturing) Tj
+T*
+(18 Marina Avenue, Chennai) Tj
+T*
+(Date: 2026-03-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D034) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: FY 2025-26) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0234) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $157,055.89) Tj
+T*
+(Closing Balance: $108,838.64) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2025-09-11 | Description Asset purchase ASSET-0001 | Amount $-65,521.09 | Running ) Tj
+T*
+(Balance $91,534.80) Tj
+T*
+(  - Date 2025-09-28 | Description Oakline Services receipt RCPT-0002 | Amount $-533.73 | ) Tj
+T*
+(Running Balance $91,001.07) Tj
+T*
+(  - Date 2025-10-02 | Description Golden State Finance receipt RCPT-0003 | Amount $-1,488.11) Tj
+T*
+( | Running Balance $89,512.96) Tj
+T*
+(  - Date 2025-10-12 | Description Loan draw LOAN-0001 | Amount $194,433.57 | Running Balance) Tj
+T*
+( $283,946.53) Tj
+T*
+(  - Date 2025-10-12 | Description Prime Utility Desk receipt RCPT-0001 | Amount $-51.17 | ) Tj
+T*
+(Running Balance $283,895.36) Tj
+T*
+(  - Date 2025-12-10 | Description Customer settlement INV-0001 | Amount $17,010.16 | Running) Tj
+T*
+( Balance $300,905.52) Tj
+T*
+(  - Date 2025-12-23 | Description Loan payment LOAN-0002 | Amount $-72,908.18 | Running ) Tj
+T*
+(Balance $227,997.34) Tj
+T*
+(  - Date 2026-01-13 | Description Payroll PAYRUN-0001 | Amount $-92,995.22 | Running Balance) Tj
+T*
+( $135,002.12) Tj
+T*
+(  - Date 2026-01-25 | Description Supplier settlement BILL-0001 | Amount $-26,163.48 | ) Tj
+T*
+(Running Balance $108,838.64) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 271 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D034) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002183 00000 n 
+0000002309 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2631
+%%EOF

@@ -1,0 +1,151 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1050 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(VENDOR INVOICE) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Atlas Operations) Tj
+T*
+(90 Hill Park, Hyderabad) Tj
+T*
+(Document Date: 01/02/2024) Tj
+T*
+() Tj
+T*
+(To) Tj
+T*
+(--) Tj
+T*
+(Meridian Support LLP) Tj
+T*
+(Vendor remittance address on file) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D006) Tj
+T*
+(Document Type: vendor_invoice) Tj
+T*
+(Period: FY 2024) Tj
+T*
+() Tj
+T*
+(Terms) Tj
+T*
+(-----) Tj
+T*
+(Due Date: 19/02/2024) Tj
+T*
+() Tj
+T*
+(Supplier Header) Tj
+T*
+(---------------) Tj
+T*
+(Vendor: Meridian Support LLP) Tj
+T*
+(Expense Label: Utilities Expense) Tj
+T*
+(Currency: GBP) Tj
+T*
+() Tj
+T*
+(Bill Details) Tj
+T*
+(------------) Tj
+T*
+(Invoice Number: BILL-0001) Tj
+T*
+(Due Date: 19/02/2024) Tj
+T*
+(Subtotal: GBP 51,811.68) Tj
+T*
+(Tax Label: VAT) Tj
+T*
+(Tax Rate: 20.00%) Tj
+T*
+(Tax Amount: GBP 10,362.34) Tj
+T*
+(Total: GBP 62,174.02) Tj
+T*
+() Tj
+T*
+(Bill Lines) Tj
+T*
+(----------) Tj
+T*
+(Lines:) Tj
+T*
+(  - Description Consulting sprint | Amount GBP 14,583.68) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 218 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Description Support fee | Amount GBP 37,228.00) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Generated for synthetic accounting research use.) Tj
+T*
+(Page marker: D006) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000001421 00000 n 
+0000001547 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+1816
+%%EOF

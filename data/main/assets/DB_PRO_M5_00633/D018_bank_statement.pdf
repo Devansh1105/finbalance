@@ -1,0 +1,157 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1799 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Northwind Manufacturing) Tj
+T*
+(90 Hill Park, Hyderabad) Tj
+T*
+(Document Date: 2024-11-30) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D018) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: November 2024) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0633) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $50,394.86) Tj
+T*
+(Closing Balance: $73,435.44) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2024-11-03 | Description Insurance coverage prepayment PRE-0001 | Amount $-9,200.04) Tj
+T*
+( | Running Balance $41,194.82) Tj
+T*
+(  - Date 2024-11-03 | Description Security deposit DEP-0003 | Amount $7,310.93 | Running ) Tj
+T*
+(Balance $48,505.75) Tj
+T*
+(  - Date 2024-11-05 | Description Security deposit DEP-0001 | Amount $4,920.41 | Running ) Tj
+T*
+(Balance $53,426.16) Tj
+T*
+(  - Date 2024-11-10 | Description Asset purchase ASSET-0001 | Amount $-16,792.79 | Running ) Tj
+T*
+(Balance $36,633.37) Tj
+T*
+(  - Date 2024-11-17 | Description Loan draw LOAN-0001 | Amount $77,281.34 | Running Balance ) Tj
+T*
+($113,914.71) Tj
+T*
+(  - Date 2024-11-20 | Description Payroll PAYRUN-0001 | Amount $-28,064.54 | Running Balance) Tj
+T*
+( $85,850.17) Tj
+T*
+(  - Date 2024-11-21 | Description Customer settlement ROLL-0001 | Amount $4,712.81 | Running) Tj
+T*
+( Balance $90,562.98) Tj
+T*
+(  - Date 2024-11-26 | Description Supplier settlement BILL-0001 | Amount $-4,223.55 | ) Tj
+T*
+(Running Balance $86,339.43) Tj
+T*
+(  - Date 2024-11-27 | Description Loan payment LOAN-0002 | Amount $-12,903.99 | Running ) Tj
+T*
+(Balance $73,435.44) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 289 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Generated for synthetic accounting research use.) Tj
+T*
+(Page marker: D018) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002170 00000 n 
+0000002296 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2636
+%%EOF

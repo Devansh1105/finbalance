@@ -1,0 +1,119 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R ] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1292 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Granite Retail Group) Tj
+T*
+(220 Lake View Road, Bengaluru) Tj
+T*
+(Date: 2025-12-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D015) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: FY 2025) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0930) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $598,299.22) Tj
+T*
+(Closing Balance: $1,388,560.58) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2025-04-08 | Description Advance collection INV-0003 | Amount $567,874.90 | Running) Tj
+T*
+( Balance $1,166,174.12) Tj
+T*
+(  - Date 2025-09-18 | Description Supplier settlement BILL-0001 | Amount $-46,434.53 | ) Tj
+T*
+(Running Balance $1,119,739.59) Tj
+T*
+(  - Date 2025-10-08 | Description Customer settlement INV-0001 | Amount $268,820.99 | ) Tj
+T*
+(Running Balance $1,388,560.58) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D015) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000117 00000 n 
+0000000187 00000 n 
+0000000313 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1657
+%%EOF

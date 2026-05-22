@@ -1,0 +1,105 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R ] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 854 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(PATIENT INVOICE) Tj
+T*
+(===============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Northwind Manufacturing) Tj
+T*
+(220 Lake View Road, Bengaluru) Tj
+T*
+(Document Date: 2024-02-10) Tj
+T*
+() Tj
+T*
+(To) Tj
+T*
+(--) Tj
+T*
+(Anaya Patel) Tj
+T*
+(Patient billing contact) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D006) Tj
+T*
+(Document Type: patient_invoice) Tj
+T*
+(Period: February 2024) Tj
+T*
+() Tj
+T*
+(Invoice Summary) Tj
+T*
+(---------------) Tj
+T*
+(Invoice Number: PTINV-0002) Tj
+T*
+(Patient: Anaya Patel) Tj
+T*
+(Payer: Unity Health Plan) Tj
+T*
+(Service Date: 2024-02-10) Tj
+T*
+(Gross Charge: $2,314.13) Tj
+T*
+(Patient Due: 806.19) Tj
+T*
+(Insurer Due: 1,507.94) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Generated for synthetic accounting research use.) Tj
+T*
+(Page marker: D006) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000117 00000 n 
+0000000187 00000 n 
+0000000313 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1218
+%%EOF

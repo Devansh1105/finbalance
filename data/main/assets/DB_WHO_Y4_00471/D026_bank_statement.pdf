@@ -1,0 +1,141 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1521 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Summit Property Services) Tj
+T*
+(220 Lake View Road, Bengaluru) Tj
+T*
+(Document Date: 2025-12-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D026) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: FY 2025) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0471) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $300,290.06) Tj
+T*
+(Closing Balance: $375,699.90) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2025-05-18 | Description Asset purchase ASSET-0001 | Amount $-187,790.24 | Running ) Tj
+T*
+(Balance $112,499.82) Tj
+T*
+(  - Date 2025-06-21 | Description Loan draw LOAN-0001 | Amount $330,724.69 | Running Balance) Tj
+T*
+( $443,224.51) Tj
+T*
+(  - Date 2025-09-23 | Description Supplier settlement SUP-0001 | Amount $-30,321.13 | ) Tj
+T*
+(Running Balance $412,903.38) Tj
+T*
+(  - Date 2025-10-21 | Description Customer settlement INV-0001 | Amount $29,165.30 | Running) Tj
+T*
+( Balance $442,068.68) Tj
+T*
+(  - Date 2025-11-14 | Description Payroll PAYRUN-0001 | Amount $-66,368.78 | Running Balance) Tj
+T*
+( $375,699.90) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Generated for synthetic accounting research use.) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 63 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(Page marker: D026) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000001892 00000 n 
+0000002018 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2131
+%%EOF

@@ -1,0 +1,28 @@
+from finbalance.doc_schemas.base import kv, listing, req, schema
+
+
+SCHEMA = schema(
+    doc_type="ap_aging_summary",
+    title="AP Aging Summary",
+    role="support_doc",
+    description="Summary of open payables grouped by age bucket.",
+    required_fields=(
+        req("summary_id", "string", "Summary id"),
+        req("period_label", "string", "Period label"),
+        req("lines", "list", "Aging lines"),
+        req("total_amount", "number", "Total open payables"),
+    ),
+    sections=(
+        kv(
+            "Aging Summary",
+            ("Summary ID", "summary_id"),
+            ("Period", "period_label"),
+            ("Total Open", "total_amount"),
+        ),
+        listing("Supplier Lines", "Lines", "lines"),
+    ),
+    list_field_orders={"lines": ("supplier", "reference", "current", "past_due")},
+    visible_fields=("summary_id", "period_label", "total_amount"),
+    template_variants=("formal", "summary", "portfolio"),
+    cosmetic_blocks=("issuer_block", "reference_block", "approval_block", "footer_block"),
+)

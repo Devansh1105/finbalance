@@ -1,0 +1,141 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1542 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Silverline Retail Group) Tj
+T*
+(220 Lake View Road, Bengaluru) Tj
+T*
+(Document Date: 30/09/2025) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D014) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: Q3 FY 2025) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0037) Tj
+T*
+(Statement Currency: EUR) Tj
+T*
+(Opening Balance: EUR 38.586,74) Tj
+T*
+(Closing Balance: EUR 47.196,87) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 31/07/2025 | Description Cash till SALES-0002 | Amount EUR 4.878,14 | Running ) Tj
+T*
+(Balance EUR 43.464,88) Tj
+T*
+(  - Date 16/08/2025 | Description Cash till SALES-0001 | Amount EUR 5.351,36 | Running ) Tj
+T*
+(Balance EUR 48.816,24) Tj
+T*
+(  - Date 01/09/2025 | Description Supplier settlement BILL-0001 | Amount EUR -2.304,59 | ) Tj
+T*
+(Running Balance EUR 46.511,65) Tj
+T*
+(  - Date 08/09/2025 | Description Payroll PAYRUN-0001 | Amount EUR -15.659,88 | Running ) Tj
+T*
+(Balance EUR 30.851,77) Tj
+T*
+(  - Date 17/09/2025 | Description Card settlement SETTLE-0001 | Amount EUR 16.345,10 | ) Tj
+T*
+(Running Balance EUR 47.196,87) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Generated for synthetic accounting research use.) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 63 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(Page marker: D014) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000001913 00000 n 
+0000002039 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2152
+%%EOF

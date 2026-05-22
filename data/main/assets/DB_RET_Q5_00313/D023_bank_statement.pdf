@@ -1,0 +1,161 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1727 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Summit Builders) Tj
+T*
+(14 King Street, Pune) Tj
+T*
+(Date: 2024-03-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D023) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: Q1 FY 2024) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0313) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $46,156.60) Tj
+T*
+(Closing Balance: $59,712.56) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2024-02-06 | Description Cash till SALES-0001 | Amount $8,944.70 | Running Balance ) Tj
+T*
+($55,101.30) Tj
+T*
+(  - Date 2024-02-06 | Description Cash till SALES-0002 | Amount $11,282.77 | Running Balance) Tj
+T*
+( $66,384.07) Tj
+T*
+(  - Date 2024-02-11 | Description Loan draw LOAN-0001 | Amount $40,907.91 | Running Balance ) Tj
+T*
+($107,291.98) Tj
+T*
+(  - Date 2024-02-24 | Description Asset purchase ASSET-0001 | Amount $-31,793.04 | Running ) Tj
+T*
+(Balance $75,498.94) Tj
+T*
+(  - Date 2024-03-02 | Description Payroll PAYRUN-0001 | Amount $-29,531.22 | Running Balance) Tj
+T*
+( $45,967.72) Tj
+T*
+(  - Date 2024-03-04 | Description Loan payment LOAN-0002 | Amount $-11,023.75 | Running ) Tj
+T*
+(Balance $34,943.97) Tj
+T*
+(  - Date 2024-03-04 | Description Supplier settlement BILL-0001 | Amount $-2,906.36 | ) Tj
+T*
+(Running Balance $32,037.61) Tj
+T*
+(  - Date 2024-03-12 | Description Return RTN-0001 | Amount $-335.83 | Running Balance ) Tj
+T*
+($31,701.78) Tj
+T*
+(  - Date 2024-03-17 | Description Return RTN-0002 | Amount $-595.29 | Running Balance ) Tj
+T*
+($31,106.49) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 399 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2024-03-22 | Description Card settlement SETTLE-0001 | Amount $28,606.07 | Running ) Tj
+T*
+(Balance $59,712.56) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D023) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002098 00000 n 
+0000002224 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2674
+%%EOF

@@ -1,0 +1,169 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1803 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Harbor Advisors) Tj
+T*
+(18 Marina Avenue, Chennai) Tj
+T*
+(Date: 2026-03-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D045) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: FY 2025-26) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-ATCH) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $182,280.30) Tj
+T*
+(Closing Balance: $-116,129.25) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2025-04-06 | Description Insurance coverage prepayment PRE-0002 | Amount ) Tj
+T*
+($-46,265.74 | Running Balance $136,014.56) Tj
+T*
+(  - Date 2025-04-30 | Description Rent prepayment PRE-0001 | Amount $-17,417.58 | Running ) Tj
+T*
+(Balance $118,596.98) Tj
+T*
+(  - Date 2025-09-30 | Description Loan draw LOAN-0001 | Amount $114,667.17 | Running Balance) Tj
+T*
+( $233,264.15) Tj
+T*
+(  - Date 2025-11-05 | Description Asset purchase ASSET-0001 | Amount $-69,726.36 | Running ) Tj
+T*
+(Balance $163,537.79) Tj
+T*
+(  - Date 2025-11-05 | Description Pace Office Mart receipt RCPT-0001 | Amount $-71.35 | ) Tj
+T*
+(Running Balance $163,466.44) Tj
+T*
+(  - Date 2025-12-08 | Description Transfer out TRX-0001 | Amount $-236,087.17 | Running ) Tj
+T*
+(Balance $-72,620.73) Tj
+T*
+(  - Date 2025-12-13 | Description Customer settlement INV-0001 | Amount $61,020.19 | Running) Tj
+T*
+( Balance $-11,600.54) Tj
+T*
+(  - Date 2025-12-20 | Description Supplier settlement BILL-0001 | Amount $-28,747.60 | ) Tj
+T*
+(Running Balance $-40,348.14) Tj
+T*
+(  - Date 2025-12-30 | Description Payroll PAYRUN-0001 | Amount $-31,804.70 | Running Balance) Tj
+T*
+( $-72,152.84) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 645 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2026-01-27 | Description Asset sale OPEN-FUR | Amount $24,211.02 | Running Balance ) Tj
+T*
+($-47,941.82) Tj
+T*
+(  - Date 2026-02-20 | Description Lease payment LEASE-0001 | Amount $-43,057.86 | Running ) Tj
+T*
+(Balance $-90,999.68) Tj
+T*
+(  - Date 2026-02-22 | Description Loan payment LOAN-0002 | Amount $-25,129.57 | Running ) Tj
+T*
+(Balance $-116,129.25) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D045) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002174 00000 n 
+0000002300 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2996
+%%EOF

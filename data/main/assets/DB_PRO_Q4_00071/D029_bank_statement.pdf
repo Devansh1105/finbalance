@@ -1,0 +1,161 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1771 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Silverline Clinic) Tj
+T*
+(90 Hill Park, Hyderabad) Tj
+T*
+(Date: 2026-03-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D029) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: Q4 FY 2026-27) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0071) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $58,741.94) Tj
+T*
+(Closing Balance: $43,645.13) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2026-01-01 | Description Rent prepayment PRE-0001 | Amount $-14,310.62 | Running ) Tj
+T*
+(Balance $44,431.32) Tj
+T*
+(  - Date 2026-02-05 | Description Pace Office Mart receipt RCPT-0001 | Amount $-692.83 | ) Tj
+T*
+(Running Balance $43,738.49) Tj
+T*
+(  - Date 2026-02-16 | Description Loan draw LOAN-0001 | Amount $92,561.74 | Running Balance ) Tj
+T*
+($136,300.23) Tj
+T*
+(  - Date 2026-02-22 | Description Asset purchase ASSET-0001 | Amount $-9,073.43 | Running ) Tj
+T*
+(Balance $127,226.80) Tj
+T*
+(  - Date 2026-03-02 | Description Asset sale OPEN-EQU | Amount $6,285.28 | Running Balance ) Tj
+T*
+($133,512.08) Tj
+T*
+(  - Date 2026-03-02 | Description Payroll PAYRUN-0001 | Amount $-24,982.62 | Running Balance) Tj
+T*
+( $108,529.46) Tj
+T*
+(  - Date 2026-03-04 | Description Customer settlement INV-0001 | Amount $12,244.21 | Running) Tj
+T*
+( Balance $120,773.67) Tj
+T*
+(  - Date 2026-03-05 | Description Transfer out TRX-0001 | Amount $-45,257.92 | Running ) Tj
+T*
+(Balance $75,515.75) Tj
+T*
+(  - Date 2026-03-14 | Description Lease payment LEASE-0001 | Amount $-18,764.82 | Running ) Tj
+T*
+(Balance $56,750.93) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 402 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2026-03-17 | Description Supplier settlement BILL-0001 | Amount $-13,105.80 | ) Tj
+T*
+(Running Balance $43,645.13) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D029) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002142 00000 n 
+0000002268 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2721
+%%EOF

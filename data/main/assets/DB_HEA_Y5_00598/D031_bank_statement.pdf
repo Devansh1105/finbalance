@@ -1,0 +1,145 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1547 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Granite Distribution) Tj
+T*
+(75 Market Road, Mumbai) Tj
+T*
+(Date: 2024-12-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D031) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: FY 2024) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0598) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $180,663.43) Tj
+T*
+(Closing Balance: $371,954.33) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2024-05-26 | Description Asset purchase ASSET-0001 | Amount $-29,412.32 | Running ) Tj
+T*
+(Balance $151,251.11) Tj
+T*
+(  - Date 2024-08-19 | Description Loan draw LOAN-0001 | Amount $317,656.89 | Running Balance) Tj
+T*
+( $468,908.00) Tj
+T*
+(  - Date 2024-10-10 | Description Loan payment LOAN-0002 | Amount $-73,626.76 | Running ) Tj
+T*
+(Balance $395,281.24) Tj
+T*
+(  - Date 2024-10-24 | Description Copay receipt COPAY-0001 | Amount $2,968.69 | Running ) Tj
+T*
+(Balance $398,249.93) Tj
+T*
+(  - Date 2024-11-07 | Description Insurer remittance PTINV-0001 | Amount $8,713.99 | Running) Tj
+T*
+( Balance $406,963.92) Tj
+T*
+(  - Date 2024-11-07 | Description Payroll PAYRUN-0001 | Amount $-35,009.59 | Running Balance) Tj
+T*
+( $371,954.33) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 117 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D031) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000001918 00000 n 
+0000002044 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2212
+%%EOF

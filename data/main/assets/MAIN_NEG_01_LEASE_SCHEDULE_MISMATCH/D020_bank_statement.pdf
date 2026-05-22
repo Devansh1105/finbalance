@@ -1,0 +1,161 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1787 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Northwind Property Services) Tj
+T*
+(18 Marina Avenue, Chennai) Tj
+T*
+(Date: 2024-11-30) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D020) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: November 2024) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-ATCH) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $28,135.80) Tj
+T*
+(Closing Balance: $12,937.84) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2024-11-02 | Description Rent prepayment PRE-0001 | Amount $-3,739.42 | Running ) Tj
+T*
+(Balance $24,396.38) Tj
+T*
+(  - Date 2024-11-10 | Description Loan draw LOAN-0001 | Amount $49,430.38 | Running Balance ) Tj
+T*
+($73,826.76) Tj
+T*
+(  - Date 2024-11-16 | Description Prime Utility Desk receipt RCPT-0001 | Amount $-239.88 | ) Tj
+T*
+(Running Balance $73,586.88) Tj
+T*
+(  - Date 2024-11-17 | Description Asset purchase ASSET-0001 | Amount $-19,697.45 | Running ) Tj
+T*
+(Balance $53,889.43) Tj
+T*
+(  - Date 2024-11-20 | Description Transfer out TRX-0001 | Amount $-25,676.94 | Running ) Tj
+T*
+(Balance $28,212.49) Tj
+T*
+(  - Date 2024-11-22 | Description Lease payment LEASE-0001 | Amount $-3,498.46 | Running ) Tj
+T*
+(Balance $24,714.03) Tj
+T*
+(  - Date 2024-11-23 | Description Asset sale OPEN-EQU | Amount $5,081.04 | Running Balance ) Tj
+T*
+($29,795.07) Tj
+T*
+(  - Date 2024-11-23 | Description Supplier settlement BILL-0001 | Amount $-4,882.30 | ) Tj
+T*
+(Running Balance $24,912.77) Tj
+T*
+(  - Date 2024-11-25 | Description Customer settlement INV-0001 | Amount $3,910.01 | Running ) Tj
+T*
+(Balance $28,822.78) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 392 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2024-11-26 | Description Payroll PAYRUN-0001 | Amount $-15,884.94 | Running Balance) Tj
+T*
+( $12,937.84) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D020) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002158 00000 n 
+0000002284 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2727
+%%EOF

@@ -1,0 +1,157 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1742 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Cedar Software) Tj
+T*
+(75 Market Road, Mumbai) Tj
+T*
+(Date: 2025-09-30) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D018) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: September 2025) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0276) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $34,762.06) Tj
+T*
+(Closing Balance: $34,204.75) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2025-09-11 | Description Cash till SALES-0001 | Amount $1,363.66 | Running Balance ) Tj
+T*
+($36,125.72) Tj
+T*
+(  - Date 2025-09-13 | Description Asset purchase ASSET-0001 | Amount $-9,061.25 | Running ) Tj
+T*
+(Balance $27,064.47) Tj
+T*
+(  - Date 2025-09-13 | Description Loan draw LOAN-0001 | Amount $27,899.72 | Running Balance ) Tj
+T*
+($54,964.19) Tj
+T*
+(  - Date 2025-09-20 | Description Cash till SALES-0002 | Amount $3,152.89 | Running Balance ) Tj
+T*
+($58,117.08) Tj
+T*
+(  - Date 2025-09-22 | Description Supplier settlement BILL-0001 | Amount $-2,844.80 | ) Tj
+T*
+(Running Balance $55,272.28) Tj
+T*
+(  - Date 2025-09-24 | Description Loan payment LOAN-0002 | Amount $-10,882.41 | Running ) Tj
+T*
+(Balance $44,389.87) Tj
+T*
+(  - Date 2025-09-25 | Description Payroll PAYRUN-0001 | Amount $-16,392.48 | Running Balance) Tj
+T*
+( $27,997.39) Tj
+T*
+(  - Date 2025-09-25 | Description Return RTN-0001 | Amount $-312.38 | Running Balance ) Tj
+T*
+($27,685.01) Tj
+T*
+(  - Date 2025-09-26 | Description Card settlement SETTLE-0001 | Amount $6,519.74 | Running ) Tj
+T*
+(Balance $34,204.75) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 271 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D018) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002113 00000 n 
+0000002239 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2561
+%%EOF

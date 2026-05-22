@@ -1,0 +1,169 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1797 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Granite Retail Group) Tj
+T*
+(75 Market Road, Mumbai) Tj
+T*
+(Document Date: 2024-12-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D046) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: FY 2024) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-LICT) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $150,753.77) Tj
+T*
+(Closing Balance: $16,269.09) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2024-01-06 | Description Insurance coverage prepayment PRE-0002 | Amount ) Tj
+T*
+($-40,860.86 | Running Balance $109,892.91) Tj
+T*
+(  - Date 2024-01-17 | Description Rent prepayment PRE-0001 | Amount $-37,688.29 | Running ) Tj
+T*
+(Balance $72,204.62) Tj
+T*
+(  - Date 2024-05-12 | Description Asset purchase ASSET-0001 | Amount $-19,725.10 | Running ) Tj
+T*
+(Balance $52,479.52) Tj
+T*
+(  - Date 2024-06-22 | Description Loan draw LOAN-0001 | Amount $143,491.78 | Running Balance) Tj
+T*
+( $195,971.30) Tj
+T*
+(  - Date 2024-09-01 | Description Meridian Support LLP receipt RCPT-0001 | Amount $-1,563.11) Tj
+T*
+( | Running Balance $194,408.19) Tj
+T*
+(  - Date 2024-09-20 | Description Transfer out TRX-0001 | Amount $-108,006.24 | Running ) Tj
+T*
+(Balance $86,401.95) Tj
+T*
+(  - Date 2024-09-28 | Description Asset sale OPEN-EQU | Amount $22,324.96 | Running Balance ) Tj
+T*
+($108,726.91) Tj
+T*
+(  - Date 2024-09-30 | Description Payroll PAYRUN-0001 | Amount $-65,929.05 | Running Balance) Tj
+T*
+( $42,797.86) Tj
+T*
+(  - Date 2024-10-10 | Description Lease payment LEASE-0001 | Amount $-52,035.72 | Running ) Tj
+T*
+(Balance $-9,237.86) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 674 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2024-11-01 | Description Supplier settlement BILL-0001 | Amount $-22,014.48 | ) Tj
+T*
+(Running Balance $-31,252.34) Tj
+T*
+(  - Date 2024-11-07 | Description Customer settlement INV-0001 | Amount $75,667.42 | Running) Tj
+T*
+( Balance $44,415.08) Tj
+T*
+(  - Date 2024-11-11 | Description Loan payment LOAN-0002 | Amount $-28,145.99 | Running ) Tj
+T*
+(Balance $16,269.09) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Generated for synthetic accounting research use.) Tj
+T*
+(Page marker: D046) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002168 00000 n 
+0000002294 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+3019
+%%EOF

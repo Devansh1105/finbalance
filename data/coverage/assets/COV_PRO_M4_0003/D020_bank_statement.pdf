@@ -1,0 +1,161 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1778 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Cedar Builders) Tj
+T*
+(18 Marina Avenue, Chennai) Tj
+T*
+(Document Date: 2025-08-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D020) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: August 2025) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0003) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $19,736.01) Tj
+T*
+(Closing Balance: $-378.36) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2025-08-02 | Description Rent prepayment PRE-0001 | Amount $-4,821.85 | Running ) Tj
+T*
+(Balance $14,914.16) Tj
+T*
+(  - Date 2025-08-18 | Description Asset purchase ASSET-0001 | Amount $-13,091.62 | Running ) Tj
+T*
+(Balance $1,822.54) Tj
+T*
+(  - Date 2025-08-18 | Description Loan draw LOAN-0001 | Amount $37,012.36 | Running Balance ) Tj
+T*
+($38,834.90) Tj
+T*
+(  - Date 2025-08-21 | Description Lease payment LEASE-0001 | Amount $-3,405.70 | Running ) Tj
+T*
+(Balance $35,429.20) Tj
+T*
+(  - Date 2025-08-21 | Description Meridian Support LLP receipt RCPT-0001 | Amount $-232.21 |) Tj
+T*
+( Running Balance $35,196.99) Tj
+T*
+(  - Date 2025-08-21 | Description Supplier settlement BILL-0001 | Amount $-2,898.21 | ) Tj
+T*
+(Running Balance $32,298.78) Tj
+T*
+(  - Date 2025-08-23 | Description Asset sale OPEN-EQU | Amount $3,979.30 | Running Balance ) Tj
+T*
+($36,278.08) Tj
+T*
+(  - Date 2025-08-25 | Description Payroll PAYRUN-0001 | Amount $-10,061.28 | Running Balance) Tj
+T*
+( $26,216.80) Tj
+T*
+(  - Date 2025-08-26 | Description Customer settlement INV-0001 | Amount $8,767.91 | Running ) Tj
+T*
+(Balance $34,984.71) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 410 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2025-08-26 | Description Transfer out TRX-0001 | Amount $-35,363.07 | Running ) Tj
+T*
+(Balance $-378.36) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Generated for synthetic accounting research use.) Tj
+T*
+(Page marker: D020) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002149 00000 n 
+0000002275 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2736
+%%EOF

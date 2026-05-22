@@ -1,0 +1,161 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1844 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Summit Manufacturing) Tj
+T*
+(18 Marina Avenue, Chennai) Tj
+T*
+(Date: 31/12/2025) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D027) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: Q3 FY 2025-26) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0008) Tj
+T*
+(Statement Currency: GBP) Tj
+T*
+(Opening Balance: GBP 38,169.47) Tj
+T*
+(Closing Balance: GBP 57,842.00) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 04/10/2025 | Description Rent prepayment PRE-0001 | Amount GBP -7,562.99 | Running ) Tj
+T*
+(Balance GBP 30,606.48) Tj
+T*
+(  - Date 02/11/2025 | Description Loan draw LOAN-0001 | Amount GBP 86,831.93 | Running ) Tj
+T*
+(Balance GBP 117,438.41) Tj
+T*
+(  - Date 07/11/2025 | Description Pace Office Mart receipt RCPT-0001 | Amount GBP -410.53 | ) Tj
+T*
+(Running Balance GBP 117,027.88) Tj
+T*
+(  - Date 15/11/2025 | Description Asset purchase ASSET-0001 | Amount GBP -23,707.26 | ) Tj
+T*
+(Running Balance GBP 93,320.62) Tj
+T*
+(  - Date 02/12/2025 | Description Lease payment LEASE-0001 | Amount GBP -11,534.43 | Running) Tj
+T*
+( Balance GBP 81,786.19) Tj
+T*
+(  - Date 03/12/2025 | Description Asset sale OPEN-FUR | Amount GBP 9,099.65 | Running ) Tj
+T*
+(Balance GBP 90,885.84) Tj
+T*
+(  - Date 05/12/2025 | Description Customer settlement INV-0001 | Amount GBP 16,574.26 | ) Tj
+T*
+(Running Balance GBP 107,460.10) Tj
+T*
+(  - Date 19/12/2025 | Description Supplier settlement BILL-0001 | Amount GBP -13,550.45 | ) Tj
+T*
+(Running Balance GBP 93,909.65) Tj
+T*
+(  - Date 19/12/2025 | Description Transfer out TRX-0001 | Amount GBP -15,865.18 | Running ) Tj
+T*
+(Balance GBP 78,044.47) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 398 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 21/12/2025 | Description Payroll PAYRUN-0001 | Amount GBP -20,202.47 | Running ) Tj
+T*
+(Balance GBP 57,842.00) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D027) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002215 00000 n 
+0000002341 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2790
+%%EOF

@@ -1,0 +1,143 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1043 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(CUSTOMER INVOICE / REFERENCE COPY) Tj
+T*
+(=================================) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Beacon Advisors) Tj
+T*
+(75 Market Road, Mumbai) Tj
+T*
+(Date: 2025-05-30) Tj
+T*
+() Tj
+T*
+(To) Tj
+T*
+(--) Tj
+T*
+(Metro Edge Partners) Tj
+T*
+(Customer account on file) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D037) Tj
+T*
+(Document Type: customer_invoice) Tj
+T*
+(Period: FY 2025-26) Tj
+T*
+(Contract Ref: CTR-0003) Tj
+T*
+() Tj
+T*
+(Terms) Tj
+T*
+(-----) Tj
+T*
+(Due Date: 2025-06-15) Tj
+T*
+() Tj
+T*
+(Parties) Tj
+T*
+(-------) Tj
+T*
+(Customer: Metro Edge Partners) Tj
+T*
+(Contract Ref: CTR-0003) Tj
+T*
+() Tj
+T*
+(Invoice Details) Tj
+T*
+(---------------) Tj
+T*
+(Invoice Number: INV-0004) Tj
+T*
+(Due Date: 2025-06-15) Tj
+T*
+(Total: $40,398.32) Tj
+T*
+() Tj
+T*
+(Line Items) Tj
+T*
+(----------) Tj
+T*
+(Items:) Tj
+T*
+(  - Description Implementation work | Amount $10,763.13) Tj
+T*
+(  - Description Reissued billing | Amount $29,635.19) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 102 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(Internal document packet copy.) Tj
+T*
+(Page marker: D037) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000001414 00000 n 
+0000001540 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+1693
+%%EOF

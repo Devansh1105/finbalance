@@ -1,0 +1,141 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1501 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Willow Advisors) Tj
+T*
+(75 Market Road, Mumbai) Tj
+T*
+(Date: 31/08/2025) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D014) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: August 2025) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0507) Tj
+T*
+(Statement Currency: GBP) Tj
+T*
+(Opening Balance: GBP 41,353.83) Tj
+T*
+(Closing Balance: GBP 52,600.34) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 19/08/2025 | Description Loan draw LOAN-0001 | Amount GBP 35,336.75 | Running ) Tj
+T*
+(Balance GBP 76,690.58) Tj
+T*
+(  - Date 20/08/2025 | Description Asset purchase ASSET-0001 | Amount GBP -14,278.68 | ) Tj
+T*
+(Running Balance GBP 62,411.90) Tj
+T*
+(  - Date 22/08/2025 | Description Payroll PAYRUN-0001 | Amount GBP -11,695.83 | Running ) Tj
+T*
+(Balance GBP 50,716.07) Tj
+T*
+(  - Date 25/08/2025 | Description Insurer remittance PTINV-0001 | Amount GBP 1,455.71 | ) Tj
+T*
+(Running Balance GBP 52,171.78) Tj
+T*
+(  - Date 27/08/2025 | Description Copay receipt COPAY-0001 | Amount GBP 428.56 | Running ) Tj
+T*
+(Balance GBP 52,600.34) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 63 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(Page marker: D014) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000001872 00000 n 
+0000001998 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2111
+%%EOF

@@ -1,0 +1,173 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1859 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Pioneer Operations) Tj
+T*
+(14 King Street, Pune) Tj
+T*
+(Date: 30/06/2024) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D044) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: Q2 FY 2024) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-ATCH) Tj
+T*
+(Statement Currency: GBP) Tj
+T*
+(Opening Balance: GBP 69,441.62) Tj
+T*
+(Closing Balance: GBP -28,852.43) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 01/04/2024 | Description Rent prepayment PRE-0001 | Amount GBP -17,078.83 | Running) Tj
+T*
+( Balance GBP 52,362.79) Tj
+T*
+(  - Date 08/04/2024 | Description Insurance coverage prepayment PRE-0002 | Amount GBP ) Tj
+T*
+(-16,733.97 | Running Balance GBP 35,628.82) Tj
+T*
+(  - Date 06/05/2024 | Description Beacon Industrial Supply receipt RCPT-0001 | Amount GBP ) Tj
+T*
+(-382.54 | Running Balance GBP 35,246.28) Tj
+T*
+(  - Date 09/05/2024 | Description Loan draw LOAN-0001 | Amount GBP 43,348.76 | Running ) Tj
+T*
+(Balance GBP 78,595.04) Tj
+T*
+(  - Date 14/05/2024 | Description Asset purchase ASSET-0001 | Amount GBP -19,458.65 | ) Tj
+T*
+(Running Balance GBP 59,136.39) Tj
+T*
+(  - Date 05/06/2024 | Description Asset sale OPEN-FUR | Amount GBP 8,992.63 | Running ) Tj
+T*
+(Balance GBP 68,129.02) Tj
+T*
+(  - Date 06/06/2024 | Description Foreign receipt FXINV-0001 | Amount GBP 21,279.57 | ) Tj
+T*
+(Running Balance GBP 89,408.59) Tj
+T*
+(  - Date 10/06/2024 | Description Supplier settlement BILL-0001 | Amount GBP -12,516.10 | ) Tj
+T*
+(Running Balance GBP 76,892.49) Tj
+T*
+(  - Date 11/06/2024 | Description Customer settlement INV-0001 | Amount GBP 17,584.10 | ) Tj
+T*
+(Running Balance GBP 94,476.59) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 790 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 14/06/2024 | Description Lease payment LEASE-0001 | Amount GBP -14,331.09 | Running) Tj
+T*
+( Balance GBP 80,145.50) Tj
+T*
+(  - Date 16/06/2024 | Description Payroll PAYRUN-0001 | Amount GBP -17,626.53 | Running ) Tj
+T*
+(Balance GBP 62,518.97) Tj
+T*
+(  - Date 18/06/2024 | Description Transfer out TRX-0001 | Amount GBP -81,444.27 | Running ) Tj
+T*
+(Balance GBP -18,925.30) Tj
+T*
+(  - Date 19/06/2024 | Description Loan payment LOAN-0002 | Amount GBP -9,927.13 | Running ) Tj
+T*
+(Balance GBP -28,852.43) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D044) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002230 00000 n 
+0000002356 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+3197
+%%EOF
