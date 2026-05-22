@@ -27,12 +27,23 @@ uv sync
 Generate a small pilot dataset:
 
 ```bash
-python -m finbalance generate \
-  --output data/pilot.jsonl \
-  --assets-dir data/pilot_assets \
-  --records-per-combo 1 \
+python scripts/generate_dataset.py \
+  --output-dir data/pilot \
+  --records 24 \
+  --industries professional_services retail subscription_saas \
   --period-types month quarter year \
+  --levels 1 2 3 \
   --seed 42
+```
+
+Regenerate the canonical paper datasets:
+
+```bash
+python scripts/generate_standard_datasets.py \
+  --base-dir data \
+  --records-per-combo 8 \
+  --negative-controls-per-code 4 \
+  --overwrite
 ```
 
 Run an evaluation ablation with OpenRouter (requires `OPENROUTER_API_KEY` in
@@ -64,6 +75,7 @@ python human_verification/generate_samples.py
 | Path | Contents |
 |---|---|
 | `finbalance/` | Python package — generator, evaluation harness, ablation runner, metrics, bootstrap |
+| `scripts/` | Public, easy dataset-generation scripts |
 | `data/` | Generated benchmark datasets (gitignored; `coverage/` and `main/` are the canonical splits) |
 | `results/` | Model outputs from ablation runs (gitignored) |
 | `human_verification/` | CPA validation packets and protocol for the synthetic-data sanity check |

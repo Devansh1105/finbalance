@@ -135,14 +135,40 @@ Instead, a year packet includes:
 
 ## Commands
 
+Generate a custom dataset bundle with an exact record count:
+
+```bash
+python scripts/generate_dataset.py \
+  --output-dir data/custom_retail_saas \
+  --records 50 \
+  --industries retail subscription_saas \
+  --period-types month quarter \
+  --levels 2 3 4 \
+  --negative-control-rate 0.10 \
+  --seed 42
+```
+
+This writes:
+
+- `records.jsonl`
+- `assets/`
+- `record_manifest.jsonl`
+- `manifest.json`
+- `README.md`
+
+For a clean-only custom dataset, add `--clean-only`. To generate the same
+number of records in every selected cell, use `--records-per-combo` instead of
+`--records`.
+
 Regenerate the standard coverage and main datasets:
 
 ```bash
-python -m finbalance generate-standard-datasets \
+python scripts/generate_standard_datasets.py \
   --base-dir data \
   --seed 42 \
   --records-per-combo 8 \
-  --negative-controls-per-code 4
+  --negative-controls-per-code 4 \
+  --overwrite
 ```
 
 Generate a mixed pilot dataset:
