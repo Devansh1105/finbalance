@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "finbalance"
-version = "0.1.0"
-description = "FinBalance benchmark harness for balance sheet generation."
+version = "0.2.0"
+description = "FinBalance benchmark for multi-document accounting reconciliation."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["finbalance", "docs_benchmark"]
+packages = ["finbalance"]
 
 [tool.uv]
 package = true

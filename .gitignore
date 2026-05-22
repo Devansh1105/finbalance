@@ -5,11 +5,22 @@
 __pycache__/
 *.py[cod]
 backups/
+
+# Generated benchmark artifacts (root-level after refactor)
+data/*.jsonl
+data/*_assets/
+data/coverage/
+data/main/
 results/
 
-# Generated docs_benchmark artifacts
-docs_benchmark/data/*.jsonl
-docs_benchmark/data/*_assets/
-docs_benchmark/data/coverage/
-docs_benchmark/data/main/
-docs_benchmark/results/
+# Paper build artifacts
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.pdf
+paper/*.synctex.gz
+paper/sections/*.aux
