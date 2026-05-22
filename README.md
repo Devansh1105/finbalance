@@ -64,6 +64,15 @@ Analyze with paired bootstrap:
 python -m finbalance analyze-ablations --results-dir results/pilot
 ```
 
+Regenerate the paper figures from the current `data/` and `results/` folders:
+
+```bash
+python scripts/generate_paper_figures.py \
+  --dataset data/coverage/records.jsonl \
+  --results-dir results \
+  --output-dir paper/figures
+```
+
 Regenerate the CPA verification packets (writes to `human_verification/samples/`):
 
 ```bash

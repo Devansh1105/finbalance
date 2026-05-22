@@ -1,0 +1,46 @@
+{
+  "ablation_deltas": [
+    "paper/figures/fig_ablation_deltas.pdf",
+    "paper/figures/fig_ablation_deltas.png"
+  ],
+  "aggregation_gap": [
+    "paper/figures/fig_aggregation_gap.pdf",
+    "paper/figures/fig_aggregation_gap.png"
+  ],
+  "codebase_pipeline_flow": [
+    "paper/figures/flow_codebase_pipeline.pdf",
+    "paper/figures/flow_codebase_pipeline.png"
+  ],
+  "context_stress": [
+    "paper/figures/fig_context_stress.pdf",
+    "paper/figures/fig_context_stress.png"
+  ],
+  "dataset_composition": [
+    "paper/figures/fig_dataset_composition.pdf",
+    "paper/figures/fig_dataset_composition.png"
+  ],
+  "dataset_packet_diagram": [
+    "paper/figures/diag_dataset_packet.pdf",
+    "paper/figures/diag_dataset_packet.png"
+  ],
+  "failure_slices": [
+    "paper/figures/fig_failure_slices.pdf",
+    "paper/figures/fig_failure_slices.png"
+  ],
+  "generation_inference_diagram": [
+    "paper/figures/diag_generation_inference.pdf",
+    "paper/figures/diag_generation_inference.png"
+  ],
+  "model_accuracy": [
+    "paper/figures/fig_model_accuracy.pdf",
+    "paper/figures/fig_model_accuracy.png"
+  ],
+  "record_generation_flow": [
+    "paper/figures/flow_record_generation_detail.pdf",
+    "paper/figures/flow_record_generation_detail.png"
+  ],
+  "verifier_transfer": [
+    "paper/figures/fig_verifier_transfer.pdf",
+    "paper/figures/fig_verifier_transfer.png"
+  ]
+}
