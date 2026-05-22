@@ -1,0 +1,38 @@
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{2.7cm}>{\raggedright\arraybackslash}X}
+\toprule
+Benchmark & Input and task & Evaluation signal & Relative limitation \\
+\midrule
+FinQA / ConvFinQA / TAT-QA / DocFinQA
+& Pre-formed reports, tables, or filings; numerical question answering
+& Answer-level or partial scoring
+& Comprehension over existing artifacts; no statement construction, no document-grounded reconciliation \\
+FinanceBench / FinBen
+& Prepared financial artifacts; analysis and judgment
+& Mixed evaluation settings
+& Tests analysis over existing statements; no construction from raw evidence \\
+FinAuditing / FinRule-Bench
+& Mixed inputs; auditing, rule checks, diagnosis
+& Exact or partially structural
+& Closer to professional workflows but does not test \emph{reconciliation under inconsistency} or expose self-consistency failures \\
+FinanceMATH / MMLU (accounting)
+& Numerical / exam-style problems
+& Exact answer
+& Tests quantitative reasoning, not bookkeeping process \\
+\textsc{FinBalance v1} (prior)~\citep{anonymous2026finbalancev1}
+& Clean journal-entry stream + opening balances; construct balance sheet
+& Account-level + invariant scoring
+& Clean-input regime: no document grounding, no OCR ambiguity, no inconsistency detection \\
+\midrule
+\benchmark{} (this work)
+& Multi-document OCR-style packet (invoices, statements, schedules, distractors); extract journal entries, build balance sheet, detect inconsistencies
+& Exact balance-sheet match, ledger-replayed reconciliation, inconsistency-code match
+& Strictly harder document-grounded setting; exposes an aggregation gap (\bsrecon{} vs \bsexact{}) that we show is closed by a closed-form ledger-verifier intervention across four model families \\
+\bottomrule
+\end{tabularx}
+\caption{Positioning relative to prior work. Existing financial benchmarks evaluate comprehension, analysis, or clean-input construction. \benchmark{} starts from a packet of OCR-style accounting documents, requires the model to extract entries and construct a balance sheet, and includes packets with deliberate contradictions for inconsistency detection. The benchmark exposes a self-consistency gap and tests a deterministic verifier intervention.}
+\label{tab:prior-work-comparison}
+\end{table*}

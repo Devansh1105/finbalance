@@ -1,0 +1,21 @@
+% Benchmark name (kept from v1; FinBalance brand carries forward).
+\newcommand{\benchmark}{\textsc{FinBalance}\xspace}
+
+% Prompting condition labels (kept from v1).
+\newcommand{\zs}{zero-shot\xspace}
+\newcommand{\CoT}{chain-of-thought\xspace}
+
+% v2 metric macros — fill in / rename as the paper draft solidifies.
+% BS_exact = strict balance-sheet equality with ground truth.
+% BS_recon = reconciled balance sheet from replaying the model's own entries.
+\newcommand{\bsexact}{\textsc{BS}\textsubscript{exact}\xspace}
+\newcommand{\bsrecon}{\textsc{BS}\textsubscript{recon}\xspace}
+
+% Aggregation gap = BS_recon - BS_exact (the self-consistency failure mode).
+\newcommand{\aggGap}{aggregation gap\xspace}
+
+% Intervention name.
+\newcommand{\verifier}{forced ledger verifier\xspace}
+
+% Inconsistency-detection metric name.
+\newcommand{\incCode}{inconsistency-code match rate\xspace}

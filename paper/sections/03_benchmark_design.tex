@@ -1,0 +1,10 @@
+\section{Benchmark Design}
+% TODO. Source: POINTS.md Section 1 (Benchmark design).
+% 3.1 Task formulation — multi-doc packet → entries (with doc_refs) + balance sheet + inconsistency flag/codes.
+% 3.2 Deterministic ledger ground truth — double-entry replay, contra-asset handling, retained-earnings closure.
+% 3.3 Coverage — 8 industries × 3 period types × 5 difficulty levels × concept flags.
+% 3.4 Inconsistency packets — 24 codes; 16% of records.
+% 3.5 Document types: posting, support, adjustment, distractor, opening_trial_balance.
+% 3.6 Stratified sampling — n=143 (120 standard + 23 inconsistency) used as headline evaluation set.
+% 3.7 Metrics — \bsexact{}, \bsrecon{}, \aggGap{}, \incCode{}, parse rate, strict_doc_ref_mismatch_rate.
+% 3.8 Ablation axes — prompt × visibility × tool variants (provider-neutral matrix).
