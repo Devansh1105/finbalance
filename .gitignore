@@ -1,10 +1,49 @@
+# Virtualenv / environment
 /.venv
 .env
+.env.*
+!.env.example
+
+# Editor / IDE / AI assistant scratch
+.codex
 .codex/
+.claude
 .claude/
+.cursor/
+.aider*
+.copilot/
+.continue/
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+
+# OS / filesystem cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python caches
 __pycache__/
 *.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+.ipynb_checkpoints/
+build/
+dist/
+
+# Local backups
 backups/
+*.bak
+*.bak.*
 
 # Generated benchmark artifacts (root-level after refactor)
 data/*.jsonl
