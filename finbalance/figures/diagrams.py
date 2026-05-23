@@ -31,10 +31,10 @@ def diagram_dataset_packet(output_dir: Path) -> list[Path]:
     ax.axis("off")
 
     _title(ax, 0.5, 0.96, "One FinBalance Record")
-    _box(ax, 0.04, 0.76, 0.24, 0.12, "Posting documents", "Invoice, receipt, payment advice,\nopening trial balance", BLUE)
-    _box(ax, 0.04, 0.58, 0.24, 0.12, "Support documents", "Bank statement, rate card,\nrollforward, tax profile", TEAL)
-    _box(ax, 0.04, 0.40, 0.24, 0.12, "Distractor documents", "Duplicate copies, memos,\nvoid/cancel notices", ORANGE)
-    _box(ax, 0.04, 0.18, 0.24, 0.12, "Allowed accounts", "Benchmark account taxonomy\nvisible in prompt", PURPLE)
+    _box(ax, 0.04, 0.76, 0.24, 0.125, "Posting documents", "Invoice, receipt,\npayment advice,\nopening trial balance", BLUE, body_size=6.9)
+    _box(ax, 0.04, 0.58, 0.24, 0.125, "Support documents", "Bank statement,\nrate card, rollforward,\ntax profile", TEAL, body_size=6.9)
+    _box(ax, 0.04, 0.40, 0.24, 0.125, "Distractor documents", "Duplicate copies,\nmemos, void/cancel\nnotices", ORANGE, body_size=6.9)
+    _box(ax, 0.04, 0.18, 0.24, 0.125, "Allowed accounts", "Benchmark account\ntaxonomy visible\nin prompt", PURPLE, body_size=6.9)
 
     _box(ax, 0.38, 0.60, 0.24, 0.16, "Visible packet", "Doc IDs + OCR text\n+ titles/types/roles depending\non visibility ablation", GREEN)
     _box(ax, 0.38, 0.27, 0.24, 0.16, "Hidden accounting truth", "Journal entries\nReplayed ledger\nFinal balance sheet", GRAY)
@@ -135,7 +135,7 @@ def flow_codebase_pipeline(output_dir: Path) -> list[Path]:
 
 def flow_record_generation_detail(output_dir: Path) -> list[Path]:
     apply_style()
-    fig, ax = plt.subplots(figsize=(7.4, 5.4))
+    fig, ax = plt.subplots(figsize=(7.4, 7.1))
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
@@ -152,14 +152,16 @@ def flow_record_generation_detail(output_dir: Path) -> list[Path]:
         ("8. Optional negative control", "mutate visible evidence and store inconsistency code"),
     ]
     x = 0.18
-    y = 0.82
+    y = 0.84
+    box_h = 0.061
+    step_gap = 0.112
     for idx, (title, body) in enumerate(steps):
         color = PALETTE_FOR_STEPS[idx % len(PALETTE_FOR_STEPS)]
-        _box(ax, x, y, 0.64, 0.075, title, body, color, body_size=7.5)
+        _box(ax, x, y, 0.64, box_h, title, body, color, body_size=6.7, header_h=0.025)
         if idx < len(steps) - 1:
-            _arrow(ax, (0.50, y), (0.50, y - 0.045))
-        y -= 0.095
-    _caption(ax, 0.5, 0.045, "This figure is intended for the appendix; it mirrors finbalance/FLOW.md.")
+            _arrow(ax, (0.50, y - 0.004), (0.50, y - (step_gap - box_h) + 0.004))
+        y -= step_gap
+    _caption(ax, 0.5, 0.025, "This figure is intended for the appendix; it mirrors finbalance/FLOW.md.")
     return save_figure(fig, output_dir, "flow_record_generation_detail")
 
 
@@ -177,6 +179,7 @@ def _box(
     color: str,
     *,
     body_size: float = 7.8,
+    header_h: float = 0.032,
 ) -> None:
     shadow = FancyBboxPatch(
         (x + 0.006, y - 0.006),
@@ -200,7 +203,6 @@ def _box(
     )
     ax.add_patch(shadow)
     ax.add_patch(patch)
-    header_h = 0.032
     ax.add_patch(Rectangle((x, y + h - header_h), w, header_h, linewidth=0, facecolor=color, zorder=3))
     ax.text(x + w / 2, y + h - header_h / 2, title, ha="center", va="center", fontsize=7.8, color="white", weight="bold", zorder=4)
     body_y = y + (h - header_h) * 0.43

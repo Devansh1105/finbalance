@@ -128,8 +128,9 @@ def plot_aggregation_gap(results_dir: Path, output_dir: Path, *, min_records: in
     ax.set_xlim(0, max(75, float(max(recon.max(), exact.max()) + 15)))
     ax.set_xlabel("Record-level accuracy (%)")
     ax.set_title("Aggregation Gap: Correct Entries Do Not Imply Correct Balance Sheets")
-    ax.legend(loc="lower right", frameon=False)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.18), ncol=2, frameon=False)
     ax.grid(axis="y", visible=False)
+    fig.subplots_adjust(bottom=0.24)
     return save_figure(fig, output_dir, "fig_aggregation_gap")
 
 
@@ -320,7 +321,7 @@ def plot_dataset_composition(dataset_path: Path, output_dir: Path) -> list[Path]
         for doc_type in {doc.get("doc_type", "unknown") for doc in docs}:
             doc_type_records[doc_type] += 1
 
-    fig, axes = plt.subplots(2, 3, figsize=(8.3, 6.2))
+    fig, axes = plt.subplots(2, 3, figsize=(9.4, 6.2))
     axes = axes.ravel()
 
     _barh_counter(axes[0], industry, "Records by Industry", color=BLUE)
@@ -341,7 +342,7 @@ def plot_dataset_composition(dataset_path: Path, output_dir: Path) -> list[Path]
         fontsize=10.5,
         fontweight="bold",
     )
-    fig.subplots_adjust(hspace=0.56, wspace=0.36)
+    fig.subplots_adjust(hspace=0.56, wspace=0.62)
     return save_figure(fig, output_dir, "fig_dataset_composition")
 
 
@@ -353,7 +354,7 @@ def plot_failure_slices(results_dir: Path, output_dir: Path) -> list[Path]:
         return []
     summary = baseline.summary
 
-    fig, axes = plt.subplots(1, 3, figsize=(8.1, 3.9))
+    fig, axes = plt.subplots(1, 3, figsize=(9.8, 3.9))
     _slice_accuracy_panel(
         axes[0],
         summary.get("by_industry", {}),
@@ -373,6 +374,7 @@ def plot_failure_slices(results_dir: Path, output_dir: Path) -> list[Path]:
     )
     _error_taxonomy_panel(axes[2], summary.get("error_taxonomy", []))
     fig.suptitle("Where Gemini 3 Flash Fails", y=1.02, fontsize=10.5, fontweight="bold")
+    fig.subplots_adjust(wspace=0.64)
     return save_figure(fig, output_dir, "fig_failure_slices")
 
 
