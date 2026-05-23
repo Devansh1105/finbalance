@@ -227,6 +227,174 @@ def plot_ablation_deltas(results_dir: Path, output_dir: Path) -> list[Path]:
     return save_figure(fig, output_dir, "fig_ablation_deltas")
 
 
+def plot_verifier_model_deltas(results_dir: Path, output_dir: Path, *, min_records: int = 100) -> list[Path]:
+    apply_style()
+    model_dirs = [
+        ("Gemini 3 Flash", "gemini3flash_promoted_coverage_full_clean"),
+        ("DeepSeek V3.2", "deepseek_v32_sweep"),
+        ("Qwen3 235B", "qwen3_235b_sweep_baseline"),
+        ("Claude Haiku 4.5", "claude_haiku45_sweep_baseline"),
+    ]
+    metrics = [
+        ("final_balance_sheet_matches_rate", "Delta BS exact (pp)"),
+        ("predicted_entries_reconstruct_correct_final_balance_sheet_rate", "Delta BS recon (pp)"),
+    ]
+    model_colors = {
+        "Gemini 3 Flash": BLUE,
+        "DeepSeek V3.2": ORANGE,
+        "Qwen3 235B": TEAL,
+        "Claude Haiku 4.5": PURPLE,
+    }
+
+    observations: list[dict[str, Any]] = []
+    for label, relative in model_dirs:
+        runs = load_ablation_group(results_dir, relative)
+        baseline = runs.get("prompt_baseline")
+        verifier = runs.get("forced_ledger_verifier")
+        if not baseline or not verifier:
+            continue
+        if baseline.records < min_records or verifier.records < min_records:
+            continue
+        observations.append(
+            {
+                "model": label,
+                "final_balance_sheet_matches_rate": 100
+                * (verifier.metric("final_balance_sheet_matches_rate") - baseline.metric("final_balance_sheet_matches_rate")),
+                "predicted_entries_reconstruct_correct_final_balance_sheet_rate": 100
+                * (
+                    verifier.metric("predicted_entries_reconstruct_correct_final_balance_sheet_rate")
+                    - baseline.metric("predicted_entries_reconstruct_correct_final_balance_sheet_rate")
+                ),
+            }
+        )
+    if not observations:
+        return []
+
+    fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.7), sharey=True)
+    y = np.arange(len(observations))
+    model_labels = [wrap_label(str(row["model"]), 14) for row in observations]
+    for ax, (metric, title) in zip(axes, metrics, strict=True):
+        values = [float(row[metric]) for row in observations]
+        colors = [model_colors.get(str(row["model"]), GRAY) for row in observations]
+        ax.axvline(0, color=GRAY, linewidth=0.8)
+        bars = ax.barh(y, values, color=colors, edgecolor="white", linewidth=0.6)
+        for bar, value in zip(bars, values, strict=False):
+            ax.text(
+                value + (1.1 if value >= 0 else -1.1),
+                bar.get_y() + bar.get_height() / 2,
+                f"{value:+.0f}",
+                ha="left" if value >= 0 else "right",
+                va="center",
+                fontsize=7,
+                color=DARK,
+            )
+        ax.set_yticks(y)
+        ax.set_yticklabels(model_labels)
+        ax.set_title(title)
+        ax.set_xlim(-8, 36)
+        ax.set_xlabel("Delta from baseline")
+        ax.grid(axis="y", visible=False)
+    axes[0].set_ylabel("Model")
+    axes[0].invert_yaxis()
+    fig.suptitle("Forced Ledger Verifier Deltas Across Models", y=1.03, fontsize=10.5, fontweight="bold")
+    fig.subplots_adjust(wspace=0.16)
+    return save_figure(fig, output_dir, "fig_verifier_model_deltas")
+
+
+def plot_two_model_context_deltas(results_dir: Path, output_dir: Path, *, min_records: int = 100) -> list[Path]:
+    apply_style()
+    model_dirs = [
+        ("Gemini 3 Flash", "gemini3flash_promoted_coverage_full_clean"),
+        ("DeepSeek V3.2", "deepseek_v32_sweep"),
+    ]
+    ablations = [
+        ("evidence_only", "Evidence only"),
+        ("evidence_plus_15_distractors", "+15 distractors"),
+    ]
+    metrics = [
+        ("final_balance_sheet_matches_rate", "Delta BS exact (pp)"),
+        ("predicted_entries_reconstruct_correct_final_balance_sheet_rate", "Delta BS recon (pp)"),
+    ]
+    model_colors = {
+        "Gemini 3 Flash": BLUE,
+        "DeepSeek V3.2": ORANGE,
+    }
+
+    observations: dict[str, list[dict[str, Any]]] = {name: [] for name, _ in ablations}
+    for label, relative in model_dirs:
+        runs = load_ablation_group(results_dir, relative)
+        baseline = runs.get("prompt_baseline")
+        if not baseline or baseline.records < min_records:
+            continue
+        for ablation, _ in ablations:
+            run = runs.get(ablation)
+            if not run or run.records < min_records:
+                continue
+            observations[ablation].append(
+                {
+                    "model": label,
+                    "final_balance_sheet_matches_rate": 100
+                    * (run.metric("final_balance_sheet_matches_rate") - baseline.metric("final_balance_sheet_matches_rate")),
+                    "predicted_entries_reconstruct_correct_final_balance_sheet_rate": 100
+                    * (
+                        run.metric("predicted_entries_reconstruct_correct_final_balance_sheet_rate")
+                        - baseline.metric("predicted_entries_reconstruct_correct_final_balance_sheet_rate")
+                    ),
+                }
+            )
+    if not any(observations.values()):
+        return []
+
+    fig, axes = plt.subplots(1, 2, figsize=(6.8, 3.6), sharey=True)
+    group_centers = np.arange(len(ablations))
+    handles: dict[str, Any] = {}
+    for ax, (metric, title) in zip(axes, metrics, strict=True):
+        ax.axhline(0, color=GRAY, linewidth=0.8)
+        for group_idx, (ablation, _) in enumerate(ablations):
+            rows = observations[ablation]
+            offsets = (np.arange(len(rows)) - (len(rows) - 1) / 2) * 0.18
+            for offset, row in zip(offsets, rows, strict=False):
+                value = float(row[metric])
+                model = str(row["model"])
+                bar = ax.bar(
+                    group_idx + offset,
+                    value,
+                    width=0.16,
+                    color=model_colors.get(model, GRAY),
+                    edgecolor="white",
+                    linewidth=0.6,
+                    label=model,
+                )
+                handles.setdefault(model, bar[0])
+                ax.text(
+                    group_idx + offset,
+                    value + (1.4 if value >= 0 else -1.7),
+                    f"{value:+.0f}",
+                    ha="center",
+                    va="bottom" if value >= 0 else "top",
+                    fontsize=6.5,
+                    color=DARK,
+                )
+        ax.set_xticks(group_centers)
+        ax.set_xticklabels([label for _, label in ablations])
+        ax.set_title(title)
+        ax.set_ylim(-20, 6)
+        ax.grid(axis="x", visible=False)
+        ax.set_xlabel("Ablation")
+    axes[0].set_ylabel("Delta from each model baseline")
+    fig.suptitle("Two-Model Context Ablation Deltas", y=1.03, fontsize=10.5, fontweight="bold")
+    fig.legend(
+        handles.values(),
+        handles.keys(),
+        loc="lower center",
+        bbox_to_anchor=(0.5, -0.04),
+        ncol=4,
+        frameon=False,
+    )
+    fig.subplots_adjust(bottom=0.24, wspace=0.14)
+    return save_figure(fig, output_dir, "fig_two_model_context_deltas")
+
+
 def plot_context_stress(results_dir: Path, output_dir: Path) -> list[Path]:
     apply_style()
     runs = load_ablation_group(results_dir, "gemini3flash_promoted_coverage_full_clean")
@@ -348,33 +516,73 @@ def plot_dataset_composition(dataset_path: Path, output_dir: Path) -> list[Path]
 
 def plot_failure_slices(results_dir: Path, output_dir: Path) -> list[Path]:
     apply_style()
-    runs = load_ablation_group(results_dir, "gemini3flash_promoted_coverage_full_clean")
-    baseline = runs.get("prompt_baseline")
-    if not baseline:
+    runs = load_default_baselines(results_dir, min_records=100)
+    if not runs:
         return []
-    summary = baseline.summary
 
-    fig, axes = plt.subplots(1, 3, figsize=(9.8, 3.9))
-    _slice_accuracy_panel(
+    metric = "predicted_entries_reconstruct_correct_final_balance_sheet_rate"
+    industries = sorted(
+        {
+            industry
+            for run in runs
+            for industry, row in run.summary.get("by_industry", {}).items()
+            if int(row.get("records_evaluated") or 0) >= 10
+        }
+    )
+    industries = _sort_categories_by_mean(runs, "by_industry", industries, metric)
+    ledger_candidates = sorted(
+        {
+            family
+            for run in runs
+            for family, row in run.summary.get("by_ledger_family", {}).items()
+            if int(row.get("records_evaluated") or 0) >= 20
+        }
+    )
+    ledgers = _sort_categories_by_mean(runs, "by_ledger_family", ledger_candidates, metric)[:8]
+    error_candidates = sorted(
+        {
+            str(row.get("error_type"))
+            for run in runs
+            for row in run.summary.get("error_taxonomy", [])
+            if row.get("error_type")
+        }
+    )
+    errors = _sort_errors_by_mean(runs, error_candidates)[:7]
+
+    model_labels = [wrap_label(run.label, 12) for run in runs]
+    fig, axes = plt.subplots(3, 1, figsize=(8.9, 7.6))
+    _annotated_heatmap(
         axes[0],
-        summary.get("by_industry", {}),
-        "Industry",
-        "predicted_entries_reconstruct_correct_final_balance_sheet_rate",
-        min_records=10,
-        color=BLUE,
+        _slice_matrix(runs, "by_industry", industries, metric),
+        model_labels,
+        [wrap_label(label, 13) for label in industries],
+        "BS Recon Accuracy by Industry",
+        cmap="YlGnBu",
+        vmin=0,
+        vmax=100,
     )
-    _slice_accuracy_panel(
+    _annotated_heatmap(
         axes[1],
-        summary.get("by_ledger_family", {}),
-        "Ledger Family",
-        "predicted_entries_reconstruct_correct_final_balance_sheet_rate",
-        min_records=20,
-        color=ORANGE,
-        limit=9,
+        _slice_matrix(runs, "by_ledger_family", ledgers, metric),
+        model_labels,
+        [wrap_label(label, 14) for label in ledgers],
+        "BS Recon Accuracy by Ledger Family",
+        cmap="YlGnBu",
+        vmin=0,
+        vmax=100,
     )
-    _error_taxonomy_panel(axes[2], summary.get("error_taxonomy", []))
-    fig.suptitle("Where Gemini 3 Flash Fails", y=1.02, fontsize=10.5, fontweight="bold")
-    fig.subplots_adjust(wspace=0.64)
+    _annotated_heatmap(
+        axes[2],
+        _error_matrix(runs, errors),
+        model_labels,
+        [wrap_label(label, 14) for label in errors],
+        "Affected Standard Records by Error Type",
+        cmap="OrRd",
+        vmin=0,
+        vmax=100,
+    )
+    fig.suptitle("Failure Slices Across Baseline Models", y=1.02, fontsize=10.5, fontweight="bold")
+    fig.subplots_adjust(hspace=0.58)
     return save_figure(fig, output_dir, "fig_failure_slices")
 
 
@@ -447,3 +655,102 @@ def _error_taxonomy_panel(ax, rows: list[dict[str, Any]]) -> None:
     ax.set_xlabel("Affected standard records (%)")
     ax.set_title("Error Taxonomy")
     ax.grid(axis="y", visible=False)
+
+
+def _sort_categories_by_mean(
+    runs: list[ResultRun],
+    slice_name: str,
+    categories: list[str],
+    metric: str,
+) -> list[str]:
+    return sorted(
+        categories,
+        key=lambda category: np.nanmean(
+            [
+                100 * float(run.summary.get(slice_name, {}).get(category, {}).get(metric, np.nan))
+                for run in runs
+            ]
+        ),
+    )
+
+
+def _sort_errors_by_mean(runs: list[ResultRun], errors: list[str]) -> list[str]:
+    def mean_rate(error: str) -> float:
+        rates: list[float] = []
+        for run in runs:
+            for row in run.summary.get("error_taxonomy", []):
+                if row.get("error_type") == error:
+                    rates.append(100 * float(row.get("affected_record_rate") or 0.0))
+                    break
+        return float(np.nanmean(rates)) if rates else 0.0
+
+    return sorted(errors, key=mean_rate, reverse=True)
+
+
+def _slice_matrix(
+    runs: list[ResultRun],
+    slice_name: str,
+    categories: list[str],
+    metric: str,
+) -> np.ndarray:
+    matrix = np.full((len(runs), len(categories)), np.nan)
+    for row_idx, run in enumerate(runs):
+        rows = run.summary.get(slice_name, {})
+        for col_idx, category in enumerate(categories):
+            value = rows.get(category, {}).get(metric)
+            if value is not None:
+                matrix[row_idx, col_idx] = 100 * float(value)
+    return matrix
+
+
+def _error_matrix(runs: list[ResultRun], errors: list[str]) -> np.ndarray:
+    matrix = np.full((len(runs), len(errors)), np.nan)
+    for row_idx, run in enumerate(runs):
+        by_error = {str(row.get("error_type")): row for row in run.summary.get("error_taxonomy", [])}
+        for col_idx, error in enumerate(errors):
+            row = by_error.get(error)
+            if row:
+                matrix[row_idx, col_idx] = 100 * float(row.get("affected_record_rate") or 0.0)
+    return matrix
+
+
+def _annotated_heatmap(
+    ax,
+    matrix: np.ndarray,
+    row_labels: list[str],
+    col_labels: list[str],
+    title: str,
+    *,
+    cmap: str,
+    vmin: float,
+    vmax: float,
+    suffix: str = "%",
+    fmt: str = "{:.0f}",
+    na_text: str = "n/a",
+) -> None:
+    masked = np.ma.masked_invalid(matrix)
+    cmap_obj = plt.get_cmap(cmap).copy()
+    cmap_obj.set_bad("#F2F3F5")
+    im = ax.imshow(masked, aspect="auto", cmap=cmap_obj, vmin=vmin, vmax=vmax)
+    ax.set_title(title)
+    ax.set_xticks(np.arange(len(col_labels)))
+    ax.set_xticklabels(col_labels)
+    ax.set_yticks(np.arange(len(row_labels)))
+    ax.set_yticklabels(row_labels)
+    ax.tick_params(axis="x", labelrotation=25, length=0)
+    ax.tick_params(axis="y", length=0)
+    ax.grid(False)
+    threshold = vmin + 0.62 * (vmax - vmin)
+    for row in range(matrix.shape[0]):
+        for col in range(matrix.shape[1]):
+            value = matrix[row, col]
+            if np.isnan(value):
+                text = na_text
+                color = GRAY
+            else:
+                text = f"{fmt.format(value)}{suffix}"
+                color = "white" if value >= threshold else DARK
+            if text:
+                ax.text(col, row, text, ha="center", va="center", fontsize=6.3, color=color)
+    cbar = plt.colorbar(im, ax=ax, fraction=0.025, pad=0.015)
+    cbar.ax.tick_params(labelsize=7, length=0)

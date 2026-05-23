@@ -19,6 +19,8 @@ from finbalance.figures.plots import (
     plot_dataset_composition,
     plot_failure_slices,
     plot_model_accuracy,
+    plot_two_model_context_deltas,
+    plot_verifier_model_deltas,
     plot_verifier_transfer,
 )
 
@@ -40,6 +42,8 @@ def generate_all_figures(
         ("model_accuracy", lambda: plot_model_accuracy(results_root, out_root, min_records=min_model_records)),
         ("aggregation_gap", lambda: plot_aggregation_gap(results_root, out_root, min_records=min_model_records)),
         ("ablation_deltas", lambda: plot_ablation_deltas(results_root, out_root)),
+        ("verifier_model_deltas", lambda: plot_verifier_model_deltas(results_root, out_root, min_records=min_model_records)),
+        ("two_model_context_deltas", lambda: plot_two_model_context_deltas(results_root, out_root, min_records=min_model_records)),
         ("context_stress", lambda: plot_context_stress(results_root, out_root)),
         ("verifier_transfer", lambda: plot_verifier_transfer(results_root, out_root, min_records=min_model_records)),
         ("dataset_composition", lambda: plot_dataset_composition(dataset_file, out_root)),
@@ -58,4 +62,3 @@ def generate_all_figures(
     index_path.write_text(json.dumps(generated, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     generated["index"] = [str(index_path)]
     return generated
-

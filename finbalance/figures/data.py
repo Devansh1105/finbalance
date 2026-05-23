@@ -133,11 +133,12 @@ def load_default_gemini_ablation_rows(results_dir: Path) -> list[dict[str, Any]]
     promoted = load_ablation_group(results_dir, "gemini3flash_promoted_coverage_full_clean")
     baseline = promoted.get("prompt_baseline")
     if self_consistency and baseline:
+        subset_baseline = subset_baseline_for_run(baseline, self_consistency) or baseline
         rows.append(
             {
                 "ablation": self_consistency.ablation_name,
                 "run": self_consistency,
-                "baseline": baseline,
+                "baseline": subset_baseline,
                 "group": "gemini3flash_self_consistency_gap",
             }
         )
@@ -168,3 +169,56 @@ def load_bootstrap_comparisons(results_dir: Path, relative_dir: str) -> dict[tup
         comparisons[(str(row.get("ablation_name")), str(row.get("metric")))] = row
     return comparisons
 
+
+def subset_baseline_for_run(baseline: ResultRun, target: ResultRun) -> ResultRun | None:
+    target_rows_path = target.path / "per_record_results.jsonl"
+    baseline_rows_path = baseline.path / "per_record_results.jsonl"
+    if not target_rows_path.exists() or not baseline_rows_path.exists():
+        return None
+    target_ids = {row["record_id"] for row in load_jsonl(target_rows_path) if row.get("record_id")}
+    if not target_ids:
+        return None
+    baseline_rows = [row for row in load_jsonl(baseline_rows_path) if row.get("record_id") in target_ids]
+    if not baseline_rows:
+        return None
+    summary = _summarize_per_record_rows(baseline_rows)
+    evaluation = dict(baseline.evaluation)
+    evaluation["summary"] = summary
+    return ResultRun(
+        label=f"{baseline.label} subset",
+        ablation_name=baseline.ablation_name,
+        model_id=baseline.model_id,
+        path=baseline.path,
+        summary=summary,
+        evaluation=evaluation,
+    )
+
+
+def _summarize_per_record_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    metric_rows = [row.get("metrics", {}) for row in rows]
+    standard = [metrics for metrics in metric_rows if not metrics.get("expected_inconsistency")]
+    inconsistency = [metrics for metrics in metric_rows if metrics.get("expected_inconsistency")]
+
+    def rate(metric: str, population: list[dict[str, Any]] | None = None) -> float:
+        selected = population if population is not None else standard
+        if not selected:
+            return 0.0
+        return round(sum(1 for metrics in selected if metrics.get(metric)) / len(selected), 4)
+
+    return {
+        "records_evaluated": len(rows),
+        "standard_records": len(standard),
+        "inconsistency_records": len(inconsistency),
+        "parse_success_count": sum(1 for metrics in metric_rows if metrics.get("parse_success")),
+        "parse_success_rate": rate("parse_success", metric_rows),
+        "predicted_entries_reconstruct_correct_final_balance_sheet_rate": rate(
+            "predicted_entries_reconstruct_correct_final_balance_sheet"
+        ),
+        "final_balance_sheet_matches_rate": rate("final_balance_sheet_matches"),
+        "final_journal_entries_match_no_doc_refs_rate": rate("final_journal_entries_match_no_doc_refs"),
+        "final_balance_sheet_and_journal_entries_match_rate": rate(
+            "final_balance_sheet_and_journal_entries_match"
+        ),
+        "inconsistency_code_match_rate": rate("inconsistency_code_matches", inconsistency),
+        "cost_total": round(sum(float(row.get("cost") or 0.0) for row in rows), 6),
+    }

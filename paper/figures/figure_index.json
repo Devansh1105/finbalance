@@ -39,6 +39,14 @@
     "paper/figures/flow_record_generation_detail.pdf",
     "paper/figures/flow_record_generation_detail.png"
   ],
+  "two_model_context_deltas": [
+    "paper/figures/fig_two_model_context_deltas.pdf",
+    "paper/figures/fig_two_model_context_deltas.png"
+  ],
+  "verifier_model_deltas": [
+    "paper/figures/fig_verifier_model_deltas.pdf",
+    "paper/figures/fig_verifier_model_deltas.png"
+  ],
   "verifier_transfer": [
     "paper/figures/fig_verifier_transfer.pdf",
     "paper/figures/fig_verifier_transfer.png"
