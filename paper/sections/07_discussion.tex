@@ -1,6 +1,4 @@
 \section{Discussion}
 \label{sec:discussion}
 
-The central finding is not that frontier LLMs cannot do accounting. It is that capable models produce locally correct postings and then fail to maintain global consistency between those postings, their citations, and the balance sheet they report. The verifier shows that much of this residual error is process-level: when a deterministic global check exists, a single feedback turn recovers substantially more than best-of-3 selection.
-
-This does not make verifier feedback a universal recipe. Accounting is unusual because the ledger that produces labels \emph{is} the verifier; tasks without such a specification require learned verifiers \citep{cobbe2021gsm8k,lightman2024verify} or LM-as-feedback \citep{madaan2023selfrefine,shinn2023reflexion}. The inconsistency-code degradation is the warning sign: feedback optimized for ledger consistency can bias a model away from saying that the evidence itself is contradictory.
+Source-document accounting is not solved by long-context retrieval. Distractors hurt, but controlled-evidence records still degrade as cross-document accounting dependencies grow: models must select evidence, form balanced entries, and aggregate them. Repair ablations target the second stage. Ledger feedback helps more than best-of-3, so the issue is not just insufficient sampling; however, strict document-grounded accuracy stays low, and ledger-consistency feedback can reduce inconsistency detection by pushing models to reconcile contradictory documents.

@@ -120,7 +120,7 @@ def main() -> None:
     prompt_preview.add_argument("--level", type=int)
     prompt_preview.add_argument("--max-records", type=int, default=1)
 
-    evaluate = subparsers.add_parser("evaluate-openrouter", help="Run the basic docs benchmark against one OpenRouter model")
+    evaluate = subparsers.add_parser("evaluate-openrouter", help="Run the basic FinBalance benchmark against one OpenRouter model")
     evaluate.add_argument("--dataset", default="data/v3_preview.jsonl")
     evaluate.add_argument("--output", default="results/openrouter_eval.json")
     evaluate.add_argument("--model", required=True)

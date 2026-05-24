@@ -575,8 +575,8 @@ Are there any entries you would book that are MISSING from section 5? Or any ent
 
 ### Q4 — Are document references correct?
 For each expected entry, is `doc_refs` the set of documents that actually support that posting?
-- [x] Yes, doc_refs are correct
-- [ ] Mostly correct with minor mismatches
+- [] Yes, doc_refs are correct
+- [x] Mostly correct with minor mismatches
 - [ ] Doc_refs are systematically wrong
 - Notes:
 

@@ -13,7 +13,7 @@ For each record in `samples/`, decide whether:
 1. **The documents are a reasonable analogue** of what an accountant would receive for that industry and reporting period — i.e. they carry the right kind of information, not that they look pixel-perfect.
 2. **The "expected journal entries"** are the entries you would actually book given only those documents.
 3. **The "expected balance sheet"** is what those entries should produce.
-4. **The labeled inconsistency** (for inconsistency packets) is a real contradiction.
+4. **The labeled inconsistency** (for forced-inconsistency records) is a real contradiction.
 
 Each Markdown file contains a verification form at the bottom — just check the boxes and add notes. **No coding, no JSON, no command line required.**
 
@@ -26,8 +26,8 @@ Each Markdown file contains a verification form at the bottom — just check the
 
 ## How the sample was selected
 
-- **60 standard packets** — spanning all five difficulty levels and all eight industries.
-- **15 inconsistency packets** — covering 15 inconsistency codes and spanning difficulty levels.
+- **60 standard records** — spanning all five difficulty levels and all eight industries.
+- **15 forced-inconsistency records** — covering 15 inconsistency codes and spanning difficulty levels.
 - The original candidate pool was generated deterministically (seed = 42); this release folder keeps the records with completed expert review. To regenerate a fresh candidate pool, edit the constants at the top of `generate_samples.py` and re-run:
   ```bash
   python human_verification/generate_samples.py
@@ -52,7 +52,7 @@ Every Markdown file has 7 sections:
 | 1. Record context | Industry, period, currency, tax regime, difficulty level, doc count, inconsistency flag |
 | 2. Allowed account names | The closed set of account names the benchmark's model is restricted to |
 | 3. Opening trial balance | Starting position before the period |
-| 4. Documents in this packet | Every document with its OCR text, type, and role (posting / support / adjustment / distractor) |
+| 4. Documents in this record | Every document with its OCR text, type, and role (posting / support / adjustment / distractor) |
 | 5. Expected journal entries | Ground truth entries the model should produce |
 | 6. Expected final balance sheet | Ground truth ending balance sheet |
 | 7. Verification form | Your checkboxes + notes |
@@ -66,7 +66,7 @@ Every Markdown file has 7 sections:
   - `distractor_doc` — should NOT generate any entries; included to test whether the model is robust to irrelevant paperwork.
   - `opening_trial_balance` — starting balances only; never generates entries.
 - **`doc_refs` field on each expected entry:** lists the document IDs that support that posting. A "Cash receipt applied to invoice INV-001" might list both the payment notice and the original invoice.
-- **Inconsistency packets:** these have `Labeled as inconsistent: True` and have empty `expected_entries` / `expected_balance_sheet`. They contain a deliberate contradiction (e.g. bank closing balance doesn't tie to the listed transactions). The labeled `inconsistency_codes` say which contradiction the generator placed.
+- **Forced-inconsistency records:** these have `Labeled as inconsistent: True` and have empty `expected_entries` / `expected_balance_sheet`. They contain a deliberate contradiction (e.g. bank closing balance doesn't tie to the listed transactions). The labeled `inconsistency_codes` say which contradiction the generator placed.
 - **Difficulty levels:** L1 trivial single-thread postings; L5 contains multi-document dependencies, jurisdictional tax rules, ASC 606, leases, deferred tax, or asset disposals.
 
 ## What to flag
@@ -79,7 +79,13 @@ We're specifically looking for the following failure modes — please call them 
 4. **Missing entry.** A document clearly implies an entry that isn't in the ground truth.
 5. **Extra entry.** An entry is booked that shouldn't be (e.g. from a distractor doc).
 6. **Wrong doc_refs.** The supporting documents listed for an entry aren't the right ones.
-7. **Inconsistency packet is actually reconcilable.** The labeled contradiction isn't visible / isn't a real contradiction.
-8. **Difficulty mis-calibrated.** L5 packet feels like L2, or vice versa.
+7. **Forced-inconsistency record is actually reconcilable.** The labeled contradiction isn't visible / isn't a real contradiction.
+8. **Difficulty mis-calibrated.** L5 record feels like L2, or vice versa.
 
 If you find a systematic issue (e.g. "every property_management record uses `Revenue` instead of `Rental Revenue`"), please note it once in `verification_responses.md` rather than repeating it on every record.
+
+## License
+
+Human-verification records, manifests, and completed release artifacts in this
+folder are part of the generated benchmark data release and are licensed under
+CC BY 4.0. See [`../DATA_LICENSE.md`](../DATA_LICENSE.md).

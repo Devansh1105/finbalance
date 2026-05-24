@@ -15,7 +15,7 @@ Generated figures are written as both PDF and PNG:
 - `fig_failure_slices`: multi-model industry, ledger-family, and error-taxonomy heatmaps.
 - `fig_concept_heatmap`: multi-model accuracy by accounting concept flag.
 - `fig_cost_pareto`: cost-per-record versus BS exact accuracy.
-- `diag_dataset_packet`: conceptual record packet diagram.
+- `diag_dataset_packet`: conceptual record document-bundle diagram.
 - `diag_generation_inference`: deterministic generation versus inverse inference diagram.
 - `flow_codebase_pipeline`: package-level pipeline flow.
 

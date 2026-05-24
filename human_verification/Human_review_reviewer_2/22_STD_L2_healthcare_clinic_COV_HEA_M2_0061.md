@@ -439,8 +439,8 @@ Are there any entries you would book that are MISSING from section 5? Or any ent
 
 ### Q4 — Are document references correct?
 For each expected entry, is `doc_refs` the set of documents that actually support that posting?
-- [x] Yes, doc_refs are correct
-- [ ] Mostly correct with minor mismatches
+- [ ] Yes, doc_refs are correct
+- [x] Mostly correct with minor mismatches
 - [ ] Doc_refs are systematically wrong
 - Notes:
 
@@ -452,7 +452,7 @@ Is the difficulty level (section 1) appropriately calibrated for this packet? L1
 - Notes:
 
 ### Q7 — Overall verdict
-- [x] Acceptable as ground truth for benchmark evaluation
-- [ ] Acceptable with minor fixes (notes below)
+- [ ] Acceptable as ground truth for benchmark evaluation
+- [x] Acceptable with minor fixes (notes below)
 - [ ] Not acceptable as ground truth
 - Notes:

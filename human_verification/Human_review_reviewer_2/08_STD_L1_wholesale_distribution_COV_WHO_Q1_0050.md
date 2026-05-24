@@ -422,8 +422,8 @@ For each expected entry, is `doc_refs` the set of documents that actually suppor
 
 ### Q5 — Difficulty calibration
 Is the difficulty level (section 1) appropriately calibrated for this packet? L1=trivial, L5=hardest.
-- [x] Calibration feels right
-- [ ] Too easy for this level
+- [] Calibration feels right
+- [x] Too easy for this level
 - [ ] Too hard for this level
 - Notes:
 

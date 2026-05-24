@@ -142,80 +142,45 @@ def plot_model_accuracy(results_dir: Path, output_dir: Path, *, min_records: int
 
 def plot_results_heatmap(results_dir: Path, output_dir: Path, *, min_records: int = 100) -> list[Path]:
     apply_style()
-    baselines = load_default_baselines(results_dir, min_records=min_records)
-    if not baselines:
+    pairs = load_verifier_pairs(results_dir, min_records=min_records)
+    if not pairs:
         return []
-    baselines = sorted(baselines, key=lambda run: run.metric("final_balance_sheet_matches_rate"), reverse=True)
 
-    verifier_rows: list[tuple[str, ResultRun]] = []
-    for label, relative in (
-        ("Gemini 3 Flash", "gemini3flash_promoted_coverage_full_clean"),
-        ("DeepSeek V3.2", "deepseek_v32_sweep"),
-        ("Qwen3 235B", "qwen3_235b_sweep_baseline"),
-        ("Claude Haiku 4.5", "claude_haiku45_sweep_baseline"),
-    ):
-        verifier = load_result_run(results_dir / relative / "forced_ledger_verifier", label=label)
-        if verifier and verifier.records >= 50:
-            verifier_rows.append((label, verifier))
-
-    def row_values(run: ResultRun) -> list[float]:
-        return [
-            100 * run.metric("final_balance_sheet_matches_rate"),
-            100 * run.metric("predicted_entries_reconstruct_correct_final_balance_sheet_rate"),
-            100 * run.metric("inconsistency_code_match_rate"),
-            100 * max(0.0, 1.0 - doc_ref_mismatch_rate(run)),
-        ]
-
-    panels: list[tuple[str, list[str], np.ndarray]] = [
-        (
-            "Baseline",
-            [run.label for run in baselines],
-            np.array([row_values(run) for run in baselines], dtype=float),
-        )
+    labels = [wrap_display_label(label, 13) for label, _, _ in pairs]
+    x = np.arange(len(pairs))
+    panels = [
+        ("Reported balance sheet", "final_balance_sheet_matches_rate", BLUE, (0, 66)),
+        ("Contradiction code", "inconsistency_code_match_rate", RED, (0, 100)),
     ]
-    if verifier_rows:
-        panels.append(
-            (
-                "Forced Ledger Verifier (1-pass)",
-                [label for label, _ in verifier_rows],
-                np.array([row_values(run) for _, run in verifier_rows], dtype=float),
-            )
-        )
-
-    fig, axes = plt.subplots(1, len(panels), figsize=(7.15, 2.7), gridspec_kw={"wspace": 0.42})
-    if len(panels) == 1:
-        axes = np.array([axes])
-    col_labels = ["BS exact", "BS replay", "Inc. code", "Refs\ncorrect"]
-    cmap = plt.get_cmap("YlGnBu")
-    for ax, (title, labels, data) in zip(axes, panels, strict=True):
-        ax.imshow(data, cmap=cmap, vmin=0, vmax=100, aspect="auto")
+    fig, axes = plt.subplots(1, 2, figsize=(7.15, 2.75), sharex=True, gridspec_kw={"wspace": 0.28})
+    for ax, (title, metric, feedback_color, ylim) in zip(axes, panels, strict=True):
+        baseline = np.array([100 * base.metric(metric) for _, base, _ in pairs])
+        feedback = np.array([100 * verifier.metric(metric) for _, _, verifier in pairs])
+        ax.plot(x, baseline, marker="o", linewidth=1.8, markersize=4.0, color=GRAY, label="Baseline")
+        ax.plot(x, feedback, marker="o", linewidth=1.8, markersize=4.0, color=feedback_color, label="Ledger feedback")
+        for idx, delta in enumerate(feedback - baseline):
+            sign_color = BLUE if delta >= 0 else RED
+            x_text = idx + (0.08 if idx == 0 else 0.0)
+            ha = "left" if idx == 0 else "center"
+            if delta >= 0:
+                y_text = min(feedback[idx] + 3.5, ylim[1] - 2)
+                va = "bottom"
+            elif feedback[idx] < 12:
+                y_text = feedback[idx] + 5.0
+                va = "bottom"
+            else:
+                y_text = feedback[idx] - 5.5
+                va = "top"
+            ax.text(x_text, y_text, f"{delta:+.0f} pp", ha=ha, va=va, fontsize=7, color=sign_color)
         ax.set_title(title, fontsize=9, fontweight="bold")
-        ax.set_xticks(np.arange(len(col_labels)))
-        ax.set_xticklabels(col_labels, fontsize=7)
-        ax.set_yticks(np.arange(len(labels)))
-        ax.set_yticklabels([wrap_display_label(label, 14) for label in labels], fontsize=7)
-        ax.set_xticks(np.arange(-0.5, len(col_labels), 1), minor=True)
-        ax.set_yticks(np.arange(-0.5, len(labels), 1), minor=True)
-        ax.grid(which="minor", color="white", linewidth=1.0)
-        ax.grid(which="major", visible=False)
-        ax.tick_params(which="minor", bottom=False, left=False)
-        for row in range(data.shape[0]):
-            for col in range(data.shape[1]):
-                value = data[row, col]
-                color = "white" if value >= 52 else DARK
-                ax.text(col, row, f"{value:.0f}", ha="center", va="center", fontsize=7.5, color=color)
-
-    fig.text(
-        0.5,
-        0.01,
-        "Cells are percent rates; darker color means higher is better. Qwen verifier uses the completed standard-record subset.",
-        ha="center",
-        va="bottom",
-        fontsize=7,
-        color=GRAY,
-        style="italic",
-    )
-    fig.subplots_adjust(bottom=0.18)
+        ax.set_xticks(x)
+        ax.set_xticklabels(labels, fontsize=7)
+        ax.set_ylim(*ylim)
+        ax.set_ylabel("Accuracy (%)")
+        ax.grid(axis="y", alpha=0.24)
+        ax.grid(axis="x", visible=False)
+    axes[0].legend(loc="upper right", frameon=False, fontsize=7)
+    fig.subplots_adjust(left=0.08, right=0.99, bottom=0.24, top=0.88)
     return save_figure(fig, output_dir, "fig_results_heatmap")
 
 
@@ -530,21 +495,21 @@ def plot_difficulty_trend(results_dir: Path, output_dir: Path) -> list[Path]:
     difficulties = [str(level) for level in range(1, 6)]
     series = [
         (
-            "Baseline BS exact",
+            "Reported BS",
             baseline,
             "final_balance_sheet_matches_rate",
             ORANGE,
             "o",
         ),
         (
-            "Baseline BS recon",
+            "Replayed entries",
             baseline,
             "predicted_entries_reconstruct_correct_final_balance_sheet_rate",
             BLUE,
             "o",
         ),
         (
-            "Verifier BS exact",
+            "Ledger feedback",
             verifier,
             "final_balance_sheet_matches_rate",
             RED,
@@ -557,8 +522,6 @@ def plot_difficulty_trend(results_dir: Path, output_dir: Path) -> list[Path]:
         rows = run.summary.get("by_difficulty_level", {})
         values = [100 * float(rows.get(level, {}).get(metric) or 0.0) for level in difficulties]
         ax.plot(x, values, marker=marker, linewidth=2, markersize=5, color=color, label=label)
-        for xx, value in zip(x, values, strict=True):
-            ax.text(xx, value + 2.0, f"{value:.0f}", ha="center", va="bottom", fontsize=6.5, color=color)
     ax.set_xticks(x)
     ax.set_xlabel("Difficulty level")
     ax.set_ylabel("Record-level accuracy (%)")

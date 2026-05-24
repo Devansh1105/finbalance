@@ -295,13 +295,13 @@ Given only the documents in section 4 (and the opening trial balance), would you
 Are there any entries you would book that are MISSING from section 5? Or any entries in section 5 that should NOT be there?
 - [x] Complete and exact
 - [ ] Missing entries (list them in notes)
-- [ ] Extra entries that should not be booked (list them)
+- [] Extra entries that should not be booked (list them)
 - Notes:
 
 ### Q4 — Are document references correct?
 For each expected entry, is `doc_refs` the set of documents that actually support that posting?
-- [x] Yes, doc_refs are correct
-- [ ] Mostly correct with minor mismatches
+- [] Yes, doc_refs are correct
+- [x] Mostly correct with minor mismatches
 - [ ] Doc_refs are systematically wrong
 - Notes:
 

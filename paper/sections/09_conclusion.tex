@@ -1,4 +1,4 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-\benchmark{} shows that accounting failures are often consistency failures: in four of six frontier LLMs, replaying a model's own entries gives a much better balance sheet than the one it reports. A rule-based ledger verifier closes much of this gap without training, while exposing a trade-off on inconsistency detection.
+\benchmark{} makes document-grounded accounting reconciliation a concrete, computable benchmark: models must select evidence, form cited ledger entries, and aggregate a balance sheet. Across six LLMs, this full pipeline remains hard; replayed entries often outscore reported balance sheets, while strict citation-grounded accuracy stays low. The released generator supports new stratified samples and larger splits from the same human-authored accounting specification.

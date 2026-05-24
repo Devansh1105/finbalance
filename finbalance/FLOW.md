@@ -1,4 +1,4 @@
-# Docs Benchmark Flow
+# FinBalance Generation Flow
 
 This file explains the **current** `finbalance/` flow in simple words.
 
@@ -44,14 +44,14 @@ add bank statement doc
     ->
 render all document seeds into PDF-style files + OCR text
     ->
-validate the clean packet
+validate the clean record
     ->
 run the ledger
     ->
 if this is a normal record:
   keep expected entries + expected balance sheet
 if this is a negative-control record:
-  mutate one visible document to make the packet inconsistent
+  mutate one visible document to make the record inconsistent
   store expected inconsistency code instead of entries/balance sheet
     ->
 final dataset record
@@ -319,7 +319,7 @@ That tells it:
 
 - which scenarios are mandatory
 - which scenarios are optional
-- how many documents the final packet should roughly contain
+- how many documents the final record should roughly contain
 
 For `subscription_saas`, year level 4 can include:
 
@@ -508,7 +508,7 @@ What they are for:
 Important:
 
 - distractors do not create postings
-- they are part of the visible packet only
+- they are part of the visible document bundle only
 - year records get the most distractors
 
 ## Step 10: Opening Balance And Bank Statement Docs Are Added
@@ -589,7 +589,7 @@ Code:
 - [validation/doc_validation.py](/home/devanshagarwal/projects/finbalance/finbalance/validation/doc_validation.py)
 - [validation/record_validation.py](/home/devanshagarwal/projects/finbalance/finbalance/validation/record_validation.py)
 
-Validation runs on the **clean** packet before any negative-control mutation.
+Validation runs on the **clean** record before any negative-control mutation.
 
 Checks include:
 
@@ -634,12 +634,12 @@ Code:
 
 Some records are intentionally made inconsistent.
 
-This happens **after** the clean packet has already been generated and validated.
+This happens **after** the clean record has already been generated and validated.
 
 So the flow is:
 
 ```text
-build a clean sound packet
+build a clean sound record
     ->
 pick one visible document
     ->
@@ -727,13 +727,13 @@ The prompt explicitly tells the model:
 - one payment can settle several invoices
 - some cash movements are inter-bank transfers with no revenue or expense
 - some entries are internal reclassifications or corrections
-- packets may contain ASC 606 bundled contracts where SSP rate cards and performance-obligation schedules drive revenue recognition
+- records may contain ASC 606 bundled contracts where SSP rate cards and performance-obligation schedules drive revenue recognition
 - country-specific tax rules may apply; US sales tax purchases are not recoverable input tax, while India GST uses CGST/SGST or IGST based on jurisdiction
 - exemption certificates can override default tax treatment
 - fixed asset disposals require NBV, accumulated depreciation removal, proceeds, and gain/loss computation
 - deferred tax comes only from visible book/tax depreciation differences and tax rates
 - lease accounting uses visible lease agreements, payment notices, amortization schedules, and modification notices
-- some packets may be inconsistent
+- some records may be inconsistent
 - if inconsistent:
   - set `has_inconsistency = true`
   - choose from the fixed `inconsistency_codes` list
@@ -833,7 +833,7 @@ industry schema
   -> add distractor docs
   -> add opening trial balance + bank statement
   -> render PDF-style docs + OCR
-  -> validate clean packet
+  -> validate clean record
   -> ledger builds final balance sheet
   -> if negative-control:
        mutate one visible doc

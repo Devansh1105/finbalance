@@ -55,6 +55,10 @@
     "paper/figures/fig_model_accuracy.pdf",
     "paper/figures/fig_model_accuracy.png"
   ],
+  "results_heatmap": [
+    "paper/figures/fig_results_heatmap.pdf",
+    "paper/figures/fig_results_heatmap.png"
+  ],
   "verifier_inconsistency_tradeoff": [
     "paper/figures/fig_verifier_inconsistency_tradeoff.pdf",
     "paper/figures/fig_verifier_inconsistency_tradeoff.png"

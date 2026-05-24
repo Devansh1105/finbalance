@@ -537,8 +537,8 @@ _Fill in your judgement below. For each question, mark one box and add notes whe
 
 ### Q1 — Document analogy to real paperwork
 We are not aiming for perfectly real documents — we are aiming for analogues that carry the same kind of information an accountant would normally extract. Treating these as stand-ins, do they convey roughly the same content (parties, dates, amounts, line items, references) that you would expect from the real-world equivalent for this industry and period?
-- [x] Yes — analogous to what an accountant would receive
-- [ ] Mostly — captures the right information, with rough edges
+- [ ] Yes — analogous to what an accountant would receive
+- [x] Mostly — captures the right information, with rough edges
 - [ ] No — missing key information an accountant would rely on, or structurally unlike the real equivalent
 - Notes:
 

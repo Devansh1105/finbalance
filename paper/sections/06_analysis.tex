@@ -2,33 +2,10 @@
 \label{sec:analysis}
 
 \paragraph{Why two models lack the gap.}
-The two no-gap models reach that state by qualitatively different routes (Table~\ref{tab:no-gap-mechanism}). GPT-5-low submits $92\%$ of expected entries and achieves a high \bsexact{} ($0.508$) essentially equal to its \bsrecon{}: genuinely competent and self-consistent. Grok-4.3 reports \bsexact{} $0.317$ while submitting only $40\%$ of expected entries; its \bsrecon{} is also low ($0.350$), and its self-consistency is the trivial consequence of reporting a sparse balance sheet matching sparse entries. ``Self-consistent because competent'' and ``self-consistent because under-answering'' are different states.
-
-\begin{table}[t]
-\centering
-\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lcccc}
-\toprule
-Model & \bsexact{} & \bsrecon{} & gap & entry ratio \\
-\midrule
-Gemini~3 Flash    & 0.250 & 0.625 & $+0.375$ & 0.95 \\
-GPT-5-low         & 0.508 & 0.500 & $-0.008$ & 0.92 \\
-Claude Haiku~4.5  & 0.042 & 0.325 & $+0.283$ & 0.55 \\
-Grok-4.3          & 0.317 & 0.350 & $+0.033$ & 0.40 \\
-DeepSeek V3.2     & 0.075 & 0.367 & $+0.292$ & 0.59 \\
-Qwen~3 235B       & 0.025 & 0.275 & $+0.250$ & 0.93 \\
-\bottomrule
-\end{tabular}
-\caption{Three regimes on standard records. \emph{Entry ratio} = predicted-entry count / expected count. Grok-4.3's apparent self-consistency is the artefact of submitting $40\%$ of expected entries; GPT-5-low's is genuine.}
-\label{tab:no-gap-mechanism}
-\end{table}
+The no-gap models differ. \mbox{GPT-5 submits} $92\%$ of expected entries and has \bsexact{} essentially equal to \bsrecon{} ($0.508$ vs.\ $0.500$). \mbox{Grok-4.3 submits} only $40\%$ of expected entries, so its balance sheet is internally aligned but incomplete (Appendix Table~\ref{tab:no-gap-mechanism}).
 
 \paragraph{Where the gap concentrates.}
-Stratified by difficulty on the anchor model, baseline \bsexact{} collapses from $0.88$ at L1 to $0.00$ at L5, while \bsrecon{} declines more gently---the \aggGap{} peaks around L2--L3 at $\sim$50\,pp and narrows at L4--L5 only because \bsrecon{} itself begins to fall (Appendix Figure~\ref{fig:difficulty-trend}). The \verifier{} closes the gap to within $\sim$10\,pp at every level, demonstrating that the recovery is not restricted to easy records. Stratified by industry, easier industries (healthcare clinic, property management) reach \bsexact{} ceilings of $0.80$--$1.00$ under the verifier, while harder ones (retail, SaaS) remain entry-limited. Per-concept slicing is in Appendix~\ref{appx:per-concept}.
+On the anchor model, \bsexact{} drops from $0.88$ at L1 to $0.00$ at L5 while \bsrecon{} declines more gently; the \aggGap{} peaks near L2--L3 at $\sim$50\,pp (Figure~\ref{fig:difficulty-trend}). Ledger feedback narrows the gap at every level. Industry and concept slices in Appendix~\ref{appx:per-concept} show that retail and SaaS remain entry-limited.
 
 \paragraph{Error taxonomy.}
-On $120$ standard records, the anchor model exhibits document-linking failures on $92.5\%$ of records ($981$ entries), omissions on $42.5\%$ ($235$ entries), hallucinated extras on $30.8\%$ ($139$ entries), arithmetic errors on $20.8\%$ ($37$ entries), and account-selection errors on only $8.3\%$ ($14$ entries). The most knowledge-dependent failure is the rarest; the dominant failure (\texttt{doc\_refs}) is roughly $9\times$ the next-worst category by entry count.
-
-\paragraph{Tool bypass.}
-Across four lightly-offered tool variants, total tool calls across all records was \emph{zero}: models emitted the final JSON on the first turn and the agent loop short-circuited via submission detection. This motivates the design of the verifier as a feedback signal the model must process, not a tool it may decline.
+On $120$ standard records, document-linking failures dominate the anchor model: $92.5\%$ of records and $981$ entries, compared with $235$ omissions, $139$ extras, $37$ arithmetic errors, and only $14$ account-selection errors. The hard part is grounding plausible entries to the right evidence. For detailed model-failure slices, see Appendix Figure~\ref{fig:failure-slices}.
