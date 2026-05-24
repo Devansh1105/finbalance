@@ -1,8 +1,8 @@
 # Human Verification — finbalance Synthetic Dataset
 
-This folder contains 75 records sampled from the benchmark dataset, rendered as plain Markdown so a CPA or accounting expert can read and verify the ground truth **without touching any JSON or code**.
+This folder contains 75 expert-reviewed records sampled from the benchmark dataset, rendered as plain Markdown so an accounting expert can read and verify the ground truth **without touching any JSON or code**.
 
-> **Note on framing:** the benchmark's ground truth is mathematically guaranteed by a deterministic ledger replay (every record's expected entries and balance sheet are computed from a verifiable double-entry generator). Your validation is therefore **about whether the documents are a reasonable analogue of what an accountant would normally receive, plus account-choice conventions, difficulty calibration, and inconsistency validity** — not about whether the paperwork is pixel-perfect, and not about catching arithmetic errors in the ledger.
+> **Note on framing:** the benchmark's ground truth is computed by deterministic ledger replay once the chart of accounts, accounting policies, tax/FX assumptions, scenario schemas, and document templates are fixed. Your validation is therefore **about whether the documents are a reasonable analogue of what an accountant would normally receive, plus account-choice conventions, difficulty calibration, and inconsistency validity** — not about whether the paperwork is pixel-perfect, and not about catching arithmetic errors in the ledger.
 >
 > We are **not** aiming for documents that look exactly like real-world invoices, bank statements, or schedules. We are aiming for analogues — paperwork that carries roughly the same information content (parties, dates, amounts, line items, references) that an accountant would extract from the real equivalent. Please judge from that angle.
 
@@ -13,7 +13,7 @@ For each record in `samples/`, decide whether:
 1. **The documents are a reasonable analogue** of what an accountant would receive for that industry and reporting period — i.e. they carry the right kind of information, not that they look pixel-perfect.
 2. **The "expected journal entries"** are the entries you would actually book given only those documents.
 3. **The "expected balance sheet"** is what those entries should produce.
-4. **The labeled inconsistency** (for the 5 inconsistency packets) is a real contradiction.
+4. **The labeled inconsistency** (for inconsistency packets) is a real contradiction.
 
 Each Markdown file contains a verification form at the bottom — just check the boxes and add notes. **No coding, no JSON, no command line required.**
 
@@ -26,13 +26,22 @@ Each Markdown file contains a verification form at the bottom — just check the
 
 ## How the sample was selected
 
-- **60 standard packets** — 12 per difficulty level (L1 to L5), industries round-robin'd within each level so every industry appears multiple times.
-- **15 inconsistency packets** — covering 15 of the 24 inconsistency codes (~63% coverage), spanning difficulty levels.
-- Stratified deterministic sample (seed = 42). To regenerate or change sizes, edit the constants at the top of `generate_samples.py` and re-run:
+- **60 standard packets** — spanning all five difficulty levels and all eight industries.
+- **15 inconsistency packets** — covering 15 inconsistency codes and spanning difficulty levels.
+- The original candidate pool was generated deterministically (seed = 42); this release folder keeps the records with completed expert review. To regenerate a fresh candidate pool, edit the constants at the top of `generate_samples.py` and re-run:
   ```bash
   python human_verification/generate_samples.py
   ```
 - See `sample_manifest.json` for the exact list of record IDs, difficulty levels, industries, and inconsistency codes covered.
+
+## Completed review artifacts
+
+- The paper analysis uses this intended assignment: Reviewer 1 records 1–50;
+  Reviewer 2 records 1–25 and 51–75.
+- The independent overlap used for agreement is records 1–25. The remaining
+  records give single-expert coverage over records 26–75.
+- Collection folders may contain duplicate files outside this assignment; those
+  are retained for auditability but are not used in the reported agreement table.
 
 ## What each record's file contains
 
@@ -74,5 +83,3 @@ We're specifically looking for the following failure modes — please call them 
 8. **Difficulty mis-calibrated.** L5 packet feels like L2, or vice versa.
 
 If you find a systematic issue (e.g. "every property_management record uses `Revenue` instead of `Rental Revenue`"), please note it once in `verification_responses.md` rather than repeating it on every record.
-
-

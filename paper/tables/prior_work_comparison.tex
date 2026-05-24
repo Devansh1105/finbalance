@@ -1,27 +1,74 @@
-\begin{table*}[t]
+\begin{table*}[t!]
 \centering
-\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.08}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.7cm}ccccccc>{\raggedright\arraybackslash}X@{}}
+\scriptsize
+\setlength{\tabcolsep}{2.4pt}
+\renewcommand{\arraystretch}{1.06}
+\newcommand{\yes}{\(\checkmark\)}
+\newcommand{\partly}{\(\triangle\)}
+\newcommand{\no}{--}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.05cm}>{\raggedright\arraybackslash}p{3.25cm}>{\raggedright\arraybackslash}p{2.65cm}ccccccc@{}}
 \toprule
-Benchmark family & Raw docs & Entries & BS & Doc refs & Incons. & Det. labels & Gap & Scope \\
+Benchmark & Evidence given to model & Target output & QA & \shortstack{Long/\\multi ctx.} & JE & BS & \shortstack{Doc/span\\grounding} & Incons. & \shortstack{Det.\\replay} \\
 \midrule
-Financial QA (FinQA, ConvFinQA, TAT-QA, DocFinQA, MultiHiertt)
-& $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$
-& Answer questions over prepared reports/tables. \\
-Finance suites (FinanceBench, FinBen, FinanceMATH)
-& $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$ & $\times$
-& Analyze filings or solve finance-grounded problems. \\
-FinAuditing
-& $\sim$ & $\times$ & $\times$ & $\sim$ & $\sim$ & $\times$ & $\times$
-& Multi-document audit checks over prepared taxonomy-tagged filings. \\
+FinQA \citep{chen-etal-2021-finqa}
+& Extracted annual-report table and nearby text
+& Numeric answer plus executable reasoning program
+& \yes & \partly & \no & \no & \no & \no & \no \\
+ConvFinQA \citep{chen-etal-2022-convfinqa}
+& Financial report context with conversational turns
+& Turn-level numeric answers and programs
+& \yes & \partly & \no & \no & \no & \no & \no \\
+TAT-QA \citep{zhu-etal-2021-tatqa}
+& One hybrid table-text context from annual reports
+& Answer with arithmetic/operator supervision
+& \yes & \partly & \no & \no & \partly & \no & \no \\
+DocFinQA \citep{reddy-etal-2024-docfinqa}
+& Full SEC filing attached to FinQA-style questions
+& Long-context numeric answer/program
+& \yes & \yes & \no & \no & \partly & \no & \no \\
+MultiHiertt \citep{zhao-etal-2022-multihiertt}
+& Multiple hierarchical tables plus report text
+& Numeric answer with supporting facts
+& \yes & \yes & \no & \no & \yes & \no & \no \\
+FinanceBench \citep{islam2023financebench}
+& Public filings and earnings-call evidence
+& Open-book financial QA answer
+& \yes & \yes & \no & \no & \yes & \no & \no \\
+FinanceMath \citep{zhao-etal-2024-financemath}
+& Finance-domain word problems with text/table inputs
+& Knowledge-intensive math solution
+& \partly & \partly & \no & \no & \no & \no & \no \\
+FinBen \citep{xie2024finben}
+& Suite of finance datasets across IE, QA, RAG, forecasting
+& Task-specific outputs across 24 tasks
+& \partly & \partly & \no & \no & \partly & \no & \no \\
+FinDABench \citep{liu-etal-2025-findabench}
+& Financial tables, charts, and documents
+& Data-analysis answers over prepared artifacts
+& \partly & \partly & \no & \no & \partly & \no & \no \\
+FinTagging \citep{wang2026fintagging}
+& Financial reports with facts to extract and structure
+& Tagged financial facts / structured fields
+& \no & \partly & \no & \no & \yes & \no & \no \\
+FinRule-Bench \citep{malarkkan2026finrulebench}
+& Financial tables plus accounting principles
+& Rule-grounded reasoning answer
+& \partly & \partly & \no & \no & \partly & \partly & \no \\
+FinMaster \citep{jiang2025finmaster}
+& Workflow-style finance tasks across roles
+& Task-specific financial workflow answers
+& \partly & \partly & \partly & \partly & \partly & \partly & \no \\
+FinAuditing \citep{wang2026finauditing}
+& Real XBRL filings with taxonomy-defined structure
+& Semantic, relational, and numerical auditing judgments
+& \no & \yes & \no & \no & \yes & \yes & \no \\
 \midrule
 \benchmark{} (this work)
-& $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$
-& Reconcile OCR-style packets into cited journal entries and a balance sheet; replay exposes self-consistency. \\
+& OCR-style packet of posting, support, adjustment, and distractor docs
+& Cited journal entries, final balance sheet, inconsistency code
+& \no & \yes & \yes & \yes & \yes & \yes & \yes \\
 \bottomrule
 \end{tabularx}
-\caption{Capability comparison with prior financial benchmarks. $\checkmark$ = explicitly evaluated; $\sim$ = partially covered; $\times$ = not part of the benchmark objective.}
+\caption{Related-benchmark comparison. \textbf{QA} marks question-answering or problem-solving benchmarks; \textbf{JE} and \textbf{BS} mark construction of journal entries and a final balance sheet; \textbf{Incons.} marks explicit contradiction or consistency detection; \textbf{Det. replay} marks labels and evaluation produced by replaying a deterministic ledger. \yes{} = central objective, \partly{} = adjacent or subset capability, -- = not part of the benchmark objective.}
 \label{tab:prior-work-comparison}
 \end{table*}

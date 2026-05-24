@@ -1,4 +1,4 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-\benchmark{} reveals an aggregation gap in four of six frontier LLMs: balance sheets replayed from the models' own entries are substantially more accurate than the ones they report. A rule-based forced ledger verifier closes this gap by $+25$ to $+37$\,pp \bsexact{} across four model families with no fine-tuning, at a documented inconsistency-detection cost on smaller models. Capability is present in the underlying models; self-consistency is the bottleneck.
+\benchmark{} shows that accounting failures are often consistency failures: in four of six frontier LLMs, replaying a model's own entries gives a much better balance sheet than the one it reports. A rule-based ledger verifier closes much of this gap without training, while exposing a trade-off on inconsistency detection.

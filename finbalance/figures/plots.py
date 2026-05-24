@@ -67,44 +67,156 @@ def plot_model_accuracy(results_dir: Path, output_dir: Path, *, min_records: int
         return []
     runs = sorted(runs, key=lambda run: run.metric("final_balance_sheet_matches_rate"), reverse=True)
 
-    labels = [run.label for run in runs]
-    x = np.arange(len(runs))
-    width = 0.18
-    fig, ax = plt.subplots(figsize=(7.2, 3.7))
+    labels = [wrap_display_label(run.label, 16) for run in runs]
+    metric_specs: list[tuple[str, str, list[float]]] = [
+        (
+            "final_balance_sheet_matches_rate",
+            "Reported\nbalance sheet",
+            [100 * run.metric("final_balance_sheet_matches_rate") for run in runs],
+        ),
+        (
+            "predicted_entries_reconstruct_correct_final_balance_sheet_rate",
+            "Replayed\nfrom entries",
+            [100 * run.metric("predicted_entries_reconstruct_correct_final_balance_sheet_rate") for run in runs],
+        ),
+        (
+            "final_journal_entries_match_no_doc_refs_rate",
+            "Entries\ncorrect",
+            [100 * run.metric("final_journal_entries_match_no_doc_refs_rate") for run in runs],
+        ),
+        (
+            "final_balance_sheet_and_journal_entries_match_rate",
+            "Strict\nend-to-end",
+            [100 * run.metric("final_balance_sheet_and_journal_entries_match_rate") for run in runs],
+        ),
+        (
+            "refs_correct",
+            "Citations\ncorrect",
+            [100 * max(0.0, 1.0 - doc_ref_mismatch_rate(run)) for run in runs],
+        ),
+        (
+            "inconsistency_code_match_rate",
+            "Contradiction\ncode",
+            [100 * run.metric("inconsistency_code_match_rate") for run in runs],
+        ),
+    ]
+    data = np.array([values for _, _, values in metric_specs], dtype=float).T
 
-    for idx, metric in enumerate(MODEL_METRICS):
-        values = [100 * run.metric(metric) for run in runs]
-        offsets = x + (idx - 1.5) * width
-        bars = ax.bar(
-            offsets,
-            values,
-            width=width,
-            color=PALETTE[idx],
-            label=METRIC_LABELS[metric],
-            edgecolor="white",
-            linewidth=0.6,
-        )
-        for bar, value in zip(bars, values, strict=False):
-            if value >= 7:
-                ax.text(
-                    bar.get_x() + bar.get_width() / 2,
-                    value + 1.2,
-                    f"{value:.0f}",
-                    ha="center",
-                    va="bottom",
-                    fontsize=6.5,
-                    color=DARK,
-                )
+    fig, ax = plt.subplots(figsize=(7.1, 2.85))
+    cmap = plt.get_cmap("YlGnBu")
+    image = ax.imshow(data, cmap=cmap, vmin=0, vmax=100, aspect="auto")
 
-    ax.set_ylabel("Accuracy (%)")
-    ax.set_ylim(0, 105)
-    ax.set_xticks(x)
-    ax.set_xticklabels([wrap_display_label(label, 13) for label in labels])
+    for row in range(data.shape[0]):
+        for col in range(data.shape[1]):
+            value = data[row, col]
+            text_color = "white" if value >= 52 else DARK
+            ax.text(col, row, f"{value:.0f}", ha="center", va="center", fontsize=8, color=text_color)
+
+    ax.set_xticks(np.arange(len(metric_specs)))
+    ax.set_xticklabels([label for _, label, _ in metric_specs])
+    ax.set_yticks(np.arange(len(labels)))
+    ax.set_yticklabels(labels)
+    ax.set_xlabel("")
+    ax.set_xticks(np.arange(-0.5, len(metric_specs), 1), minor=True)
+    ax.set_yticks(np.arange(-0.5, len(labels), 1), minor=True)
+    ax.grid(which="minor", color="white", linewidth=1.2)
+    ax.tick_params(which="minor", bottom=False, left=False)
+    ax.grid(which="major", visible=False)
+    cbar = fig.colorbar(image, ax=ax, fraction=0.026, pad=0.02)
+    cbar.set_label("higher is better", rotation=270, labelpad=10, fontsize=7)
+    cbar.ax.tick_params(labelsize=7)
     record_counts = sorted({run.records for run in runs})
-    suffix = f" (n={record_counts[0]} records)" if len(record_counts) == 1 else ""
-    ax.set_title(f"Model Accuracy on FinBalance Coverage Set{suffix}")
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.19), ncol=4, frameon=False)
+    if len(record_counts) != 1:
+        ax.text(
+            0.0,
+            -0.16,
+            "Runs have unequal record counts; see setup for details.",
+            transform=ax.transAxes,
+            ha="left",
+            va="top",
+            fontsize=7,
+            color=GRAY,
+        )
     return save_figure(fig, output_dir, "fig_model_accuracy")
+
+
+def plot_results_heatmap(results_dir: Path, output_dir: Path, *, min_records: int = 100) -> list[Path]:
+    apply_style()
+    baselines = load_default_baselines(results_dir, min_records=min_records)
+    if not baselines:
+        return []
+    baselines = sorted(baselines, key=lambda run: run.metric("final_balance_sheet_matches_rate"), reverse=True)
+
+    verifier_rows: list[tuple[str, ResultRun]] = []
+    for label, relative in (
+        ("Gemini 3 Flash", "gemini3flash_promoted_coverage_full_clean"),
+        ("DeepSeek V3.2", "deepseek_v32_sweep"),
+        ("Qwen3 235B", "qwen3_235b_sweep_baseline"),
+        ("Claude Haiku 4.5", "claude_haiku45_sweep_baseline"),
+    ):
+        verifier = load_result_run(results_dir / relative / "forced_ledger_verifier", label=label)
+        if verifier and verifier.records >= 50:
+            verifier_rows.append((label, verifier))
+
+    def row_values(run: ResultRun) -> list[float]:
+        return [
+            100 * run.metric("final_balance_sheet_matches_rate"),
+            100 * run.metric("predicted_entries_reconstruct_correct_final_balance_sheet_rate"),
+            100 * run.metric("inconsistency_code_match_rate"),
+            100 * max(0.0, 1.0 - doc_ref_mismatch_rate(run)),
+        ]
+
+    panels: list[tuple[str, list[str], np.ndarray]] = [
+        (
+            "Baseline",
+            [run.label for run in baselines],
+            np.array([row_values(run) for run in baselines], dtype=float),
+        )
+    ]
+    if verifier_rows:
+        panels.append(
+            (
+                "Forced Ledger Verifier (1-pass)",
+                [label for label, _ in verifier_rows],
+                np.array([row_values(run) for _, run in verifier_rows], dtype=float),
+            )
+        )
+
+    fig, axes = plt.subplots(1, len(panels), figsize=(7.15, 2.7), gridspec_kw={"wspace": 0.42})
+    if len(panels) == 1:
+        axes = np.array([axes])
+    col_labels = ["BS exact", "BS replay", "Inc. code", "Refs\ncorrect"]
+    cmap = plt.get_cmap("YlGnBu")
+    for ax, (title, labels, data) in zip(axes, panels, strict=True):
+        ax.imshow(data, cmap=cmap, vmin=0, vmax=100, aspect="auto")
+        ax.set_title(title, fontsize=9, fontweight="bold")
+        ax.set_xticks(np.arange(len(col_labels)))
+        ax.set_xticklabels(col_labels, fontsize=7)
+        ax.set_yticks(np.arange(len(labels)))
+        ax.set_yticklabels([wrap_display_label(label, 14) for label in labels], fontsize=7)
+        ax.set_xticks(np.arange(-0.5, len(col_labels), 1), minor=True)
+        ax.set_yticks(np.arange(-0.5, len(labels), 1), minor=True)
+        ax.grid(which="minor", color="white", linewidth=1.0)
+        ax.grid(which="major", visible=False)
+        ax.tick_params(which="minor", bottom=False, left=False)
+        for row in range(data.shape[0]):
+            for col in range(data.shape[1]):
+                value = data[row, col]
+                color = "white" if value >= 52 else DARK
+                ax.text(col, row, f"{value:.0f}", ha="center", va="center", fontsize=7.5, color=color)
+
+    fig.text(
+        0.5,
+        0.01,
+        "Cells are percent rates; darker color means higher is better. Qwen verifier uses the completed standard-record subset.",
+        ha="center",
+        va="bottom",
+        fontsize=7,
+        color=GRAY,
+        style="italic",
+    )
+    fig.subplots_adjust(bottom=0.18)
+    return save_figure(fig, output_dir, "fig_results_heatmap")
 
 
 def plot_aggregation_gap(results_dir: Path, output_dir: Path, *, min_records: int = 100) -> list[Path]:
@@ -177,18 +289,6 @@ def plot_ablation_deltas(results_dir: Path, output_dir: Path) -> list[Path]:
         yy = y + (metric_idx - 0.5) * 0.18
         deltas = [100 * (row["run"].metric(metric) - row["baseline"].metric(metric)) for row in ordered]
         ax.scatter(deltas, yy, s=30, color=color, label=label, zorder=3)
-        for delta, yyy in zip(deltas, yy, strict=True):
-            if abs(delta) >= 8:
-                ax.text(
-                    delta + (1.2 if delta >= 0 else -1.2),
-                    yyy,
-                    f"{delta:+.0f}",
-                    va="center",
-                    ha="left" if delta >= 0 else "right",
-                    fontsize=6.2,
-                    color=color,
-                    weight="bold",
-                )
     ax.set_yticks(y)
     ax.set_yticklabels(labels)
     ax.invert_yaxis()
@@ -516,37 +616,50 @@ def plot_cost_pareto(results_dir: Path, output_dir: Path, *, min_records: int = 
     if not runs:
         return []
 
-    x = np.array([1000 * float(run.summary.get("cost_average_per_record") or 0.0) for run in runs])
+    x = np.array([100 * float(run.summary.get("cost_average_per_record") or 0.0) for run in runs])
     y = np.array([100 * run.metric("final_balance_sheet_matches_rate") for run in runs])
     recon = np.array([100 * run.metric("predicted_entries_reconstruct_correct_final_balance_sheet_rate") for run in runs])
-    sizes = 42 + 1.8 * recon
-    fig, ax = plt.subplots(figsize=(6.0, 3.55))
+    sizes = 34 + 1.35 * recon
+    fig, ax = plt.subplots(figsize=(3.35, 2.45))
     ax.scatter(x, y, s=sizes, color=BLUE, alpha=0.88, edgecolor="white", linewidth=0.7)
+    short_names = {
+        "Gemini 3 Flash": "Gemini",
+        "Claude Haiku 4.5": "Haiku",
+        "DeepSeek V3.2": "DeepSeek",
+        "Qwen3 235B": "Qwen",
+        "Grok 4.3": "Grok",
+        "GPT-5": "GPT-5",
+    }
+    offsets = {
+        "GPT-5": (-6, 7),
+        "Gemini 3 Flash": (5, 6),
+        "Grok 4.3": (5, 6),
+        "DeepSeek V3.2": (5, 7),
+        "Qwen3 235B": (5, 8),
+        "Claude Haiku 4.5": (5, 8),
+    }
     for idx, run in enumerate(runs):
-        offsets = {
-            "GPT-5": (5, -10),
-            "Gemini 3 Flash": (5, 5),
-            "Grok 4.3": (-8, 10),
-            "DeepSeek V3.2": (5, 8),
-            "Qwen3 235B": (8, 10),
-            "Claude Haiku 4.5": (5, 8),
-        }
         dx, dy = offsets.get(run.label, (5, 5))
         ax.annotate(
-            run.label,
+            short_names.get(run.label, run.label),
             (x[idx], y[idx]),
             textcoords="offset points",
             xytext=(dx, dy),
             ha="left" if dx >= 0 else "right",
             va="center",
-            fontsize=7,
+            fontsize=6.6,
             color=DARK,
+            bbox={"boxstyle": "round,pad=0.10", "facecolor": "white", "edgecolor": "none", "alpha": 0.82},
         )
-    ax.set_xlabel("Cost per record (USD x 1,000)")
-    ax.set_ylabel("BS_exact accuracy (%)")
-    ax.set_title("Cost and Accuracy Trade-off")
-    ax.set_ylim(0, max(60, float(y.max() + 10)))
-    ax.set_xlim(0, max(12, float(x.max() * 1.15)))
+    ax.set_xscale("log")
+    ax.set_xticks([0.1, 0.2, 0.5, 1.0, 2.0, 5.0])
+    ax.set_xticklabels(["0.1", "0.2", "0.5", "1", "2", "5"])
+    ax.set_xlabel("Cost per record (cents, log scale)")
+    ax.set_ylabel("BS exact accuracy (%)")
+    ax.set_title("Cost / Accuracy Trade-off")
+    ax.set_ylim(-4, max(60, float(y.max() + 10)))
+    ax.set_xlim(0.075, max(6.5, float(x.max() * 1.18)))
+    fig.subplots_adjust(left=0.18, right=0.98, bottom=0.20, top=0.90)
     return save_figure(fig, output_dir, "fig_cost_pareto")
 
 
@@ -648,52 +761,49 @@ def plot_context_stress(results_dir: Path, output_dir: Path) -> list[Path]:
     apply_style()
     runs = load_ablation_group(results_dir, "gemini3flash_promoted_coverage_full_clean")
     baseline = runs.get("prompt_baseline")
-    distractor_order = [
-        "evidence_only",
-        "evidence_plus_5_distractors",
-        "evidence_plus_15_distractors",
-        "evidence_plus_30_distractors",
+    run_order = [
+        ("prompt_baseline", "Full\npacket"),
+        ("evidence_only", "Evidence\nonly"),
+        ("evidence_plus_5_distractors", "+5\nextra"),
+        ("evidence_plus_15_distractors", "+15\nextra"),
+        ("evidence_plus_30_distractors", "+30\nextra"),
     ]
-    distractor_runs = [runs[name] for name in distractor_order if name in runs]
+    ordered = [(label, runs[name]) for name, label in run_order if name in runs]
     relevant_last = runs.get("evidence_relevant_last")
-    if not baseline or len(distractor_runs) < 2:
+    if not baseline or len(ordered) < 3:
         return []
 
     metrics = (
         "predicted_entries_reconstruct_correct_final_balance_sheet_rate",
         "final_journal_entries_match_no_doc_refs_rate",
-        "final_balance_sheet_matches_rate",
+        "inconsistency_code_match_rate",
     )
     colors = [BLUE, TEAL, ORANGE]
-    fig, axes = plt.subplots(1, 2, figsize=(7.3, 3.65), sharey=True)
-    x = np.arange(len(distractor_runs))
-    labels = ["Evidence\nonly", "+5\ndistractors", "+15\ndistractors", "+30\ndistractors"][: len(distractor_runs)]
+    labels = [label for label, _ in ordered]
+    x = np.arange(len(ordered))
+    fig, ax = plt.subplots(figsize=(3.55, 2.75))
     for metric, color in zip(metrics, colors, strict=True):
-        values = [100 * (run.metric(metric) - baseline.metric(metric)) for run in distractor_runs]
-        axes[0].plot(x, values, marker="o", linewidth=2, markersize=5, color=color, label=METRIC_LABELS[metric])
-        for xx, value in zip(x, values, strict=True):
-            if abs(value) >= 4:
-                axes[0].text(xx, value + (1.2 if value >= 0 else -1.4), f"{value:+.0f}", ha="center", va="bottom" if value >= 0 else "top", fontsize=6.3, color=color)
-        axes[0].axhline(0, color=LIGHT_GRAY, linewidth=1.0)
-    axes[0].set_xticks(x)
-    axes[0].set_xticklabels(labels)
-    axes[0].set_title("Distractor count")
-    axes[0].set_ylabel("Delta from full packet (pp)")
-    axes[0].set_ylim(-24, 10)
-
+        values = [100 * run.metric(metric) for _, run in ordered]
+        ax.plot(x, values, marker="o", linewidth=1.8, markersize=4.2, color=color, label=METRIC_LABELS[metric])
     if relevant_last:
-        width = 0.22
-        positions = np.arange(len(metrics))
-        values = [100 * (relevant_last.metric(metric) - baseline.metric(metric)) for metric in metrics]
-        bars = axes[1].bar(positions, values, width=width, color=colors[: len(metrics)], edgecolor="white", linewidth=0.6)
-        axes[1].axhline(0, color=LIGHT_GRAY, linewidth=1.0)
-        for bar, value in zip(bars, values, strict=True):
-            axes[1].text(bar.get_x() + bar.get_width() / 2, value + (1.2 if value >= 0 else -1.4), f"{value:+.0f}", ha="center", va="bottom" if value >= 0 else "top", fontsize=6.4, color=DARK)
-        axes[1].set_xticks(positions)
-        axes[1].set_xticklabels([wrap_display_label(METRIC_LABELS[metric], 10) for metric in metrics])
-        axes[1].set_title("Relevant docs last")
-    fig.legend(loc="upper center", bbox_to_anchor=(0.5, -0.08), ncol=3, frameon=False)
-    fig.subplots_adjust(bottom=0.24, top=0.90, wspace=0.12)
+        ax.text(
+            0.98,
+            0.06,
+            "Relevant-last check:\nBS recon 49%, inc-code 87%",
+            transform=ax.transAxes,
+            ha="right",
+            va="bottom",
+            fontsize=6.1,
+            color=GRAY,
+            bbox={"boxstyle": "round,pad=0.2", "facecolor": "white", "edgecolor": LIGHT_GRAY, "alpha": 0.92},
+        )
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.set_ylabel("Accuracy (%)")
+    ax.set_ylim(0, 100)
+    ax.set_xlabel("Visible evidence condition")
+    ax.legend(loc="upper right", frameon=False, fontsize=6.2)
+    fig.subplots_adjust(left=0.14, right=0.98, bottom=0.20, top=0.97)
     return save_figure(fig, output_dir, "fig_context_stress")
 
 

@@ -1,15 +1,104 @@
 % Appendix entry point. Anonymity is preserved throughout.
 
-\section{Example Packet}
-\label{appx:packet-example}
+\section{Dataset Examples}
+\label{appx:dataset-examples}
 
-Figure~\ref{fig:dataset-packet-appx} shows a schematic view of one full \benchmark{} record: a packet of posting, support, adjustment, and distractor documents that the model must reconcile into journal entries and a final balance sheet. The complete OCR text and ground-truth labels for individual records are released alongside the dataset.
+Figure~\ref{fig:dataset-samples} shows two released core-evaluation records in compressed form, plus excerpts of the OCR-style document text the model receives. Read each colored box as one benchmark record: \emph{Visible packet} is the document evidence shown to the model, while \emph{Hidden labels} or \emph{Expected answer} is scorer-only ground truth. The full release includes every document's OCR text, asset path, expected entries, expected balance sheet, and inconsistency labels.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.98\textwidth]{figures/diag_dataset_packet.pdf}
-\caption{An example record packet. Posting documents directly imply journal entries; support documents provide inputs (rate cards, schedules, certificates) referenced from postings via \texttt{doc\_refs}; adjustment documents (period-end accruals, rollforwards) produce closing entries; distractors should not appear in any entry.}
-\label{fig:dataset-packet-appx}
+\setlength{\fboxsep}{4pt}
+\setlength{\fboxrule}{0.55pt}
+\begin{minipage}[t]{0.485\textwidth}
+\fcolorbox{blue!55!black}{blue!3}{%
+\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+\colorbox{blue!54!black}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\centering\color{white}\scriptsize Monthly professional-services packet}}
+\vspace{2pt}
+\footnotesize
+\setlength{\parskip}{2pt}
+\textbf{Cell.} Professional services; month; difficulty L1. The packet has 6 documents, 3 expected entries, and no inconsistency.
+
+\textbf{Visible packet.} Customer invoice \$4,530.84; vendor invoice \$2,391.35; travel receipt \$74.90; cancellation notice; bank statement.
+
+\textbf{Hidden labels.}
+\begin{itemize}[leftmargin=*,nosep,itemsep=1pt,topsep=2pt]
+\item Dr Accounts Receivable / Cr Service Revenue, \$4,530.84.
+\item Dr Office Supplies Expense / Cr Accounts Payable, \$2,391.35.
+\item Dr Travel Expense / Cr Cash, \$74.90.
+\end{itemize}
+\textbf{Final check.} Assets \$29,442.65; liabilities \$3,377.16; equity \$26,065.49.
+\end{minipage}}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.485\textwidth}
+\fcolorbox{red!55!black}{red!3}{%
+\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+\colorbox{red!54!black}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\centering\color{white}\scriptsize Tax-exemption conflict packet}}
+\vspace{2pt}
+\footnotesize
+\setlength{\parskip}{2pt}
+\textbf{Cell.} Wholesale distribution; month; difficulty L4. The packet has 20 documents and should produce no entries.
+
+\textbf{Visible contradiction.} The exemption certificate is \emph{Expired}; the customer profile still points to it; the invoice applies it and charges 0.00\% tax on \$21,008.41; the tax notice states California sales tax at 8.25\%.
+
+\textbf{Expected answer.}
+\begin{itemize}[leftmargin=*,nosep,itemsep=1pt,topsep=2pt]
+\item Flag: \texttt{has\_inconsistency = true}.
+\item Code: \texttt{tax\_exemption\_conflict}.
+\item Entries: empty; do not force a reconciled ledger.
+\end{itemize}
+\textbf{Diagnostic role.} Tests contradiction detection rather than arithmetic.
+\end{minipage}}
+\end{minipage}
+
+\vspace{5pt}
+\fcolorbox{gray!55}{gray!4}{%
+\begin{minipage}{\dimexpr0.965\textwidth-2\fboxsep-2\fboxrule\relax}
+\colorbox{gray!55}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\centering\color{white}\footnotesize Example visible document excerpts}}
+\vspace{3pt}
+\begin{minipage}[t]{0.315\linewidth}
+\scriptsize\ttfamily
+CUSTOMER INVOICE\\
+Doc ID: D002\\
+Date: 2024-12-05\\
+Customer: Metro Edge Partners\\
+Invoice: INV-0001\\
+Total: \$4,530.84\\
+- Support package: \$1,131.39\\
+- Follow-up support: \$3,399.45
+\end{minipage}\hfill
+\begin{minipage}[t]{0.315\linewidth}
+\scriptsize\ttfamily
+TAX NOTICE\\
+Doc ID: D014\\
+Jurisdiction: California\\
+Sales tax rate: 8.25\%\\
+Exemption certificate: EX-211\\
+Certificate status: Expired\\
+Taxable base: \$21,008.41\\
+Expected tax: \$1,733.19
+\end{minipage}\hfill
+\begin{minipage}[t]{0.315\linewidth}
+\scriptsize\ttfamily
+FX SETTLEMENT ADVICE\\
+Doc ID: D019\\
+Invoice currency: EUR\\
+Home currency: USD\\
+Invoice rate: 1.0840\\
+Settlement rate: 1.0715\\
+Cash received: \$38,627.42\\
+FX difference: compute from rates
+\end{minipage}
+\end{minipage}}
+\caption{Two concrete dataset samples and three document excerpts. The blue example is a clean record: the model must convert visible invoices, receipts, and statements into journal entries and a final balance sheet. The red example is a forced-inconsistency record: the visible documents contradict each other, so the correct answer is an inconsistency flag/code and no entries. The gray panel shows the raw prompt surface for ordinary revenue, tax/exemption, and foreign-exchange evidence.}
+\label{fig:dataset-samples}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.86\textwidth]{figures/diag_generation_inference.pdf}
+\caption{Benchmark construction and evaluation. The generator executes a deterministic accounting program to create document packets, hidden journal entries, balance sheets, and inconsistency labels. The model sees only the visible packet and account taxonomy; scoring replays its entries through the same ledger, enabling both \bsrecon{} and the rule-based \verifier{}.}
+\label{fig:generation-inference}
 \end{figure*}
 
 \section{Dataset Details}
@@ -29,7 +118,7 @@ Every document in a packet carries a \texttt{role} tag that determines how the l
 Professional services, field services, retail, wholesale distribution, healthcare clinic, property management, manufacturing, and subscription SaaS.
 
 \paragraph{Concept flags.}
-Each record carries boolean flags marking the presence of: ASC~606 bundled SaaS revenue recognition with SSP allocation; fixed asset disposals with NBV / gain-or-loss computation; deferred tax from book/tax depreciation differences; lease accounting with ROU asset/liability schedules and modifications; foreign-currency invoice, settlement, and remeasurement scenarios; multi-jurisdictional sales tax (US sales tax, India GST, with exemption certificates); tax exemptions; multi-invoice payments; interbank transfers; reclassifications; and period-end rollforwards.
+Each record carries boolean flags marking the presence of: ASC~606 revenue recognition (the U.S.\ standard for recognizing revenue from customer contracts), including bundled SaaS contracts with SSP, or standalone selling price, allocation; fixed-asset disposals with NBV, or net book value, and gain-or-loss computation; deferred tax from book/tax depreciation differences; lease accounting with ROU, or right-of-use, asset/liability schedules and modifications; FX, or foreign-exchange, invoice, settlement, and remeasurement scenarios; multi-jurisdictional sales tax (US sales tax, India GST, with exemption certificates); tax exemptions; multi-invoice payments; interbank transfers; reclassifications; and period-end rollforwards.
 
 \paragraph{Inconsistency codes.}
 The released negative-control taxonomy contains 23 machine-readable codes, grouped here for readability: banking and transfers (closing balance, statement balance, transfer); invoicing and payments (invoice total, payment allocation, duplicate reference); tax and jurisdiction (tax rate, tax total, input tax, exemption conflict, jurisdictional tax); assets, inventory, leases, and deferred tax (disposal, rollforward, remeasurement, schedule, and deferred-tax conflicts); and contract/revenue support (SSP allocation, performance-obligation release, reclassification support, schedule rollforward, and FX settlement or exchange-rate conflicts).
@@ -46,14 +135,14 @@ The released negative-control taxonomy contains 23 machine-readable codes, group
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_dataset_composition.pdf}
-\caption{Coverage-split composition. The released exploratory split spans eight industries, five difficulty levels, three period types, and a broad packet surface of posting, support, adjustment, distractor, and opening-balance documents.}
+\caption{Core evaluation split composition. The released evaluation split spans eight industries, five difficulty levels, three period types, and a broad packet surface of posting, support, adjustment, distractor, and opening-balance documents.}
 \label{fig:dataset-composition}
 \end{figure*}
 
 \section{Per-Concept Results}
 \label{appx:per-concept}
 
-Table~\ref{tab:per-concept} reports baseline \bsrecon{} by concept flag across all six models. Per-concept subset sizes on the coverage split are small ($n{\le}18$ per concept, with most concepts at $n{=}6$); rates are descriptive rather than inferential. The \texttt{has\_rollforward} flag has the largest subset ($n{=}53$) and shows the gap-having pattern across all four gap-having models (Gemini~51\%, DeepSeek~26\%, Qwen~17\%, Haiku~15\%) with GPT-5-low and Grok-4.3 in the same band by entry quality.
+Table~\ref{tab:per-concept} reports baseline \bsrecon{} by concept flag across all six models. The terms are defined in Appendix~\ref{appx:dataset-details}; in short, they mark which accounting concept appears in the packet, not a separate dataset split. Per-concept subset sizes on the core evaluation split are small ($n{\le}18$ per concept, with most concepts at $n{=}6$); rates are descriptive rather than inferential. The rollforward flag has the largest subset ($n{=}53$) and shows the gap-having pattern across all four gap-having models (Gemini~51\%, DeepSeek~26\%, Qwen~17\%, Haiku~15\%) with GPT-5-low and Grok-4.3 in the same band by entry quality.
 
 \begin{table*}[t]
 \centering
@@ -64,16 +153,16 @@ Table~\ref{tab:per-concept} reports baseline \bsrecon{} by concept flag across a
 \toprule
 Concept flag & Gemini & GPT-5 & Haiku & Grok & DeepSeek & Qwen \\
 \midrule
-ASC~606 ($n{=}6$)        & 17 & 33 & 17 & 0  & 0  & 17 \\
-Asset disposal ($n{=}6$) & 17 & 0  & 0  & 0  & 0  & 0  \\
-Deferred tax ($n{=}3$)   & 0  & 0  & 0  & 0  & 0  & 0  \\
-Lease ($n{=}6$)          & 17 & 0  & 0  & 0  & 0  & 0  \\
-Tax exemption ($n{=}6$)  & 50 & 0  & 0  & 0  & 33 & 17 \\
-FX ($n{=}6$)             & 0  & 17 & 0  & 0  & 0  & 0  \\
-Rollforward ($n{=}53$)   & 51 & 42 & 15 & 21 & 26 & 17 \\
+Revenue recognition ($n{=}6$) & 17 & 33 & 17 & 0  & 0  & 17 \\
+Asset disposal ($n{=}6$)      & 17 & 0  & 0  & 0  & 0  & 0  \\
+Deferred tax ($n{=}3$)        & 0  & 0  & 0  & 0  & 0  & 0  \\
+Lease accounting ($n{=}6$)    & 17 & 0  & 0  & 0  & 0  & 0  \\
+Tax exemption ($n{=}6$)       & 50 & 0  & 0  & 0  & 33 & 17 \\
+Foreign exchange ($n{=}6$)    & 0  & 17 & 0  & 0  & 0  & 0  \\
+Period rollforward ($n{=}53$) & 51 & 42 & 15 & 21 & 26 & 17 \\
 \bottomrule
 \end{tabular}
-\caption{Baseline \bsrecon{} (\%) by concept flag on the coverage split. Subset sizes are small for most concepts, so these rates are descriptive; the larger rollforward subset mirrors the headline gap pattern.}
+\caption{Baseline \bsrecon{} (\%) by accounting concept on the core evaluation split. Revenue recognition corresponds to ASC~606 customer-contract revenue; foreign exchange covers non-home-currency invoices and settlements; period rollforwards are schedules that carry prior balances forward. Subset sizes are small for most concepts, so these rates are descriptive.}
 \label{tab:per-concept}
 \end{table*}
 
@@ -81,7 +170,10 @@ Rollforward ($n{=}53$)   & 51 & 42 & 15 & 21 & 26 & 17 \\
 \label{appx:metrics-detail}
 
 \paragraph{Metric definitions.}
-\bsexact{} requires every section of the model's reported balance sheet (current and non-current assets, current and non-current liabilities, equity) to match ground truth at 0.01 tolerance. \bsrecon{} runs the model's entries through our ledger, computes the implied balance sheet, and applies the same equality check. The strict joint entry match requires account, amount, date, and \texttt{doc\_refs} all correct; the lenient variant relaxes \texttt{doc\_refs}. The strict \texttt{doc\_refs} mismatch rate is the proportion of entries with correct account-and-amount whose \texttt{doc\_refs} differs from ground truth.
+\bsexact{} requires every section of the model's reported balance sheet (current and non-current assets, current and non-current liabilities, equity) to match ground truth at 0.01 tolerance. \bsrecon{} runs the model's entries through our ledger, computes the implied balance sheet, and applies the same equality check. These balance-sheet and entry metrics are reported over standard records only. On forced-inconsistency packets, the expected behavior is \texttt{has\_inconsistency=True}, the correct code, empty entries, and an empty balance sheet; we therefore score them with \incCode{} and \texttt{inconsistency\_empty\_answer} instead of \bsexact{} or entry match.
+
+\paragraph{Entry matching.}
+Journal entries are scored at the posting level. A strict posting match requires the same debit account, credit account, amount rounded to cents, and sorted \texttt{doc\_refs}. The lenient entry match uses the same account-and-amount criteria but ignores \texttt{doc\_refs}. The matcher proceeds greedily over unmatched predictions in four passes: exact match; same debit/credit/amount but wrong \texttt{doc\_refs}; same debit/credit/\texttt{doc\_refs} but wrong amount; and same \texttt{doc\_refs}/amount but wrong account. Remaining expected postings are missing; remaining predicted postings are extra. Duplicate identical postings are matched first-in-first-out. The evaluator does not use account synonyms: the allowed account list is closed. Posting dates are parsed and retained for diagnostics, but they are not part of the headline entry-match key. Split transactions receive credit only when the predicted posting decomposition matches the generator's expected postings.
 
 \paragraph{Parse rate.}
 Across the six models at $n{=}143$, parse-success rates are $\geq 98\%$ for all six. Llama-3.3-70B was excluded from the panel for parse-rate reasons (33\%); we report this only as background for the panel choice.
@@ -89,10 +181,29 @@ Across the six models at $n{=}143$, parse-success rates are $\geq 98\%$ for all 
 \paragraph{Verifier 2-pass effect.}
 For Gemini~3 Flash, the 2-pass verifier closes \bsexact{} by $+35.8$\,pp (CI $[+26.9, +44.9]$) compared with $+32.5$\,pp at 1-pass, and degrades \incCode{} by $-21.7$\,pp (CI $[-40.0, -5.3]$) compared with $-13.0$\,pp at 1-pass. The 2-pass variant adds $\sim$56\% inference cost; we recommend 1-pass as the practical operating point.
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_difficulty_trend.pdf}
+\caption{The aggregation gap widens with difficulty on the anchor model; the forced verifier tracks the replayed-entry ceiling much more closely than the one-shot reported balance sheet.}
+\label{fig:difficulty-trend}
+\end{figure}
+
+\section{Cost Analysis}
+\label{appx:cost-analysis}
+
+Figure~\ref{fig:cost-pareto} reports API cost per evaluated core-evaluation record against \bsexact{} accuracy. Costs are provider-billed OpenRouter totals for completed baseline runs only; failed pilots and excluded partial runs are not counted. GPT-5-low is the most accurate and most expensive baseline (\$7.18 for 143 records; 5.02 cents/record). Gemini~3 Flash gives the strongest aggregation-gap signal at substantially lower cost (\$0.89 total; 0.63 cents/record). DeepSeek V3.2 and Qwen3 235B are the cheapest completed baselines (\$0.30 and \$0.15 total), useful for replication but far weaker on \bsexact{}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_cost_pareto.pdf}
+\caption{Cost/accuracy trade-off for completed baseline model runs. Marker area scales with \bsrecon{}, so vertically low but large markers indicate models that write replayable entries but fail to aggregate them.}
+\label{fig:cost-pareto}
+\end{figure}
+
 \section{Ablation Matrix}
 \label{appx:ablation-grid}
 
-Table~\ref{tab:ablation-grid} enumerates every \texttt{AblationSpec} triple (prompt, visibility, tool) evaluated on the anchor model. Each cell is a single evaluation run on the coverage split. We omit the cross-product cells with neither additional prompt nor visibility variation but include all unary axis variants and the multi-axis \verifier{} variants.
+Table~\ref{tab:ablation-grid} enumerates every \texttt{AblationSpec} triple (prompt, visibility, tool) evaluated on the anchor model. Each cell is a single evaluation run on the core evaluation split. We omit the cross-product cells with neither additional prompt nor visibility variation but include all unary axis variants and the multi-axis \verifier{} variants.
 
 \begin{table*}[t]
 \centering
@@ -120,6 +231,8 @@ Tool / intervention
 \label{tab:ablation-grid}
 \end{table*}
 
+The main text reports the measured effects of these ablations rather than only listing the design: Figure~\ref{fig:ablation-deltas} shows the anchor-model deltas for the full matrix summary, Figure~\ref{fig:context-stress} isolates distractor count and evidence position, Figure~\ref{fig:doc-refs-persistence} tests whether citation pressure fixes document-linking, and Figure~\ref{fig:gap-repair} compares best-of-3 selection against verifier revision. The resulting pattern is consistent across these views: passive tool availability and prompt-only variants are weak, removing support evidence or the account taxonomy is strongly damaging, and forced ledger feedback is the only treatment that substantially improves the reported balance sheet.
+
 \section{Human Verification Protocol}
 \label{appx:human-protocol}
 
@@ -127,31 +240,31 @@ Tool / intervention
 The validation packet was reviewed by two practising finance professionals working at major U.S.\ investment banks. Both reviewers had prior accounting and reconciliation responsibilities in their day-to-day work and were given a one-paragraph briefing on the benchmark's scope (analogy of reconciliation paperwork; not OCR fidelity).
 
 \paragraph{Instrument.}
-Each of 75 records was rendered as a self-contained Markdown file with seven sections: (1) record context (industry, period, currency, tax regime, difficulty, inconsistency flag), (2) the allowed-account-name list, (3) opening trial balance, (4) every document with its OCR text and role tag, (5) ground-truth journal entries, (6) ground-truth balance sheet, and (7) the verification form. The form contains six questions: Q1 document analogy, Q2 entry correctness, Q3 entry completeness, Q4 \texttt{doc\_refs} support, Q5 difficulty calibration, and Q7 overall verdict. Each question offers three options (positive, mixed, negative) plus a free-text notes field.
+Each of 51 release records was rendered as a self-contained Markdown file with seven sections: (1) record context (industry, period, currency, tax regime, difficulty, inconsistency flag), (2) the allowed-account-name list, (3) opening trial balance, (4) every document with its OCR text and role tag, (5) ground-truth journal entries, (6) ground-truth balance sheet, and (7) the verification form. The form contains six checks: document analogy, entry correctness, entry completeness, \texttt{doc\_refs} support, difficulty calibration, and overall verdict. Each check offers three options (positive, mixed, negative) plus a free-text notes field.
 
 \paragraph{Protocol.}
-The original plan was a symmetric split with a 25-record IAA overlap. As executed, 51 of 75 records received double-reviewed sign-off under the protocol used in this paper; the remaining 24 records (all at L3--L4 standard difficulty) are reserved for an extended camera-ready validation pass and are not used in any claim above. Records were assigned by index; reviewers worked independently and did not see each other's responses.
+The release subset contains 75 expert-reviewed records: 60 standard packets and 15 forced-inconsistency packets. The intended assignment used in the paper is Reviewer~1 on records 1--50 and Reviewer~2 on records 1--25 plus 51--75. This gives every record one expert review and creates a 25-record independent overlap on records 1--25. Reviewers worked independently and did not see each other's responses.
 
 \paragraph{Results.}
-Table~\ref{tab:iaa} reports per-question raw agreement and per-reviewer marginal positive rates on the 50-record double-reviewed subset.
+Table~\ref{tab:iaa} reports per-question raw agreement and per-reviewer marginal positive rates on the 25-record double-reviewed overlap. We use raw agreement rather than Cohen's $\kappa$ because Reviewer~2 selected the positive option on every overlap item; under such skewed marginals $\kappa$ is zero or undefined despite high observed agreement. Q6 is omitted because the overlap contains standard packets only; inconsistency validity was reviewed in the single-reviewed negative-control records.
 
 \begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{4pt}
-\begin{tabular}{lcccc}
+\begin{tabular}{lccc}
 \toprule
-Question & R1 + & R2 + & Agree.\ & $\kappa$ \\
+Question & R1 + & R2 + & Agree. \\
 \midrule
-Q1 Doc.\ analogy   & 92\%  & 100\% & 92\%  & deg. \\
-Q2 Entry correct   & 94\%  & 100\% & 94\%  & deg. \\
-Q3 Entry complete  & 100\% & 100\% & 100\% & 1.0 \\
-Q4 \texttt{doc\_refs}   & 92\%  & 100\% & 92\%  & deg. \\
-Q5 Difficulty      & 100\% & 100\% & 100\% & 1.0 \\
-Q7 Overall verdict & 86\%  & 100\% & 86\%  & deg. \\
+Q1 Doc.\ analogy   & 92\%  & 100\% & 92\% \\
+Q2 Entry correct   & 92\%  & 100\% & 92\% \\
+Q3 Entry complete  & 100\% & 100\% & 100\% \\
+Q4 \texttt{doc\_refs}   & 92\%  & 100\% & 92\% \\
+Q5 Difficulty      & 100\% & 100\% & 100\% \\
+Overall verdict & 84\%  & 100\% & 84\% \\
 \bottomrule
 \end{tabular}
-\caption{Inter-annotator agreement on the 50-record double-reviewed subset. ``R1+'' and ``R2+'' are per-reviewer positive (first-option) rates. Cohen's $\kappa$ is degenerate (``deg.'') on questions where Reviewer~2's responses had no variance.}
+\caption{Inter-annotator agreement on the 25-record overlap (records 1--25). ``R1+'' and ``R2+'' are per-reviewer positive (first-option) rates. Agreement is high on document analogy, entry correctness/completeness, document references, and difficulty calibration; remaining disagreement appears in the overall verdict.}
 \label{tab:iaa}
 \end{table}
 
@@ -162,20 +275,13 @@ Q7 Overall verdict & 86\%  & 100\% & 86\%  & deg. \\
 Dataset generation uses seed 42. Headline LLM evaluations use temperature 0.0 with no explicit seed (closed APIs do not expose a deterministic seed knob); the best-of-3 condition uses temperature 0.7 with three independent samples.
 
 \paragraph{Sampling.}
-The coverage split contains one record per (industry, period type, difficulty level) cell plus one forced-inconsistency record per code, drawn from a stratified deterministic sampler. The main split uses 8 records per cell and 4 per inconsistency code.
+The core evaluation split, stored under \texttt{data/coverage/} for backward compatibility, contains one record per (industry, period type, difficulty level) cell plus one forced-inconsistency record per code, drawn from a stratified deterministic sampler. The large generated split, stored under \texttt{data/main/}, uses 8 records per cell and 4 per inconsistency code.
 
 \paragraph{Bootstrap.}
 All confidence intervals are paired bootstrap with $n{=}5000$ resamples drawn over a shared record-id set, so baseline and treatment are compared on matched records. CIs are reported as percentile $95\%$.
 
 \paragraph{Code release.}
 The benchmark, deterministic generator, evaluation harness, ablation runner, and bootstrap analyzer are released as supplementary material. License is to be determined at acceptance.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{figures/fig_context_stress.pdf}
-\caption{Context stress on the anchor model: distractor-count effects and document-ordering effects.}
-\label{fig:context-stress}
-\end{figure}
 
 \begin{figure*}[t]
 \centering

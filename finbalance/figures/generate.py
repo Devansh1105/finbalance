@@ -23,6 +23,7 @@ from finbalance.figures.plots import (
     plot_failure_slices,
     plot_gap_repair_comparison,
     plot_model_accuracy,
+    plot_results_heatmap,
     plot_verifier_inconsistency_tradeoff,
     plot_verifier_model_deltas,
 )
@@ -43,6 +44,7 @@ def generate_all_figures(
     generated: dict[str, list[str]] = {}
     tasks: list[tuple[str, Callable[[], list[Path]]]] = [
         ("model_accuracy", lambda: plot_model_accuracy(results_root, out_root, min_records=min_model_records)),
+        ("results_heatmap", lambda: plot_results_heatmap(results_root, out_root, min_records=min_model_records)),
         ("aggregation_gap", lambda: plot_aggregation_gap(results_root, out_root, min_records=min_model_records)),
         ("ablation_deltas", lambda: plot_ablation_deltas(results_root, out_root)),
         ("verifier_model_deltas", lambda: plot_verifier_model_deltas(results_root, out_root, min_records=min_model_records)),

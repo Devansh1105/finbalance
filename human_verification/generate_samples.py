@@ -4,8 +4,8 @@ Run from the repo root:
     python human_verification/generate_samples.py
 
 This picks a stratified sample across difficulty, industry, period type, and
-standard/inconsistency status, then writes one Markdown file per record so a
-CPA or accounting expert can read and verify without touching JSON.
+standard/inconsistency status, then writes one Markdown file per record so an
+accounting expert can read and verify without touching JSON.
 
 The script regenerates `samples/`, `sample_manifest.json`, and
 `verification_responses.md` from scratch — so changing the targets below
