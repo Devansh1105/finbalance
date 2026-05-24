@@ -61,43 +61,33 @@ def diagram_dataset_packet(output_dir: Path) -> list[Path]:
 
 def diagram_generation_inference(output_dir: Path) -> list[Path]:
     apply_style()
-    fig, ax = plt.subplots(figsize=(8.1, 4.6))
+    fig, ax = plt.subplots(figsize=(7.7, 2.65))
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
 
-    _title(ax, 0.5, 0.96, "Deterministic Forward Generation, Hard Backward Inference")
-    _box(ax, 0.03, 0.74, 0.18, 0.13, "Design axes", "Industry\nPeriod\nDifficulty", BLUE, body_size=7.1)
-    _box(ax, 0.03, 0.54, 0.18, 0.13, "Accounting axes", "Tax regime\nFX/currency\nSubledgers", TEAL, body_size=7.1)
-    _box(ax, 0.03, 0.34, 0.18, 0.13, "Scenario axes", "Billing, collections\naccruals, leases/assets", ORANGE, body_size=7.1)
-    _box(ax, 0.03, 0.14, 0.18, 0.13, "Noise axes", "Distractors\nOrdering\nInconsistency", PURPLE, body_size=7.1)
+    ax.text(0.19, 0.93, "Generation", ha="center", va="center", fontsize=9.2, weight="bold", color=BLUE)
+    ax.text(0.81, 0.93, "Inference", ha="center", va="center", fontsize=9.2, weight="bold", color=RED)
 
-    _box(ax, 0.31, 0.58, 0.20, 0.14, "Scenario builders", "Create document seeds,\npostings, bank rows,\nsubledger updates", GREEN)
-    _box(ax, 0.31, 0.30, 0.20, 0.14, "Ledger replay", "Apply all postings to\nopening balance", GRAY)
+    _box(ax, 0.02, 0.72, 0.34, 0.13, "Task cell", "industry + period + difficulty", BLUE, body_size=7.1, header_h=0.048)
+    _box(ax, 0.02, 0.51, 0.34, 0.13, "Accounting profile", "currency + tax + subledgers", TEAL, body_size=7.1, header_h=0.048)
+    _box(ax, 0.02, 0.30, 0.34, 0.13, "Scenario builders", "documents + postings + bank rows", ORANGE, body_size=7.1, header_h=0.048)
+    _box(ax, 0.02, 0.09, 0.34, 0.13, "Ledger replay", "hidden entries + final balance sheet", GREEN, body_size=7.1, header_h=0.048)
 
-    _box(ax, 0.60, 0.58, 0.17, 0.14, "Rendered packet", "PDF-style assets\n+ OCR text", BLUE)
-    _box(ax, 0.60, 0.30, 0.17, 0.14, "Answer key", "Entries\nDoc refs\nBalance sheet", TEAL)
+    _box(ax, 0.395, 0.39, 0.21, 0.19, "Released record", "visible docs\nOCR text\naccount list", GRAY, body_size=6.9, header_h=0.048)
 
-    _box(ax, 0.84, 0.58, 0.13, 0.14, "Model view", "Mixed visible\ndocuments", ORANGE)
-    _box(ax, 0.84, 0.30, 0.13, 0.14, "Inverse task", "Recover hidden\nledger state", RED, body_size=7.2)
+    _box(ax, 0.64, 0.66, 0.34, 0.14, "Model evidence", "posting + support + distractors", BLUE, body_size=7.1, header_h=0.048)
+    _box(ax, 0.64, 0.40, 0.34, 0.14, "Inverse task", "entries + doc refs + balances", RED, body_size=7.1, header_h=0.048)
+    _box(ax, 0.64, 0.14, 0.34, 0.14, "Scoring", "parse + match + ledger replay", PURPLE, body_size=7.1, header_h=0.048)
 
-    for y in (0.80, 0.60, 0.40, 0.20):
-        _arrow(ax, (0.22, y), (0.31, 0.65 if y >= 0.5 else 0.37))
-    _arrow(ax, (0.51, 0.65), (0.60, 0.65))
-    _arrow(ax, (0.51, 0.37), (0.60, 0.37))
-    _arrow(ax, (0.68, 0.58), (0.68, 0.44))
-    _arrow(ax, (0.77, 0.65), (0.84, 0.65))
-    _arrow(ax, (0.90, 0.58), (0.90, 0.44))
-    _arrow(ax, (0.84, 0.37), (0.77, 0.37))
+    for y in (0.72, 0.51, 0.30):
+        _arrow(ax, (0.19, y), (0.19, y - 0.08))
+    _arrow(ax, (0.36, 0.385), (0.395, 0.48))
+    _arrow(ax, (0.605, 0.49), (0.64, 0.72))
+    _arrow(ax, (0.81, 0.66), (0.81, 0.54))
+    _arrow(ax, (0.81, 0.40), (0.81, 0.28))
 
-    _caption(
-        ax,
-        0.5,
-        0.055,
-        "Generation composes many simple deterministic choices; evaluation asks the model to invert the composition from noisy evidence.",
-    )
     return save_figure(fig, output_dir, "diag_generation_inference")
-
 
 def flow_codebase_pipeline(output_dir: Path) -> list[Path]:
     apply_style()
@@ -214,8 +204,8 @@ def _arrow(ax, start: tuple[float, float], end: tuple[float, float]) -> None:
         start,
         end,
         arrowstyle="-|>",
-        mutation_scale=10,
-        linewidth=1.1,
+        mutation_scale=11,
+        linewidth=1.25,
         color=GRAY,
         shrinkA=2,
         shrinkB=2,

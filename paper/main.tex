@@ -1,16 +1,34 @@
-% FinBalance (v2) — EMNLP 2026 submission
-% Entry point. Style file (e.g., emnlp2026.sty) must be placed alongside this file.
+% FinBalance --- EMNLP 2026 submission.
+% Top matter follows the official acl-org/acl-style-files template.
+% Do NOT modify the \documentclass or the acl package invocation below.
 
 \documentclass[11pt]{article}
 
-% Replace with the EMNLP 2026 style file once available; until then, keep packages.tex generic.
+% Change "review" to "final" to generate the final (sometimes called camera-ready) version.
+% Change to "preprint" to generate a non-anonymous version with page numbers.
+\usepackage[review]{acl}
+
+% Standard package includes from the ACL template.
+\usepackage{times}
+\usepackage{latexsym}
+
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files).
+\usepackage[T1]{fontenc}
+% This assumes your files are encoded as UTF8.
+\usepackage[utf8]{inputenc}
+
+% Improves the layout of the manuscript and typically saves some space.
+\usepackage{microtype}
+% Improves typewriter-font aesthetics.
+\usepackage{inconsolata}
+
+% Project-local additions kept in preamble/packages.tex so we never edit ACL top matter.
 \input{preamble/packages}
 \input{macros}
 
 \title{FinBalance: A Multi-Document Accounting Reconciliation Benchmark}
 
 \author{Anonymous Submission}
-\date{}
 
 \begin{document}
 \maketitle
@@ -26,7 +44,6 @@
 \input{sections/08_limitations}
 \input{sections/09_conclusion}
 
-\bibliographystyle{acl_natbib}
 \bibliography{references}
 
 \appendix

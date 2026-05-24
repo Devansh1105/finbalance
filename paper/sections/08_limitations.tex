@@ -1,10 +1,6 @@
 \section{Limitations}
-% TODO. Source: POINTS.md Section 7 (Methodology notes).
-% (1) Synthetic data — CPA validation in place, but no real-world OCR corpus tested.
-% (2) Single-seed runs at temp=0.0 for main results (variance not exhaustively characterized).
-% (3) Multi-model coverage — 6 models with full n=143; some pilot runs (gemini-3-pro, claude-sonnet-4.6, gpt-5-default) were partial and excluded. Llama-3.3-70b parse rate too low to include.
-% (4) Aggregation gap is present in 4 of 6 models tested; GPT-5-low and Grok-4.3 are exceptions — we report the partial generality honestly.
-% (5) Qwen-3-235b verifier run is partial (n=85, standard records only).
-% (6) self_consistency_k3 ablation uses a verifier-aware selection rule rather than vanilla majority vote; reported as "best-of-3 with ledger-guided selection."
-% (7) Verifier intervention degrades inconsistency detection on smaller models (−13 to −61pp); disclose as a trade-off.
-% (8) Doc-linking metric is per-entry strict; lenient variants in appendix.
+\label{sec:limitations}
+
+\benchmark{} is synthetic: every document is rendered from a deterministic generator. This is the deliberate trade for computable ground truth at scale; the cost is that the benchmark cannot evaluate OCR robustness or real-document idiosyncrasies. Our human validation (\S\ref{sec:human-validation}) addresses analogy and plausibility, not real-document fidelity. Headline numbers use a single decoding seed at temperature $0$; differences smaller than $\sim$3\,pp should be treated as not robust. Six models are evaluated at full $n{=}143$ on baseline; verifier replication is full on three and partial ($n{=}85$) on Qwen. The aggregation gap is established in four of six frontier models, not asserted universally. The \verifier{} degrades inconsistency-code detection on smaller models, as reported. Of the 75 records in the validation packet, 51 received double-reviewed sign-off; the remaining 24 are reserved for an extended camera-ready pass.
+
+\paragraph{Ethics.} The benchmark uses synthetic data; no real records, PII, or production accounting data are used. Reviewers participated on a volunteer basis. We follow the ACL Responsible NLP Research checklist (Appendix~\ref{appx:reproducibility}).

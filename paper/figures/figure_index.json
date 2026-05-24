@@ -11,9 +11,17 @@
     "paper/figures/flow_codebase_pipeline.pdf",
     "paper/figures/flow_codebase_pipeline.png"
   ],
+  "concept_heatmap": [
+    "paper/figures/fig_concept_heatmap.pdf",
+    "paper/figures/fig_concept_heatmap.png"
+  ],
   "context_stress": [
     "paper/figures/fig_context_stress.pdf",
     "paper/figures/fig_context_stress.png"
+  ],
+  "cost_pareto": [
+    "paper/figures/fig_cost_pareto.pdf",
+    "paper/figures/fig_cost_pareto.png"
   ],
   "dataset_composition": [
     "paper/figures/fig_dataset_composition.pdf",
@@ -23,9 +31,21 @@
     "paper/figures/diag_dataset_packet.pdf",
     "paper/figures/diag_dataset_packet.png"
   ],
+  "difficulty_trend": [
+    "paper/figures/fig_difficulty_trend.pdf",
+    "paper/figures/fig_difficulty_trend.png"
+  ],
+  "doc_refs_persistence": [
+    "paper/figures/fig_doc_refs_persistence.pdf",
+    "paper/figures/fig_doc_refs_persistence.png"
+  ],
   "failure_slices": [
     "paper/figures/fig_failure_slices.pdf",
     "paper/figures/fig_failure_slices.png"
+  ],
+  "gap_repair_comparison": [
+    "paper/figures/fig_gap_repair_comparison.pdf",
+    "paper/figures/fig_gap_repair_comparison.png"
   ],
   "generation_inference_diagram": [
     "paper/figures/diag_generation_inference.pdf",
@@ -35,20 +55,12 @@
     "paper/figures/fig_model_accuracy.pdf",
     "paper/figures/fig_model_accuracy.png"
   ],
-  "record_generation_flow": [
-    "paper/figures/flow_record_generation_detail.pdf",
-    "paper/figures/flow_record_generation_detail.png"
-  ],
-  "two_model_context_deltas": [
-    "paper/figures/fig_two_model_context_deltas.pdf",
-    "paper/figures/fig_two_model_context_deltas.png"
+  "verifier_inconsistency_tradeoff": [
+    "paper/figures/fig_verifier_inconsistency_tradeoff.pdf",
+    "paper/figures/fig_verifier_inconsistency_tradeoff.png"
   ],
   "verifier_model_deltas": [
     "paper/figures/fig_verifier_model_deltas.pdf",
     "paper/figures/fig_verifier_model_deltas.png"
-  ],
-  "verifier_transfer": [
-    "paper/figures/fig_verifier_transfer.pdf",
-    "paper/figures/fig_verifier_transfer.png"
   ]
 }

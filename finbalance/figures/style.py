@@ -78,8 +78,8 @@ def apply_style() -> None:
             "xtick.labelsize": 8,
             "ytick.labelsize": 8,
             "legend.fontsize": 8,
-            "figure.dpi": 160,
-            "savefig.dpi": 240,
+            "figure.dpi": 180,
+            "savefig.dpi": 300,
             "axes.spines.top": False,
             "axes.spines.right": False,
             "axes.grid": True,
@@ -111,6 +111,15 @@ def short_label(value: str) -> str:
 
 def wrap_label(value: str, width: int = 16) -> str:
     words = short_label(value).split()
+    return _wrap_words(words, width)
+
+
+def wrap_display_label(value: str, width: int = 16) -> str:
+    words = value.replace("_", " ").split()
+    return _wrap_words(words, width)
+
+
+def _wrap_words(words: list[str], width: int) -> str:
     lines: list[str] = []
     current: list[str] = []
     current_len = 0
@@ -135,4 +144,3 @@ def save_figure(fig, output_dir: Path, stem: str) -> list[Path]:
         fig.savefig(path, bbox_inches="tight", facecolor="white")
     plt.close(fig)
     return paths
-

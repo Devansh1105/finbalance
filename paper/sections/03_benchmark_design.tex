@@ -1,10 +1,28 @@
 \section{Benchmark Design}
-% TODO. Source: POINTS.md Section 1 (Benchmark design).
-% 3.1 Task formulation — multi-doc packet → entries (with doc_refs) + balance sheet + inconsistency flag/codes.
-% 3.2 Deterministic ledger ground truth — double-entry replay, contra-asset handling, retained-earnings closure.
-% 3.3 Coverage — 8 industries × 3 period types × 5 difficulty levels × concept flags.
-% 3.4 Inconsistency packets — 24 codes; 16% of records.
-% 3.5 Document types: posting, support, adjustment, distractor, opening_trial_balance.
-% 3.6 Stratified sampling — n=143 (120 standard + 23 inconsistency) used as headline evaluation set.
-% 3.7 Metrics — \bsexact{}, \bsrecon{}, \aggGap{}, \incCode{}, parse rate, strict_doc_ref_mismatch_rate.
-% 3.8 Ablation axes — prompt × visibility × tool variants (provider-neutral matrix).
+\label{sec:benchmark}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/diag_generation_inference.pdf}
+\caption{Benchmark construction and evaluation. The generator executes a deterministic accounting program to create document packets, hidden journal entries, balance sheets, and inconsistency labels. The model sees only the visible packet and account taxonomy; scoring replays its entries through the same ledger, enabling both \bsrecon{} and the rule-based \verifier{}.}
+\label{fig:generation-inference}
+\end{figure*}
+
+\paragraph{Task.}
+A \benchmark{} record is a packet of OCR-style accounting documents covering one fiscal period for a synthetic business: \emph{posting} documents (invoices, bills, statements, payment notices, vouchers), \emph{support} documents (contracts, schedules, rate sheets, certificates), \emph{adjustment} documents (period-end accruals, rollforwards, reclassifications), an \emph{opening trial balance}, and \emph{distractor} documents that are neutralised but visually plausible. Given the packet, the opening trial balance, and the allowed account list, the model outputs JSON with (i)~journal entries (balanced debit/credit postings with account, amount, date, and a \texttt{doc\_refs} list citing supporting documents); (ii)~the final balance sheet structured by section; and (iii)~an inconsistency flag, code, and justification.
+
+\paragraph{Deterministic ledger ground truth.}
+Accounting methodology is fixed by standard and admits a deterministic specification, which we exploit to generate every label algorithmically (Figure~\ref{fig:generation-inference}, left). The generator seeds an industry, difficulty, and period; selects business scenarios from per-industry schemas; constructs master data and subledgers for contracts, assets, leases, tax, and FX; emits document seeds and journal entries; renders the seeds into PDF-style files and OCR text; validates the clean packet; and replays the ledger to produce the final balance sheet. Every ground-truth label is verified to balance under double-entry invariants with contra-asset handling and a residual-equity opening solve that always satisfies $A{=}L{+}E$. No record is hand-labeled.
+
+\paragraph{Coverage.}
+Records are stratified over eight industries---professional services, field services, retail, wholesale distribution, healthcare clinics, property management, manufacturing, and subscription SaaS---three period types (month, quarter, year), and five difficulty levels (L1--L5). Difficulty scales document count, cross-document dependencies, jurisdictional complexity, and temporal lookback. \emph{Concept flags} mark the presence of ASC~606 revenue recognition, lease accounting, deferred tax, asset disposals, FX scenarios, multi-jurisdictional tax with exemptions, and rollforwards. We release a \emph{coverage} split ($n{=}143$; $120$ standard + $23$ forced-inconsistency) and a \emph{main} split ($n{=}1{,}052$; $960$ standard + $92$ inconsistency). The generator is deterministic given a seed, so additional stratified samples can be drawn at will.
+
+\paragraph{Inconsistency packets.}
+A 23-code taxonomy of deliberate contradictions covers banking, billing, contract, jurisdictional, and reconciliation errors, including closing-balance conflicts, invoice-total mismatches, tax-total mismatches, and invalid exemption certificates. In an inconsistency packet the generator first builds a clean record, then applies a code-specific perturbation that makes the packet unreconcilable. The model must set \texttt{has\_inconsistency=True}, emit the correct code, and not fabricate a reconciled balance sheet. Inconsistency packets are 16\% of the coverage split.
+
+\paragraph{Metrics.}
+\bsexact{} measures whether the model's self-reported balance sheet matches ground truth at $0.01$ tolerance. \bsrecon{} replays the model's entries through our ledger and checks the resulting balance sheet; the gap $\bsrecon{}-\bsexact{}$ is the \aggGap{}. Per-entry metrics are \emph{strict} (account, amount, date, and \texttt{doc\_refs} all correct) and \emph{lenient} (the same but ignoring \texttt{doc\_refs}); their gap quantifies document-linking failure. On inconsistency packets we report \incCode{}: rate of correct flag-plus-code. Parse rate is reported separately.
+
+\paragraph{Forced ledger verifier.}
+\label{sec:verifier}
+The verifier repurposes the same deterministic ledger as inference-time feedback. The model submits a candidate JSON answer; the harness parses it, replays the entries, computes the implied balance sheet, and compares it section-by-section against the model's reported balance sheet at $0.01$ tolerance. If they match (or the model has claimed inconsistency, in which case the comparison is skipped), no feedback is sent. Otherwise the harness composes a structured message listing per-section deltas (``\texttt{current\_assets: submitted=\$48{,}500; replayed=\$51{,}300; delta=\$-2{,}800}''). The message carries no entry-level hints and no ground-truth values; the model is given one turn to revise. The verifier is rule-based, training-free, model-agnostic, and adds at most one extra LLM call. The provider-neutral ablation harness (Appendix~\ref{appx:ablation-grid}) executes each evaluation as an \texttt{(prompt, visibility, tool)} triple with paired bootstrap inference.

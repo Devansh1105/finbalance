@@ -1,5 +1,4 @@
 \section{Conclusion}
-% TODO. Three sentences:
-% (1) Introduced \benchmark{}, a multi-document accounting reconciliation benchmark with deterministic ledger ground truth and 24 inconsistency codes across 8 industries and 5 difficulty levels.
-% (2) Identified a self-consistency aggregation gap in 4 of 6 frontier LLMs and a 52% doc-linking failure that persists under explicit citation pressure.
-% (3) Demonstrated that a deterministic forced-ledger-verifier intervention closes the aggregation gap across four model families, with the trade-off that inconsistency detection on smaller models degrades.
+\label{sec:conclusion}
+
+\benchmark{} reveals an aggregation gap in four of six frontier LLMs: balance sheets replayed from the models' own entries are substantially more accurate than the ones they report. A rule-based forced ledger verifier closes this gap by $+25$ to $+37$\,pp \bsexact{} across four model families with no fine-tuning, at a documented inconsistency-detection cost on smaller models. Capability is present in the underlying models; self-consistency is the bottleneck.

@@ -1,21 +1,30 @@
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{microtype}
+% Project-local package additions. The ACL style file already loads:
+%   xcolor, lineno (when [review]), etoolbox, geometry, caption, natbib, hyperref, url.
+% Do NOT re-load any of those here.
+
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{multirow}
 \usepackage{amsmath}
-\usepackage{latexsym}
+\usepackage{amssymb}
 \usepackage{xspace}
 \usepackage{enumitem}
-\usepackage{xcolor}
-\usepackage{tikz}
-\usepackage{hyperref}
-\usepackage{url}
-\usepackage{lineno}
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,backgrounds,calc}
 
-\definecolor{darkblue}{rgb}{0,0,0.5}
-\hypersetup{colorlinks=true, citecolor=darkblue, linkcolor=darkblue, urlcolor=darkblue}
+\captionsetup{font=small,labelfont=bf}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{3pt}
+\setlength{\belowcaptionskip}{0pt}
+
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{8pt plus 2pt minus 2pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\setlength{\@dblfptop}{0pt}
+\setlength{\@dblfpsep}{8pt plus 2pt minus 2pt}
+\setlength{\@dblfpbot}{0pt plus 1fil}
+\makeatother

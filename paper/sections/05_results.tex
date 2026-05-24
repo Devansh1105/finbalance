@@ -1,8 +1,49 @@
 \section{Results}
-% TODO. Lead with the three headline findings from POINTS.md Section 2.
-% 5.1 Aggregation gap (POINTS 2.1) — \bsrecon{} vs \bsexact{} gap of 25–37pp on 4 of 6 frontier models. GPT-5-low and Grok-4.3 are exceptions with no gap.
-% 5.2 Forced ledger verifier closes the gap (POINTS 2.2 + 2.2a) — +25–36pp \bsexact{} replicated across 4 model families. Table: per-model bl/ver/Δ/CI.
-% 5.3 Verifier inconsistency-detection trade-off (POINTS 2.2b) — −13 to −61pp \incCode{} on smaller models. Honest disclosure.
-% 5.4 Doc-linking failure (POINTS 2.3 + 2.3a) — 52% of correct entries cite wrong docs; persists under explicit prompting pressure (doc_refs_strict −1.4pp only).
-% 5.5 Best-of-3 ledger-guided selection (POINTS 3.5) — closes ~40% of what the verifier closes; sampling alone < iterative revision.
-% 5.6 Context-stress findings (POINTS 2.5) — distractor saturation, position-bias on inconsistency detection.
+\label{sec:results}
+
+\benchmark{} is difficult for frontier LLMs: no model in our six-LLM panel exceeds 51\% \bsexact{}, and the two strongest---GPT-5-low (51\%) and Grok-4.3 (32\%)---do so for qualitatively different reasons (\S\ref{sec:analysis}). The remaining four cluster between $0.025$ and $0.250$. Figure~\ref{fig:aggregation-gap} decomposes accuracy by plotting \bsexact{} against \bsrecon{}, the balance sheet obtained by deterministically replaying the model's own entries. In four of six models the two metrics disagree dramatically: Gemini~3 Flash writes entries whose replay yields $0.625$ \bsrecon{} but reports a balance sheet matching ground truth only $0.250$ of the time, an \aggGap{} of $37.5$\,pp. DeepSeek V3.2 ($+29.2$\,pp), Claude Haiku~4.5 ($+28.3$\,pp), and Qwen~3 235B ($+25.0$\,pp) show the same pattern. The model has the components of a correct answer in its own intermediate output and fails to aggregate them into a self-consistent statement.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/fig_aggregation_gap.pdf}
+\caption{\bsrecon{} versus \bsexact{} on the coverage split. Four of six models show a 25--38\,pp aggregation gap; GPT-5-low and Grok-4.3 do not.}
+\label{fig:aggregation-gap}
+\end{figure*}
+
+If the gap is a self-consistency failure rather than an entries deficit, then giving the model a closed-form view of its own inconsistency should close it. We test this with the \verifier{} of \S\ref{sec:verifier}: the same ledger that produces our ground truth compares the model's reported balance sheet against the one its entries imply, returning per-section deltas as one-shot feedback. The model is given one turn to revise. Figure~\ref{fig:verifier-effects} reports the effect across four gap-having model families. \bsexact{} gains $+25$ to $+37$\,pp, all significant at $95\%$ paired bootstrap. The intervention requires no fine-tuning, no separate verifier model, and feeds no ground-truth values or entry-level hints---only the model's own implied-versus-reported deltas. Recovering this much \bsexact{} with no parametric change supports the self-consistency reading.
+
+The intervention has a real cost, which we report rather than suppress. Figure~\ref{fig:verifier-effects} (right panel, \texttt{inc\_code} column) shows the same verifier's effect on \incCode{} (23 forced-inconsistency packets). Gemini~3 Flash loses $-13$\,pp (not significant), but Claude Haiku~4.5 loses $-52$\,pp and DeepSeek V3.2 loses $-61$\,pp, both significant. When an inconsistency packet's first-pass submission does not raise the flag, the verifier sends ledger deltas instead of giving the model a chance to reconsider whether the documents themselves contradict; the deltas bias the next turn toward reconciling rather than flagging. The trade-off is mild for strong detectors and severe for weak ones.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/fig_results_heatmap.pdf}
+\caption{Baseline vs.\ \verifier{} (1-pass) across six models and four metrics. Values are percent rates; color encodes ``higher is better,'' with \texttt{doc\_refs err} inverted so green denotes fewer errors. The right panel covers only the four gap-having models (no verifier run for GPT-5-low and Grok-4.3; see Table~\ref{tab:no-gap-mechanism}). The verifier moves the \bsexact{} column substantially and the \texttt{inc\_code} column negatively; the \bsrecon{} and \texttt{doc\_refs err} columns barely move---only the aggregation step is affected.}
+\label{fig:verifier-effects}
+\end{figure*}
+
+The aggregation gap is one of two large failure modes; the other is document-linking. On the baseline anchor run, $52\%$ of journal entries with correct account and amount cite the \emph{wrong} supporting documents---which is why the strict joint metric collapses to $5\%$ despite a $57\%$ account-and-amount entry-match rate. A citation-pressure prompt moves the strict mismatch rate from $0.524$ to $0.510$ ($-1.4$\,pp, CI $[-2.9, 0.0]$), borderline at best. Under an \emph{evidence-only} oracle restricting visible documents to ground-truth-cited evidence, the same rate drops by $-26.4$\,pp (CI $[-29.8, -23.0]$). The failure is retrieval-disambiguation, not prompt compliance (Figure~\ref{fig:doc-refs-persistence}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_doc_refs_persistence.pdf}
+\caption{Document-linking failure persists under explicit citation pressure, but drops under an evidence-only oracle.}
+\label{fig:doc-refs-persistence}
+\end{figure}
+
+An alternative to verifier-driven revision is to sample multiple candidates and pick. A best-of-3 condition at temperature $0.7$ with a deterministic ledger-aware selector closes the gap by $+13.3$\,pp \bsexact{} ($n{=}45$ paired); the \verifier{} closes $+32.5$\,pp on the same model. We are explicit that the selector is ledger-aware---this is not pure majority-vote self-consistency---but the comparison is informative: picking recovers $\sim$40\% of the available gain, revising recovers the remainder. The verifier's advantage is not access to the ledger (both conditions have it) but the chance to act on what the ledger says.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_gap_repair_comparison.pdf}
+\caption{Best-of-3 selection recovers part of the aggregation gap; one verifier revision recovers substantially more on the same target records.}
+\label{fig:gap-repair}
+\end{figure}
+
+Figure~\ref{fig:ablation-deltas} summarises the full ablation matrix on the anchor model. Forced-verifier variants are the only treatments that move \bsexact{} substantially upward; removing scaffolding (allowed accounts, support docs) is the most damaging intervention. Adding $5$, $15$, or $30$ distractor documents decreases \bsrecon{} by $16.7$, $15.8$, and $18.3$\,pp respectively: the penalty saturates after the first few.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_ablation_deltas.pdf}
+\caption{Ablation effects on the anchor model. Dots are paired-bootstrap mean deltas vs.\ baseline; visibility stresses dominate the negative tail. Full grid in Appendix~\ref{appx:ablation-grid}.}
+\label{fig:ablation-deltas}
+\end{figure}

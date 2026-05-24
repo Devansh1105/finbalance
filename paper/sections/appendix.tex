@@ -1,16 +1,185 @@
-% Appendix entry point. Add subsections via \input{} or write inline.
+% Appendix entry point. Anonymity is preserved throughout.
 
-\section{Dataset details}
-% TODO. Concept-flag taxonomy; document-type definitions; industry list; inconsistency-code list (24 codes); difficulty-level rubric.
+\section{Example Packet}
+\label{appx:packet-example}
 
-\section{Ablation matrix}
-% TODO. Full table of prompt × visibility × tool variants with definitions.
+Figure~\ref{fig:dataset-packet-appx} shows a schematic view of one full \benchmark{} record: a packet of posting, support, adjustment, and distractor documents that the model must reconcile into journal entries and a final balance sheet. The complete OCR text and ground-truth labels for individual records are released alongside the dataset.
 
-\section{Per-model results}
-% TODO. Per-model breakdown for all 6 models.
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/diag_dataset_packet.pdf}
+\caption{An example record packet. Posting documents directly imply journal entries; support documents provide inputs (rate cards, schedules, certificates) referenced from postings via \texttt{doc\_refs}; adjustment documents (period-end accruals, rollforwards) produce closing entries; distractors should not appear in any entry.}
+\label{fig:dataset-packet-appx}
+\end{figure*}
 
-\section{Human verification protocol}
-% TODO. CPA recruitment, instrument, IAA computation. Reference \texttt{human\_verification/} folder.
+\section{Dataset Details}
+\label{appx:dataset-details}
+
+\paragraph{Document roles.}
+Every document in a packet carries a \texttt{role} tag that determines how the ledger ground-truth generator handled it.
+\begin{itemize}[leftmargin=*,topsep=2pt,itemsep=1pt]
+\item \texttt{posting\_doc} --- directly generates one or more journal entries (e.g., invoices, bills, payment notices, journal vouchers).
+\item \texttt{support\_doc} --- provides inputs for postings derived from other documents (rate cards, contracts, schedules, tax certificates) and may appear in the \texttt{doc\_refs} of an entry.
+\item \texttt{adjustment\_doc} --- period-end corrections such as depreciation schedules, rollforwards, and reclassification memos.
+\item \texttt{distractor\_doc} --- intentionally neutralised; should not generate any entry.
+\item \texttt{opening\_trial\_balance} --- starting balances only; never generates entries.
+\end{itemize}
+
+\paragraph{Industries.}
+Professional services, field services, retail, wholesale distribution, healthcare clinic, property management, manufacturing, and subscription SaaS.
+
+\paragraph{Concept flags.}
+Each record carries boolean flags marking the presence of: ASC~606 bundled SaaS revenue recognition with SSP allocation; fixed asset disposals with NBV / gain-or-loss computation; deferred tax from book/tax depreciation differences; lease accounting with ROU asset/liability schedules and modifications; foreign-currency invoice, settlement, and remeasurement scenarios; multi-jurisdictional sales tax (US sales tax, India GST, with exemption certificates); tax exemptions; multi-invoice payments; interbank transfers; reclassifications; and period-end rollforwards.
+
+\paragraph{Inconsistency codes.}
+The released negative-control taxonomy contains 23 machine-readable codes, grouped here for readability: banking and transfers (closing balance, statement balance, transfer); invoicing and payments (invoice total, payment allocation, duplicate reference); tax and jurisdiction (tax rate, tax total, input tax, exemption conflict, jurisdictional tax); assets, inventory, leases, and deferred tax (disposal, rollforward, remeasurement, schedule, and deferred-tax conflicts); and contract/revenue support (SSP allocation, performance-obligation release, reclassification support, schedule rollforward, and FX settlement or exchange-rate conflicts).
+
+\paragraph{Difficulty rubric.}
+\begin{itemize}[leftmargin=*,topsep=2pt,itemsep=1pt]
+\item \textbf{L1:} single-thread postings, no tax beyond basic, no FX, no advanced concepts; $\sim$8--12 documents.
+\item \textbf{L2:} cross-document dependencies (e.g., invoice $\to$ payment receipt), straightforward tax.
+\item \textbf{L3:} multi-jurisdictional tax with exemptions, FX scenarios, or simple rollforwards; $\sim$15--20 documents.
+\item \textbf{L4:} ASC~606 bundled contracts, fixed-asset disposals, deferred tax, or lease accounting; $\sim$20--30 documents with longer temporal lookback.
+\item \textbf{L5:} multiple concurrent advanced concepts (e.g., ASC~606 + FX + deferred tax) and/or lease modifications; $\sim$25--35 documents.
+\end{itemize}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig_dataset_composition.pdf}
+\caption{Coverage-split composition. The released exploratory split spans eight industries, five difficulty levels, three period types, and a broad packet surface of posting, support, adjustment, distractor, and opening-balance documents.}
+\label{fig:dataset-composition}
+\end{figure*}
+
+\section{Per-Concept Results}
+\label{appx:per-concept}
+
+Table~\ref{tab:per-concept} reports baseline \bsrecon{} by concept flag across all six models. Per-concept subset sizes on the coverage split are small ($n{\le}18$ per concept, with most concepts at $n{=}6$); rates are descriptive rather than inferential. The \texttt{has\_rollforward} flag has the largest subset ($n{=}53$) and shows the gap-having pattern across all four gap-having models (Gemini~51\%, DeepSeek~26\%, Qwen~17\%, Haiku~15\%) with GPT-5-low and Grok-4.3 in the same band by entry quality.
+
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.02}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Concept flag & Gemini & GPT-5 & Haiku & Grok & DeepSeek & Qwen \\
+\midrule
+ASC~606 ($n{=}6$)        & 17 & 33 & 17 & 0  & 0  & 17 \\
+Asset disposal ($n{=}6$) & 17 & 0  & 0  & 0  & 0  & 0  \\
+Deferred tax ($n{=}3$)   & 0  & 0  & 0  & 0  & 0  & 0  \\
+Lease ($n{=}6$)          & 17 & 0  & 0  & 0  & 0  & 0  \\
+Tax exemption ($n{=}6$)  & 50 & 0  & 0  & 0  & 33 & 17 \\
+FX ($n{=}6$)             & 0  & 17 & 0  & 0  & 0  & 0  \\
+Rollforward ($n{=}53$)   & 51 & 42 & 15 & 21 & 26 & 17 \\
+\bottomrule
+\end{tabular}
+\caption{Baseline \bsrecon{} (\%) by concept flag on the coverage split. Subset sizes are small for most concepts, so these rates are descriptive; the larger rollforward subset mirrors the headline gap pattern.}
+\label{tab:per-concept}
+\end{table*}
+
+\section{Detailed Metrics}
+\label{appx:metrics-detail}
+
+\paragraph{Metric definitions.}
+\bsexact{} requires every section of the model's reported balance sheet (current and non-current assets, current and non-current liabilities, equity) to match ground truth at 0.01 tolerance. \bsrecon{} runs the model's entries through our ledger, computes the implied balance sheet, and applies the same equality check. The strict joint entry match requires account, amount, date, and \texttt{doc\_refs} all correct; the lenient variant relaxes \texttt{doc\_refs}. The strict \texttt{doc\_refs} mismatch rate is the proportion of entries with correct account-and-amount whose \texttt{doc\_refs} differs from ground truth.
+
+\paragraph{Parse rate.}
+Across the six models at $n{=}143$, parse-success rates are $\geq 98\%$ for all six. Llama-3.3-70B was excluded from the panel for parse-rate reasons (33\%); we report this only as background for the panel choice.
+
+\paragraph{Verifier 2-pass effect.}
+For Gemini~3 Flash, the 2-pass verifier closes \bsexact{} by $+35.8$\,pp (CI $[+26.9, +44.9]$) compared with $+32.5$\,pp at 1-pass, and degrades \incCode{} by $-21.7$\,pp (CI $[-40.0, -5.3]$) compared with $-13.0$\,pp at 1-pass. The 2-pass variant adds $\sim$56\% inference cost; we recommend 1-pass as the practical operating point.
+
+\section{Ablation Matrix}
+\label{appx:ablation-grid}
+
+Table~\ref{tab:ablation-grid} enumerates every \texttt{AblationSpec} triple (prompt, visibility, tool) evaluated on the anchor model. Each cell is a single evaluation run on the coverage split. We omit the cross-product cells with neither additional prompt nor visibility variation but include all unary axis variants and the multi-axis \verifier{} variants.
+
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.05}
+\begin{tabularx}{\linewidth}{@{}p{2.05cm}p{5.35cm}X@{}}
+\toprule
+Axis & Variants evaluated & Diagnostic purpose \\
+\midrule
+Prompt
+& baseline; guided private solve; self-check; strict document-citation pressure; explicit balance reconstruction
+& Separates baseline prompting, task-specific workflow, final verification, document-citation pressure, and aggregation instructions. \\
+\addlinespace[2pt]
+Visibility
+& full packet; OCR-only; no allowed accounts; no distractors; no support docs; evidence-only oracle; evidence + 5/15/30 distractors; evidence relevant-last
+& Tests whether failures arise from missing evidence, account taxonomy, metadata, distractors, document position, or context length. \\
+\addlinespace[2pt]
+Tool / intervention
+& no tools; calculator; document search; ledger check; full tool agent; best-of-3 self-consistency; forced ledger verifier; two-pass forced verifier
+& Tests passive tool availability, ledger-aware candidate selection, and iterative rule-based correction. \\
+\bottomrule
+\end{tabularx}
+\caption{Ablation matrix. We run unary axis variants and targeted multi-axis interventions rather than the full prompt $\times$ visibility $\times$ tool cross-product. This keeps the diagnostic surface broad while controlling cost.}
+\label{tab:ablation-grid}
+\end{table*}
+
+\section{Human Verification Protocol}
+\label{appx:human-protocol}
+
+\paragraph{Reviewer recruitment.}
+The validation packet was reviewed by two practising finance professionals working at major U.S.\ investment banks. Both reviewers had prior accounting and reconciliation responsibilities in their day-to-day work and were given a one-paragraph briefing on the benchmark's scope (analogy of reconciliation paperwork; not OCR fidelity).
+
+\paragraph{Instrument.}
+Each of 75 records was rendered as a self-contained Markdown file with seven sections: (1) record context (industry, period, currency, tax regime, difficulty, inconsistency flag), (2) the allowed-account-name list, (3) opening trial balance, (4) every document with its OCR text and role tag, (5) ground-truth journal entries, (6) ground-truth balance sheet, and (7) the verification form. The form contains six questions: Q1 document analogy, Q2 entry correctness, Q3 entry completeness, Q4 \texttt{doc\_refs} support, Q5 difficulty calibration, and Q7 overall verdict. Each question offers three options (positive, mixed, negative) plus a free-text notes field.
+
+\paragraph{Protocol.}
+The original plan was a symmetric split with a 25-record IAA overlap. As executed, 51 of 75 records received double-reviewed sign-off under the protocol used in this paper; the remaining 24 records (all at L3--L4 standard difficulty) are reserved for an extended camera-ready validation pass and are not used in any claim above. Records were assigned by index; reviewers worked independently and did not see each other's responses.
+
+\paragraph{Results.}
+Table~\ref{tab:iaa} reports per-question raw agreement and per-reviewer marginal positive rates on the 50-record double-reviewed subset.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccc}
+\toprule
+Question & R1 + & R2 + & Agree.\ & $\kappa$ \\
+\midrule
+Q1 Doc.\ analogy   & 92\%  & 100\% & 92\%  & deg. \\
+Q2 Entry correct   & 94\%  & 100\% & 94\%  & deg. \\
+Q3 Entry complete  & 100\% & 100\% & 100\% & 1.0 \\
+Q4 \texttt{doc\_refs}   & 92\%  & 100\% & 92\%  & deg. \\
+Q5 Difficulty      & 100\% & 100\% & 100\% & 1.0 \\
+Q7 Overall verdict & 86\%  & 100\% & 86\%  & deg. \\
+\bottomrule
+\end{tabular}
+\caption{Inter-annotator agreement on the 50-record double-reviewed subset. ``R1+'' and ``R2+'' are per-reviewer positive (first-option) rates. Cohen's $\kappa$ is degenerate (``deg.'') on questions where Reviewer~2's responses had no variance.}
+\label{tab:iaa}
+\end{table}
 
 \section{Reproducibility}
-% TODO. Seeds, sampling strategy, bootstrap details, code release URL.
+\label{appx:reproducibility}
+
+\paragraph{Seeds.}
+Dataset generation uses seed 42. Headline LLM evaluations use temperature 0.0 with no explicit seed (closed APIs do not expose a deterministic seed knob); the best-of-3 condition uses temperature 0.7 with three independent samples.
+
+\paragraph{Sampling.}
+The coverage split contains one record per (industry, period type, difficulty level) cell plus one forced-inconsistency record per code, drawn from a stratified deterministic sampler. The main split uses 8 records per cell and 4 per inconsistency code.
+
+\paragraph{Bootstrap.}
+All confidence intervals are paired bootstrap with $n{=}5000$ resamples drawn over a shared record-id set, so baseline and treatment are compared on matched records. CIs are reported as percentile $95\%$.
+
+\paragraph{Code release.}
+The benchmark, deterministic generator, evaluation harness, ablation runner, and bootstrap analyzer are released as supplementary material. License is to be determined at acceptance.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_context_stress.pdf}
+\caption{Context stress on the anchor model: distractor-count effects and document-ordering effects.}
+\label{fig:context-stress}
+\end{figure}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/fig_failure_slices.pdf}
+\caption{Failure slices across the six-model panel. Industry and ledger-family panels show \bsrecon{} accuracy (higher is better); the error-taxonomy panel shows affected standard records (lower is better).}
+\label{fig:failure-slices}
+\end{figure*}

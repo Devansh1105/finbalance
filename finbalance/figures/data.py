@@ -172,26 +172,51 @@ def load_bootstrap_comparisons(results_dir: Path, relative_dir: str) -> dict[tup
 
 def subset_baseline_for_run(baseline: ResultRun, target: ResultRun) -> ResultRun | None:
     target_rows_path = target.path / "per_record_results.jsonl"
-    baseline_rows_path = baseline.path / "per_record_results.jsonl"
-    if not target_rows_path.exists() or not baseline_rows_path.exists():
+    if not target_rows_path.exists():
         return None
     target_ids = {row["record_id"] for row in load_jsonl(target_rows_path) if row.get("record_id")}
     if not target_ids:
         return None
-    baseline_rows = [row for row in load_jsonl(baseline_rows_path) if row.get("record_id") in target_ids]
-    if not baseline_rows:
+    return subset_run_for_record_ids(baseline, target_ids, label=f"{baseline.label} subset")
+
+
+def subset_run_for_record_ids(
+    run: ResultRun,
+    record_ids: set[str],
+    *,
+    label: str | None = None,
+) -> ResultRun | None:
+    rows_path = run.path / "per_record_results.jsonl"
+    if not rows_path.exists() or not record_ids:
         return None
-    summary = _summarize_per_record_rows(baseline_rows)
-    evaluation = dict(baseline.evaluation)
+    rows = [row for row in load_jsonl(rows_path) if row.get("record_id") in record_ids]
+    if not rows:
+        return None
+    summary = _summarize_per_record_rows(rows)
+    evaluation = dict(run.evaluation)
     evaluation["summary"] = summary
     return ResultRun(
-        label=f"{baseline.label} subset",
-        ablation_name=baseline.ablation_name,
-        model_id=baseline.model_id,
-        path=baseline.path,
+        label=label or f"{run.label} subset",
+        ablation_name=run.ablation_name,
+        model_id=run.model_id,
+        path=run.path,
         summary=summary,
         evaluation=evaluation,
     )
+
+
+def record_ids_for_run(run: ResultRun) -> set[str]:
+    rows_path = run.path / "per_record_results.jsonl"
+    if not rows_path.exists():
+        return set()
+    return {row["record_id"] for row in load_jsonl(rows_path) if row.get("record_id")}
+
+
+def doc_ref_mismatch_rate(run: ResultRun) -> float:
+    expected = float(run.summary.get("expected_entry_count") or 0.0)
+    if expected <= 0:
+        return float(run.summary.get("entries_accounting_correct_but_doc_refs_wrong_rate") or 0.0)
+    return float(run.summary.get("doc_refs_mismatch_count") or 0.0) / expected
 
 
 def _summarize_per_record_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:

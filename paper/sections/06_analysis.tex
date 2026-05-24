@@ -1,8 +1,41 @@
 \section{Analysis}
-% TODO. Lead with the per-slice analyses from POINTS.md Sections 4–5.
-% 6.1 Slice by difficulty (POINTS 4.1) — gap grows monotonically with L1→L5.
-% 6.2 Slice by industry (POINTS 4.2) — verifier rescues easy industries to ceiling; hard industries (retail, SaaS) limited by entry quality.
-% 6.3 Per-concept analysis — by concept flag (ASC 606, lease, deferred tax, etc.). [Pending: free analysis on existing data.]
-% 6.4 Error taxonomy (POINTS 5) — doc-linking 92.5%, omissions 42.5%, balance reconstruction 37.5%, hallucinated extras 30.8%, arithmetic 20.8%, account selection 8.3%.
-% 6.5 Difficulty decomposition — context-length effect (~17pp) vs accounting-complexity effect (~37pp). Figure.
-% 6.6 Why GPT-5-low and Grok-4.3 lack the aggregation gap [Pending: cross-model entry/BS-path analysis on existing data].
+\label{sec:analysis}
+
+\paragraph{Why two models lack the gap.}
+The two no-gap models reach that state by qualitatively different routes (Table~\ref{tab:no-gap-mechanism}). GPT-5-low submits $92\%$ of expected entries and achieves a high \bsexact{} ($0.508$) essentially equal to its \bsrecon{}: genuinely competent and self-consistent. Grok-4.3 reports \bsexact{} $0.317$ while submitting only $40\%$ of expected entries; its \bsrecon{} is also low ($0.350$), and its self-consistency is the trivial consequence of reporting a sparse balance sheet matching sparse entries. ``Self-consistent because competent'' and ``self-consistent because under-answering'' are different states.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccc}
+\toprule
+Model & \bsexact{} & \bsrecon{} & gap & entry ratio \\
+\midrule
+Gemini~3 Flash    & 0.250 & 0.625 & $+0.375$ & 0.95 \\
+GPT-5-low         & 0.508 & 0.500 & $-0.008$ & 0.92 \\
+Claude Haiku~4.5  & 0.042 & 0.325 & $+0.283$ & 0.55 \\
+Grok-4.3          & 0.317 & 0.350 & $+0.033$ & 0.40 \\
+DeepSeek V3.2     & 0.075 & 0.367 & $+0.292$ & 0.59 \\
+Qwen~3 235B       & 0.025 & 0.275 & $+0.250$ & 0.93 \\
+\bottomrule
+\end{tabular}
+\caption{Three regimes on standard records. \emph{Entry ratio} = predicted-entry count / expected count. Grok-4.3's apparent self-consistency is the artefact of submitting $40\%$ of expected entries; GPT-5-low's is genuine.}
+\label{tab:no-gap-mechanism}
+\end{table}
+
+\paragraph{Where the gap concentrates.}
+Stratified by difficulty on the anchor model, baseline \bsexact{} collapses from $0.88$ at L1 to $0.00$ at L5, while \bsrecon{} declines more gently---the \aggGap{} peaks around L2--L3 at $\sim$50\,pp and narrows at L4--L5 only because \bsrecon{} itself begins to fall (Figure~\ref{fig:difficulty-trend}). The \verifier{} closes the gap to within $\sim$10\,pp at every level, demonstrating that the recovery is not restricted to easy records. Stratified by industry, easier industries (healthcare clinic, property management) reach \bsexact{} ceilings of $0.80$--$1.00$ under the verifier, while harder ones (retail, SaaS) remain entry-limited. Per-concept slicing is in Appendix~\ref{appx:per-concept}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_difficulty_trend.pdf}
+\caption{The aggregation gap widens with difficulty on the anchor model; the forced verifier tracks the replayed-entry ceiling much more closely than the one-shot reported balance sheet.}
+\label{fig:difficulty-trend}
+\end{figure}
+
+\paragraph{Error taxonomy.}
+On $120$ standard records, the anchor model exhibits document-linking failures on $92.5\%$ of records ($981$ entries), omissions on $42.5\%$ ($235$ entries), hallucinated extras on $30.8\%$ ($139$ entries), arithmetic errors on $20.8\%$ ($37$ entries), and account-selection errors on only $8.3\%$ ($14$ entries). The most knowledge-dependent failure is the rarest; the dominant failure (\texttt{doc\_refs}) is roughly $9\times$ the next-worst category by entry count.
+
+\paragraph{Tool bypass.}
+Across four lightly-offered tool variants, total tool calls across all records was \emph{zero}: models emitted the final JSON on the first turn and the agent loop short-circuited via submission detection. This motivates the design of the verifier as a feedback signal the model must process, not a tool it may decline.
