@@ -5,7 +5,7 @@
 The no-gap models differ. \mbox{GPT-5 submits} $91\%$ of expected entries and has \bsexact{} essentially equal to \bsrecon{} ($0.465$ vs.\ $0.463$). \mbox{Grok-4.3 submits} only $40\%$ of expected entries, so its balance sheet is internally aligned but incomplete (Appendix Table~\ref{tab:no-gap-mechanism}).
 
 \paragraph{Where the gap concentrates.}
-On the anchor model, \bsexact{} drops from $0.95$ at L1 to $0.02$ at L5 while \bsrecon{} declines more gently; the \aggGap{} peaks near L3 at roughly $46$\,pp (Figure~\ref{fig:difficulty-trend}). Ledger feedback narrows the gap at every level. Industry and concept slices in Appendix~\ref{appx:per-concept} show that retail and SaaS remain entry-limited.
+On the anchor model, \bsexact{} drops from $0.95$ at L1 to $0.02$ at L5 while \bsrecon{} declines more gently; the \aggGap{} peaks near L3 at roughly $46$\,pp (Figure~\ref{fig:difficulty-trend}). Ledger feedback narrows the gap at every level. Industry, ledger-family, and concept slices in Appendix~\ref{appx:per-concept} and Figure~\ref{fig:failure-slices} show where the benchmark stresses models beyond the aggregate score.
 
 \paragraph{Error taxonomy.}
-On the 480 standard records, document-linking failures dominate the anchor model: $93.1\%$ of records and $3890$ entries, compared with $1033$ omissions, $584$ extras, $202$ arithmetic errors, and $85$ account-selection errors. The hard part is grounding plausible entries to the right evidence. For detailed model-failure slices, see Appendix Figure~\ref{fig:failure-slices}.
+On the 480 standard records, document-linking failures dominate the anchor model: $93.1\%$ of records and $3890$ entries, compared with $1033$ omissions, $584$ extras, $202$ arithmetic errors, and $85$ account-selection errors. The hard part is grounding plausible entries to the right evidence. Appendix Figure~\ref{fig:failure-slices} breaks failures down by industry, ledger family, and error type.

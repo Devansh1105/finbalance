@@ -269,7 +269,6 @@ def plot_verifier_model_deltas(results_dir: Path, output_dir: Path, *, min_recor
     apply_style()
     model_dirs = [
         ("Gemini 3 Flash", "gemini3flash_promoted_coverage_full_clean"),
-        ("DeepSeek V3.2", "deepseek_v32_sweep"),
         ("Qwen3 235B", "qwen3_235b_sweep_baseline"),
         ("Claude Haiku 4.5", "claude_haiku45_sweep_baseline"),
     ]
@@ -279,7 +278,6 @@ def plot_verifier_model_deltas(results_dir: Path, output_dir: Path, *, min_recor
     ]
     model_colors = {
         "Gemini 3 Flash": BLUE,
-        "DeepSeek V3.2": ORANGE,
         "Qwen3 235B": TEAL,
         "Claude Haiku 4.5": PURPLE,
     }

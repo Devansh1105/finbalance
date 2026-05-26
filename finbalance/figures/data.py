@@ -39,7 +39,6 @@ DEFAULT_BASELINE_RUNS: tuple[tuple[str, str], ...] = (
 
 DEFAULT_VERIFIER_MODEL_DIRS: tuple[tuple[str, str], ...] = (
     ("Gemini 3 Flash", "gemini3flash_promoted_coverage_full_clean"),
-    ("DeepSeek V3.2", "deepseek_v32_sweep"),
     ("Qwen3 235B", "qwen3_235b_sweep_baseline"),
     ("Claude Haiku 4.5", "claude_haiku45_sweep_baseline"),
 )
