@@ -297,7 +297,7 @@ Expected code & Meaning & Detected \\
 \section{Per-Concept Results}
 \label{appx:per-concept}
 
-Table~\ref{tab:per-concept} reports baseline \bsrecon{} by concept flag across all six models. The terms are defined in Appendix~\ref{appx:dataset-details}; in short, they mark which accounting concept appears in the record, not a separate dataset split. The core evaluation split is built to cover the authored scenario families and concept flags at least once, while the released generator can create larger concept-targeted samples for training, stress tests, or future evaluation splits. The rollforward flag appears most often in the core split ($n{=}53$) and shows the gap-having pattern across all four gap-having models (Gemini~51\%, DeepSeek~26\%, Qwen~17\%, Haiku~15\%) with GPT-5 and Grok-4.3 in the same band by entry quality.
+Table~\ref{tab:per-concept} reports baseline \bsrecon{} by concept flag across all six models. The terms are defined in Appendix~\ref{appx:dataset-details}; in short, they mark which accounting concept appears in the record, not a separate dataset split. The core evaluation split is built to cover the authored scenario families and concept flags at least once, while the released generator can create larger concept-targeted samples for training, stress tests, or future evaluation splits. The period-rollforward flag appears most often in the core split and shows the gap-having pattern across all four gap-having models, with GPT-5 and Grok-4.3 in the same band by entry quality.
 
 \begin{table*}[t]
 \centering
@@ -308,16 +308,16 @@ Table~\ref{tab:per-concept} reports baseline \bsrecon{} by concept flag across a
 \toprule
 Concept flag & Gemini & GPT-5 & Haiku & Grok & DeepSeek & Qwen \\
 \midrule
-Revenue recognition ($n{=}6$) & 17 & 33 & 17 & 0  & 0  & 17 \\
-Asset disposal ($n{=}6$)      & 17 & 0  & 0  & 0  & 0  & 0  \\
-Deferred tax ($n{=}3$)        & 0  & 0  & 0  & 0  & 0  & 0  \\
-Lease accounting ($n{=}6$)    & 17 & 0  & 0  & 0  & 0  & 0  \\
-Tax exemption ($n{=}6$)       & 50 & 0  & 0  & 0  & 33 & 17 \\
-Foreign exchange ($n{=}6$)    & 0  & 17 & 0  & 0  & 0  & 0  \\
-Period rollforward ($n{=}53$) & 51 & 42 & 15 & 21 & 26 & 17 \\
+Revenue recognition & 17\% & 33\% & 17\% & 0\%  & 0\%  & 17\% \\
+Asset disposal      & 17\% & 0\%  & 0\%  & 0\%  & 0\%  & 0\%  \\
+Deferred tax        & 0\%  & 0\%  & 0\%  & 0\%  & 0\%  & 0\%  \\
+Lease accounting    & 17\% & 0\%  & 0\%  & 0\%  & 0\%  & 0\%  \\
+Tax exemption       & 50\% & 0\%  & 0\%  & 0\%  & 33\% & 17\% \\
+Foreign exchange    & 0\%  & 17\% & 0\%  & 0\%  & 0\%  & 0\%  \\
+Period rollforward  & 51\% & 42\% & 15\% & 21\% & 26\% & 17\% \\
 \bottomrule
 \end{tabular}
-\caption{Baseline \bsrecon{} (\%) by accounting concept on the core evaluation split. Revenue recognition corresponds to ASC~606 customer-contract revenue; foreign exchange covers non-home-currency invoices and settlements; period rollforwards are schedules that carry prior balances forward. The table documents coverage over the authored concept families; larger concept-specific splits can be sampled with the released generator.}
+\caption{Baseline \bsrecon{} by accounting concept on the core evaluation split; all values are percentages. Revenue recognition corresponds to ASC~606 customer-contract revenue; foreign exchange covers non-home-currency invoices and settlements; period rollforwards are schedules that carry prior balances forward. The table documents coverage over the authored concept families; larger concept-specific splits can be sampled with the released generator.}
 \label{tab:per-concept}
 \end{table*}
 

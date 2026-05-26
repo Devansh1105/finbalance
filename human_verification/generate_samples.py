@@ -14,6 +14,7 @@ keeps every artifact in sync.
 
 from __future__ import annotations
 
+import argparse
 import json
 import random
 import shutil
@@ -32,8 +33,8 @@ TARGET_INCONSISTENCY = 15
 RANDOM_SEED = 42
 
 
-def load_records() -> list[dict]:
-    with DATASET_PATH.open(encoding="utf-8") as handle:
+def load_records(dataset_path: Path) -> list[dict]:
+    with dataset_path.open(encoding="utf-8") as handle:
         return [json.loads(line) for line in handle if line.strip()]
 
 
@@ -276,10 +277,10 @@ def render_record(record: dict) -> str:
     return "\n".join(md)
 
 
-def write_samples(records: list[dict]) -> list[dict]:
-    if OUTPUT_DIR.exists():
-        shutil.rmtree(OUTPUT_DIR)
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+def write_samples(records: list[dict], output_dir: Path) -> list[dict]:
+    if output_dir.exists():
+        shutil.rmtree(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
     width = max(2, len(str(len(records))))
     manifest_rows: list[dict] = []
     for index, record in enumerate(records, start=1):
@@ -288,7 +289,7 @@ def write_samples(records: list[dict]) -> list[dict]:
             f"{index:0{width}d}_{label}_L{record['difficulty_level']}_"
             f"{record['industry']}_{record['record_id']}.md"
         )
-        path = OUTPUT_DIR / filename
+        path = output_dir / filename
         path.write_text(render_record(record), encoding="utf-8")
         manifest_rows.append(
             {
@@ -307,10 +308,11 @@ def write_samples(records: list[dict]) -> list[dict]:
     return manifest_rows
 
 
-def render_responses_template(rows: list[dict]) -> str:
+def render_responses_template(rows: list[dict], samples_label: str = "samples") -> str:
+    width = max(2, len(str(len(rows))))
     lines: list[str] = [
         "# Verification Responses — Consolidated Form\n",
-        "_Use this file if you'd rather record all responses in one place instead of editing each `samples/*.md`. Either format is fine._\n",
+        f"_Use this file if you'd rather record all responses in one place instead of editing each `{samples_label}/*.md`. Either format is fine._\n",
         "---\n",
         "## Reviewer info\n",
         "- **Name / role:**",
@@ -323,16 +325,16 @@ def render_responses_template(rows: list[dict]) -> str:
         "-\n",
         "---\n",
         "## Per-record responses\n",
-        "_For each record below, fill in the verdict. The full record content is in `samples/<filename>.md`._\n",
+        f"_For each record below, fill in the verdict. The full record content is in `{samples_label}/<filename>.md`._\n",
     ]
     for row in rows:
         label = "INC" if row["expected_inconsistency"] else "STD"
         header = (
-            f"### {row['verification_index']:02d} — {label} L{row['difficulty_level']} "
+            f"### {row['verification_index']:0{width}d} — {label} L{row['difficulty_level']} "
             f"{row['industry']} — `{row['record_id']}`"
         )
         lines.append(header)
-        lines.append(f"_File:_ `samples/{row['filename']}`")
+        lines.append(f"_File:_ `{samples_label}/{row['filename']}`")
         lines.append("")
         lines.append("- Q1 Document analogy: [ ] Analogous   [ ] Mostly   [ ] Not analogous — notes:")
         lines.append("- Q2 Entries correct: [ ] Yes   [ ] Mostly   [ ] No — notes:")
@@ -358,17 +360,87 @@ def render_responses_template(rows: list[dict]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def render_readme(dataset_path: Path, rows: list[dict], samples_label: str = "samples") -> str:
+    standard_count = sum(1 for row in rows if not row["expected_inconsistency"])
+    inconsistency_count = sum(1 for row in rows if row["expected_inconsistency"])
+    return f"""# Full-Dataset Human Review Packets
+
+This folder contains Markdown verification packets for an accounting expert to
+review without touching JSON or code.
+
+## Scope
+
+- Dataset: `{dataset_path.relative_to(REPO_ROOT)}`
+- Records: {len(rows)}
+- Standard records: {standard_count}
+- Forced-inconsistency records: {inconsistency_count}
+
+Each file in `{samples_label}/` contains the record context, allowed accounts,
+opening trial balance, document OCR text, ground-truth journal entries,
+ground-truth balance sheet, and a verification form.
+
+## Reviewer Workflow
+
+1. Open files in `{samples_label}/` in order.
+2. Read sections 1-6.
+3. Fill in section 7 in each file, or use `verification_responses.md` as one
+   consolidated response sheet.
+4. Save completed files in this folder.
+
+## What To Check
+
+- Whether the documents are a reasonable analogue of real reconciliation
+  paperwork for the industry and period.
+- Whether the expected journal entries are correct and complete.
+- Whether `doc_refs` cite the documents that actually support each entry.
+- Whether the final balance sheet follows from the entries.
+- For forced-inconsistency records, whether the contradiction is visible and
+  would block a clean reconciliation.
+
+See `sample_manifest.json` for record IDs, difficulty levels, industries,
+document counts, and inconsistency codes.
+"""
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Render human-review Markdown packets.")
+    parser.add_argument("--dataset", type=Path, default=DATASET_PATH, help="JSONL dataset to render")
+    parser.add_argument("--output-dir", type=Path, default=OUTPUT_DIR, help="Directory for Markdown packet files")
+    parser.add_argument("--manifest", type=Path, default=MANIFEST_PATH, help="Path for sample manifest JSON")
+    parser.add_argument("--responses", type=Path, default=RESPONSES_PATH, help="Path for consolidated response template")
+    parser.add_argument("--readme", type=Path, default=None, help="Optional path for reviewer README")
+    parser.add_argument(
+        "--all-records",
+        action="store_true",
+        help="Render every record in dataset order instead of the stratified 75-record sample",
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
-    records = load_records()
-    selected = stratified_sample(records)
-    rows = write_samples(selected)
-    MANIFEST_PATH.write_text(
+    args = parse_args()
+    dataset_path = args.dataset if args.dataset.is_absolute() else REPO_ROOT / args.dataset
+    output_dir = args.output_dir if args.output_dir.is_absolute() else REPO_ROOT / args.output_dir
+    manifest_path = args.manifest if args.manifest.is_absolute() else REPO_ROOT / args.manifest
+    responses_path = args.responses if args.responses.is_absolute() else REPO_ROOT / args.responses
+    readme_path = None
+    if args.readme is not None:
+        readme_path = args.readme if args.readme.is_absolute() else REPO_ROOT / args.readme
+
+    records = load_records(dataset_path)
+    selected = records if args.all_records else stratified_sample(records)
+    rows = write_samples(selected, output_dir)
+    samples_label = output_dir.name
+
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(
         json.dumps(
             {
-                "dataset": str(DATASET_PATH.relative_to(REPO_ROOT)),
-                "seed": RANDOM_SEED,
-                "standard_per_level_target": TARGET_STANDARD_PER_LEVEL,
-                "inconsistency_target": TARGET_INCONSISTENCY,
+                "dataset": str(dataset_path.relative_to(REPO_ROOT)),
+                "selection": "all_records" if args.all_records else "stratified_sample",
+                "seed": None if args.all_records else RANDOM_SEED,
+                "standard_per_level_target": None if args.all_records else TARGET_STANDARD_PER_LEVEL,
+                "inconsistency_target": None if args.all_records else TARGET_INCONSISTENCY,
                 "sample_size": len(rows),
                 "samples": rows,
             },
@@ -376,10 +448,16 @@ def main() -> None:
         ),
         encoding="utf-8",
     )
-    RESPONSES_PATH.write_text(render_responses_template(rows), encoding="utf-8")
-    print(f"Wrote {len(rows)} verification packets to {OUTPUT_DIR}")
-    print(f"Wrote manifest to {MANIFEST_PATH}")
-    print(f"Wrote consolidated responses template to {RESPONSES_PATH}")
+    responses_path.parent.mkdir(parents=True, exist_ok=True)
+    responses_path.write_text(render_responses_template(rows, samples_label=samples_label), encoding="utf-8")
+    if readme_path is not None:
+        readme_path.parent.mkdir(parents=True, exist_ok=True)
+        readme_path.write_text(render_readme(dataset_path, rows, samples_label=samples_label), encoding="utf-8")
+    print(f"Wrote {len(rows)} verification packets to {output_dir}")
+    print(f"Wrote manifest to {manifest_path}")
+    print(f"Wrote consolidated responses template to {responses_path}")
+    if readme_path is not None:
+        print(f"Wrote README to {readme_path}")
 
 
 if __name__ == "__main__":

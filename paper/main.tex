@@ -8,6 +8,20 @@
 % Change to "preprint" to generate a non-anonymous version with page numbers.
 \usepackage[review]{acl}
 
+% The generic *ACL review style prints "Anonymous ACL submission" in the
+% anonymized title block. This paper is being prepared for EMNLP 2026, so keep
+% the official style invocation but make the venue label unambiguous.
+\makeatletter
+\renewcommand\outauthor{%
+    \begin{tabular}[t]{c}
+    \ifacl@anonymize
+        \bfseries Anonymous EMNLP submission
+    \else
+        \bfseries\@author
+    \fi
+    \end{tabular}}
+\makeatother
+
 % Standard package includes from the ACL template.
 \usepackage{times}
 \usepackage{latexsym}
