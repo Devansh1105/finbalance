@@ -36,7 +36,7 @@ def diagram_dataset_packet(output_dir: Path) -> list[Path]:
     _box(ax, 0.04, 0.40, 0.24, 0.125, "Distractor documents", "Duplicate copies,\nmemos, void/cancel\nnotices", ORANGE, body_size=6.9)
     _box(ax, 0.04, 0.18, 0.24, 0.125, "Allowed accounts", "Benchmark account\ntaxonomy visible\nin prompt", PURPLE, body_size=6.9)
 
-    _box(ax, 0.38, 0.60, 0.24, 0.16, "Visible documents", "Doc IDs + OCR text\n+ titles/types/roles depending\non visibility ablation", GREEN)
+    _box(ax, 0.38, 0.60, 0.24, 0.16, "Visible documents", "Doc IDs + OCR text\n+ types/titles depending\non visibility ablation", GREEN)
     _box(ax, 0.38, 0.27, 0.24, 0.16, "Hidden accounting truth", "Journal entries\nReplayed ledger\nFinal balance sheet", GRAY)
 
     _box(ax, 0.72, 0.66, 0.23, 0.13, "Model answer", "Strict JSON:\nentries + doc_refs + BS", BLUE)

@@ -15,8 +15,8 @@ existing scripts and result directories:
 
 | Split | Records | Contents | Intended use |
 |---|---:|---|---|
-| `coverage/` | 143 | One record per industry x period x difficulty cell, plus one forced-inconsistency record per code | Core evaluation split for the paper |
-| `main/` | 1,052 | Eight clean records per industry x period x difficulty cell, plus four forced-inconsistency records per code | Training, stress tests, and downstream studies |
+| `coverage/` | 143 | One record per industry x period x difficulty cell, plus one forced-inconsistency record per code | Compact ablation and smoke-test split |
+| `main/` | 710 | Four records per industry x period x difficulty cell, plus ten forced-inconsistency records per code | Core evaluation split for the paper |
 
 Both splits are generated from human-authored business scenarios, document
 schemas, accounting policies, tax/FX assumptions, distractor templates, and
@@ -88,8 +88,8 @@ Regenerate the canonical paper splits:
 python scripts/generate_standard_datasets.py \
   --base-dir data \
   --seed 42 \
-  --records-per-combo 8 \
-  --negative-controls-per-code 4 \
+  --records-per-combo 4 \
+  --negative-controls-per-code 10 \
   --overwrite
 ```
 

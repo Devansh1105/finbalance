@@ -588,7 +588,9 @@ def plot_cost_pareto(results_dir: Path, output_dir: Path, *, min_records: int = 
     short_names = {
         "Gemini 3 Flash": "Gemini",
         "Claude Haiku 4.5": "Haiku",
-        "DeepSeek V3.2": "DeepSeek",
+        "DeepSeek V3.2": "DeepSeek\nV3.2",
+        "DeepSeek Chat": "DS Chat",
+        "DeepSeek Reasoner": "DS Reasoner",
         "Qwen3 235B": "Qwen",
         "Grok 4.3": "Grok",
         "GPT-5": "GPT-5",
@@ -598,6 +600,8 @@ def plot_cost_pareto(results_dir: Path, output_dir: Path, *, min_records: int = 
         "Gemini 3 Flash": (5, 6),
         "Grok 4.3": (5, 6),
         "DeepSeek V3.2": (5, 7),
+        "DeepSeek Chat": (5, 7),
+        "DeepSeek Reasoner": (5, 7),
         "Qwen3 235B": (5, 8),
         "Claude Haiku 4.5": (5, 8),
     }

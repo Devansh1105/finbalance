@@ -12,7 +12,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 1028 >>
+<< /Length 1013 >>
 stream
 BT
 /F1 10 Tf
@@ -28,11 +28,11 @@ T*
 T*
 (----) Tj
 T*
-(Cedar Operations) Tj
+(Willow Builders) Tj
 T*
-(220 Lake View Road, Bengaluru) Tj
+(14 King Street, Pune) Tj
 T*
-(Date: 2025-11-02) Tj
+(Document Date: 2025-10-06) Tj
 T*
 () Tj
 T*
@@ -40,7 +40,7 @@ T*
 T*
 (--) Tj
 T*
-(Golden State Finance) Tj
+(Pace Office Mart) Tj
 T*
 (Vendor remittance address on file) Tj
 T*
@@ -54,7 +54,7 @@ T*
 T*
 (Document Type: vendor_invoice) Tj
 T*
-(Period: November 2025) Tj
+(Period: October 2025) Tj
 T*
 () Tj
 T*
@@ -62,7 +62,7 @@ T*
 T*
 (-----) Tj
 T*
-(Due Date: 2025-11-17) Tj
+(Due Date: 2025-10-23) Tj
 T*
 () Tj
 T*
@@ -70,7 +70,7 @@ T*
 T*
 (---------------) Tj
 T*
-(Vendor: Golden State Finance) Tj
+(Vendor: Pace Office Mart) Tj
 T*
 (Expense Label: Office Supplies Expense) Tj
 T*
@@ -84,9 +84,9 @@ T*
 T*
 (Invoice Number: BILL-0001) Tj
 T*
-(Due Date: 2025-11-17) Tj
+(Due Date: 2025-10-23) Tj
 T*
-(Total: $1,830.87) Tj
+(Total: $3,360.87) Tj
 T*
 () Tj
 T*
@@ -96,9 +96,9 @@ T*
 T*
 (Lines:) Tj
 T*
-(  - Description Monthly retainer | Amount $417.38) Tj
+(  - Description Review pack | Amount $894.14) Tj
 T*
-(  - Description Support fee | Amount $1,413.49) Tj
+(  - Description Support fee | Amount $2,466.73) Tj
 T*
 () Tj
 T*
@@ -112,13 +112,13 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
 endobj
 7 0 obj
-<< /Length 102 >>
+<< /Length 120 >>
 stream
 BT
 /F1 10 Tf
 50 760 Td
 14 TL
-(Internal document packet copy.) Tj
+(Generated for synthetic accounting research use.) Tj
 T*
 (Page marker: D003) Tj
 T*
@@ -134,10 +134,10 @@ xref
 0000000123 00000 n 
 0000000193 00000 n 
 0000000319 00000 n 
-0000001399 00000 n 
-0000001525 00000 n 
+0000001384 00000 n 
+0000001510 00000 n 
 trailer
 << /Size 8 /Root 1 0 R >>
 startxref
-1678
+1681
 %%EOF

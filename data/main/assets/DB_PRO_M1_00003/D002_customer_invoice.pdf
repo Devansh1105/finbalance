@@ -12,15 +12,15 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 1022 >>
+<< /Length 1045 >>
 stream
 BT
 /F1 10 Tf
 50 760 Td
 14 TL
-(CUSTOMER INVOICE) Tj
+(CUSTOMER INVOICE / REFERENCE COPY) Tj
 T*
-(================) Tj
+(=================================) Tj
 T*
 () Tj
 T*
@@ -28,11 +28,11 @@ T*
 T*
 (----) Tj
 T*
-(Cedar Operations) Tj
+(Willow Builders) Tj
 T*
-(220 Lake View Road, Bengaluru) Tj
+(14 King Street, Pune) Tj
 T*
-(Document Date: 2025-11-06) Tj
+(Date: 2025-10-09) Tj
 T*
 () Tj
 T*
@@ -40,7 +40,7 @@ T*
 T*
 (--) Tj
 T*
-(Crescent Labs) Tj
+(Maple Ridge Trading) Tj
 T*
 (Customer account on file) Tj
 T*
@@ -54,7 +54,7 @@ T*
 T*
 (Document Type: customer_invoice) Tj
 T*
-(Period: November 2025) Tj
+(Period: October 2025) Tj
 T*
 (Contract Ref: CTR-0001) Tj
 T*
@@ -64,7 +64,7 @@ T*
 T*
 (-----) Tj
 T*
-(Due Date: 2025-11-25) Tj
+(Due Date: 2025-10-20) Tj
 T*
 () Tj
 T*
@@ -72,7 +72,7 @@ T*
 T*
 (-------) Tj
 T*
-(Customer: Crescent Labs) Tj
+(Customer: Maple Ridge Trading) Tj
 T*
 (Contract Ref: CTR-0001) Tj
 T*
@@ -86,9 +86,9 @@ T*
 T*
 (Invoice Number: INV-0001) Tj
 T*
-(Due Date: 2025-11-25) Tj
+(Due Date: 2025-10-20) Tj
 T*
-(Total: $5,300.35) Tj
+(Total: $4,202.94) Tj
 T*
 () Tj
 T*
@@ -98,9 +98,9 @@ T*
 T*
 (Items:) Tj
 T*
-(  - Description Implementation work | Amount $1,262.60) Tj
+(  - Description Monthly retainer | Amount $1,355.89) Tj
 T*
-(  - Description Follow-up support | Amount $4,037.75) Tj
+(  - Description Follow-up support | Amount $2,847.05) Tj
 T*
 () Tj
 T*
@@ -112,7 +112,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
 endobj
 7 0 obj
-<< /Length 135 >>
+<< /Length 117 >>
 stream
 BT
 /F1 10 Tf
@@ -120,7 +120,7 @@ BT
 14 TL
 (------) Tj
 T*
-(Generated for synthetic accounting research use.) Tj
+(Internal document packet copy.) Tj
 T*
 (Page marker: D002) Tj
 T*
@@ -136,10 +136,10 @@ xref
 0000000123 00000 n 
 0000000193 00000 n 
 0000000319 00000 n 
-0000001393 00000 n 
-0000001519 00000 n 
+0000001416 00000 n 
+0000001542 00000 n 
 trailer
 << /Size 8 /Root 1 0 R >>
 startxref
-1705
+1710
 %%EOF

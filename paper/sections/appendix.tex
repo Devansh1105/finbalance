@@ -238,7 +238,7 @@ Each record carries boolean flags marking the presence of: ASC~606 revenue recog
 \paragraph{Inconsistency codes.}
 The released negative-control taxonomy contains 23 machine-readable codes, grouped here for readability: banking and transfers (closing balance, statement balance, transfer); invoicing and payments (invoice total, payment allocation, duplicate reference); tax and jurisdiction (tax rate, tax total, input tax, exemption conflict, jurisdictional tax); assets, inventory, leases, and deferred tax (disposal, rollforward, remeasurement, schedule, and deferred-tax conflicts); and contract/revenue support (SSP allocation, performance-obligation release, reclassification support, schedule rollforward, and FX settlement or exchange-rate conflicts).
 
-Table~\ref{tab:inconsistency-code-diagnostics} summarizes the 23 negative-control codes on the six-model baseline panel. The core split contains one record per code, so each row has six model attempts rather than many iid examples. Most models learn to flag that the documents are contradictory (128/138 attempts), but exact code selection is harder (103/138). Banking, lease, and simple transfer contradictions are easiest; input-tax and performance-obligation-release contradictions are hardest.
+Table~\ref{tab:inconsistency-code-diagnostics} summarizes the 23 negative-control codes on the six-model baseline panel. The core split contains ten generated records per code, so each row aggregates 60 model attempts. Models usually recognize that a contradiction exists (1110/1380 attempts), while exact code selection is harder (994/1380). Banking, lease, and simple transfer contradictions are easiest; input-tax, jurisdictional-tax, and performance-obligation-release contradictions remain hardest.
 
 \begin{table*}[t]
 \centering
@@ -249,32 +249,32 @@ Table~\ref{tab:inconsistency-code-diagnostics} summarizes the 23 negative-contro
 \toprule
 Expected code & Meaning & Detected \\
 \midrule
-\path{invoice_total_mismatch} & Invoice subtotal, tax, and stated total do not tie. & 67\% \\
-\path{bank_closing_mismatch} & Bank statement closing balance conflicts with its listed activity. & 100\% \\
-\path{statement_balance_mismatch} & Statement opening/closing balance conflicts with visible transaction rows. & 83\% \\
-\path{payment_allocation_mismatch} & Payment advice allocates cash to invoices in a way that cannot reconcile. & 83\% \\
-\path{duplicate_reference_conflict} & Two visible documents reuse the same reference for incompatible transactions. & 83\% \\
-\path{schedule_rollforward_mismatch} & Rollforward schedule opening balance, movements, and closing balance do not tie. & 67\% \\
-\path{inventory_rollforward_mismatch} & Inventory movement schedule cannot reconcile to purchases, COGS, or ending stock. & 67\% \\
-\path{transfer_mismatch} & Interbank transfer outflow and receiving-bank inflow disagree. & 100\% \\
-\path{reclassification_support_mismatch} & Reclassification memo is unsupported or contradicts the source schedule. & 83\% \\
-\path{tax_total_mismatch} & Stated tax total disagrees with taxable base and tax lines. & 67\% \\
-\path{tax_rate_mismatch} & Applied tax rate conflicts with the visible jurisdiction or tax notice. & 67\% \\
-\path{input_tax_mismatch} & Claimed recoverable input tax is not supported by the supplier/tax documents. & 17\% \\
-\path{jurisdiction_tax_mismatch} & Tax treatment uses the wrong jurisdiction or jurisdiction-specific rule. & 50\% \\
-\path{tax_exemption_conflict} & Exemption certificate is invalid, expired, or conflicts with the tax charged. & 83\% \\
-\path{ssp_allocation_mismatch} & Standalone selling price allocation in a bundled contract is inconsistent. & 67\% \\
-\path{performance_obligation_release_mismatch} & Revenue release conflicts with the performance-obligation schedule. & 17\% \\
+\path{invoice_total_mismatch} & Invoice subtotal, tax, and stated total do not tie. & 60\% \\
+\path{bank_closing_mismatch} & Bank statement closing balance conflicts with its listed activity. & 98\% \\
+\path{statement_balance_mismatch} & Statement opening/closing balance conflicts with visible transaction rows. & 73\% \\
+\path{payment_allocation_mismatch} & Payment advice allocates cash to invoices in a way that cannot reconcile. & 85\% \\
+\path{duplicate_reference_conflict} & Two visible documents reuse the same reference for incompatible transactions. & 68\% \\
+\path{schedule_rollforward_mismatch} & Rollforward schedule opening balance, movements, and closing balance do not tie. & 80\% \\
+\path{inventory_rollforward_mismatch} & Inventory movement schedule cannot reconcile to purchases, COGS, or ending stock. & 77\% \\
+\path{transfer_mismatch} & Interbank transfer outflow and receiving-bank inflow disagree. & 97\% \\
+\path{reclassification_support_mismatch} & Reclassification memo is unsupported or contradicts the source schedule. & 60\% \\
+\path{tax_total_mismatch} & Stated tax total disagrees with taxable base and tax lines. & 72\% \\
+\path{tax_rate_mismatch} & Applied tax rate conflicts with the visible jurisdiction or tax notice. & 65\% \\
+\path{input_tax_mismatch} & Claimed recoverable input tax is not supported by the supplier/tax documents. & 23\% \\
+\path{jurisdiction_tax_mismatch} & Tax treatment uses the wrong jurisdiction or jurisdiction-specific rule. & 37\% \\
+\path{tax_exemption_conflict} & Exemption certificate is invalid, expired, or conflicts with the tax charged. & 82\% \\
+\path{ssp_allocation_mismatch} & Standalone selling price allocation in a bundled contract is inconsistent. & 62\% \\
+\path{performance_obligation_release_mismatch} & Revenue release conflicts with the performance-obligation schedule. & 28\% \\
 \path{asset_disposal_mismatch} & Disposal proceeds, net book value, and gain/loss do not reconcile. & 83\% \\
-\path{deferred_tax_rollforward_mismatch} & Deferred-tax rollforward conflicts with book/tax temporary differences. & 100\% \\
-\path{lease_schedule_mismatch} & Lease amortization schedule does not tie to liability, interest, or payments. & 100\% \\
-\path{lease_remeasurement_mismatch} & Lease modification or remeasurement calculation conflicts with support. & 100\% \\
-\path{exchange_rate_mismatch} & Exchange rate used in a document conflicts with the visible rate notice. & 67\% \\
-\path{fx_settlement_mismatch} & Foreign-currency invoice settlement does not tie to cash paid or FX gain/loss. & 83\% \\
-\path{remeasurement_mismatch} & Period-end FX remeasurement uses an inconsistent rate or carrying amount. & 83\% \\
+\path{deferred_tax_rollforward_mismatch} & Deferred-tax rollforward conflicts with book/tax temporary differences. & 95\% \\
+\path{lease_schedule_mismatch} & Lease amortization schedule does not tie to liability, interest, or payments. & 92\% \\
+\path{lease_remeasurement_mismatch} & Lease modification or remeasurement calculation conflicts with support. & 98\% \\
+\path{exchange_rate_mismatch} & Exchange rate used in a document conflicts with the visible rate notice. & 72\% \\
+\path{fx_settlement_mismatch} & Foreign-currency invoice settlement does not tie to cash paid or FX gain/loss. & 70\% \\
+\path{remeasurement_mismatch} & Period-end FX remeasurement uses an inconsistent rate or carrying amount. & 80\% \\
 \bottomrule
 \end{tabularx}
-\caption{Per-code inconsistency diagnostics over the six-model baseline panel. \emph{Detected} is the percentage of models that set \texttt{has\_inconsistency=True} and selected the gold code. Because the core split has one record per code, these percentages are descriptive six-model rates, not iid estimates of per-code accuracy.}
+\caption{Per-code inconsistency diagnostics over the six-model baseline panel on the core split. \emph{Detected} is the percentage of 60 attempts per code (10 records $\times$ 6 models) that set \texttt{has\_inconsistency=True} and selected the gold code. The rows are descriptive diagnostics over generated instances, not final estimates of each code's full population difficulty.}
 \label{tab:inconsistency-code-diagnostics}
 \end{table*}
 
@@ -297,7 +297,7 @@ Expected code & Meaning & Detected \\
 \section{Per-Concept Results}
 \label{appx:per-concept}
 
-Table~\ref{tab:per-concept} reports baseline \bsrecon{} by concept flag across all six models. The terms are defined in Appendix~\ref{appx:dataset-details}; in short, they mark which accounting concept appears in the record, not a separate dataset split. The core evaluation split is built to cover the authored scenario families and concept flags at least once, while the released generator can create larger concept-targeted samples for training, stress tests, or future evaluation splits. The period-rollforward flag appears most often in the core split and shows the gap-having pattern across all four gap-having models, with GPT-5 and Grok-4.3 in the same band by entry quality.
+Table~\ref{tab:per-concept} reports baseline \bsrecon{} by concept flag across all six models. The terms are defined in Appendix~\ref{appx:dataset-details}; in short, they mark which accounting concept appears in the record, not a separate dataset split. The core evaluation split is built to cover the authored scenario families and concept flags at least once, while the released generator can create larger concept-targeted samples for training, stress tests, or future evaluation splits. The period-rollforward flag appears most often in the core split. Smaller concept slices are coverage diagnostics over the authored scenario families; larger concept-targeted splits can be sampled with the released generator.
 
 \begin{table*}[t]
 \centering
@@ -308,13 +308,13 @@ Table~\ref{tab:per-concept} reports baseline \bsrecon{} by concept flag across a
 \toprule
 Concept flag & Gemini & GPT-5 & Haiku & Grok & DeepSeek & Qwen \\
 \midrule
-Revenue recognition & 17\% & 33\% & 17\% & 0\%  & 0\%  & 17\% \\
-Asset disposal      & 17\% & 0\%  & 0\%  & 0\%  & 0\%  & 0\%  \\
-Deferred tax        & 0\%  & 0\%  & 0\%  & 0\%  & 0\%  & 0\%  \\
-Lease accounting    & 17\% & 0\%  & 0\%  & 0\%  & 0\%  & 0\%  \\
-Tax exemption       & 50\% & 0\%  & 0\%  & 0\%  & 33\% & 17\% \\
-Foreign exchange    & 0\%  & 17\% & 0\%  & 0\%  & 0\%  & 0\%  \\
-Period rollforward  & 51\% & 42\% & 15\% & 21\% & 26\% & 17\% \\
+Revenue recognition & 17\% & 25\% & 4\%  & 4\%  & 8\%  & 12\% \\
+Asset disposal      & 21\% & 17\% & 0\%  & 0\%  & 8\%  & 0\%  \\
+Deferred tax        & 25\% & 0\%  & 0\%  & 0\%  & 8\%  & 0\%  \\
+Lease accounting    & 21\% & 17\% & 0\%  & 0\%  & 8\%  & 0\%  \\
+Tax exemption       & 29\% & 12\% & 0\%  & 0\%  & 33\% & 4\%  \\
+Foreign exchange    & 8\%  & 8\%  & 0\%  & 0\%  & 0\%  & 0\%  \\
+Period rollforward  & 48\% & 41\% & 11\% & 19\% & 39\% & 19\% \\
 \bottomrule
 \end{tabular}
 \caption{Baseline \bsrecon{} by accounting concept on the core evaluation split; all values are percentages. Revenue recognition corresponds to ASC~606 customer-contract revenue; foreign exchange covers non-home-currency invoices and settlements; period rollforwards are schedules that carry prior balances forward. The table documents coverage over the authored concept families; larger concept-specific splits can be sampled with the released generator.}
@@ -332,15 +332,15 @@ Period rollforward  & 51\% & 42\% & 15\% & 21\% & 26\% & 17\% \\
 \toprule
 Model & \bsexact{} & \bsrecon{} & gap & entry ratio \\
 \midrule
-Gemini~3 Flash    & 0.250 & 0.625 & $+0.375$ & 0.95 \\
-GPT-5             & 0.508 & 0.500 & $-0.008$ & 0.92 \\
-Claude Haiku~4.5  & 0.042 & 0.325 & $+0.283$ & 0.55 \\
-Grok-4.3          & 0.317 & 0.350 & $+0.033$ & 0.40 \\
-DeepSeek V3.2     & 0.075 & 0.367 & $+0.292$ & 0.59 \\
-Qwen~3 235B       & 0.025 & 0.275 & $+0.250$ & 0.93 \\
+Gemini~3 Flash    & 0.235 & 0.548 & $+0.313$ & 0.94 \\
+GPT-5             & 0.465 & 0.463 & $-0.002$ & 0.91 \\
+Claude Haiku~4.5  & 0.029 & 0.292 & $+0.263$ & 0.53 \\
+Grok-4.3          & 0.310 & 0.350 & $+0.040$ & 0.40 \\
+DeepSeek Chat     & 0.067 & 0.473 & $+0.406$ & 0.98 \\
+Qwen~3 235B       & 0.013 & 0.302 & $+0.290$ & 0.94 \\
 \bottomrule
 \end{tabular}
-\caption{Three regimes on standard records. \emph{Entry ratio} is predicted-entry count divided by expected-entry count. GPT-5 is self-consistent while submitting most expected entries; Grok-4.3 is internally aligned partly because it submits only $40\%$ of expected entries.}
+\caption{Three regimes on the 480 standard records in the core split. \emph{Entry ratio} is predicted-entry count divided by expected-entry count. GPT-5 is comparatively self-consistent while submitting most expected entries; Grok-4.3 has a smaller gap partly because it submits only $40\%$ of expected entries.}
 \label{tab:no-gap-mechanism}
 \end{table}
 
@@ -351,7 +351,7 @@ Qwen~3 235B       & 0.025 & 0.275 & $+0.250$ & 0.93 \\
 Journal entries are scored at the posting level. A strict posting match requires the same debit account, credit account, amount rounded to cents, and sorted \texttt{doc\_refs}. The lenient entry match uses the same account-and-amount criteria but ignores \texttt{doc\_refs}. The matcher proceeds greedily over unmatched predictions in four passes: exact match; same debit/credit/amount but wrong \texttt{doc\_refs}; same debit/credit/\texttt{doc\_refs} but wrong amount; and same \texttt{doc\_refs}/amount but wrong account. Remaining expected postings are missing; remaining predicted postings are extra. Duplicate identical postings are matched first-in-first-out. The evaluator does not use account synonyms: the allowed account list is closed. Posting dates are parsed and retained for diagnostics, but they are not part of the headline entry-match key. Split transactions receive credit only when the predicted posting decomposition matches the generator's expected postings.
 
 \paragraph{Parse rate.}
-Across the six models at $n{=}143$, parse-success rates are $\geq 98\%$ for all six. Llama-3.3-70B was excluded from the panel for parse-rate reasons (33\%); we report this only as background for the panel choice.
+Across the six completed headline baselines at $n{=}710$, parse-success rates are at least $97\%$ and five models parse at $\geq 99.8\%$. We also attempted a DeepSeek reasoning-model run on the same split, but the completed artifacts had low parse success under the available provider conditions. We therefore report DeepSeek Chat as the completed DeepSeek-family baseline and keep the reasoning-model attempt as an excluded reproducibility artifact rather than a task result.
 
 \paragraph{Two-pass ledger-feedback diagnostic.}
 For Gemini~3 Flash, the 2-pass ledger-feedback variant changes \bsexact{} by $+35.8$\,pp (CI $[+26.9, +44.9]$) compared with $+32.5$\,pp at 1-pass, and degrades \incCode{} by $-21.7$\,pp (CI $[-40.0, -5.3]$) compared with $-13.0$\,pp at 1-pass. The 2-pass variant adds $\sim$56\% inference cost; the main text therefore reports the 1-pass diagnostic.
@@ -359,7 +359,7 @@ For Gemini~3 Flash, the 2-pass ledger-feedback variant changes \bsexact{} by $+3
 \section{Cost Analysis}
 \label{appx:cost-analysis}
 
-Figure~\ref{fig:cost-pareto} reports API cost per evaluated core-evaluation record against \bsexact{} accuracy. Costs are provider-billed OpenRouter totals for completed baseline runs only; failed pilots and excluded partial runs are not counted. GPT-5 is the most accurate and most expensive baseline in our panel (\$7.18 for 143 records; 5.02 cents/record). Gemini~3 Flash gives the strongest aggregation-gap signal at substantially lower cost (\$0.89 total; 0.63 cents/record). DeepSeek V3.2 and Qwen3 235B are the cheapest completed baselines (\$0.30 and \$0.15 total), useful for replication but far weaker on \bsexact{}.
+Figure~\ref{fig:cost-pareto} reports API cost per evaluated core-evaluation record against \bsexact{} accuracy. Costs are provider-billed totals for completed baseline runs only; failed pilots and excluded partial runs are not counted. The plot is intended as a reproducibility aid rather than a model ranking: prices and routing can change, and DeepSeek Chat was run through the DeepSeek Platform while the other completed baselines were run through OpenRouter.
 
 \begin{figure}[t]
 \centering
@@ -419,13 +419,13 @@ The main text reports the measured effects of these ablations rather than only l
 \label{appx:human-protocol}
 
 \paragraph{Reviewer recruitment.}
-The validation records were reviewed by two practising finance professionals working at major U.S.\ investment banks. Both reviewers had prior accounting and reconciliation responsibilities in their day-to-day work and were given a one-paragraph briefing on the benchmark's scope (analogy of reconciliation paperwork; not OCR fidelity).
+The release subset was reviewed by two practising finance professionals working at major U.S.\ investment banks. Both reviewers had prior accounting and reconciliation responsibilities in their day-to-day work and were given a one-paragraph briefing on the benchmark's scope (analogy of reconciliation paperwork; not OCR fidelity). A third reviewer, a certified accountant, independently reviewed the full compact coverage split under the same instrument and briefing; this reviewer worked separately and did not see the other reviewers' responses.
 
 \paragraph{Instrument.}
 Each of 75 release records was rendered as a self-contained Markdown file with seven sections: (1) record context (industry, period, currency, tax regime, difficulty, inconsistency flag), (2) the allowed-account-name list, (3) opening trial balance, (4) every document with its OCR text and role tag, (5) ground-truth journal entries, (6) ground-truth balance sheet, and (7) the verification form. The form contains six checks: document analogy, entry correctness, entry completeness, \texttt{doc\_refs} support, difficulty calibration, and overall verdict. Each check offers three options (positive, mixed, negative) plus a free-text notes field.
 
 \paragraph{Protocol.}
-The release subset contains 75 expert-reviewed records: 60 standard records and 15 forced-inconsistency records. The intended assignment used in the paper is Reviewer~1 on records 1--50 and Reviewer~2 on records 1--25 plus 51--75. This gives every record one expert review and creates a 25-record independent overlap on records 1--25. Reviewers worked independently and did not see each other's responses.
+The release subset contains 75 expert-reviewed records: 60 standard records and 15 forced-inconsistency records. The intended assignment used in the paper is Reviewer~1 on records 1--50 and Reviewer~2 on records 1--25 plus 51--75. This gives every record one expert review and creates a 25-record independent overlap on records 1--25. Reviewers worked independently and did not see each other's responses. The third reviewer (certified accountant) instead covered the entire compact coverage split of 143 records (120 standard + 23 forced-inconsistency). This split contains one record per industry--period--difficulty cell plus one per inconsistency code, so every compact scenario is reviewed at least once.
 
 \paragraph{Results.}
 Table~\ref{tab:iaa} reports strict three-option agreement, collapsed acceptable agreement, and per-reviewer first-option rates on the 25-record double-reviewed overlap. The collapsed column treats ``Yes/Mostly'' or ``Accept/Accept with minor fixes'' as the same acceptability judgment; difficulty remains first option versus not-first option. We report these descriptive rates rather than Cohen's $\kappa$ because the sample is small and marginals are highly skewed toward positive judgments. Q6 is omitted because the overlap contains standard records only; inconsistency validity was reviewed in the single-reviewed negative-control records.
@@ -449,6 +449,9 @@ Overall verdict    & 84\%  & 96\%  & 80\%  & 100\% \\
 \label{tab:iaa}
 \end{center}
 
+\paragraph{Full-coverage review.}
+The third reviewer's pass over all 143 compact-coverage records rejected nothing. On the cleanest (first) option the reviewer chose ``analogous'' on 139/143 records, ``entries correct'' on 136/143, ``complete and exact'' on 143/143, ``\texttt{doc\_refs} correct'' on 135/143, and ``calibration right'' on 139/143; the overall verdict was ``acceptable as ground truth'' on 136/143 and ``acceptable with minor fixes'' on the remaining 7, with no rejections. Collapsing acceptable judgments, document analogy, entry correctness, entry completeness, \texttt{doc\_refs} support, and the overall verdict are all at $100\%$, and difficulty calibration is at $97\%$ (3 ``too easy,'' 1 ``too hard''). The minor-fix notes are localized \texttt{doc\_refs} cleanups and document-label wording, not entry or balance-sheet errors. Q6 (inconsistency validity) is answerable here because this pass includes all 23 forced-inconsistency records: every one was confirmed to contain a real contradiction that would block a clean reconciliation, and on 3 of 23 the reviewer additionally noted that the assigned code was a loose fit for an otherwise genuine break.
+
 \section{Reproducibility}
 \label{appx:reproducibility}
 
@@ -456,7 +459,7 @@ Overall verdict    & 84\%  & 96\%  & 80\%  & 100\% \\
 Dataset generation uses seed 42. Headline LLM evaluations use temperature 0.0 with no explicit seed (closed APIs do not expose a deterministic seed knob); the best-of-3 condition uses temperature 0.7 with three independent samples.
 
 \paragraph{Sampling.}
-The core evaluation split, stored under \texttt{data/coverage/} for backward compatibility, contains one record per (industry, period type, difficulty level) cell plus one forced-inconsistency record per code, drawn from a stratified deterministic sampler. The large generated split, stored under \texttt{data/main/}, uses 8 records per cell and 4 per inconsistency code.
+The main evaluation split, stored under \texttt{data/main/}, uses four standard records per (industry, period type, difficulty level) cell and ten forced-inconsistency records per code, drawn from a stratified deterministic sampler. The compact ablation split, stored under \texttt{data/coverage/} for backward compatibility, contains one record per cell plus one forced-inconsistency record per code.
 
 \begin{table*}[t]
 \centering
@@ -470,16 +473,16 @@ Gemini 3 Flash & \path{google/gemini-3-flash-preview} & \path{google/gemini-3-fl
 GPT-5 & \path{openai/gpt-5} & \path{openai/gpt-5-2025-08-07} & OpenAI & temp 0; max 32k; 420s; effort low \\
 Claude Haiku 4.5 & \path{anthropic/claude-haiku-4.5} & \path{anthropic/claude-4.5-haiku-20251001} & Amazon Bedrock & temp 0; max 16k; 180s; no reasoning \\
 Grok-4.3 & \path{x-ai/grok-4.3} & \path{x-ai/grok-4.3-20260430} & xAI & temp 0; max 16k; 180s; no reasoning \\
-DeepSeek V3.2 & \path{deepseek/deepseek-v3.2-exp} & \path{deepseek/deepseek-v3.2-exp} & Novita & temp 0; max 32k; 1800s; no reasoning \\
 Qwen 3 235B & \path{qwen/qwen3-235b-a22b-2507} & \path{qwen/qwen3-235b-a22b-07-25} & DeepInfra & temp 0; max 12k; 180s; no reasoning \\
+DeepSeek Chat & \path{deepseek-chat} & \path{deepseek-chat} & DeepSeek Platform & temp 0; max 8k; 1800s; no reasoning \\
 \bottomrule
 \end{tabularx}
-\caption{API-model settings for the six headline baseline runs. Providers and returned model identifiers are taken from the stored OpenRouter response payloads. The best-of-3 condition keeps the same model family and prompt but uses temperature $0.7$ and three independent samples on the aggregation-gap subset.}
+\caption{API-model settings for the six completed headline baseline runs. Providers and returned model identifiers are taken from the stored response payloads where available. The best-of-3 condition keeps the same model family and prompt but uses temperature $0.7$ and three independent samples on the aggregation-gap subset.}
 \label{tab:api-settings}
 \end{table*}
 
 \paragraph{API reproducibility.}
-All headline model runs use OpenRouter's chat-completions endpoint with ordinary text prompts and no structured JSON mode or response-schema constraint; strict JSON is enforced only by the prompt and parser. Each run directory stores \texttt{evaluation.json}, \texttt{summary.json}, \texttt{per\_record\_results.jsonl}, and slice tables. The evaluation files include run start/end timestamps, requested model slug, returned model identifier, selected provider, service tier where available, raw response text, raw response metadata where provider terms permit, token counts, cost, latency, parse status, tool/verifier metadata, and per-record metrics. Prompts are exactly reconstructable from the released prompt templates, ablation specification, and record JSON; we also release the raw model outputs used for the reported tables. Transient gateway errors use at most three client retries with exponential backoff for 429/5xx responses; parse failures are scored as failures and logged rather than silently repaired.
+OpenRouter runs and DeepSeek Platform runs use chat-completions endpoints with ordinary text prompts and no structured JSON mode or response-schema constraint; strict JSON is enforced only by the prompt and parser. Each run directory stores \texttt{evaluation.json}, \texttt{summary.json}, \texttt{per\_record\_results.jsonl}, and slice tables. The evaluation files include run start/end timestamps, requested model slug, returned model identifier, selected provider where available, service tier where available, raw response text, raw response metadata where provider terms permit, token counts, cost where available, latency, parse status, tool/verifier metadata, and per-record metrics. Prompts are exactly reconstructable from the released prompt templates, ablation specification, and record JSON; we also release the raw model outputs used for the reported tables. Transient gateway errors use at most three client retries with exponential backoff for 429/5xx responses; parse failures are scored as failures and logged rather than silently repaired.
 
 \paragraph{Bootstrap.}
 All confidence intervals are paired bootstrap with $n{=}5000$ resamples drawn over a shared record-id set, so baseline and treatment are compared on matched records. CIs are reported as percentile $95\%$. These intervals quantify record-level sampling uncertainty for a fixed saved run; they do not capture API nondeterminism, provider routing changes, silent model updates, or future prompt-run variance.

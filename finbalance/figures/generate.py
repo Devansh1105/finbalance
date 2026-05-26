@@ -32,7 +32,7 @@ from finbalance.figures.plots import (
 def generate_all_figures(
     *,
     results_dir: str | Path = "results",
-    dataset_path: str | Path = "data/coverage/records.jsonl",
+    dataset_path: str | Path = "data/main/records.jsonl",
     output_dir: str | Path = "paper/figures",
     min_model_records: int = 100,
 ) -> dict[str, list[str]]:

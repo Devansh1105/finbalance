@@ -12,7 +12,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 449 >>
+<< /Length 445 >>
 stream
 BT
 /F1 10 Tf
@@ -30,9 +30,9 @@ T*
 T*
 (Receipt Number: RCPT-0001) Tj
 T*
-(Merchant: Beacon Industrial Supply) Tj
+(Merchant: Prime Utility Desk) Tj
 T*
-(Total: $1.43) Tj
+(Total: $32.13) Tj
 T*
 (Payment Method: Cash) Tj
 T*
@@ -44,9 +44,9 @@ T*
 T*
 (Lines:) Tj
 T*
-(  - Description Travel Expense | Amount $0.51) Tj
+(  - Description Travel Expense | Amount $9.35) Tj
 T*
-(  - Description Travel Incidentals | Amount $0.92) Tj
+(  - Description Travel Incidentals | Amount $22.78) Tj
 T*
 () Tj
 ET
@@ -63,5 +63,5 @@ xref
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-813
+809
 %%EOF

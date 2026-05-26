@@ -12,15 +12,15 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 1000 >>
+<< /Length 1052 >>
 stream
 BT
 /F1 10 Tf
 50 760 Td
 14 TL
-(CUSTOMER INVOICE) Tj
+(CUSTOMER INVOICE / REFERENCE COPY) Tj
 T*
-(================) Tj
+(=================================) Tj
 T*
 () Tj
 T*
@@ -28,11 +28,11 @@ T*
 T*
 (----) Tj
 T*
-(Beacon Clinic) Tj
+(Willow Operations) Tj
 T*
-(14 King Street, Pune) Tj
+(18 Marina Avenue, Chennai) Tj
 T*
-(Date: 2024-01-04) Tj
+(Date: 2025-03-06) Tj
 T*
 () Tj
 T*
@@ -40,7 +40,7 @@ T*
 T*
 (--) Tj
 T*
-(Riverfront Group) Tj
+(Aster Point Services) Tj
 T*
 (Customer account on file) Tj
 T*
@@ -54,7 +54,7 @@ T*
 T*
 (Document Type: customer_invoice) Tj
 T*
-(Period: January 2024) Tj
+(Period: March 2025) Tj
 T*
 (Contract Ref: CTR-0001) Tj
 T*
@@ -64,7 +64,7 @@ T*
 T*
 (-----) Tj
 T*
-(Due Date: 2024-01-25) Tj
+(Due Date: 2025-03-29) Tj
 T*
 () Tj
 T*
@@ -72,7 +72,7 @@ T*
 T*
 (-------) Tj
 T*
-(Customer: Riverfront Group) Tj
+(Customer: Aster Point Services) Tj
 T*
 (Contract Ref: CTR-0001) Tj
 T*
@@ -86,9 +86,9 @@ T*
 T*
 (Invoice Number: INV-0001) Tj
 T*
-(Due Date: 2024-01-25) Tj
+(Due Date: 2025-03-29) Tj
 T*
-(Total: $2,424.27) Tj
+(Total: $6,267.41) Tj
 T*
 () Tj
 T*
@@ -98,9 +98,9 @@ T*
 T*
 (Items:) Tj
 T*
-(  - Description Support package | Amount $811.51) Tj
+(  - Description Monthly retainer | Amount $1,666.84) Tj
 T*
-(  - Description Follow-up support | Amount $1,612.76) Tj
+(  - Description Follow-up support | Amount $4,600.57) Tj
 T*
 () Tj
 T*
@@ -136,10 +136,10 @@ xref
 0000000123 00000 n 
 0000000193 00000 n 
 0000000319 00000 n 
-0000001371 00000 n 
-0000001497 00000 n 
+0000001423 00000 n 
+0000001549 00000 n 
 trailer
 << /Size 8 /Root 1 0 R >>
 startxref
-1665
+1717
 %%EOF

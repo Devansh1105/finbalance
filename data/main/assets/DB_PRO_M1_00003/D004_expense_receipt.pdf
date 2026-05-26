@@ -12,7 +12,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 449 >>
+<< /Length 450 >>
 stream
 BT
 /F1 10 Tf
@@ -32,9 +32,9 @@ T*
 T*
 (Merchant: Oakline Services) Tj
 T*
-(Total: $7.65) Tj
+(Total: $81.10) Tj
 T*
-(Payment Method: Company card) Tj
+(Payment Method: Debit card) Tj
 T*
 () Tj
 T*
@@ -44,9 +44,9 @@ T*
 T*
 (Lines:) Tj
 T*
-(  - Description Travel Expense | Amount $3.34) Tj
+(  - Description Travel Expense | Amount $32.72) Tj
 T*
-(  - Description Travel Incidentals | Amount $4.31) Tj
+(  - Description Travel Incidentals | Amount $48.38) Tj
 T*
 () Tj
 ET
@@ -63,5 +63,5 @@ xref
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-813
+814
 %%EOF

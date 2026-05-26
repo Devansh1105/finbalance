@@ -33,10 +33,14 @@ the ground truth. This makes every label auditable and reproducible.
 
 Headline findings from the EMNLP 2026 submission:
 
-- Across the six contemporary LLMs in our cost-bounded evaluation panel, the
-  highest model reaches **51%** exact final balance-sheet accuracy on standard
+- The benchmark was expert-validated through a 75-record review with an
+  independently double-reviewed subset, plus a certified-accountant review of
+  all 143 compact coverage records so every compact scenario is checked at
+  least once.
+- Across the six contemporary LLMs in our evaluation panel, the
+  highest model reaches **46%** exact final balance-sheet accuracy on standard
   records.
-- Four of six models show a **25-38 percentage-point aggregation gap**:
+- Four of six models show a **26-41 percentage-point aggregation gap**:
   replaying their own account-and-amount postings often gives a better balance
   sheet than the one they report.
 - Document grounding is a separate failure mode: **52%** of entries with the
@@ -164,8 +168,8 @@ print(summary)
 python scripts/generate_standard_datasets.py \
   --base-dir data \
   --seed 42 \
-  --records-per-combo 8 \
-  --negative-controls-per-code 4 \
+  --records-per-combo 4 \
+  --negative-controls-per-code 10 \
   --overwrite
 ```
 
@@ -175,13 +179,13 @@ The canonical generated splits live under `data/`:
 
 | Split | Records | Purpose |
 |---|---:|---|
-| `data/coverage/` | 143 | Core evaluation split used for headline paper results |
-| `data/main/` | 1,052 | Larger generated split for training, stress testing, and downstream studies |
+| `data/coverage/` | 143 | Compact ablation and smoke-test split |
+| `data/main/` | 710 | Core paper evaluation split with four records per industry-period-difficulty cell and ten records per inconsistency code |
 
 The folder names are kept for backward compatibility with earlier scripts and
-result directories. The paper treats `coverage/` as the core evaluation split
-because it covers every industry-period-difficulty cell and every inconsistency
-code at least once.
+result directories. The paper treats `main/` as the core evaluation split;
+`coverage/` remains useful for fast ablations because it covers every
+industry-period-difficulty cell and every inconsistency code at least once.
 
 ## Evaluate Models
 
@@ -221,7 +225,7 @@ Regenerate paper figures:
 
 ```bash
 python scripts/generate_paper_figures.py \
-  --dataset data/coverage/records.jsonl \
+  --dataset data/main/records.jsonl \
   --results-dir results \
   --output-dir paper/figures
 ```
@@ -230,9 +234,9 @@ python scripts/generate_paper_figures.py \
 
 The paper reports:
 
-- six-model baseline evaluation on the 143-record core split
+- six-model baseline evaluation on the 710-record core split
 - full ablation matrix on Gemini 3 Flash
-- targeted ablations on DeepSeek V3.2, Claude Haiku 4.5, and Qwen 3 235B
+- targeted ablations on DeepSeek, Claude Haiku 4.5, and Qwen 3 235B
 - paired bootstrap CIs with 5,000 resamples
 
 The headline OpenRouter request slugs were:
@@ -243,7 +247,7 @@ The headline OpenRouter request slugs were:
 | GPT-5 | `openai/gpt-5` with `--reasoning-effort low` | `openai/gpt-5-2025-08-07` |
 | Claude Haiku 4.5 | `anthropic/claude-haiku-4.5` | `anthropic/claude-4.5-haiku-20251001` |
 | Grok-4.3 | `x-ai/grok-4.3` | `x-ai/grok-4.3-20260430` |
-| DeepSeek V3.2 | `deepseek/deepseek-v3.2-exp` | `deepseek/deepseek-v3.2-exp` |
+| DeepSeek Chat | `deepseek-chat` through DeepSeek Platform | `deepseek-chat` |
 | Qwen 3 235B | `qwen/qwen3-235b-a22b-2507` | `qwen/qwen3-235b-a22b-07-25` |
 
 Saved evaluation outputs include timestamps, selected provider, returned model

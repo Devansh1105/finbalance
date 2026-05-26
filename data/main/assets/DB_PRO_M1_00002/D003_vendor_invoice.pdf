@@ -12,7 +12,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 1018 >>
+<< /Length 1027 >>
 stream
 BT
 /F1 10 Tf
@@ -28,11 +28,11 @@ T*
 T*
 (----) Tj
 T*
-(Beacon Clinic) Tj
+(Willow Operations) Tj
 T*
-(14 King Street, Pune) Tj
+(18 Marina Avenue, Chennai) Tj
 T*
-(Date: 2024-01-08) Tj
+(Document Date: 2025-03-09) Tj
 T*
 () Tj
 T*
@@ -40,7 +40,7 @@ T*
 T*
 (--) Tj
 T*
-(Golden State Finance) Tj
+(Prime Utility Desk) Tj
 T*
 (Vendor remittance address on file) Tj
 T*
@@ -54,7 +54,7 @@ T*
 T*
 (Document Type: vendor_invoice) Tj
 T*
-(Period: January 2024) Tj
+(Period: March 2025) Tj
 T*
 () Tj
 T*
@@ -62,7 +62,7 @@ T*
 T*
 (-----) Tj
 T*
-(Due Date: 2024-01-20) Tj
+(Due Date: 2025-03-30) Tj
 T*
 () Tj
 T*
@@ -70,7 +70,7 @@ T*
 T*
 (---------------) Tj
 T*
-(Vendor: Golden State Finance) Tj
+(Vendor: Prime Utility Desk) Tj
 T*
 (Expense Label: Office Supplies Expense) Tj
 T*
@@ -84,9 +84,9 @@ T*
 T*
 (Invoice Number: BILL-0001) Tj
 T*
-(Due Date: 2024-01-20) Tj
+(Due Date: 2025-03-30) Tj
 T*
-(Total: $2,168.11) Tj
+(Total: $3,286.49) Tj
 T*
 () Tj
 T*
@@ -96,9 +96,9 @@ T*
 T*
 (Lines:) Tj
 T*
-(  - Description Implementation work | Amount $974.20) Tj
+(  - Description Monthly retainer | Amount $760.70) Tj
 T*
-(  - Description Support fee | Amount $1,193.91) Tj
+(  - Description Support fee | Amount $2,525.79) Tj
 T*
 () Tj
 T*
@@ -112,13 +112,13 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
 endobj
 7 0 obj
-<< /Length 102 >>
+<< /Length 120 >>
 stream
 BT
 /F1 10 Tf
 50 760 Td
 14 TL
-(Internal document packet copy.) Tj
+(Generated for synthetic accounting research use.) Tj
 T*
 (Page marker: D003) Tj
 T*
@@ -134,10 +134,10 @@ xref
 0000000123 00000 n 
 0000000193 00000 n 
 0000000319 00000 n 
-0000001389 00000 n 
-0000001515 00000 n 
+0000001398 00000 n 
+0000001524 00000 n 
 trailer
 << /Size 8 /Root 1 0 R >>
 startxref
-1668
+1695
 %%EOF

@@ -29,12 +29,12 @@ class ResultRun:
 
 
 DEFAULT_BASELINE_RUNS: tuple[tuple[str, str], ...] = (
-    ("Gemini 3 Flash", "gemini3flash_promoted_coverage_full_clean/prompt_baseline"),
-    ("GPT-5", "gpt5_sweep_baseline_low/prompt_baseline"),
-    ("DeepSeek V3.2", "deepseek_v32_sweep/prompt_baseline"),
-    ("Qwen3 235B", "qwen3_235b_sweep_baseline/prompt_baseline"),
-    ("Grok 4.3", "grok43_sweep_baseline/prompt_baseline"),
-    ("Claude Haiku 4.5", "claude_haiku45_sweep_baseline/prompt_baseline"),
+    ("Gemini 3 Flash", "gemini3flash_main710/prompt_baseline"),
+    ("GPT-5", "gpt5_main710/prompt_baseline"),
+    ("Claude Haiku 4.5", "claude_haiku45_main710/prompt_baseline"),
+    ("Grok 4.3", "grok43_main710/prompt_baseline"),
+    ("Qwen3 235B", "qwen3_235b_main710/prompt_baseline"),
+    ("DeepSeek Chat", "deepseek_chat_main710/prompt_baseline"),
 )
 
 DEFAULT_VERIFIER_MODEL_DIRS: tuple[tuple[str, str], ...] = (

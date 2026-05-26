@@ -12,7 +12,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 1017 >>
+<< /Length 1046 >>
 stream
 BT
 /F1 10 Tf
@@ -28,11 +28,11 @@ T*
 T*
 (----) Tj
 T*
-(Beacon Clinic) Tj
+(Willow Operations) Tj
 T*
-(14 King Street, Pune) Tj
+(18 Marina Avenue, Chennai) Tj
 T*
-(Date: 2024-01-31) Tj
+(Document Date: 2025-03-31) Tj
 T*
 () Tj
 T*
@@ -44,7 +44,7 @@ T*
 T*
 (Document Type: bank_statement) Tj
 T*
-(Period: January 2024) Tj
+(Period: March 2025) Tj
 T*
 () Tj
 T*
@@ -58,9 +58,9 @@ T*
 T*
 (Statement Currency: USD) Tj
 T*
-(Opening Balance: $40,629.83) Tj
+(Opening Balance: $22,792.47) Tj
 T*
-(Closing Balance: $40,628.40) Tj
+(Closing Balance: $22,760.34) Tj
 T*
 () Tj
 T*
@@ -70,9 +70,9 @@ T*
 T*
 (Rows:) Tj
 T*
-(  - Date 2024-01-11 | Description Beacon Industrial Supply receipt RCPT-0001 | Amount $-1.43) Tj
+(  - Date 2025-03-20 | Description Prime Utility Desk receipt RCPT-0001 | Amount $-32.13 | ) Tj
 T*
-( | Running Balance $40,628.40) Tj
+(Running Balance $22,760.34) Tj
 T*
 () Tj
 T*
@@ -88,7 +88,7 @@ T*
 T*
 (------) Tj
 T*
-(Internal document packet copy.) Tj
+(Generated for synthetic accounting research use.) Tj
 T*
 (Page marker: D005) Tj
 T*
@@ -107,5 +107,5 @@ xref
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-1382
+1411
 %%EOF

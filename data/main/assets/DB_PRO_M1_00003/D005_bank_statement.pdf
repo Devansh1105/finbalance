@@ -12,7 +12,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 1022 >>
+<< /Length 1012 >>
 stream
 BT
 /F1 10 Tf
@@ -28,11 +28,11 @@ T*
 T*
 (----) Tj
 T*
-(Cedar Operations) Tj
+(Willow Builders) Tj
 T*
-(220 Lake View Road, Bengaluru) Tj
+(14 King Street, Pune) Tj
 T*
-(Date: 2025-11-30) Tj
+(Date: 2025-10-31) Tj
 T*
 () Tj
 T*
@@ -44,7 +44,7 @@ T*
 T*
 (Document Type: bank_statement) Tj
 T*
-(Period: November 2025) Tj
+(Period: October 2025) Tj
 T*
 () Tj
 T*
@@ -58,9 +58,9 @@ T*
 T*
 (Statement Currency: USD) Tj
 T*
-(Opening Balance: $40,891.58) Tj
+(Opening Balance: $20,517.97) Tj
 T*
-(Closing Balance: $40,883.93) Tj
+(Closing Balance: $20,436.87) Tj
 T*
 () Tj
 T*
@@ -70,9 +70,9 @@ T*
 T*
 (Rows:) Tj
 T*
-(  - Date 2025-11-14 | Description Oakline Services receipt RCPT-0001 | Amount $-7.65 | ) Tj
+(  - Date 2025-10-16 | Description Oakline Services receipt RCPT-0001 | Amount $-81.10 | ) Tj
 T*
-(Running Balance $40,883.93) Tj
+(Running Balance $20,436.87) Tj
 T*
 () Tj
 T*
@@ -107,5 +107,5 @@ xref
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-1387
+1377
 %%EOF

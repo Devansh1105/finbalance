@@ -40,6 +40,8 @@ MODEL_LABELS = {
     "qwen/qwen3-235b-a22b-2507": "Qwen3 235B",
     "x-ai/grok-4.3": "Grok 4.3",
     "anthropic/claude-haiku-4.5": "Claude Haiku 4.5",
+    "deepseek-chat": "DeepSeek Chat",
+    "deepseek-reasoner": "DeepSeek Reasoner",
     "meta-llama/llama-3.3-70b-instruct": "Llama 3.3 70B",
     "anthropic/claude-sonnet-4.6": "Claude Sonnet 4.6",
     "google/gemini-3.1-pro-preview": "Gemini 3.1 Pro",

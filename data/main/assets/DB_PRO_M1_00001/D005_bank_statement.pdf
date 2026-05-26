@@ -12,7 +12,7 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
 endobj
 5 0 obj
-<< /Length 1039 >>
+<< /Length 1024 >>
 stream
 BT
 /F1 10 Tf
@@ -28,11 +28,11 @@ T*
 T*
 (----) Tj
 T*
-(Silverline Clinic) Tj
+(Granite Retail Group) Tj
 T*
-(14 King Street, Pune) Tj
+(18 Marina Avenue, Chennai) Tj
 T*
-(Document Date: 2024-06-30) Tj
+(Date: 2025-11-30) Tj
 T*
 () Tj
 T*
@@ -44,7 +44,7 @@ T*
 T*
 (Document Type: bank_statement) Tj
 T*
-(Period: June 2024) Tj
+(Period: November 2025) Tj
 T*
 () Tj
 T*
@@ -58,9 +58,9 @@ T*
 T*
 (Statement Currency: USD) Tj
 T*
-(Opening Balance: $30,869.47) Tj
+(Opening Balance: $40,777.07) Tj
 T*
-(Closing Balance: $30,706.66) Tj
+(Closing Balance: $40,652.73) Tj
 T*
 () Tj
 T*
@@ -70,9 +70,9 @@ T*
 T*
 (Rows:) Tj
 T*
-(  - Date 2024-06-15 | Description Oakline Services receipt RCPT-0001 | Amount $-162.81 | ) Tj
+(  - Date 2025-11-18 | Description Oakline Services receipt RCPT-0001 | Amount $-124.34 | ) Tj
 T*
-(Running Balance $30,706.66) Tj
+(Running Balance $40,652.73) Tj
 T*
 () Tj
 T*
@@ -88,7 +88,7 @@ T*
 T*
 (------) Tj
 T*
-(Generated for synthetic accounting research use.) Tj
+(Internal document packet copy.) Tj
 T*
 (Page marker: D005) Tj
 T*
@@ -107,5 +107,5 @@ xref
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-1404
+1389
 %%EOF

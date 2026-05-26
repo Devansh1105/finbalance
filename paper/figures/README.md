@@ -11,7 +11,7 @@ Generated figures are written as both PDF and PNG:
 - `fig_gap_repair_comparison`: self-consistency selection versus forced verifier on the same targeted gap records.
 - `fig_difficulty_trend`: baseline and verifier performance by difficulty level.
 - `fig_context_stress`: evidence-only and distractor/context-ordering ablations.
-- `fig_dataset_composition`: coverage-set composition.
+- `fig_dataset_composition`: main evaluation-set composition.
 - `fig_failure_slices`: multi-model industry, ledger-family, and error-taxonomy heatmaps.
 - `fig_concept_heatmap`: multi-model accuracy by accounting concept flag.
 - `fig_cost_pareto`: cost-per-record versus BS exact accuracy.
@@ -23,7 +23,7 @@ Regenerate all figures from repo root:
 
 ```bash
 python scripts/generate_paper_figures.py \
-  --dataset data/coverage/records.jsonl \
+  --dataset data/main/records.jsonl \
   --results-dir results \
   --output-dir paper/figures
 ```

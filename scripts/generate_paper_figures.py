@@ -18,7 +18,7 @@ from finbalance.figures import generate_all_figures
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results-dir", default="results", help="Directory containing evaluation result folders.")
-    parser.add_argument("--dataset", default="data/coverage/records.jsonl", help="Dataset JSONL used for composition plots.")
+    parser.add_argument("--dataset", default="data/main/records.jsonl", help="Dataset JSONL used for composition plots.")
     parser.add_argument("--output-dir", default="paper/figures", help="Directory for generated PDF/PNG figures.")
     parser.add_argument(
         "--min-model-records",
@@ -39,4 +39,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

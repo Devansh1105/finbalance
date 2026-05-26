@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import os
 import shutil
@@ -56,6 +57,11 @@ FORCED_INCONSISTENCY_CANDIDATES = {
     "remeasurement_mismatch": (("subscription_saas", "year", 5, None), ("professional_services", "year", 5, None)),
 }
 
+BACKEND_CHAT_COMPLETIONS_URLS = {
+    "openrouter": "https://openrouter.ai/api/v1/chat/completions",
+    "deepseek": "https://api.deepseek.com/chat/completions",
+}
+
 
 def _aggregation_gap_record_ids(path: Path) -> set[str]:
     if path.is_dir():
@@ -101,8 +107,13 @@ def main() -> None:
     standard = subparsers.add_parser("generate-standard-datasets", help="Regenerate finbalance coverage and main datasets with manifests")
     standard.add_argument("--base-dir", default="data")
     standard.add_argument("--seed", type=int, default=42)
-    standard.add_argument("--records-per-combo", type=int, default=8)
-    standard.add_argument("--negative-controls-per-code", type=int, default=4)
+    standard.add_argument("--records-per-combo", type=int, default=4)
+    standard.add_argument("--negative-controls-per-code", type=int, default=10)
+    standard.add_argument(
+        "--main-only",
+        action="store_true",
+        help="Regenerate only data/main as an extension of existing data/coverage",
+    )
 
     inspect = subparsers.add_parser("inspect", help="Generate one sample record and print a summary")
     inspect.add_argument("--industry", choices=INDUSTRIES, default="professional_services")
@@ -132,12 +143,13 @@ def main() -> None:
     evaluate.add_argument("--temperature", type=float, default=0.0)
     evaluate.add_argument("--max-output-tokens", type=int, default=8192)
     evaluate.add_argument("--timeout", type=int, default=180)
+    evaluate.add_argument("--max-retries", type=int, default=3)
     evaluate.add_argument("--reasoning-effort", choices=["none", "minimal", "low", "medium", "high", "xhigh"])
 
     ablations = subparsers.add_parser("evaluate-ablations", help="Run provider-neutral benchmark ablations")
     ablations.add_argument("--dataset", default="data/coverage/records.jsonl")
     ablations.add_argument("--output-dir", default="results/ablations")
-    ablations.add_argument("--backend", choices=["openrouter"], default="openrouter")
+    ablations.add_argument("--backend", choices=["openrouter", "deepseek"], default="openrouter")
     ablations.add_argument("--model", required=True)
     ablations.add_argument("--api-key")
     ablations.add_argument("--matrix", choices=["coverage", "targeted", "context_stress"], default="coverage")
@@ -157,6 +169,7 @@ def main() -> None:
     ablations.add_argument("--temperature", type=float, default=0.0)
     ablations.add_argument("--max-output-tokens", type=int, default=8192)
     ablations.add_argument("--timeout", type=int, default=180)
+    ablations.add_argument("--max-retries", type=int, default=3)
     ablations.add_argument("--reasoning-effort", choices=["none", "minimal", "low", "medium", "high", "xhigh"])
     ablations.add_argument("--agent-max-steps", type=int, default=8)
     ablations.add_argument("--resume", action="store_true", help="Skip records already present in per_record_results.jsonl")
@@ -206,12 +219,20 @@ def main() -> None:
         return
 
     if args.command == "generate-standard-datasets":
-        summary = regenerate_standard_datasets(
-            base_dir=args.base_dir,
-            seed=args.seed,
-            records_per_combo=args.records_per_combo,
-            negative_controls_per_code=args.negative_controls_per_code,
-        )
+        if args.main_only:
+            summary = regenerate_main_dataset_from_existing_coverage(
+                base_dir=args.base_dir,
+                seed=args.seed,
+                records_per_combo=args.records_per_combo,
+                negative_controls_per_code=args.negative_controls_per_code,
+            )
+        else:
+            summary = regenerate_standard_datasets(
+                base_dir=args.base_dir,
+                seed=args.seed,
+                records_per_combo=args.records_per_combo,
+                negative_controls_per_code=args.negative_controls_per_code,
+            )
         print(json.dumps(summary, indent=2))
         return
 
@@ -248,7 +269,14 @@ def main() -> None:
         if not records:
             raise SystemExit("No matching records found in dataset")
 
-        client = OpenRouterClient(api_key=api_key, model=args.model, reasoning_effort=args.reasoning_effort)
+        client = OpenRouterClient(
+            api_key=api_key,
+            model=args.model,
+            base_url=BACKEND_CHAT_COMPLETIONS_URLS["openrouter"],
+            app_name="finbalance-openrouter",
+            max_retries=args.max_retries,
+            reasoning_effort=args.reasoning_effort,
+        )
         evaluation = run_openrouter_evaluation(
             records,
             client=client,
@@ -264,9 +292,10 @@ def main() -> None:
         return
 
     if args.command == "evaluate-ablations":
-        api_key = args.api_key or os.environ.get("OPENROUTER_API_KEY")
+        env_var = "DEEPSEEK_API_KEY" if args.backend == "deepseek" else "OPENROUTER_API_KEY"
+        api_key = args.api_key or os.environ.get(env_var)
         if not api_key:
-            raise SystemExit("OpenRouter API key is required via --api-key or OPENROUTER_API_KEY")
+            raise SystemExit(f"{args.backend} API key is required via --api-key or {env_var}")
 
         records = filter_records(
             load_records(args.dataset),
@@ -284,7 +313,14 @@ def main() -> None:
             raise SystemExit("No matching records found in dataset")
 
         specs = select_ablation_specs(matrix=args.matrix, names=args.ablations)
-        client = OpenRouterClient(api_key=api_key, model=args.model, reasoning_effort=args.reasoning_effort)
+        client = OpenRouterClient(
+            api_key=api_key,
+            model=args.model,
+            base_url=BACKEND_CHAT_COMPLETIONS_URLS[args.backend],
+            app_name=f"finbalance-{args.backend}",
+            max_retries=args.max_retries,
+            reasoning_effort=args.reasoning_effort,
+        )
         output_dirs = []
         for spec in specs:
             existing_results = (
@@ -384,8 +420,8 @@ def regenerate_standard_datasets(
     *,
     base_dir: str | Path = "data",
     seed: int = 42,
-    records_per_combo: int = 8,
-    negative_controls_per_code: int = 4,
+    records_per_combo: int = 4,
+    negative_controls_per_code: int = 10,
 ) -> dict[str, object]:
     base_path = Path(base_dir)
     coverage_dir = base_path / "coverage"
@@ -406,41 +442,55 @@ def regenerate_standard_datasets(
         },
     )
 
-    total_main = len(INDUSTRIES) * len(PERIOD_TYPES) * 5 * records_per_combo
-    negative_target = len(INCONSISTENCY_CODES) * negative_controls_per_code
-    main_builder = DocumentBenchmarkBuilder(seed=seed)
-    counts = {
-        industry: {
-            period_type: {level: records_per_combo for level in range(1, 6)}
-            for period_type in PERIOD_TYPES
-        }
-        for industry in INDUSTRIES
-    }
-    main_records = main_builder.generate_dataset(
-        counts,
-        main_dir / "records.jsonl",
-        main_dir / "assets",
-        negative_control_rate=0.0,
-    )
-    for code_index, code in enumerate(INCONSISTENCY_CODES):
-        for ordinal in range(negative_controls_per_code):
-            main_records.append(_forced_negative_record(code, code_index, ordinal, main_dir / "assets", seed, prefix="MAIN_NEG"))
-    _write_dataset_bundle(
-        main_dir,
-        "main",
-        main_records,
-        config={
-            "base_seed": seed,
-            "records_per_combo": records_per_combo,
-            "negative_controls_per_code": negative_controls_per_code,
-            "base_combo_records": total_main,
-            "nonstandard_display_target_rate": 0.05,
-        },
+    main_records = _build_main_extension_dataset(
+        coverage_records=coverage_records,
+        coverage_dir=coverage_dir,
+        main_dir=main_dir,
+        seed=seed,
+        records_per_combo=records_per_combo,
+        negative_controls_per_code=negative_controls_per_code,
     )
     return {
         "coverage_records": len(coverage_records),
         "main_records": len(main_records),
-        "main_negative_target": negative_target,
+        "main_negative_target": len(INCONSISTENCY_CODES) * negative_controls_per_code,
+    }
+
+
+def regenerate_main_dataset_from_existing_coverage(
+    *,
+    base_dir: str | Path = "data",
+    seed: int = 42,
+    records_per_combo: int = 4,
+    negative_controls_per_code: int = 10,
+) -> dict[str, object]:
+    """Regenerate ``data/main`` as a strict extension of existing ``data/coverage``."""
+
+    base_path = Path(base_dir)
+    coverage_dir = base_path / "coverage"
+    main_dir = base_path / "main"
+    coverage_path = coverage_dir / "records.jsonl"
+    if not coverage_path.exists():
+        raise SystemExit(f"Coverage split not found: {coverage_path}")
+    if main_dir.exists():
+        shutil.rmtree(main_dir)
+
+    coverage_records = load_records(coverage_path)
+    main_records = _build_main_extension_dataset(
+        coverage_records=coverage_records,
+        coverage_dir=coverage_dir,
+        main_dir=main_dir,
+        seed=seed,
+        records_per_combo=records_per_combo,
+        negative_controls_per_code=negative_controls_per_code,
+    )
+    return {
+        "coverage_records": len(coverage_records),
+        "main_records": len(main_records),
+        "main_standard_records": sum(1 for record in main_records if not record.expected_inconsistency),
+        "main_inconsistency_records": sum(1 for record in main_records if record.expected_inconsistency),
+        "main_records_per_combo": records_per_combo,
+        "main_negative_controls_per_code": negative_controls_per_code,
     }
 
 
@@ -472,6 +522,108 @@ def _build_coverage_dataset(dataset_dir: Path, seed: int) -> list:
     for code_index, code in enumerate(INCONSISTENCY_CODES):
         records.append(_forced_negative_record(code, code_index, 0, assets_dir, seed, prefix="COV_NEG"))
     return records
+
+
+def _build_main_extension_dataset(
+    *,
+    coverage_records: list,
+    coverage_dir: Path,
+    main_dir: Path,
+    seed: int,
+    records_per_combo: int,
+    negative_controls_per_code: int,
+) -> list:
+    """Build the main split as coverage plus additional generated records.
+
+    The coverage split already contains one standard record per
+    industry-period-difficulty cell and one forced-inconsistency record per
+    code. The main split preserves those record IDs so previous coverage
+    evaluations can be reused, then adds enough records to reach the requested
+    per-cell and per-code totals.
+    """
+
+    if records_per_combo < 1:
+        raise ValueError("records_per_combo must be at least 1")
+    if negative_controls_per_code < 1:
+        raise ValueError("negative_controls_per_code must be at least 1")
+
+    assets_dir = main_dir / "assets"
+    main_records = [_copy_record_into_dataset(record, coverage_dir, main_dir) for record in coverage_records]
+
+    extra_per_combo = records_per_combo - 1
+    if extra_per_combo:
+        counts = {
+            industry: {
+                period_type: {level: extra_per_combo for level in range(1, 6)}
+                for period_type in PERIOD_TYPES
+            }
+            for industry in INDUSTRIES
+        }
+        builder = DocumentBenchmarkBuilder(seed=seed + 10_000)
+        extra_path = main_dir / "_extra_standard_records.jsonl"
+        extra_standard = builder.generate_dataset(
+            counts,
+            extra_path,
+            assets_dir,
+            negative_control_rate=0.0,
+        )
+        if extra_path.exists():
+            extra_path.unlink()
+        for record in extra_standard:
+            _rewrite_record_asset_paths(record, assets_dir)
+        main_records.extend(extra_standard)
+
+    extra_negatives_per_code = negative_controls_per_code - 1
+    if extra_negatives_per_code:
+        for code_index, code in enumerate(INCONSISTENCY_CODES):
+            for ordinal in range(1, negative_controls_per_code):
+                record = _forced_negative_record(
+                    code,
+                    code_index,
+                    ordinal,
+                    assets_dir,
+                    seed,
+                    prefix="MAIN_NEG",
+                )
+                _rewrite_record_asset_paths(record, assets_dir)
+                main_records.append(record)
+
+    _write_dataset_bundle(
+        main_dir,
+        "main",
+        main_records,
+        config={
+            "base_seed": seed,
+            "selection_strategy": "strict_extension_of_coverage",
+            "coverage_records_reused": len(coverage_records),
+            "records_per_industry_period_difficulty_cell": records_per_combo,
+            "extra_records_per_industry_period_difficulty_cell": extra_per_combo,
+            "negative_controls_per_code": negative_controls_per_code,
+            "extra_negative_controls_per_code": extra_negatives_per_code,
+            "base_combo_records": len(INDUSTRIES) * len(PERIOD_TYPES) * 5 * records_per_combo,
+            "forced_inconsistency_codes": list(INCONSISTENCY_CODES),
+            "nonstandard_display_target_rate": 0.05,
+        },
+    )
+    return main_records
+
+
+def _copy_record_into_dataset(record, source_dataset_dir: Path, target_dataset_dir: Path):
+    copied = copy.deepcopy(record)
+    source_assets_dir = source_dataset_dir / "assets" / copied.record_id
+    target_assets_dir = target_dataset_dir / "assets" / copied.record_id
+    if source_assets_dir.exists():
+        if target_assets_dir.exists():
+            shutil.rmtree(target_assets_dir)
+        shutil.copytree(source_assets_dir, target_assets_dir)
+    _rewrite_record_asset_paths(copied, target_dataset_dir / "assets")
+    return copied
+
+
+def _rewrite_record_asset_paths(record, assets_dir: Path) -> None:
+    for document in record.documents:
+        filename = Path(document.asset_path).name
+        document.asset_path = str(assets_dir / record.record_id / filename)
 
 
 def _forced_negative_record(code: str, code_index: int, ordinal: int, assets_dir: Path, seed: int, *, prefix: str):

@@ -1,6 +1,6 @@
 # Human Verification — finbalance Synthetic Dataset
 
-This folder contains 75 expert-reviewed records sampled from the benchmark dataset, rendered as plain Markdown so an accounting expert can read and verify the ground truth **without touching any JSON or code**.
+This folder contains expert-reviewed benchmark records rendered as plain Markdown so an accounting expert can read and verify the ground truth **without touching any JSON or code**.
 
 > **Note on framing:** the benchmark's ground truth is computed by deterministic ledger replay once the chart of accounts, accounting policies, tax/FX assumptions, scenario schemas, and document templates are fixed. Your validation is therefore **about whether the documents are a reasonable analogue of what an accountant would normally receive, plus account-choice conventions, difficulty calibration, and inconsistency validity** — not about whether the paperwork is pixel-perfect, and not about catching arithmetic errors in the ledger.
 >
@@ -24,15 +24,16 @@ Each Markdown file contains a verification form at the bottom — just check the
 3. Fill in the form in section 7 by checking boxes and writing free-text notes.
 4. Save the file back when done. You can also copy your responses into `verification_responses.md` if you prefer one consolidated file (template provided).
 
-## How the sample was selected
+## Review scopes
 
-- **60 standard records** — spanning all five difficulty levels and all eight industries.
-- **15 forced-inconsistency records** — covering 15 inconsistency codes and spanning difficulty levels.
-- The original candidate pool was generated deterministically (seed = 42); this release folder keeps the records with completed expert review. To regenerate a fresh candidate pool, edit the constants at the top of `generate_samples.py` and re-run:
+- **Release subset review:** 75 expert-reviewed records: 60 standard records spanning all five difficulty levels and all eight industries, plus 15 forced-inconsistency records covering 15 inconsistency codes.
+- **Double-reviewed overlap:** records 1-25 in the release subset were independently reviewed by two practising finance professionals. This is the overlap used for agreement reporting.
+- **Full compact-coverage review:** `Human_review_reviewer_3/` contains 143 completed reviews by a certified accountant over the full compact coverage split: 120 standard records plus all 23 forced-inconsistency codes. Because the compact split has one record for every industry-period-difficulty cell and one record for every inconsistency code, this pass checks every compact scenario at least once.
+- The original candidate pools were generated deterministically (seed = 42). To regenerate a fresh release-subset candidate pool, edit the constants at the top of `generate_samples.py` and re-run:
   ```bash
   python human_verification/generate_samples.py
   ```
-- See `sample_manifest.json` for the exact list of record IDs, difficulty levels, industries, and inconsistency codes covered.
+- See `sample_manifest.json` for the 75-record release subset and `full_dataset_reviewer_3/sample_manifest.json` for the 143-record compact coverage review manifest.
 
 ## Completed review artifacts
 
@@ -40,6 +41,12 @@ Each Markdown file contains a verification form at the bottom — just check the
   Reviewer 2 records 1–25 and 51–75.
 - The independent overlap used for agreement is records 1–25. The remaining
   records give single-expert coverage over records 26–75.
+- The certified-accountant pass over `Human_review_reviewer_3/` rejected no
+  record. Collapsing acceptable judgments gives 100% acceptability on document
+  analogy, entry correctness, entry completeness, `doc_refs`, and overall
+  verdict; all 23 forced-inconsistency records were confirmed to contain a real
+  contradiction, with 3/23 noted as genuine contradictions whose assigned code
+  was a loose fit.
 - Collection folders may contain duplicate files outside this assignment; those
   are retained for auditability but are not used in the reported agreement table.
 
