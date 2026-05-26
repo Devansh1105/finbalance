@@ -354,7 +354,7 @@ Journal entries are scored at the posting level. A strict posting match requires
 Across the six completed headline baselines at $n{=}710$, parse-success rates are at least $97\%$ and five models parse at $\geq 99.8\%$. We also attempted a DeepSeek reasoning-model run on the same split; because its completed artifacts had low parse success under the available provider conditions, we use DeepSeek Chat for the DeepSeek-family baseline.
 
 \paragraph{Two-pass ledger-feedback diagnostic.}
-For Gemini~3 Flash, the 2-pass ledger-feedback variant changes \bsexact{} by $+35.8$\,pp (CI $[+26.9, +44.9]$) compared with $+32.5$\,pp at 1-pass, and degrades \incCode{} by $-21.7$\,pp (CI $[-40.0, -5.3]$) compared with $-13.0$\,pp at 1-pass. The 2-pass variant adds $\sim$56\% inference cost; the main text therefore reports the 1-pass diagnostic.
+For Gemini~3 Flash, the 2-pass ledger-feedback variant changes \bsexact{} by $+35.8$\,pp (CI $[+26.9, +44.9]$) compared with $+32.5$\,pp at 1-pass, and degrades \incCode{} by $-21.7$\,pp (CI $[-40.0, -5.3]$) compared with $-13.0$\,pp at 1-pass. The main text reports the simpler 1-pass diagnostic.
 
 \section{Cost Analysis}
 \label{appx:cost-analysis}
@@ -395,7 +395,7 @@ Tool / diagnostic
 & Tests passive tool availability, ledger-aware candidate selection, and forced exposure to the deterministic ledger as a consistency-checking tool. \\
 \bottomrule
 \end{tabularx}
-\caption{Ablation matrix. We run unary axis variants and targeted multi-axis diagnostics rather than the full prompt $\times$ visibility $\times$ tool cross-product. This keeps the diagnostic surface broad while controlling cost.}
+\caption{Ablation matrix. We run unary axis variants and targeted multi-axis diagnostics rather than the full prompt $\times$ visibility $\times$ tool cross-product. This keeps the diagnostic surface broad while preserving paired comparisons.}
 \label{tab:ablation-grid}
 \end{table*}
 

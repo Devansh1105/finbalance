@@ -14,6 +14,9 @@ statements, payment notices, contracts, schedules, tax certificates, and
 distractor paperwork. FinBalance asks models to reconstruct the accounting
 state from that document bundle.
 
+Anonymous backup repository for review:
+https://anonymous.4open.science/r/finbalance-74D5/README.md
+
 ![One FinBalance record](paper/figures/diag_dataset_packet.png)
 
 ## Paper Summary

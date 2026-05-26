@@ -45,6 +45,10 @@ backups/
 *.bak
 *.bak.*
 
+# OpenReview supplementary archives
+finbalance_software_openreview.zip
+finbalance_data_openreview.zip
+
 # Generated benchmark artifacts (root-level after refactor)
 data/*.jsonl
 data/*_assets/
