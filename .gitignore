@@ -49,6 +49,11 @@ backups/
 finbalance_software_openreview.zip
 finbalance_data_openreview.zip
 
+# Raw run logs and legacy material (kept out of the public release)
+run_logs/
+.github/logs/
+_archive/
+
 # Generated benchmark artifacts (root-level after refactor)
 data/*.jsonl
 data/*_assets/

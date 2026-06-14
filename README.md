@@ -14,9 +14,6 @@ statements, payment notices, contracts, schedules, tax certificates, and
 distractor paperwork. FinBalance asks models to reconstruct the accounting
 state from that document bundle.
 
-Anonymous backup repository for review:
-https://anonymous.4open.science/r/finbalance-74D5/README.md
-
 ![One FinBalance record](paper/figures/diag_dataset_packet.png)
 
 ## Paper Summary
@@ -285,8 +282,17 @@ metrics.
 
 ## Citation
 
-The EMNLP 2026 paper is under review. A BibTeX entry will be added on
-acceptance.
+A preprint is available on arXiv. If you use FinBalance, please cite:
+
+```bibtex
+@article{finbalance2026,
+  title   = {FinBalance: A Multi-Document Accounting Reconciliation Benchmark},
+  author  = {TODO: author list},
+  journal = {arXiv preprint arXiv:TODO},
+  year    = {2026},
+  url     = {https://arxiv.org/abs/TODO}
+}
+```
 
 ## License
 
