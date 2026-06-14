@@ -49,6 +49,9 @@ backups/
 finbalance_software_openreview.zip
 finbalance_data_openreview.zip
 
+# arXiv submission tarball (build artifact)
+finbalance_arxiv.tar.gz
+
 # Raw run logs and legacy material (kept out of the public release)
 run_logs/
 .github/logs/

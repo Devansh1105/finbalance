@@ -287,7 +287,9 @@ A preprint is available on arXiv. If you use FinBalance, please cite:
 ```bibtex
 @article{finbalance2026,
   title   = {FinBalance: A Multi-Document Accounting Reconciliation Benchmark},
-  author  = {TODO: author list},
+  author  = {Tumpati, Sasank and Agarwal, Devansh and Kedia, Ayush and
+             Neekhra, Arjun and Mandal, Murari and Garg, Krishna and
+             Sinha, Yash and Gupta, Suman and Kumar, Dhruv},
   journal = {arXiv preprint arXiv:TODO},
   year    = {2026},
   url     = {https://arxiv.org/abs/TODO}
