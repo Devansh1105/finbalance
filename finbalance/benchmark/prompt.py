@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from typing import Final
 
+from finbalance.benchmark.ocr_noise import perturb_ocr_text
 from finbalance.inconsistencies import INCONSISTENCY_CODE_DETAILS
 from finbalance.schemas import DocumentRecord
 
@@ -32,6 +33,14 @@ VISIBILITY_VARIANT_EVIDENCE_PLUS_5_DISTRACTORS: Final = "evidence_plus_5_distrac
 VISIBILITY_VARIANT_EVIDENCE_PLUS_15_DISTRACTORS: Final = "evidence_plus_15_distractors"
 VISIBILITY_VARIANT_EVIDENCE_PLUS_30_DISTRACTORS: Final = "evidence_plus_30_distractors"
 VISIBILITY_VARIANT_EVIDENCE_RELEVANT_LAST: Final = "evidence_relevant_last"
+VISIBILITY_VARIANT_OCR_NOISE_2PCT: Final = "ocr_noise_2pct"
+VISIBILITY_VARIANT_OCR_NOISE_5PCT: Final = "ocr_noise_5pct"
+VISIBILITY_VARIANT_OCR_NOISE_10PCT: Final = "ocr_noise_10pct"
+OCR_NOISE_RATES: Final = {
+    VISIBILITY_VARIANT_OCR_NOISE_2PCT: 0.02,
+    VISIBILITY_VARIANT_OCR_NOISE_5PCT: 0.05,
+    VISIBILITY_VARIANT_OCR_NOISE_10PCT: 0.10,
+}
 VISIBILITY_VARIANTS: Final = (
     VISIBILITY_VARIANT_NORMAL,
     VISIBILITY_VARIANT_OCR_ONLY,
@@ -43,6 +52,9 @@ VISIBILITY_VARIANTS: Final = (
     VISIBILITY_VARIANT_EVIDENCE_PLUS_15_DISTRACTORS,
     VISIBILITY_VARIANT_EVIDENCE_PLUS_30_DISTRACTORS,
     VISIBILITY_VARIANT_EVIDENCE_RELEVANT_LAST,
+    VISIBILITY_VARIANT_OCR_NOISE_2PCT,
+    VISIBILITY_VARIANT_OCR_NOISE_5PCT,
+    VISIBILITY_VARIANT_OCR_NOISE_10PCT,
 )
 
 
@@ -226,14 +238,22 @@ def build_prompt(
         ]
     )
 
+    noise_rate = OCR_NOISE_RATES.get(visibility_variant, 0.0)
     for document in record.documents:
+        ocr_text = document.ocr_text
+        if noise_rate:
+            ocr_text = perturb_ocr_text(
+                ocr_text,
+                rate=noise_rate,
+                seed_key=f"{record.record_id}:{document.doc_id}:{noise_rate}",
+            )
         if visibility_variant == VISIBILITY_VARIANT_OCR_ONLY:
             lines.extend(
                 [
                     "",
                     f"Document ID: {document.doc_id}",
                     "Document OCR Text:",
-                    document.ocr_text.strip() or "(empty document text)",
+                    ocr_text.strip() or "(empty document text)",
                 ]
             )
         else:
@@ -244,7 +264,7 @@ def build_prompt(
                     f"Document Type: {document.doc_type}",
                     f"Document Title: {document.title}",
                     "Document OCR Text:",
-                    document.ocr_text.strip() or "(empty document text)",
+                    ocr_text.strip() or "(empty document text)",
                 ]
             )
 

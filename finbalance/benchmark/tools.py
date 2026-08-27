@@ -23,6 +23,7 @@ TOOL_VARIANT_CALCULATOR = "calculator"
 TOOL_VARIANT_DOCUMENT_SEARCH = "document_search"
 TOOL_VARIANT_LEDGER_CHECK = "ledger_check"
 TOOL_VARIANT_FULL_TOOL_AGENT = "full_tool_agent"
+TOOL_VARIANT_NATIVE_FULL_TOOL_AGENT = "native_full_tool_agent"
 TOOL_VARIANT_FORCED_LEDGER_VERIFIER = "forced_ledger_verifier"
 TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS = "forced_ledger_verifier_2pass"
 TOOL_VARIANT_SELF_CONSISTENCY_K3 = "self_consistency_k3"
@@ -32,6 +33,7 @@ TOOL_VARIANTS = (
     TOOL_VARIANT_DOCUMENT_SEARCH,
     TOOL_VARIANT_LEDGER_CHECK,
     TOOL_VARIANT_FULL_TOOL_AGENT,
+    TOOL_VARIANT_NATIVE_FULL_TOOL_AGENT,
     TOOL_VARIANT_FORCED_LEDGER_VERIFIER,
     TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS,
     TOOL_VARIANT_SELF_CONSISTENCY_K3,
@@ -47,6 +49,12 @@ TOOLS_BY_VARIANT = {
     TOOL_VARIANT_CALCULATOR: (TOOL_CALCULATOR,),
     TOOL_VARIANT_DOCUMENT_SEARCH: (TOOL_DOCUMENT_SEARCH,),
     TOOL_VARIANT_LEDGER_CHECK: (TOOL_LEDGER_CHECK,),
+    TOOL_VARIANT_NATIVE_FULL_TOOL_AGENT: (
+        TOOL_CALCULATOR,
+        TOOL_DOCUMENT_SEARCH,
+        TOOL_LEDGER_CHECK,
+        TOOL_INCONSISTENCY_CHECK,
+    ),
     TOOL_VARIANT_FULL_TOOL_AGENT: (
         TOOL_CALCULATOR,
         TOOL_DOCUMENT_SEARCH,
@@ -195,6 +203,203 @@ def run_tool_agent_completion(
     )
     response_text, response_payload = _complete_messages(
         client,
+        messages,
+        temperature=temperature,
+        max_tokens=max_tokens,
+        timeout=timeout,
+    )
+    payloads.append(response_payload)
+    return ToolAgentResult(
+        response_text=response_text,
+        response_payload=_payload_with_combined_usage(response_payload, payloads),
+        tool_calls=tool_calls,
+        tool_call_failures=failures,
+        latency_seconds=round(time.monotonic() - started, 4),
+    )
+
+
+NATIVE_TOOL_SCHEMAS: dict[str, dict[str, Any]] = {
+    TOOL_CALCULATOR: {
+        "type": "function",
+        "function": {
+            "name": TOOL_CALCULATOR,
+            "description": "Evaluate an arithmetic expression exactly and return the numeric result.",
+            "parameters": {
+                "type": "object",
+                "properties": {"expression": {"type": "string", "description": "Arithmetic expression, e.g. '1250 * 0.0825'"}},
+                "required": ["expression"],
+            },
+        },
+    },
+    TOOL_DOCUMENT_SEARCH: {
+        "type": "function",
+        "function": {
+            "name": TOOL_DOCUMENT_SEARCH,
+            "description": "Search the visible documents for a text query and return matching snippets with doc ids.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string"},
+                    "max_results": {"type": "integer", "minimum": 1, "maximum": 20},
+                },
+                "required": ["query"],
+            },
+        },
+    },
+    TOOL_LEDGER_CHECK: {
+        "type": "function",
+        "function": {
+            "name": TOOL_LEDGER_CHECK,
+            "description": "Replay candidate journal entries through a deterministic double-entry ledger and return the resulting balance sheet.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "entries": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "doc_refs": {"type": "array", "items": {"type": "string"}},
+                                "debit_account": {"type": "string"},
+                                "credit_account": {"type": "string"},
+                                "amount": {"type": "number"},
+                            },
+                            "required": ["debit_account", "credit_account", "amount"],
+                        },
+                    }
+                },
+                "required": ["entries"],
+            },
+        },
+    },
+    TOOL_INCONSISTENCY_CHECK: {
+        "type": "function",
+        "function": {
+            "name": TOOL_INCONSISTENCY_CHECK,
+            "description": "Validate candidate inconsistency codes against the allowed 23-code taxonomy.",
+            "parameters": {
+                "type": "object",
+                "properties": {"inconsistency_codes": {"type": "array", "items": {"type": "string"}}},
+                "required": ["inconsistency_codes"],
+            },
+        },
+    },
+}
+
+
+def run_native_tool_agent_completion(
+    record: DocumentRecord,
+    client: ChatClient,
+    prompt: str,
+    *,
+    allowed_tools: tuple[str, ...],
+    agent_max_steps: int = 8,
+    temperature: float,
+    max_tokens: int,
+    timeout: int,
+) -> ToolAgentResult:
+    """Tool agent using the provider-native function-calling API.
+
+    Same tools and loop budget as :func:`run_tool_agent_completion`, but tools
+    are declared through the request ``tools`` field and calls arrive as
+    structured ``tool_calls`` on the assistant message, so tool use does not
+    depend on the model emitting a bespoke JSON protocol.
+    """
+    complete_messages = getattr(client, "complete_messages", None)
+    if not callable(complete_messages):
+        raise TypeError("native tool agent requires a client with complete_messages support")
+
+    started = time.monotonic()
+    failures = 0
+    tool_calls: list[dict[str, Any]] = []
+    payloads: list[dict[str, Any]] = []
+    tool_schemas = [NATIVE_TOOL_SCHEMAS[name] for name in allowed_tools]
+    messages: list[dict[str, Any]] = [
+        {
+            "role": "user",
+            "content": prompt
+            + "\n\nTools are available through the tool-calling interface. Use them if helpful, "
+            "then return the final strict benchmark JSON answer as your message content.",
+        }
+    ]
+
+    for _ in range(agent_max_steps):
+        response_text, response_payload = complete_messages(
+            messages,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            timeout=timeout,
+            tools=tool_schemas,
+        )
+        payloads.append(response_payload)
+        choices = response_payload.get("choices") or [{}]
+        message = choices[0].get("message") or {"role": "assistant", "content": response_text}
+        requested_calls = message.get("tool_calls") or []
+
+        if not requested_calls:
+            return ToolAgentResult(
+                response_text=response_text,
+                response_payload=_payload_with_combined_usage(response_payload, payloads),
+                tool_calls=tool_calls,
+                tool_call_failures=failures,
+                latency_seconds=round(time.monotonic() - started, 4),
+            )
+
+        messages.append(message)
+        for call in requested_calls:
+            if len(tool_calls) >= agent_max_steps:
+                # Budget parity with the text protocol: at most agent_max_steps
+                # executed tool calls per record, regardless of parallel calls.
+                messages.append(
+                    {
+                        "role": "tool",
+                        "tool_call_id": call.get("id", ""),
+                        "content": json.dumps(
+                            {"ok": False, "error": "Tool-call budget exhausted. Return the final strict benchmark JSON answer."}
+                        ),
+                    }
+                )
+                continue
+            function = call.get("function") or {}
+            tool_name = function.get("name", "")
+            try:
+                arguments = json.loads(function.get("arguments") or "{}")
+                if not isinstance(arguments, dict):
+                    raise ValueError("arguments must be a JSON object")
+            except (json.JSONDecodeError, ValueError) as exc:
+                failures += 1
+                arguments = {}
+                tool_result: dict[str, Any] = {"ok": False, "error": f"Unparseable tool arguments: {exc}"}
+            else:
+                if tool_name not in allowed_tools:
+                    failures += 1
+                    tool_result = {
+                        "ok": False,
+                        "error": f"Tool '{tool_name}' is not available in this ablation.",
+                        "available_tools": list(allowed_tools),
+                    }
+                else:
+                    tool_result = execute_tool(tool_name, arguments, record)
+            tool_calls.append({"tool": tool_name, "arguments": arguments, "result": tool_result})
+            messages.append(
+                {
+                    "role": "tool",
+                    "tool_call_id": call.get("id", ""),
+                    "content": json.dumps(tool_result, sort_keys=True),
+                }
+            )
+
+    failures += 1
+    messages.append(
+        {
+            "role": "user",
+            "content": (
+                "Maximum tool steps reached. Stop calling tools and return the final strict "
+                "benchmark JSON answer now."
+            ),
+        }
+    )
+    response_text, response_payload = complete_messages(
         messages,
         temperature=temperature,
         max_tokens=max_tokens,

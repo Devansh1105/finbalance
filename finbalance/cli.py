@@ -60,7 +60,30 @@ FORCED_INCONSISTENCY_CANDIDATES = {
 BACKEND_CHAT_COMPLETIONS_URLS = {
     "openrouter": "https://openrouter.ai/api/v1/chat/completions",
     "deepseek": "https://api.deepseek.com/chat/completions",
+    "gemini": "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
 }
+
+BACKEND_API_KEY_ENV_VARS = {
+    "openrouter": "OPENROUTER_API_KEY",
+    "deepseek": "DEEPSEEK_API_KEY",
+    "gemini": "GEMINI_API_KEY",
+}
+
+
+def _vertex_chat_completions_url() -> str:
+    """Vertex AI OpenAI-compatible endpoint, built from env configuration.
+
+    Requires GOOGLE_CLOUD_PROJECT; GOOGLE_CLOUD_LOCATION defaults to global.
+    Auth uses `gcloud auth print-access-token` (api key sentinel "gcloud").
+    """
+    project = os.environ.get("GOOGLE_CLOUD_PROJECT")
+    if not project:
+        raise SystemExit("vertex backend requires GOOGLE_CLOUD_PROJECT to be set")
+    location = os.environ.get("GOOGLE_CLOUD_LOCATION", "global")
+    host = "aiplatform.googleapis.com" if location == "global" else f"{location}-aiplatform.googleapis.com"
+    return (
+        f"https://{host}/v1/projects/{project}/locations/{location}/endpoints/openapi/chat/completions"
+    )
 
 
 def _aggregation_gap_record_ids(path: Path) -> set[str]:
@@ -149,10 +172,10 @@ def main() -> None:
     ablations = subparsers.add_parser("evaluate-ablations", help="Run provider-neutral benchmark ablations")
     ablations.add_argument("--dataset", default="data/coverage/records.jsonl")
     ablations.add_argument("--output-dir", default="results/ablations")
-    ablations.add_argument("--backend", choices=["openrouter", "deepseek"], default="openrouter")
+    ablations.add_argument("--backend", choices=["openrouter", "deepseek", "gemini", "vertex"], default="openrouter")
     ablations.add_argument("--model", required=True)
     ablations.add_argument("--api-key")
-    ablations.add_argument("--matrix", choices=["coverage", "targeted", "context_stress"], default="coverage")
+    ablations.add_argument("--matrix", choices=["coverage", "targeted", "context_stress", "ocr_noise"], default="coverage")
     ablations.add_argument("--ablations", nargs="+")
     ablations.add_argument("--industries", nargs="+", choices=INDUSTRIES)
     ablations.add_argument("--period-types", nargs="+", choices=PERIOD_TYPES)
@@ -292,10 +315,13 @@ def main() -> None:
         return
 
     if args.command == "evaluate-ablations":
-        env_var = "DEEPSEEK_API_KEY" if args.backend == "deepseek" else "OPENROUTER_API_KEY"
-        api_key = args.api_key or os.environ.get(env_var)
-        if not api_key:
-            raise SystemExit(f"{args.backend} API key is required via --api-key or {env_var}")
+        if args.backend == "vertex":
+            api_key = "gcloud"  # sentinel: bearer tokens come from gcloud with auto-refresh
+        else:
+            env_var = BACKEND_API_KEY_ENV_VARS[args.backend]
+            api_key = args.api_key or os.environ.get(env_var)
+            if not api_key:
+                raise SystemExit(f"{args.backend} API key is required via --api-key or {env_var}")
 
         records = filter_records(
             load_records(args.dataset),
@@ -316,7 +342,9 @@ def main() -> None:
         client = OpenRouterClient(
             api_key=api_key,
             model=args.model,
-            base_url=BACKEND_CHAT_COMPLETIONS_URLS[args.backend],
+            base_url=_vertex_chat_completions_url()
+            if args.backend == "vertex"
+            else BACKEND_CHAT_COMPLETIONS_URLS[args.backend],
             app_name=f"finbalance-{args.backend}",
             max_retries=args.max_retries,
             reasoning_effort=args.reasoning_effort,

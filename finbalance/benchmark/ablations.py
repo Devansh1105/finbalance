@@ -35,6 +35,9 @@ from finbalance.benchmark.prompt import (
     VISIBILITY_VARIANT_NO_ALLOWED_ACCOUNTS,
     VISIBILITY_VARIANT_NO_DISTRACTORS_ORACLE,
     VISIBILITY_VARIANT_NORMAL,
+    VISIBILITY_VARIANT_OCR_NOISE_2PCT,
+    VISIBILITY_VARIANT_OCR_NOISE_5PCT,
+    VISIBILITY_VARIANT_OCR_NOISE_10PCT,
     VISIBILITY_VARIANT_OCR_ONLY,
     VISIBILITY_VARIANT_SUPPORT_DOCS_REMOVED,
     VISIBILITY_VARIANTS,
@@ -47,6 +50,7 @@ from finbalance.benchmark.tools import (
     TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS,
     TOOL_VARIANT_FULL_TOOL_AGENT,
     TOOL_VARIANT_LEDGER_CHECK,
+    TOOL_VARIANT_NATIVE_FULL_TOOL_AGENT,
     TOOL_VARIANT_NO_TOOLS,
     TOOL_VARIANT_SELF_CONSISTENCY_K3,
     TOOL_VARIANTS,
@@ -54,6 +58,7 @@ from finbalance.benchmark.tools import (
     ChatClient,
     ToolAgentResult,
     run_forced_ledger_verifier_completion,
+    run_native_tool_agent_completion,
     run_no_tool_completion,
     run_self_consistency_completion,
     run_tool_agent_completion,
@@ -97,6 +102,7 @@ COVERAGE_ABLATION_SPECS = (
     AblationSpec("tool_document_search", tool_variant=TOOL_VARIANT_DOCUMENT_SEARCH),
     AblationSpec("tool_ledger_check", tool_variant=TOOL_VARIANT_LEDGER_CHECK),
     AblationSpec("tool_full_tool_agent", tool_variant=TOOL_VARIANT_FULL_TOOL_AGENT),
+    AblationSpec("tool_native_full_tool_agent", tool_variant=TOOL_VARIANT_NATIVE_FULL_TOOL_AGENT),
 )
 
 TARGETED_ABLATION_SPECS = (
@@ -122,10 +128,18 @@ CONTEXT_STRESS_ABLATION_SPECS = (
     AblationSpec("evidence_relevant_last", visibility_variant=VISIBILITY_VARIANT_EVIDENCE_RELEVANT_LAST),
 )
 
+OCR_NOISE_ABLATION_SPECS = (
+    AblationSpec("prompt_baseline"),
+    AblationSpec("ocr_noise_2pct", visibility_variant=VISIBILITY_VARIANT_OCR_NOISE_2PCT),
+    AblationSpec("ocr_noise_5pct", visibility_variant=VISIBILITY_VARIANT_OCR_NOISE_5PCT),
+    AblationSpec("ocr_noise_10pct", visibility_variant=VISIBILITY_VARIANT_OCR_NOISE_10PCT),
+)
+
 ABLATION_MATRICES = {
     "coverage": COVERAGE_ABLATION_SPECS,
     "targeted": TARGETED_ABLATION_SPECS,
     "context_stress": CONTEXT_STRESS_ABLATION_SPECS,
+    "ocr_noise": OCR_NOISE_ABLATION_SPECS,
 }
 
 ALL_ABLATION_SPECS = tuple(
@@ -394,6 +408,17 @@ def run_ablation_evaluation(
                     verifier_passes=2
                     if spec.tool_variant == TOOL_VARIANT_FORCED_LEDGER_VERIFIER_2PASS
                     else 1,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                    timeout=timeout,
+                )
+            elif spec.tool_variant == TOOL_VARIANT_NATIVE_FULL_TOOL_AGENT:
+                completion = run_native_tool_agent_completion(
+                    visible_record,
+                    client,
+                    prompt,
+                    allowed_tools=TOOLS_BY_VARIANT[spec.tool_variant],
+                    agent_max_steps=agent_max_steps,
                     temperature=temperature,
                     max_tokens=max_tokens,
                     timeout=timeout,

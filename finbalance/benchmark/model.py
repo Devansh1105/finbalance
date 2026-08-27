@@ -2,10 +2,47 @@
 
 from __future__ import annotations
 
+import shutil
+import subprocess
 import time
 from typing import Any
 
 import requests
+
+GCLOUD_TOKEN_SENTINEL = "gcloud"
+_GCLOUD_TOKEN_TTL_SECONDS = 45 * 60
+
+
+class _GcloudTokenProvider:
+    """Bearer tokens for Vertex AI via `gcloud auth print-access-token`.
+
+    Access tokens expire after ~1 hour; we cache for 45 minutes and refresh
+    eagerly so multi-hour benchmark runs never send a stale token.
+    """
+
+    def __init__(self) -> None:
+        self._token: str | None = None
+        self._fetched_at = 0.0
+
+    def token(self, *, force_refresh: bool = False) -> str:
+        if (
+            not force_refresh
+            and self._token
+            and time.monotonic() - self._fetched_at < _GCLOUD_TOKEN_TTL_SECONDS
+        ):
+            return self._token
+        gcloud = shutil.which("gcloud") or f"{subprocess.os.path.expanduser('~')}/google-cloud-sdk/bin/gcloud"
+        result = subprocess.run(
+            [gcloud, "auth", "print-access-token"],
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"gcloud auth print-access-token failed: {result.stderr.strip()[:300]}")
+        self._token = result.stdout.strip()
+        self._fetched_at = time.monotonic()
+        return self._token
 
 
 class OpenRouterRequestError(RuntimeError):
@@ -36,6 +73,12 @@ class OpenRouterClient:
         self.max_retries = int(max_retries)
         self.retry_backoff_seconds = float(retry_backoff_seconds)
         self.reasoning_effort = reasoning_effort
+        self._gcloud_tokens = _GcloudTokenProvider() if api_key == GCLOUD_TOKEN_SENTINEL else None
+
+    def _bearer_token(self, *, force_refresh: bool = False) -> str:
+        if self._gcloud_tokens is not None:
+            return self._gcloud_tokens.token(force_refresh=force_refresh)
+        return self.api_key
 
     def _extract_text(self, payload: dict[str, Any]) -> str:
         choices = payload.get("choices") or []
@@ -44,6 +87,8 @@ class OpenRouterClient:
 
         message = choices[0].get("message") or {}
         content = message.get("content", "")
+        if content is None and message.get("tool_calls"):
+            return ""
         if isinstance(content, str):
             return content
         if isinstance(content, dict):
@@ -81,6 +126,7 @@ class OpenRouterClient:
         temperature: float = 0.0,
         max_tokens: int = 8192,
         timeout: int = 180,
+        tools: list[dict[str, Any]] | None = None,
     ) -> tuple[str, dict[str, Any]]:
         attempt = 0
         while True:
@@ -91,13 +137,21 @@ class OpenRouterClient:
                     "max_tokens": max_tokens,
                     "messages": messages,
                 }
+                if tools:
+                    request_json["tools"] = tools
                 if self.reasoning_effort:
-                    request_json["reasoning"] = {"effort": self.reasoning_effort}
+                    if "aiplatform.googleapis.com" in self.base_url:
+                        # Vertex's OpenAI-compat layer takes the OpenAI-style field;
+                        # "minimal" is the documented thinking-off approximation and
+                        # measurably yields 0 reasoning tokens on Gemini 3 Flash.
+                        request_json["reasoning_effort"] = self.reasoning_effort
+                    else:
+                        request_json["reasoning"] = {"effort": self.reasoning_effort}
 
                 response = requests.post(
                     self.base_url,
                     headers={
-                        "Authorization": f"Bearer {self.api_key}",
+                        "Authorization": f"Bearer {self._bearer_token()}",
                         "Content-Type": "application/json",
                         "X-Title": self.app_name,
                     },
@@ -108,6 +162,11 @@ class OpenRouterClient:
                 if attempt >= self.max_retries:
                     raise
                 self._sleep_before_retry(attempt)
+                attempt += 1
+                continue
+
+            if response.status_code == 401 and self._gcloud_tokens is not None and attempt < self.max_retries:
+                self._bearer_token(force_refresh=True)
                 attempt += 1
                 continue
 

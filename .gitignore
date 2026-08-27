@@ -75,3 +75,4 @@ paper/*.out
 paper/*.pdf
 paper/*.synctex.gz
 paper/sections/*.aux
+.codex-out/
