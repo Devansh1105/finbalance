@@ -1,0 +1,95 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R ] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1433 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(OPENING TRIAL BALANCE) Tj
+T*
+(=====================) Tj
+T*
+() Tj
+T*
+(Summary) Tj
+T*
+(-------) Tj
+T*
+(Statement Date: 2025-04-01) Tj
+T*
+(Prepared By: Synthetic finance engine) Tj
+T*
+() Tj
+T*
+(Account Lines) Tj
+T*
+(-------------) Tj
+T*
+(Accounts:) Tj
+T*
+(  - Section assets | Account Cash | Amount $89,990.15) Tj
+T*
+(  - Section assets | Account Accounts Receivable | Amount $22,365.72) Tj
+T*
+(  - Section assets | Account Prepaid Rent | Amount $9,008.42) Tj
+T*
+(  - Section assets | Account Prepaid Insurance | Amount $3,864.89) Tj
+T*
+(  - Section assets | Account Office Supplies | Amount $1,670.81) Tj
+T*
+(  - Section assets | Account Equipment | Amount $23,334.58) Tj
+T*
+(  - Section assets | Account Furniture | Amount $25,709.00) Tj
+T*
+(  - Section liabilities | Account Accounts Payable | Amount $7,841.54) Tj
+T*
+(  - Section liabilities | Account Accrued Expenses | Amount $1,950.68) Tj
+T*
+(  - Section liabilities | Account Unearned Revenue | Amount $7,723.02) Tj
+T*
+(  - Section liabilities | Account Loans Payable | Amount $12,742.51) Tj
+T*
+(  - Section liabilities | Account Notes Payable | Amount $20,121.34) Tj
+T*
+(  - Section equity | Account Retained Earnings | Amount $38,215.23) Tj
+T*
+(  - Section equity | Account Owner's Equity | Amount $87,349.25) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Opening balances are source inputs and should tie to the rest of the packet.) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000117 00000 n 
+0000000187 00000 n 
+0000000313 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1798
+%%EOF

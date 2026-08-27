@@ -1,0 +1,157 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1803 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Silverline Distribution) Tj
+T*
+(90 Hill Park, Hyderabad) Tj
+T*
+(Document Date: 2024-09-30) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D027) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: Q3 FY 2024) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0299) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $175,393.46) Tj
+T*
+(Closing Balance: $130,423.15) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2024-08-06 | Description Direct labor BATCH-0001 | Amount $-30,978.72 | Running ) Tj
+T*
+(Balance $144,414.74) Tj
+T*
+(  - Date 2024-08-23 | Description Loan draw LOAN-0001 | Amount $65,076.70 | Running Balance ) Tj
+T*
+($209,491.44) Tj
+T*
+(  - Date 2024-09-02 | Description Supplier settlement MAT-0001 | Amount $-30,111.99 | ) Tj
+T*
+(Running Balance $179,379.45) Tj
+T*
+(  - Date 2024-09-02 | Description Transfer out TRX-0001 | Amount $-69,802.21 | Running ) Tj
+T*
+(Balance $109,577.24) Tj
+T*
+(  - Date 2024-09-10 | Description Loan payment LOAN-0002 | Amount $-55,270.99 | Running ) Tj
+T*
+(Balance $54,306.25) Tj
+T*
+(  - Date 2024-09-14 | Description Payroll PAYRUN-0001 | Amount $-51,724.03 | Running Balance) Tj
+T*
+( $2,582.22) Tj
+T*
+(  - Date 2024-09-18 | Description Combined customer settlement PAY-0003 | Amount $40,958.95 ) Tj
+T*
+(| Running Balance $43,541.17) Tj
+T*
+(  - Date 2024-09-18 | Description Foreign payment FXBILL-0001 | Amount $-21,643.68 | Running) Tj
+T*
+( Balance $21,897.49) Tj
+T*
+(  - Date 2024-09-20 | Description Customer settlement FGINV-0001 | Amount $108,525.66 | ) Tj
+T*
+(Running Balance $130,423.15) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 289 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Generated for synthetic accounting research use.) Tj
+T*
+(Page marker: D027) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002174 00000 n 
+0000002300 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2640
+%%EOF

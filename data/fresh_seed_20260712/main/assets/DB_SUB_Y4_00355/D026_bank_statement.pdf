@@ -1,0 +1,145 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1583 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Granite Clinic) Tj
+T*
+(90 Hill Park, Hyderabad) Tj
+T*
+(Document Date: 2025-03-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D026) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: FY 2024-25) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0355) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $924,414.88) Tj
+T*
+(Closing Balance: $2,550,194.80) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2024-06-17 | Description Advance collection INV-0003 | Amount $1,096,792.82 | ) Tj
+T*
+(Running Balance $2,021,207.70) Tj
+T*
+(  - Date 2024-08-23 | Description Loan draw LOAN-0001 | Amount $1,182,324.73 | Running ) Tj
+T*
+(Balance $3,203,532.43) Tj
+T*
+(  - Date 2024-12-15 | Description Customer settlement INV-0001 | Amount $542,196.39 | ) Tj
+T*
+(Running Balance $3,745,728.82) Tj
+T*
+(  - Date 2024-12-27 | Description Supplier settlement BILL-0001 | Amount $-78,978.73 | ) Tj
+T*
+(Running Balance $3,666,750.09) Tj
+T*
+(  - Date 2025-01-19 | Description Payroll PAYRUN-0001 | Amount $-350,742.41 | Running ) Tj
+T*
+(Balance $3,316,007.68) Tj
+T*
+(  - Date 2025-02-01 | Description Transfer out TRX-0001 | Amount $-765,812.88 | Running ) Tj
+T*
+(Balance $2,550,194.80) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 135 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(------) Tj
+T*
+(Generated for synthetic accounting research use.) Tj
+T*
+(Page marker: D026) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000001954 00000 n 
+0000002080 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2266
+%%EOF

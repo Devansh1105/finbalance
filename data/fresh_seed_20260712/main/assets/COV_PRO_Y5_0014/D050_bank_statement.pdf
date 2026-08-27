@@ -1,0 +1,169 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1861 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Granite Distribution) Tj
+T*
+(220 Lake View Road, Bengaluru) Tj
+T*
+(Date: 31/12/2025) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D050) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: FY 2025) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0014) Tj
+T*
+(Statement Currency: GBP) Tj
+T*
+(Opening Balance: GBP 182,927.68) Tj
+T*
+(Closing Balance: GBP -227,503.21) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 19/01/2025 | Description Insurance coverage prepayment PRE-0002 | Amount GBP ) Tj
+T*
+(-23,645.34 | Running Balance GBP 159,282.34) Tj
+T*
+(  - Date 27/01/2025 | Description Rent prepayment PRE-0001 | Amount GBP -34,806.64 | Running) Tj
+T*
+( Balance GBP 124,475.70) Tj
+T*
+(  - Date 10/07/2025 | Description Asset purchase ASSET-0001 | Amount GBP -86,191.03 | ) Tj
+T*
+(Running Balance GBP 38,284.67) Tj
+T*
+(  - Date 01/08/2025 | Description Loan draw LOAN-0001 | Amount GBP 99,540.18 | Running ) Tj
+T*
+(Balance GBP 137,824.85) Tj
+T*
+(  - Date 21/08/2025 | Description Oakline Services receipt RCPT-0001 | Amount GBP -414.77 | ) Tj
+T*
+(Running Balance GBP 137,410.08) Tj
+T*
+(  - Date 17/09/2025 | Description Lease payment LEASE-0001 | Amount GBP -35,343.00 | Running) Tj
+T*
+( Balance GBP 102,067.08) Tj
+T*
+(  - Date 03/10/2025 | Description Transfer out TRX-0001 | Amount GBP -334,236.18 | Running ) Tj
+T*
+(Balance GBP -232,169.10) Tj
+T*
+(  - Date 04/10/2025 | Description Loan payment LOAN-0002 | Amount GBP -63,692.55 | Running ) Tj
+T*
+(Balance GBP -295,861.65) Tj
+T*
+(  - Date 07/10/2025 | Description Payroll PAYRUN-0001 | Amount GBP -39,948.97 | Running ) Tj
+T*
+(Balance GBP -335,810.62) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 676 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 08/10/2025 | Description Customer settlement INV-0001 | Amount GBP 21,087.51 | ) Tj
+T*
+(Running Balance GBP -314,723.11) Tj
+T*
+(  - Date 30/10/2025 | Description Supplier settlement BILL-0001 | Amount GBP -28,168.59 | ) Tj
+T*
+(Running Balance GBP -342,891.70) Tj
+T*
+(  - Date 24/11/2025 | Description Asset sale TAG-0001 | Amount GBP 115,388.49 | Running ) Tj
+T*
+(Balance GBP -227,503.21) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D050) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002232 00000 n 
+0000002358 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+3085
+%%EOF

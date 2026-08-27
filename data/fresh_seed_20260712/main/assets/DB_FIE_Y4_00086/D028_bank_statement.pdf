@@ -1,0 +1,153 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1709 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Atlas Retail Group) Tj
+T*
+(220 Lake View Road, Bengaluru) Tj
+T*
+(Date: 2025-12-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D028) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: FY 2025) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0086) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $171,682.85) Tj
+T*
+(Closing Balance: $70,330.92) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2025-05-05 | Description Pace Office Mart receipt RCPT-0002 | Amount $-1,043.13 | ) Tj
+T*
+(Running Balance $170,639.72) Tj
+T*
+(  - Date 2025-05-19 | Description Meridian Support LLP receipt RCPT-0001 | Amount $-52.32 | ) Tj
+T*
+(Running Balance $170,587.40) Tj
+T*
+(  - Date 2025-06-01 | Description Asset purchase ASSET-0001 | Amount $-139,618.85 | Running ) Tj
+T*
+(Balance $30,968.55) Tj
+T*
+(  - Date 2025-07-21 | Description Loan draw LOAN-0001 | Amount $118,896.95 | Running Balance) Tj
+T*
+( $149,865.50) Tj
+T*
+(  - Date 2025-07-21 | Description Pace Office Mart receipt RCPT-0003 | Amount $-1,017.21 | ) Tj
+T*
+(Running Balance $148,848.29) Tj
+T*
+(  - Date 2025-09-24 | Description Customer settlement INV-0001 | Amount $37,228.16 | Running) Tj
+T*
+( Balance $186,076.45) Tj
+T*
+(  - Date 2025-10-20 | Description Payroll PAYRUN-0001 | Amount $-108,366.92 | Running ) Tj
+T*
+(Balance $77,709.53) Tj
+T*
+(  - Date 2025-11-08 | Description Supplier settlement BILL-0001 | Amount $-7,378.61 | ) Tj
+T*
+(Running Balance $70,330.92) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 248 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D028) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002080 00000 n 
+0000002206 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2505
+%%EOF

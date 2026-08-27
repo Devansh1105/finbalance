@@ -1,0 +1,173 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1794 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Summit Software) Tj
+T*
+(75 Market Road, Mumbai) Tj
+T*
+(Date: 2024-09-30) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D041) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: Q3 FY 2024) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0030) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $44,530.67) Tj
+T*
+(Closing Balance: $-44,533.13) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2024-07-01 | Description Insurance coverage prepayment PRE-0002 | Amount ) Tj
+T*
+($-11,402.41 | Running Balance $33,128.26) Tj
+T*
+(  - Date 2024-07-05 | Description Rent prepayment PRE-0001 | Amount $-14,400.11 | Running ) Tj
+T*
+(Balance $18,728.15) Tj
+T*
+(  - Date 2024-08-11 | Description Prime Utility Desk receipt RCPT-0001 | Amount $-668.36 | ) Tj
+T*
+(Running Balance $18,059.79) Tj
+T*
+(  - Date 2024-08-20 | Description Asset purchase ASSET-0001 | Amount $-45,490.55 | Running ) Tj
+T*
+(Balance $-27,430.76) Tj
+T*
+(  - Date 2024-08-28 | Description Loan draw LOAN-0001 | Amount $136,347.71 | Running Balance) Tj
+T*
+( $108,916.95) Tj
+T*
+(  - Date 2024-08-31 | Description Supplier settlement BILL-0001 | Amount $-17,539.05 | ) Tj
+T*
+(Running Balance $91,377.90) Tj
+T*
+(  - Date 2024-09-04 | Description Payroll PAYRUN-0001 | Amount $-38,580.49 | Running Balance) Tj
+T*
+( $52,797.41) Tj
+T*
+(  - Date 2024-09-05 | Description Lease payment LEASE-0001 | Amount $-25,874.01 | Running ) Tj
+T*
+(Balance $26,923.40) Tj
+T*
+(  - Date 2024-09-09 | Description Foreign receipt FXINV-0001 | Amount $35,833.94 | Running ) Tj
+T*
+(Balance $62,757.34) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 766 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2024-09-10 | Description Asset sale OPEN-FUR | Amount $9,087.58 | Running Balance ) Tj
+T*
+($71,844.92) Tj
+T*
+(  - Date 2024-09-12 | Description Loan payment LOAN-0002 | Amount $-9,685.25 | Running ) Tj
+T*
+(Balance $62,159.67) Tj
+T*
+(  - Date 2024-09-13 | Description Customer settlement INV-0001 | Amount $8,457.80 | Running ) Tj
+T*
+(Balance $70,617.47) Tj
+T*
+(  - Date 2024-09-19 | Description Transfer out TRX-0001 | Amount $-115,150.60 | Running ) Tj
+T*
+(Balance $-44,533.13) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D041) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002165 00000 n 
+0000002291 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+3108
+%%EOF

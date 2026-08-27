@@ -1,0 +1,169 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1795 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Silverline Property Services) Tj
+T*
+(220 Lake View Road, Bengaluru) Tj
+T*
+(Date: 2024-03-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D029) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: March 2024) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-MATC) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $40,690.55) Tj
+T*
+(Closing Balance: $8,834.07) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2024-03-02 | Description Rent prepayment PRE-0001 | Amount $-6,772.43 | Running ) Tj
+T*
+(Balance $33,918.12) Tj
+T*
+(  - Date 2024-03-03 | Description Insurance coverage prepayment PRE-0002 | Amount $-5,274.35) Tj
+T*
+( | Running Balance $28,643.77) Tj
+T*
+(  - Date 2024-03-10 | Description Loan draw LOAN-0001 | Amount $30,880.24 | Running Balance ) Tj
+T*
+($59,524.01) Tj
+T*
+(  - Date 2024-03-11 | Description Asset purchase ASSET-0001 | Amount $-9,511.24 | Running ) Tj
+T*
+(Balance $50,012.77) Tj
+T*
+(  - Date 2024-03-19 | Description Pace Office Mart receipt RCPT-0001 | Amount $-362.18 | ) Tj
+T*
+(Running Balance $49,650.59) Tj
+T*
+(  - Date 2024-03-21 | Description Customer settlement INV-0001 | Amount $7,877.29 | Running ) Tj
+T*
+(Balance $57,527.88) Tj
+T*
+(  - Date 2024-03-21 | Description Loan payment LOAN-0002 | Amount $-11,117.33 | Running ) Tj
+T*
+(Balance $46,410.55) Tj
+T*
+(  - Date 2024-03-22 | Description Asset sale OPEN-EQU | Amount $6,394.32 | Running Balance ) Tj
+T*
+($52,804.87) Tj
+T*
+(  - Date 2024-03-23 | Description Lease payment LEASE-0001 | Amount $-3,631.33 | Running ) Tj
+T*
+(Balance $49,173.54) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 643 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2024-03-23 | Description Transfer out TRX-0001 | Amount $-29,990.87 | Running ) Tj
+T*
+(Balance $19,182.67) Tj
+T*
+(  - Date 2024-03-27 | Description Payroll PAYRUN-0001 | Amount $-5,109.36 | Running Balance ) Tj
+T*
+($14,073.31) Tj
+T*
+(  - Date 2024-03-28 | Description Supplier settlement BILL-0001 | Amount $-5,239.24 | ) Tj
+T*
+(Running Balance $8,834.07) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D029) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002166 00000 n 
+0000002292 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2986
+%%EOF

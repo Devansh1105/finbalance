@@ -1,0 +1,169 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1803 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Willow Manufacturing) Tj
+T*
+(14 King Street, Pune) Tj
+T*
+(Document Date: 2025-03-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D048) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: FY 2024-25) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0044) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $142,175.51) Tj
+T*
+(Closing Balance: $64,424.45) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2024-04-14 | Description Insurance coverage prepayment PRE-0002 | Amount ) Tj
+T*
+($-40,239.85 | Running Balance $101,935.66) Tj
+T*
+(  - Date 2024-04-14 | Description Rent prepayment PRE-0001 | Amount $-54,465.40 | Running ) Tj
+T*
+(Balance $47,470.26) Tj
+T*
+(  - Date 2024-09-22 | Description Asset purchase ASSET-0001 | Amount $-84,884.52 | Running ) Tj
+T*
+(Balance $-37,414.26) Tj
+T*
+(  - Date 2024-10-06 | Description Vertex Supply Co. receipt RCPT-0001 | Amount $-569.85 | ) Tj
+T*
+(Running Balance $-37,984.11) Tj
+T*
+(  - Date 2024-10-22 | Description Loan draw LOAN-0001 | Amount $342,885.07 | Running Balance) Tj
+T*
+( $304,900.96) Tj
+T*
+(  - Date 2024-12-12 | Description Loan payment LOAN-0002 | Amount $-62,317.46 | Running ) Tj
+T*
+(Balance $242,583.50) Tj
+T*
+(  - Date 2024-12-26 | Description Payroll PAYRUN-0001 | Amount $-70,237.49 | Running Balance) Tj
+T*
+( $172,346.01) Tj
+T*
+(  - Date 2024-12-28 | Description Transfer out TRX-0001 | Amount $-106,202.84 | Running ) Tj
+T*
+(Balance $66,143.17) Tj
+T*
+(  - Date 2024-12-30 | Description Customer settlement INV-0001 | Amount $40,567.67 | Running) Tj
+T*
+( Balance $106,710.84) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 666 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2025-01-06 | Description Lease payment LEASE-0001 | Amount $-51,252.96 | Running ) Tj
+T*
+(Balance $55,457.88) Tj
+T*
+(  - Date 2025-01-20 | Description Asset sale OPEN-EQU | Amount $30,635.93 | Running Balance ) Tj
+T*
+($86,093.81) Tj
+T*
+(  - Date 2025-02-03 | Description Supplier settlement BILL-0001 | Amount $-21,669.36 | ) Tj
+T*
+(Running Balance $64,424.45) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Generated for synthetic accounting research use.) Tj
+T*
+(Page marker: D048) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002174 00000 n 
+0000002300 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+3017
+%%EOF

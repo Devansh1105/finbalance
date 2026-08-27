@@ -1,0 +1,161 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1754 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Harbor Clinic) Tj
+T*
+(75 Market Road, Mumbai) Tj
+T*
+(Date: 2024-05-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D020) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: May 2024) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0012) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $19,223.90) Tj
+T*
+(Closing Balance: $37,133.07) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2024-05-03 | Description Rent prepayment PRE-0001 | Amount $-5,780.05 | Running ) Tj
+T*
+(Balance $13,443.85) Tj
+T*
+(  - Date 2024-05-11 | Description Asset purchase ASSET-0001 | Amount $-10,787.07 | Running ) Tj
+T*
+(Balance $2,656.78) Tj
+T*
+(  - Date 2024-05-18 | Description Pace Office Mart receipt RCPT-0001 | Amount $-208.55 | ) Tj
+T*
+(Running Balance $2,448.23) Tj
+T*
+(  - Date 2024-05-19 | Description Loan draw LOAN-0001 | Amount $40,232.09 | Running Balance ) Tj
+T*
+($42,680.32) Tj
+T*
+(  - Date 2024-05-21 | Description Asset sale TAG-0001 | Amount $37,060.47 | Running Balance ) Tj
+T*
+($79,740.79) Tj
+T*
+(  - Date 2024-05-25 | Description Payroll PAYRUN-0001 | Amount $-5,496.86 | Running Balance ) Tj
+T*
+($74,243.93) Tj
+T*
+(  - Date 2024-05-26 | Description Lease payment LEASE-0001 | Amount $-2,664.24 | Running ) Tj
+T*
+(Balance $71,579.69) Tj
+T*
+(  - Date 2024-05-26 | Description Supplier settlement BILL-0001 | Amount $-1,693.03 | ) Tj
+T*
+(Running Balance $69,886.66) Tj
+T*
+(  - Date 2024-05-26 | Description Transfer out TRX-0001 | Amount $-37,945.11 | Running ) Tj
+T*
+(Balance $31,941.55) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 399 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2024-05-27 | Description Customer settlement INV-0001 | Amount $5,191.52 | Running ) Tj
+T*
+(Balance $37,133.07) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D020) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002125 00000 n 
+0000002251 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2701
+%%EOF

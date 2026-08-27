@@ -1,0 +1,153 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1692 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Harbor Operations) Tj
+T*
+(14 King Street, Pune) Tj
+T*
+(Date: 2024-09-30) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D018) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: Q2 FY 2024-25) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0252) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $102,523.44) Tj
+T*
+(Closing Balance: $79,463.56) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2024-07-08 | Description Insurance coverage prepayment PRE-0001 | Amount ) Tj
+T*
+($-10,624.38 | Running Balance $91,899.06) Tj
+T*
+(  - Date 2024-07-21 | Description Security deposit DEP-0001 | Amount $4,197.22 | Running ) Tj
+T*
+(Balance $96,096.28) Tj
+T*
+(  - Date 2024-08-19 | Description Asset purchase ASSET-0001 | Amount $-31,807.72 | Running ) Tj
+T*
+(Balance $64,288.56) Tj
+T*
+(  - Date 2024-08-23 | Description Loan draw LOAN-0001 | Amount $42,241.05 | Running Balance ) Tj
+T*
+($106,529.61) Tj
+T*
+(  - Date 2024-08-31 | Description Security deposit refund DEP-0001 | Amount $-4,127.88 | ) Tj
+T*
+(Running Balance $102,401.73) Tj
+T*
+(  - Date 2024-09-02 | Description Payroll PAYRUN-0001 | Amount $-15,179.15 | Running Balance) Tj
+T*
+( $87,222.58) Tj
+T*
+(  - Date 2024-09-07 | Description Customer settlement ROLL-0001 | Amount $7,742.56 | Running) Tj
+T*
+( Balance $94,965.14) Tj
+T*
+(  - Date 2024-09-09 | Description Supplier settlement BILL-0001 | Amount $-15,501.58 | ) Tj
+T*
+(Running Balance $79,463.56) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 248 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D018) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002063 00000 n 
+0000002189 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2488
+%%EOF

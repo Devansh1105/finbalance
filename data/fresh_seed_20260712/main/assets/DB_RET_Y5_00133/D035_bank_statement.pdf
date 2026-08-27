@@ -1,0 +1,169 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1818 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Atlas Distribution) Tj
+T*
+(220 Lake View Road, Bengaluru) Tj
+T*
+(Date: 31/12/2025) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D035) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: FY 2025) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-0133) Tj
+T*
+(Statement Currency: EUR) Tj
+T*
+(Opening Balance: EUR 78.798,46) Tj
+T*
+(Closing Balance: EUR 331.519,84) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 02/06/2025 | Description Loan draw LOAN-0001 | Amount EUR 173.698,34 | Running ) Tj
+T*
+(Balance EUR 252.496,80) Tj
+T*
+(  - Date 20/06/2025 | Description Cash till SALES-0001 | Amount EUR 21.588,78 | Running ) Tj
+T*
+(Balance EUR 274.085,58) Tj
+T*
+(  - Date 27/07/2025 | Description Asset purchase ASSET-0001 | Amount EUR -19.623,73 | ) Tj
+T*
+(Running Balance EUR 254.461,85) Tj
+T*
+(  - Date 28/07/2025 | Description Cash till SALES-0003 | Amount EUR 7.503,28 | Running ) Tj
+T*
+(Balance EUR 261.965,13) Tj
+T*
+(  - Date 23/08/2025 | Description Cash till SALES-0004 | Amount EUR 32.463,21 | Running ) Tj
+T*
+(Balance EUR 294.428,34) Tj
+T*
+(  - Date 30/08/2025 | Description Cash till SALES-0002 | Amount EUR 27.590,54 | Running ) Tj
+T*
+(Balance EUR 322.018,88) Tj
+T*
+(  - Date 15/09/2025 | Description Card settlement SETTLE-0001 | Amount EUR 97.933,65 | ) Tj
+T*
+(Running Balance EUR 419.952,53) Tj
+T*
+(  - Date 02/10/2025 | Description Return RTN-0001 | Amount EUR -835,04 | Running Balance EUR) Tj
+T*
+( 419.117,49) Tj
+T*
+(  - Date 02/10/2025 | Description Supplier settlement BILL-0001 | Amount EUR -24.155,92 | ) Tj
+T*
+(Running Balance EUR 394.961,57) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 651 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 09/10/2025 | Description Return RTN-0002 | Amount EUR -497,03 | Running Balance EUR) Tj
+T*
+( 394.464,54) Tj
+T*
+(  - Date 19/10/2025 | Description Loan payment LOAN-0002 | Amount EUR -26.518,63 | Running ) Tj
+T*
+(Balance EUR 367.945,91) Tj
+T*
+(  - Date 28/10/2025 | Description Payroll PAYRUN-0001 | Amount EUR -36.426,07 | Running ) Tj
+T*
+(Balance EUR 331.519,84) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D035) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002189 00000 n 
+0000002315 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+3017
+%%EOF

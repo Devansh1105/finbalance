@@ -1,0 +1,169 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1781 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Beacon Operations) Tj
+T*
+(90 Hill Park, Hyderabad) Tj
+T*
+(Date: 2025-05-31) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D030) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: May 2025) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-MATC) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $20,427.18) Tj
+T*
+(Closing Balance: $-29,642.21) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2025-05-03 | Description Insurance coverage prepayment PRE-0002 | Amount $-6,489.02) Tj
+T*
+( | Running Balance $13,938.16) Tj
+T*
+(  - Date 2025-05-03 | Description Rent prepayment PRE-0001 | Amount $-7,822.94 | Running ) Tj
+T*
+(Balance $6,115.22) Tj
+T*
+(  - Date 2025-05-16 | Description Meridian Support LLP receipt RCPT-0001 | Amount $-1.29 | ) Tj
+T*
+(Running Balance $6,113.93) Tj
+T*
+(  - Date 2025-05-18 | Description Asset purchase ASSET-0001 | Amount $-16,968.64 | Running ) Tj
+T*
+(Balance $-10,854.71) Tj
+T*
+(  - Date 2025-05-21 | Description Loan draw LOAN-0001 | Amount $56,258.81 | Running Balance ) Tj
+T*
+($45,404.10) Tj
+T*
+(  - Date 2025-05-21 | Description Supplier settlement BILL-0001 | Amount $-5,607.05 | ) Tj
+T*
+(Running Balance $39,797.05) Tj
+T*
+(  - Date 2025-05-22 | Description Transfer out TRX-0001 | Amount $-46,692.44 | Running ) Tj
+T*
+(Balance $-6,895.39) Tj
+T*
+(  - Date 2025-05-23 | Description Customer settlement INV-0001 | Amount $2,947.60 | Running ) Tj
+T*
+(Balance $-3,947.79) Tj
+T*
+(  - Date 2025-05-24 | Description Asset sale OPEN-EQU | Amount $4,777.40 | Running Balance ) Tj
+T*
+($829.61) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 643 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2025-05-24 | Description Lease payment LEASE-0001 | Amount $-3,670.40 | Running ) Tj
+T*
+(Balance $-2,840.79) Tj
+T*
+(  - Date 2025-05-26 | Description Payroll PAYRUN-0001 | Amount $-13,662.94 | Running Balance) Tj
+T*
+( $-16,503.73) Tj
+T*
+(  - Date 2025-05-27 | Description Loan payment LOAN-0002 | Amount $-13,138.48 | Running ) Tj
+T*
+(Balance $-29,642.21) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D030) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002152 00000 n 
+0000002278 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+2972
+%%EOF

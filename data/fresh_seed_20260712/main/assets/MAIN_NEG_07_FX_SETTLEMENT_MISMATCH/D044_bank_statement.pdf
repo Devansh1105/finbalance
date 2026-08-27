@@ -1,0 +1,173 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 1799 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(BANK STATEMENT) Tj
+T*
+(==============) Tj
+T*
+() Tj
+T*
+(From) Tj
+T*
+(----) Tj
+T*
+(Beacon Retail Group) Tj
+T*
+(14 King Street, Pune) Tj
+T*
+(Date: 2025-06-30) Tj
+T*
+() Tj
+T*
+(Reference Box) Tj
+T*
+(-------------) Tj
+T*
+(Document ID: D044) Tj
+T*
+(Document Type: bank_statement) Tj
+T*
+(Period: Q2 FY 2025) Tj
+T*
+() Tj
+T*
+(Account Summary) Tj
+T*
+(---------------) Tj
+T*
+(Account Name: Operating Account) Tj
+T*
+(Account Number: 1002-ATCH) Tj
+T*
+(Statement Currency: USD) Tj
+T*
+(Opening Balance: $59,275.32) Tj
+T*
+(Closing Balance: $76,960.56) Tj
+T*
+() Tj
+T*
+(Statement Rows) Tj
+T*
+(--------------) Tj
+T*
+(Rows:) Tj
+T*
+(  - Date 2025-04-04 | Description Rent prepayment PRE-0001 | Amount $-13,068.28 | Running ) Tj
+T*
+(Balance $46,207.04) Tj
+T*
+(  - Date 2025-04-07 | Description Insurance coverage prepayment PRE-0002 | Amount ) Tj
+T*
+($-21,044.92 | Running Balance $25,162.12) Tj
+T*
+(  - Date 2025-04-30 | Description Loan draw LOAN-0001 | Amount $101,961.21 | Running Balance) Tj
+T*
+( $127,123.33) Tj
+T*
+(  - Date 2025-05-06 | Description Pace Office Mart receipt RCPT-0001 | Amount $-277.14 | ) Tj
+T*
+(Running Balance $126,846.19) Tj
+T*
+(  - Date 2025-05-17 | Description Asset purchase ASSET-0001 | Amount $-35,918.49 | Running ) Tj
+T*
+(Balance $90,927.70) Tj
+T*
+(  - Date 2025-06-02 | Description Customer settlement INV-0001 | Amount $28,000.61 | Running) Tj
+T*
+( Balance $118,928.31) Tj
+T*
+(  - Date 2025-06-06 | Description Supplier settlement BILL-0001 | Amount $-15,618.38 | ) Tj
+T*
+(Running Balance $103,309.93) Tj
+T*
+(  - Date 2025-06-07 | Description Asset sale TAG-0001 | Amount $70,461.11 | Running Balance ) Tj
+T*
+($173,771.04) Tj
+T*
+(  - Date 2025-06-07 | Description Foreign receipt FXINV-0001 | Amount $33,648.35 | Running ) Tj
+T*
+(Balance $207,419.39) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 768 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+14 TL
+(  - Date 2025-06-10 | Description Lease payment LEASE-0001 | Amount $-25,777.38 | Running ) Tj
+T*
+(Balance $181,642.01) Tj
+T*
+(  - Date 2025-06-15 | Description Loan payment LOAN-0002 | Amount $-23,285.36 | Running ) Tj
+T*
+(Balance $158,356.65) Tj
+T*
+(  - Date 2025-06-19 | Description Payroll PAYRUN-0001 | Amount $-38,333.55 | Running Balance) Tj
+T*
+( $120,023.10) Tj
+T*
+(  - Date 2025-06-19 | Description Transfer out TRX-0001 | Amount $-43,062.54 | Running ) Tj
+T*
+(Balance $76,960.56) Tj
+T*
+() Tj
+T*
+(Notes) Tj
+T*
+(-----) Tj
+T*
+(Generated from the internal cash ledger so that every listed movement is consistent.) Tj
+T*
+() Tj
+T*
+(Footer) Tj
+T*
+(------) Tj
+T*
+(Internal document packet copy.) Tj
+T*
+(Page marker: D044) Tj
+T*
+() Tj
+ET
+endstream
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000123 00000 n 
+0000000193 00000 n 
+0000000319 00000 n 
+0000002170 00000 n 
+0000002296 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+3115
+%%EOF
