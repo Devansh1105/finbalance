@@ -1,6 +1,6 @@
 \begin{table*}[t!]
 \centering
-\scriptsize
+\footnotesize
 \setlength{\tabcolsep}{2.4pt}
 \renewcommand{\arraystretch}{1.06}
 \newcommand{\yes}{\(\checkmark\)}
@@ -11,7 +11,7 @@
 Benchmark & Evidence given to model & Target output & QA & \shortstack{Long/\\multi ctx.} & JE & BS & \shortstack{Doc/span\\grounding} & Incons. & \shortstack{Det.\\replay} \\
 \midrule
 FinQA \citep{chen-etal-2021-finqa}
-& Extracted annual-report table and nearby text
+& Extracted financial-report table and nearby text
 & Numeric answer plus executable reasoning program
 & \yes & \partly & \no & \no & \no & \no & \no \\
 ConvFinQA \citep{chen-etal-2022-convfinqa}
@@ -19,7 +19,7 @@ ConvFinQA \citep{chen-etal-2022-convfinqa}
 & Turn-level numeric answers and programs
 & \yes & \partly & \no & \no & \no & \no & \no \\
 TAT-QA \citep{zhu-etal-2021-tatqa}
-& One hybrid table-text context from annual reports
+& One hybrid table-text context from financial reports
 & Answer with arithmetic/operator supervision
 & \yes & \partly & \no & \no & \partly & \no & \no \\
 DocFinQA \citep{reddy-etal-2024-docfinqa}
@@ -31,10 +31,10 @@ MultiHiertt \citep{zhao-etal-2022-multihiertt}
 & Numeric answer with supporting facts
 & \yes & \yes & \no & \no & \yes & \no & \no \\
 FinanceBench \citep{islam2023financebench}
-& Public filings and earnings-call evidence
+& Public filings and earnings-report evidence
 & Open-book financial QA answer
 & \yes & \yes & \no & \no & \yes & \no & \no \\
-FinanceMath \citep{zhao-etal-2024-financemath}
+FinanceMATH \citep{zhao-etal-2024-financemath}
 & Finance-domain word problems with text/table inputs
 & Knowledge-intensive math solution
 & \partly & \partly & \no & \no & \no & \no & \no \\
@@ -47,16 +47,16 @@ FinDABench \citep{liu-etal-2025-findabench}
 & Data-analysis answers over prepared artifacts
 & \partly & \partly & \no & \no & \partly & \no & \no \\
 FinTagging \citep{wang2025fintagging}
-& Financial reports with facts to extract and structure
-& Tagged financial facts / structured fields
+& Financial-report text and tables with numerical facts
+& Extracted facts and aligned US-GAAP taxonomy concepts
 & \no & \partly & \no & \no & \yes & \no & \no \\
 FinRule-Bench \citep{malarkkan2026finrulebench}
-& Financial tables plus accounting principles
-& Rule-grounded reasoning answer
+& Real financial-statement tables plus explicit principles
+& Rule verification, identification, and joint diagnosis
 & \partly & \partly & \no & \no & \partly & \partly & \no \\
 FinMaster \citep{jiang2025finmaster}
-& Workflow-style finance tasks across roles
-& Task-specific financial workflow answers
+& Synthetic transactions, journal entries, and statements
+& Task-specific metrics, diagnoses, or financial statements
 & \partly & \partly & \partly & \partly & \partly & \partly & \no \\
 FinAuditing \citep{wang2026finauditing}
 & Real XBRL filings with taxonomy-defined structure
@@ -64,7 +64,7 @@ FinAuditing \citep{wang2026finauditing}
 & \no & \yes & \no & \no & \yes & \yes & \no \\
 \midrule
 \benchmark{} (this work)
-& Source-document bundle with OCR text and posting/support/distractor docs
+& Unlabeled source-document bundle with OCR text; document roles are hidden
 & Cited journal entries, final balance sheet, inconsistency code
 & \no & \yes & \yes & \yes & \yes & \yes & \yes \\
 \bottomrule

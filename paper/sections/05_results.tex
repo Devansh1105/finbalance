@@ -6,29 +6,37 @@
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_model_accuracy.pdf}
-\caption{Baseline model profile on the 710-record core evaluation split. Balance-sheet and entry metrics use the 480 standard records; \emph{Contradiction code} uses the 230 forced-inconsistency records. \emph{Reported balance sheet} is \bsexact{}; \emph{Replayed from entries} is \bsrecon{}, the balance sheet implied by the model's own journal entries; \emph{Entries correct} ignores document citations; \emph{Strict end-to-end} requires the balance sheet, entries, and citations all to match; \emph{Citations correct} is one minus the document-reference mismatch rate among otherwise correct entries.}
+\caption{Baseline model profile on the 710-record core evaluation split. Balance-sheet and entry metrics use the 480 standard records; \emph{Contradiction code} uses the 230 forced-inconsistency records. \emph{Reported balance sheet} is \bsexact{}; \emph{Replayed from entries} is \bsrecon{}, the balance sheet implied by the model's own journal entries; \emph{Entries correct} ignores document citations; \emph{Strict end-to-end} requires the balance sheet, entries, and citations all to match; \emph{Citations correct} is one minus document-reference mismatch incidence per expected posting.}
 \label{fig:model-accuracy}
 \end{figure*}
 
 The central pattern in Figure~\ref{fig:model-accuracy} is the gap between \bsexact{} and \bsrecon{}, where \bsrecon{} parses the model's journal entries, applies them to the opening balance with our ledger, and checks the resulting balance sheet against ground truth. In four of six models the two metrics disagree dramatically: DeepSeek Chat reaches $0.473$ \bsrecon{} but only $0.067$ \bsexact{}, a $40.6$\,pp \aggGap{}. Gemini~3 Flash ($+31.3$\,pp), Qwen~3 235B ($+29.0$\,pp), and Claude Haiku~4.5 ($+26.3$\,pp) show the same pattern. Since \bsrecon{} ignores document support, the claim is not that entries are audit-grounded; it is that models often recover plausible entries, fail to bind them to evidence, and then fail to aggregate them into a self-consistent reported statement. GPT-5 is comparatively self-consistent ($46.5\%$ \bsexact{}, $46.3\%$ \bsrecon{}), while Grok-4.3 has a smaller gap but lower entry recall (\S\ref{sec:analysis}).
 
-If the gap is partly a self-consistency failure rather than only an entries deficit, then applying the model's own entries through the ledger should expose it. We test this with ledger-feedback (\S\ref{sec:verifier}): the ledger compares the model's reported balance sheet against the one its entries imply, returns per-section deltas, and gives the model one revision turn. Figure~\ref{fig:verifier-effects} shows that \bsexact{} gains $+30$ to $+33$\,pp across three gap-having model families, all significant at $95\%$ paired bootstrap. The feedback gives no ground-truth values or entry-level hints---only the model's own implied-versus-reported deltas.
+GPT-5 and Grok-4.3 used reasoning in the headline panel. Compact-split controls show an association, not a complete explanation: switching DeepSeek Chat to its reasoner raises \bsexact{} from $8.3\%$ to $54.2\%$ and shrinks the gap from $42.0$ to $1.7$\,pp; higher-reasoning Haiku and Qwen configurations move in the same direction, while disabling Grok reasoning creates a $27.5$\,pp gap. Yet strict accuracy remains $0$--$4.2\%$ across these controls and inconsistency-code effects are mixed. Reasoning improves self-aggregation but does not solve evidence-grounded reconciliation (Appendix~\ref{appx:reasoning-controls}).
 
-The same diagnostic also reveals a real cost. Figure~\ref{fig:verifier-effects} (right) shows the feedback loop's effect on \incCode{} on the compact ablation split. Gemini~3 Flash loses $-13$\,pp (not significant), while Qwen~3 235B loses $-17$\,pp and Claude Haiku~4.5 loses $-52$\,pp. When a forced-inconsistency record's first-pass submission does not raise the flag, ledger feedback sends balance-sheet deltas instead of giving the model a chance to reconsider whether the documents themselves contradict; the deltas bias the next turn toward reconciling rather than flagging. The trade-off is mild for strong detectors and severe for weak ones.
+If the gap is partly a self-consistency failure rather than only an entries deficit, then applying the model's own entries through the ledger should expose it. We test this with ledger-feedback (\S\ref{sec:verifier}): the ledger returns the full balance sheet implied by the model's entries, account-level and total deltas against its reported balance sheet, and one revision turn. Figure~\ref{fig:verifier-effects} shows that \bsexact{} gains $+30$ to $+33$\,pp across three gap-having model families, all significant at $95\%$ paired bootstrap. These effects compare an independent same-model baseline run with the feedback condition, not the feedback condition's first pass with its revision. The feedback gives no ground-truth values or entry-correctness hints.
+
+The same diagnostic also reveals a real cost. Figure~\ref{fig:verifier-effects} (right) shows the feedback loop's effect on \incCode{} on the compact ablation split. Gemini~3 Flash loses $-13$\,pp (not significant), while Qwen~3 235B loses $-17$\,pp and Claude Haiku~4.5 loses $-52$\,pp. One plausible mechanism is that, when a forced-inconsistency draft does not raise the flag, replay feedback focuses the revision on reconciling the reported statement rather than reconsidering whether the documents themselves contradict. This interpretation is diagnostic rather than causal; the measured trade-off is mild for strong detectors and severe for weak ones.
+
+Tool interface also matters. In the submitted text protocol, models requested tools by emitting JSON, but made $0$ calls across $572$ compact-split record-runs. Re-offering the same tools through provider-native function calling produces calls on $141/143$ Gemini, $134/143$ DeepSeek, $56/143$ GPT-5, and $140/143$ Haiku records. Native \bsexact{} is $52.5\%$, $45.8\%$, $52.5\%$, and $23.3\%$, respectively, but strict end-to-end accuracy remains only $3.3$--$5.8\%$. Native tools recover much of the aggregation component when invoked; they do not solve grounding (Appendix~\ref{appx:native-tools}).
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.98\textwidth]{figures/fig_results_heatmap.pdf}
-\caption{One-pass ledger-feedback effect on the compact ablation split. Lines compare each model's baseline with the same model after ledger feedback; labels are percentage-point changes. The tool strongly improves reported balance-sheet accuracy (left) but can reduce contradiction-code accuracy (right). GPT-5 and Grok-4.3 are omitted because they do not exhibit the same aggregation-gap mechanism (Table~\ref{tab:no-gap-mechanism}).}
+\caption{One-pass ledger-feedback effect on the compact ablation split ($n{=}143$ per model; \bsexact{} over $n{=}120$ standard records and \incCode{} over $n{=}23$ forced-inconsistency records). Lines compare each model's independent baseline with the same model after feedback; labels are percentage-point changes. The tool strongly improves reported balance-sheet accuracy (left) but can reduce contradiction-code accuracy (right). GPT-5 and Grok-4.3 are omitted because they do not exhibit the same aggregation-gap mechanism (Table~\ref{tab:no-gap-mechanism}).}
 \label{fig:verifier-effects}
 \end{figure*}
 
-The aggregation gap is one of two large failure modes; the other is document-linking. On the compact anchor split, $52\%$ of journal entries with correct account and amount cite the \emph{wrong} supporting documents, collapsing strict joint accuracy to $5\%$ despite $57\%$ entry-match when citations are ignored. Citation-pressure prompting changes the mismatch rate by only $-1.4$\,pp (CI $[-2.9, 0.0]$), while an \emph{evidence-only} oracle lowers it by $-26.4$\,pp (CI $[-29.8, -23.0]$). The failure is retrieval-disambiguation, not prompt compliance (Figure~\ref{fig:doc-refs-persistence}).
+The aggregation gap is one of two large failure modes; the other is document-linking. On the compact anchor split, document-reference mismatches affect $52.4\%$ of expected postings under the greedy matcher, collapsing strict joint accuracy to $5\%$ despite $57\%$ entry-match when citations are ignored. Citation-pressure prompting changes this incidence by only $-1.4$\,pp (CI $[-2.9, 0.0]$), while an \emph{evidence-only} oracle lowers it by $-26.4$\,pp (CI $[-29.8, -23.0]$). The failure is retrieval-disambiguation, not prompt compliance (Figure~\ref{fig:doc-refs-persistence}).
+
+Exact citation matching is deliberately strict, so we also decompose it. Of mismatch postings, $42.0\%$ for Gemini and $58.8\%$ for GPT-5 contain every gold reference plus extras, and $94$--$96\%$ of those extra citations are support documents. Under a superset-tolerant sensitivity score, strict end-to-end accuracy rises to $8.8\%$ and $15.8\%$, respectively, but remains low; DeepSeek changes from $2.5\%$ to $3.3\%$ (Appendix~\ref{appx:citation-sensitivity}).
+
+Finally, clean text is a control rather than a claim of OCR realism. Seeded substitutions, deletions, token splits, and token merges at achieved character-edit rates of $0.94\%$, $2.20\%$, and $4.45\%$ reduce \bsrecon{} monotonically: Gemini falls from $61.7\%$ clean to $49.2\%$, and DeepSeek from $50.0\%$ to $36.7\%$. Parse success remains $99$--$100\%$. This measures a separable character-noise axis, not raw OCR or layout understanding (Appendix~\ref{appx:ocr-noise}).
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig_doc_refs_persistence.pdf}
-\caption{Document-linking failure persists under explicit citation pressure, but drops under an evidence-only oracle.}
+\caption{Document-linking failure on Gemini~3 Flash over the compact split ($n{=}143$; posting metric over $n{=}120$ standard records) persists under explicit citation pressure, but drops under an evidence-only oracle.}
 \label{fig:doc-refs-persistence}
 \end{figure}
 
@@ -38,7 +46,7 @@ Table~\ref{tab:ablation-summary} distills the ablation results by diagnostic que
 
 \begin{table}[t]
 \centering
-\scriptsize
+\footnotesize
 \setlength{\tabcolsep}{2.4pt}
 \renewcommand{\arraystretch}{1.08}
 \begin{tabularx}{\linewidth}{@{}p{1.7cm}p{2.55cm}X@{}}
@@ -48,26 +56,26 @@ Question & Main effect & Interpretation \\
 Prompt & Guided/self-check prompts change \bsexact{} by at most $2.5$\,pp; citation pressure changes ref mismatch by $-1.4$\,pp. & Failures are not primarily prompt-compliance artifacts. \\
 Evidence & Removing accounts drops \bsrecon{} by $47.5$\,pp; removing support docs drops it by $38.3$\,pp. & Account taxonomy and support evidence are essential. \\
 Grounding & Evidence-only visibility lowers ref mismatch by $26.4$\,pp. & Citation failure is mostly evidence selection, not wording. \\
-Context & Adding distractors to evidence-only visibility costs $16$--$18$\,pp \bsrecon{} and saturates. & Longer context hurts, but does not explain the task difficulty. \\
+Context & Adding 5/15/30 distractors to evidence-only visibility costs $6.7/5.8/8.3$\,pp \bsrecon{}. & Longer context hurts, but does not explain the task difficulty. \\
 Repair & One ledger-feedback turn raises \bsexact{} by $32.5$\,pp on Gemini; best-of-3 raises it by $28.9$\,pp on the targeted subset. & Global ledger checks repair many reported balance sheets. \\
 \bottomrule
 \end{tabularx}
-\caption{Compact ablation summary. Deltas are percentage points against the Gemini~3 Flash anchor baseline unless a targeted subset is stated.}
+\caption{Compact-split ablation summary for Gemini~3 Flash ($n{=}143$; balance-sheet metrics over $n{=}120$ standard records). Deltas are percentage points against the matched anchor baseline unless a targeted subset is stated.}
 \label{tab:ablation-summary}
 \end{table}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig_difficulty_trend.pdf}
-\caption{Accuracy by difficulty level on the anchor model. As records move from L1 to L5, \bsexact{} collapses much more sharply than the context-stress penalty in Figure~\ref{fig:context-stress}; \bsrecon{} remains higher, showing that entry replay remains easier than reporting the final balance sheet.}
+\caption{Accuracy by difficulty level for Gemini~3 Flash on the compact split ($n{=}143$; $24$ standard records per level). As records move from L1 to L5, \bsexact{} collapses much more sharply than the context-stress penalty in Figure~\ref{fig:context-stress}; \bsrecon{} remains higher, showing that entry replay remains easier than reporting the final balance sheet.}
 \label{fig:difficulty-trend}
 \end{figure}
 
-Figures~\ref{fig:difficulty-trend} and~\ref{fig:context-stress} separate two concerns that are easy to conflate: is the benchmark hard because the prompt contains too much text, or because the model must apply the right accounting logic to the right evidence? Difficulty produces the larger effect: baseline \bsexact{} falls from $88\%$ at L1 to $0\%$ at L5, while \bsrecon{} also declines from $100\%$ to $46\%$. By contrast, adding $5$, $15$, or $30$ distractors to an evidence-only document bundle decreases \bsrecon{} by $16.7$, $15.8$, and $18.3$\,pp respectively, with the penalty appearing quickly and then saturating. Thus context contributes, but it is not the main explanation; accounting dependencies and document choice remain binding even when context is controlled.
+Figures~\ref{fig:difficulty-trend} and~\ref{fig:context-stress} separate two concerns that are easy to conflate: is the benchmark hard because the prompt contains too much text, or because the model must apply the right accounting logic to the right evidence? Difficulty produces the larger effect: baseline \bsexact{} falls from $88\%$ at L1 to $0\%$ at L5, while \bsrecon{} also declines from $100\%$ to $46\%$. By contrast, adding $5$, $15$, or $30$ distractors to an evidence-only document bundle decreases \bsrecon{} by $6.7$, $5.8$, and $8.3$\,pp respectively. Thus context contributes, but it is not the main explanation; accounting dependencies and document choice remain binding even when context is controlled.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/fig_context_stress.pdf}
-\caption{Context stress on the anchor model, designed to separate longer-context effects from the underlying accounting-logic difficulty. The task remains hard under controlled evidence; distractors hurt most when first introduced and then saturate.}
+\caption{Context stress for Gemini~3 Flash on the compact standard-record split ($n{=}120$), designed to separate longer-context effects from the underlying accounting-logic difficulty. The task remains hard under controlled evidence; distractors hurt most when first introduced and then saturate.}
 \label{fig:context-stress}
 \end{figure}

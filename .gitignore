@@ -5,10 +5,11 @@
 !.env.example
 
 # Editor / IDE / AI assistant scratch
-.codex
 .codex/
 .claude
 .claude/
+.codex
+.codex-out/
 .cursor/
 .aider*
 .copilot/
@@ -25,7 +26,7 @@
 Thumbs.db
 desktop.ini
 
-# Python caches
+# Python caches and build output
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -45,26 +46,31 @@ backups/
 *.bak
 *.bak.*
 
-# OpenReview supplementary archives
-finbalance_software_openreview.zip
-finbalance_data_openreview.zip
-
-# arXiv submission tarball (build artifact)
-finbalance_arxiv.tar.gz
-
 # Raw run logs and legacy material (kept out of the public release)
 run_logs/
 .github/logs/
 _archive/
 
-# Generated benchmark artifacts (root-level after refactor)
+# Generated benchmark artifacts
 data/*.jsonl
-data/*_assets/
 data/coverage/
 data/main/
+data/*_assets/
 results/
 
-# Paper build artifacts
+# Submission bundles (rebuilt on demand)
+finbalance_software_openreview.zip
+finbalance_data_openreview.zip
+finbalance_arxiv.tar.gz
+/finbalance_*.zip
+/finbalance_*.tar.gz
+
+# Local camera-ready workflow (not part of the public release)
+/camera_ready_tracker.html
+/output/
+/tmp/
+
+# LaTeX build artifacts
 paper/*.aux
 paper/*.bbl
 paper/*.blg
@@ -75,4 +81,3 @@ paper/*.out
 paper/*.pdf
 paper/*.synctex.gz
 paper/sections/*.aux
-.codex-out/

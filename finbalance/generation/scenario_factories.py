@@ -1359,7 +1359,14 @@ def make_jurisdictional_tax_invoice_scenario(*, name: str, description: str) -> 
         sale_date = pick_date(state.period_spec, rng, "mid")
         vendor = rng.choice(state.master_data["vendors"])
         customer = rng.choice(state.master_data["customers"])
-        tax_regime = state.tax_regime if state.tax_regime in {"us_sales_tax", "india_gst"} else rng.choice(("us_sales_tax", "india_gst"))
+        if state.tax_regime in {"us_sales_tax", "india_gst"}:
+            tax_regime = state.tax_regime
+        elif state.tax_regime == "sales_tax":
+            tax_regime = "us_sales_tax"
+        elif state.tax_regime == "gst":
+            tax_regime = "india_gst"
+        else:
+            tax_regime = rng.choice(("us_sales_tax", "india_gst"))
         tax_rate = choose_tax_rate(tax_regime, rng)
         subtotal = _scaled_amount(state, rng, 2200, 9800, "inventory")
         tax_amount = round(subtotal * tax_rate, 2)

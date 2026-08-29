@@ -61,7 +61,7 @@ final dataset record
 
 ### `PeriodSpec`
 
-Defined in [types.py](/home/devanshagarwal/projects/finbalance/finbalance/types.py).
+Defined in [types.py](types.py).
 
 This says what time span the record covers:
 
@@ -73,7 +73,7 @@ This says what time span the record covers:
 
 ### `DocSchema`
 
-Also in [types.py](/home/devanshagarwal/projects/finbalance/finbalance/types.py).
+Also in [types.py](types.py).
 
 This says what one document type looks like:
 
@@ -83,11 +83,11 @@ This says what one document type looks like:
 - layout variants
 - which values must show up in OCR text
 
-The actual schema files live in [doc_schemas/](/home/devanshagarwal/projects/finbalance/finbalance/doc_schemas).
+The actual schema files live in [doc_schemas/](doc_schemas/).
 
 ### `IndustrySchema`
 
-Also in [types.py](/home/devanshagarwal/projects/finbalance/finbalance/types.py).
+Also in [types.py](types.py).
 
 This says how one industry works:
 
@@ -97,7 +97,7 @@ This says how one industry works:
 - scenario plans by period and difficulty
 - allowed distractor document types
 
-The industry files live in [industry_schemas/](/home/devanshagarwal/projects/finbalance/finbalance/industry_schemas).
+The industry files live in [industry_schemas/](industry_schemas/).
 
 ### `BusinessScenario`
 
@@ -113,7 +113,7 @@ Examples:
 - revenue release
 - production batch moving into finished goods
 
-The reusable builders live in [generation/scenario_factories.py](/home/devanshagarwal/projects/finbalance/finbalance/generation/scenario_factories.py).
+The reusable builders live in [generation/scenario_factories.py](generation/scenario_factories.py).
 
 ### `BusinessState`
 
@@ -175,7 +175,7 @@ DocumentBenchmarkBuilder(seed=42).generate_record(
 ## Step 1: Builder Entry
 
 Code:
-- [generation/builder.py](/home/devanshagarwal/projects/finbalance/finbalance/generation/builder.py)
+- [generation/builder.py](generation/builder.py)
 
 Input:
 
@@ -193,7 +193,7 @@ Output:
 ## Step 2: Period Is Chosen
 
 Code:
-- [generation/helpers.py](/home/devanshagarwal/projects/finbalance/finbalance/generation/helpers.py)
+- [generation/helpers.py](generation/helpers.py)
 
 The builder creates a `PeriodSpec`.
 
@@ -210,7 +210,7 @@ fiscal_start_month = 1
 ## Step 3: Display Format Is Chosen
 
 Code:
-- [generation/helpers.py](/home/devanshagarwal/projects/finbalance/finbalance/generation/helpers.py)
+- [generation/helpers.py](generation/helpers.py)
 
 Before documents are built, the record gets one display profile.
 
@@ -241,7 +241,7 @@ Important:
 ## Step 4: Master Data Is Built
 
 Code:
-- [generation/master_data.py](/home/devanshagarwal/projects/finbalance/finbalance/generation/master_data.py)
+- [generation/master_data.py](generation/master_data.py)
 
 What goes in:
 
@@ -268,8 +268,8 @@ This master data keeps names and references consistent across documents.
 
 Code:
 
-- industry file, for example [industry_schemas/subscription_saas.py](/home/devanshagarwal/projects/finbalance/finbalance/industry_schemas/subscription_saas.py)
-- shared helper [industry_schemas/common.py](/home/devanshagarwal/projects/finbalance/finbalance/industry_schemas/common.py)
+- industry file, for example [industry_schemas/subscription_saas.py](industry_schemas/subscription_saas.py)
+- shared helper [industry_schemas/common.py](industry_schemas/common.py)
 
 What happens:
 
@@ -306,7 +306,7 @@ Equity:
 ## Step 6: Scenarios Are Picked
 
 Code:
-- [generation/builder.py](/home/devanshagarwal/projects/finbalance/finbalance/generation/builder.py)
+- [generation/builder.py](generation/builder.py)
 - industry file for the chosen industry
 
 The builder looks at:
@@ -350,7 +350,7 @@ Difficulty levels remain public `1` through `5`:
 ## Step 7: Each Scenario Creates Documents And Entries
 
 Code:
-- [generation/scenario_factories.py](/home/devanshagarwal/projects/finbalance/finbalance/generation/scenario_factories.py)
+- [generation/scenario_factories.py](generation/scenario_factories.py)
 
 This is the main place where business logic is turned into:
 
@@ -448,8 +448,8 @@ These scenarios drive the `asset_register`, `tax_context`, and `lease_subledger`
 ## Step 8: Amounts Are Scaled
 
 Code:
-- [generation/helpers.py](/home/devanshagarwal/projects/finbalance/finbalance/generation/helpers.py)
-- [generation/scenario_factories.py](/home/devanshagarwal/projects/finbalance/finbalance/generation/scenario_factories.py)
+- [generation/helpers.py](generation/helpers.py)
+- [generation/scenario_factories.py](generation/scenario_factories.py)
 
 Amounts are no longer all in one small range.
 
@@ -480,8 +480,8 @@ This is why:
 ## Step 9: Distractor Documents Are Added
 
 Code:
-- [generation/builder.py](/home/devanshagarwal/projects/finbalance/finbalance/generation/builder.py)
-- [doc_schemas/](/home/devanshagarwal/projects/finbalance/finbalance/doc_schemas)
+- [generation/builder.py](generation/builder.py)
+- [doc_schemas/](doc_schemas/)
 
 After the real business scenarios are built, the builder may add documents that should **not** create new entries.
 
@@ -514,7 +514,7 @@ Important:
 ## Step 10: Opening Balance And Bank Statement Docs Are Added
 
 Code:
-- [generation/builder.py](/home/devanshagarwal/projects/finbalance/finbalance/generation/builder.py)
+- [generation/builder.py](generation/builder.py)
 
 The builder always adds:
 
@@ -533,8 +533,8 @@ So for a clean record:
 ## Step 11: Document Seeds Become PDF-Style Documents
 
 Code:
-- [rendering/renderer.py](/home/devanshagarwal/projects/finbalance/finbalance/rendering/renderer.py)
-- [render.py](/home/devanshagarwal/projects/finbalance/finbalance/render.py)
+- [rendering/renderer.py](rendering/renderer.py)
+- [render.py](render.py)
 
 What goes in:
 
@@ -586,8 +586,8 @@ GBP 12,540.00
 ## Step 12: Clean-Packet Validation Runs
 
 Code:
-- [validation/doc_validation.py](/home/devanshagarwal/projects/finbalance/finbalance/validation/doc_validation.py)
-- [validation/record_validation.py](/home/devanshagarwal/projects/finbalance/finbalance/validation/record_validation.py)
+- [validation/doc_validation.py](validation/doc_validation.py)
+- [validation/record_validation.py](validation/record_validation.py)
 
 Validation runs on the **clean** record before any negative-control mutation.
 
@@ -611,7 +611,7 @@ This is why normal records stay sound.
 ## Step 13: Ledger Builds The Final Balance Sheet
 
 Code:
-- [ledger.py](/home/devanshagarwal/projects/finbalance/finbalance/ledger.py)
+- [ledger.py](ledger.py)
 
 For a clean record:
 
@@ -629,8 +629,8 @@ This gives:
 ## Step 14: Negative-Control Records
 
 Code:
-- [generation/builder.py](/home/devanshagarwal/projects/finbalance/finbalance/generation/builder.py)
-- [inconsistencies.py](/home/devanshagarwal/projects/finbalance/finbalance/inconsistencies.py)
+- [generation/builder.py](generation/builder.py)
+- [inconsistencies.py](inconsistencies.py)
 
 Some records are intentionally made inconsistent.
 
@@ -711,7 +711,7 @@ So the benchmark truth is deterministic.
 ## Step 16: How The Benchmark Asks Models To Answer
 
 Code:
-- [benchmark/prompt.py](/home/devanshagarwal/projects/finbalance/finbalance/benchmark/prompt.py)
+- [benchmark/prompt.py](benchmark/prompt.py)
 
 The model sees:
 
@@ -762,8 +762,8 @@ Current inconsistency output shape:
 ## Step 17: How Inconsistency Is Scored
 
 Code:
-- [benchmark/parser.py](/home/devanshagarwal/projects/finbalance/finbalance/benchmark/parser.py)
-- [benchmark/scoring.py](/home/devanshagarwal/projects/finbalance/finbalance/benchmark/scoring.py)
+- [benchmark/parser.py](benchmark/parser.py)
+- [benchmark/scoring.py](benchmark/scoring.py)
 
 For negative-control records, the benchmark compares:
 
@@ -781,7 +781,7 @@ Important:
 ## Step 18: How Normal Records Are Scored
 
 Code:
-- [benchmark/scoring.py](/home/devanshagarwal/projects/finbalance/finbalance/benchmark/scoring.py)
+- [benchmark/scoring.py](benchmark/scoring.py)
 
 For normal records, the benchmark now uses four plain exact-match metrics:
 

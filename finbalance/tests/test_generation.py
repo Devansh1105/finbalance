@@ -2,10 +2,11 @@ import json
 import re
 import tempfile
 import unittest
+from datetime import date
 from pathlib import Path
 
 from finbalance.generation.builder import DocumentBenchmarkBuilder
-from finbalance.generation.helpers import PERIOD_TYPES
+from finbalance.generation.helpers import PERIOD_TYPES, _fiscal_year_label
 from finbalance.industry_schemas import INDUSTRIES
 from finbalance.benchmark.manifests import record_manifest_row
 
@@ -55,6 +56,9 @@ class GenerationTests(unittest.TestCase):
             self.assertEqual(len(lines), 3)
             first = json.loads(lines[0])
             self.assertEqual(first["metadata"]["version"], "v4_phase2_schema_driven")
+
+    def test_april_fiscal_year_labels_q4_in_prior_calendar_year(self):
+        self.assertEqual(_fiscal_year_label(date(2026, 1, 1), 4), "FY 2025-26")
 
     def test_property_management_rent_roll_posts_to_rental_revenue(self):
         builder = DocumentBenchmarkBuilder(seed=42)
@@ -474,6 +478,22 @@ class GenerationTests(unittest.TestCase):
             )
             self.assertEqual(record.metadata["tax_regime"], "vat")
             self.assertIn("vat", record.metadata["tax_label"].lower())
+
+    def test_generic_sales_tax_never_generates_india_gst_jurisdiction_docs(self):
+        builder = DocumentBenchmarkBuilder(seed=42)
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            record = builder.generate_record(
+                record_id="TEST_GENERIC_SALES_TAX_JURISDICTION",
+                industry="wholesale_distribution",
+                difficulty_level=4,
+                assets_root=tmp_dir,
+                period_type="month",
+                tax_regime_override="sales_tax",
+            )
+            notice = next(doc for doc in record.documents if doc.doc_type == "tax_regime_notice")
+            self.assertEqual(record.metadata["tax_regime"], "sales_tax")
+            self.assertIn("Tax Regime: us_sales_tax", notice.ocr_text)
+            self.assertNotIn("india_gst", notice.ocr_text)
 
     def test_us_sales_tax_purchase_embeds_tax_into_inventory_cost(self):
         builder = DocumentBenchmarkBuilder(seed=42)

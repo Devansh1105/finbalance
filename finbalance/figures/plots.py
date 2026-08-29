@@ -883,13 +883,30 @@ def plot_failure_slices(results_dir: Path, output_dir: Path) -> list[Path]:
     )
     errors = _sort_errors_by_mean(runs, error_candidates)[:7]
 
+    def labels_with_n(slice_name: str, categories: list[str], width: int) -> list[str]:
+        labels: list[str] = []
+        for category in categories:
+            counts = {
+                int(run.summary.get(slice_name, {}).get(category, {}).get("standard_records") or 0)
+                for run in runs
+            }
+            counts.discard(0)
+            if len(counts) == 1:
+                count_label = f"n={next(iter(counts))}"
+            elif counts:
+                count_label = f"n={min(counts)}-{max(counts)}"
+            else:
+                count_label = "n=0"
+            labels.append(f"{wrap_label(category, width)}\n({count_label})")
+        return labels
+
     model_labels = [wrap_display_label(run.label, 12) for run in runs]
     fig, axes = plt.subplots(3, 1, figsize=(8.9, 7.6))
     _annotated_heatmap(
         axes[0],
         _slice_matrix(runs, "by_industry", industries, metric),
         model_labels,
-        [wrap_label(label, 13) for label in industries],
+        labels_with_n("by_industry", industries, 13),
         "BS Recon Accuracy by Industry",
         cmap="YlGnBu",
         vmin=0,
@@ -900,7 +917,7 @@ def plot_failure_slices(results_dir: Path, output_dir: Path) -> list[Path]:
         axes[1],
         _slice_matrix(runs, "by_ledger_family", ledgers, metric),
         model_labels,
-        [wrap_label(label, 14) for label in ledgers],
+        labels_with_n("by_ledger_family", ledgers, 14),
         "BS Recon Accuracy by Ledger Family",
         cmap="YlGnBu",
         vmin=0,
@@ -912,7 +929,7 @@ def plot_failure_slices(results_dir: Path, output_dir: Path) -> list[Path]:
         _error_matrix(runs, errors),
         model_labels,
         [wrap_label(label, 14) for label in errors],
-        "Affected Standard Records by Error Type",
+        "Affected Standard Records by Error Type (n=480/model)",
         cmap="OrRd",
         vmin=0,
         vmax=100,

@@ -13,7 +13,7 @@ Figures~\ref{fig:dataset-samples} and~\ref{fig:dataset-fx-clean} expand two core
 \begin{minipage}{\dimexpr0.965\textwidth-2\fboxsep-2\fboxrule\relax}
 \colorbox{red!54!black}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\centering\color{white}\footnotesize Complete record example: tax-exemption conflict}}
 \vspace{2pt}
-\scriptsize
+\footnotesize
 \begin{minipage}[t]{0.315\linewidth}
 \textbf{Record context.}\\
 Record: \texttt{tax\_exemption\_conflict}\\
@@ -47,7 +47,7 @@ Equity: \$65,553.92\\
 \textbf{Hidden expected answer.}\\
 \fcolorbox{red!55!black}{white}{%
 \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
-\scriptsize\ttfamily
+\footnotesize\ttfamily
 \{\\
 \ \ "has\_inconsistency": true,\\
 \ \ "inconsistency\_codes": [\\
@@ -68,10 +68,10 @@ Equity: \$65,553.92\\
 \vspace{5pt}
 \fcolorbox{gray!55}{gray!4}{%
 \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
-\colorbox{gray!55}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\centering\color{white}\scriptsize OCR-style evidence snippets shown in the prompt}}
+\colorbox{gray!55}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\centering\color{white}\footnotesize OCR-style evidence snippets shown in the prompt}}
 \vspace{2pt}
 \begin{minipage}[t]{0.24\linewidth}
-\scriptsize\ttfamily
+\footnotesize\ttfamily
 D015 TAX REGIME NOTICE\\
 Company Jurisdiction: California\\
 Counterparty Jurisdiction: California\\
@@ -79,14 +79,15 @@ Tax Rate: 8.25\%\\
 Jurisdiction Tax Amount: \$1,224.97
 \end{minipage}\hfill
 \begin{minipage}[t]{0.24\linewidth}
-\scriptsize\ttfamily
+\footnotesize\ttfamily
 D017 TAX EXEMPTION CERTIFICATE\\
 Certificate Number: EXEMPT-0001\\
-\colorbox{red!18}{Exemption Status: Expired}\\
+\colorbox{red!18}{Exemption Status:}\\
+\colorbox{red!18}{Expired}\\
 Exempt Reason: Resale exemption certificate overrides default invoice tax treatment.
 \end{minipage}\hfill
 \begin{minipage}[t]{0.24\linewidth}
-\scriptsize\ttfamily
+\footnotesize\ttfamily
 D018 CUSTOMER TAX PROFILE\\
 Customer: Oak Harbor Foods\\
 Customer Jurisdiction: California\\
@@ -94,7 +95,7 @@ Company Jurisdiction: California\\
 Exemption Certificate: EXEMPT-0001
 \end{minipage}\hfill
 \begin{minipage}[t]{0.24\linewidth}
-\scriptsize\ttfamily
+\footnotesize\ttfamily
 D019 CUSTOMER INVOICE\\
 Customer: Oak Harbor Foods\\
 Subtotal: \$21,008.41\\
@@ -121,7 +122,7 @@ Total: \$21,008.41
 \begin{minipage}{\dimexpr0.965\textwidth-2\fboxsep-2\fboxrule\relax}
 \colorbox{green!45!black}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\centering\color{white}\footnotesize Complete clean record example: foreign-currency payable settlement}}
 \vspace{2pt}
-\scriptsize
+\footnotesize
 \begin{minipage}[t]{0.30\linewidth}
 \raggedright
 \textbf{Record context.}\\
@@ -151,7 +152,7 @@ The four documents agree: the payable was booked at the bill-date rate, settled 
 \textbf{Hidden expected FX entries.}\\
 \fcolorbox{green!45!black}{white}{%
 \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
-\scriptsize
+\footnotesize
 1. Dr Raw Materials Inventory / Cr Accounts Payable, \$49,601.24, refs \texttt{D017,D018}.\\
 2. Dr Accounts Payable / Cr Cash, \$49,601.24, refs \texttt{D019,D017}.\\
 3. Dr Foreign Exchange Loss / Cr Cash, \$1,821.54, refs \texttt{D019,D017}.
@@ -164,10 +165,10 @@ Assets \$719,627.12; liabilities \$330,057.95; equity \$389,569.17; balanced: tr
 \vspace{5pt}
 \fcolorbox{gray!55}{gray!4}{%
 \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
-\colorbox{gray!55}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\centering\color{white}\scriptsize OCR-style evidence snippets shown in the prompt}}
+\colorbox{gray!55}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\centering\color{white}\footnotesize OCR-style evidence snippets shown in the prompt}}
 \vspace{2pt}
 \begin{minipage}[t]{0.24\linewidth}
-\scriptsize\ttfamily\raggedright
+\footnotesize\ttfamily\raggedright
 D017 SUPPLIER INVOICE\\
 Invoice Number: FXBILL-0001\\
 Currency: GBP\\
@@ -175,7 +176,7 @@ Total: GBP 37,480.16\\
 Lines: consulting sprint GBP 9,173.27; foreign-currency support GBP 28,306.89
 \end{minipage}\hfill
 \begin{minipage}[t]{0.24\linewidth}
-\scriptsize\ttfamily\raggedright
+\footnotesize\ttfamily\raggedright
 D018 EXCHANGE RATE NOTICE\\
 Reference: FXBILL-0001\\
 Rate Date: 2025-04-25\\
@@ -185,7 +186,7 @@ Exchange Rate: 1.3234\\
 Functional Amount: \$49,601.24
 \end{minipage}\hfill
 \begin{minipage}[t]{0.24\linewidth}
-\scriptsize\ttfamily\raggedright
+\footnotesize\ttfamily\raggedright
 D019 PAYMENT ADVICE\\
 Reference: FXBILL-0001\\
 Currency: USD\\
@@ -195,7 +196,7 @@ FX Difference: 1,821.54\\
 Payment For: payable settlement
 \end{minipage}\hfill
 \begin{minipage}[t]{0.24\linewidth}
-\scriptsize\ttfamily\raggedright
+\footnotesize\ttfamily\raggedright
 D023 BANK STATEMENT\\
 Statement Currency: USD\\
 Row: 2025-06-06\\
@@ -226,7 +227,7 @@ Every document in a record carries a \texttt{role} tag that determines how the l
 \item \texttt{support\_doc} --- provides inputs for postings derived from other documents (rate cards, contracts, schedules, tax certificates) and may appear in the \texttt{doc\_refs} of an entry.
 \item \texttt{adjustment\_doc} --- period-end corrections such as depreciation schedules, rollforwards, and reclassification memos.
 \item \texttt{distractor\_doc} --- intentionally neutralised; should not generate any entry.
-\item \texttt{opening\_trial\_balance} --- starting balances only; never generates entries.
+\item \texttt{opening\_trial\_balance} --- supplies starting balances and emits no expected entries; it retains the internal \texttt{posting\_doc} role only for pipeline compatibility.
 \end{itemize}
 
 \paragraph{Industries.}
@@ -242,7 +243,7 @@ Table~\ref{tab:inconsistency-code-diagnostics} summarizes the 23 negative-contro
 
 \begin{table*}[t]
 \centering
-\scriptsize
+\footnotesize
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.08}
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.15in}>{\raggedright\arraybackslash}X>{\raggedleft\arraybackslash}p{0.7in}@{}}
@@ -278,7 +279,8 @@ Expected code & Meaning & Detected \\
 \label{tab:inconsistency-code-diagnostics}
 \end{table*}
 
-\paragraph{Difficulty rubric.}
+\paragraph{Difficulty rubric and validation.}
+\label{appx:difficulty-validation}
 \begin{itemize}[leftmargin=*,topsep=2pt,itemsep=1pt]
 \item \textbf{L1:} single-thread postings, no tax beyond basic, no FX, no advanced concepts; $\sim$8--12 documents.
 \item \textbf{L2:} cross-document dependencies (e.g., invoice $\to$ payment receipt), straightforward tax.
@@ -286,6 +288,8 @@ Expected code & Meaning & Detected \\
 \item \textbf{L4:} ASC~606 bundled contracts, fixed-asset disposals, deferred tax, or lease accounting; $\sim$20--30 documents with longer temporal lookback.
 \item \textbf{L5:} multiple concurrent advanced concepts (e.g., ASC~606 + FX + deferred tax) and/or lease modifications; $\sim$25--35 documents.
 \end{itemize}
+
+The levels are cumulative by construction: each level retains the sources of complexity below it and adds document volume, dependencies, jurisdictions, temporal lookback, or advanced concepts. The certified-accountant review judged $139/143$ compact-split assignments calibrated as written (three ``too easy,'' one ``too hard''); the independently double-reviewed overlap showed $96\%$ agreement on difficulty calibration. These judgments support practitioner-perceived ordering for the sampled benchmark records, not a claim that the rubric exhausts every source of real-world accounting difficulty.
 
 \begin{figure*}[t]
 \centering
@@ -308,18 +312,25 @@ Table~\ref{tab:per-concept} reports baseline \bsrecon{} by concept flag across a
 \toprule
 Concept flag & Gemini & GPT-5 & Haiku & Grok & DeepSeek & Qwen \\
 \midrule
-Revenue recognition & 17\% & 25\% & 4\%  & 4\%  & 8\%  & 12\% \\
-Asset disposal      & 21\% & 17\% & 0\%  & 0\%  & 8\%  & 0\%  \\
-Deferred tax        & 25\% & 0\%  & 0\%  & 0\%  & 8\%  & 0\%  \\
-Lease accounting    & 21\% & 17\% & 0\%  & 0\%  & 8\%  & 0\%  \\
-Tax exemption       & 29\% & 12\% & 0\%  & 0\%  & 33\% & 4\%  \\
-Foreign exchange    & 8\%  & 8\%  & 0\%  & 0\%  & 0\%  & 0\%  \\
-Period rollforward  & 48\% & 41\% & 11\% & 19\% & 39\% & 19\% \\
+Revenue recognition ($n{=}24$) & 17\% & 25\% & 4\%  & 4\%  & 8\%  & 12\% \\
+Asset disposal ($n{=}24$)      & 21\% & 17\% & 0\%  & 0\%  & 8\%  & 0\%  \\
+Deferred tax ($n{=}12$)        & 25\% & 0\%  & 0\%  & 0\%  & 8\%  & 0\%  \\
+Lease accounting ($n{=}24$)    & 21\% & 17\% & 0\%  & 0\%  & 8\%  & 0\%  \\
+Tax exemption ($n{=}24$)       & 29\% & 12\% & 0\%  & 0\%  & 33\% & 4\%  \\
+Foreign exchange ($n{=}24$)    & 8\%  & 8\%  & 0\%  & 0\%  & 0\%  & 0\%  \\
+Period rollforward ($n{=}212$) & 48\% & 41\% & 11\% & 19\% & 39\% & 19\% \\
 \bottomrule
 \end{tabular}
-\caption{Baseline \bsrecon{} by accounting concept on the core evaluation split; all values are percentages. Revenue recognition corresponds to ASC~606 customer-contract revenue; foreign exchange covers non-home-currency invoices and settlements; period rollforwards are schedules that carry prior balances forward. The table documents coverage over the authored concept families; larger concept-specific splits can be sampled with the released generator.}
+\caption{Baseline \bsrecon{} by accounting concept on the $480$ standard records in the core evaluation split; all values are percentages and each row reports its record count. Revenue recognition corresponds to ASC~606 customer-contract revenue; foreign exchange covers non-home-currency invoices and settlements; period rollforwards are schedules that carry prior balances forward. These smaller slices are coverage diagnostics, not balanced sub-splits; larger concept-specific splits can be sampled with the released generator.}
 \label{tab:per-concept}
 \end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/fig_failure_slices.pdf}
+\caption{Failure slices across the six-model panel. Industry and ledger-family panels show \bsrecon{} accuracy (higher is better), with the standard-record denominator in each column label; the error-taxonomy panel uses all $480$ standard records per model (lower is better).}
+\label{fig:failure-slices}
+\end{figure*}
 
 \section{Detailed Metrics}
 \label{appx:metrics-detail}
@@ -345,7 +356,7 @@ Qwen~3 235B       & 0.013 & 0.302 & $+0.290$ & 0.94 \\
 \end{table}
 
 \paragraph{Metric definitions.}
-\bsexact{} requires every section of the model's reported balance sheet (current and non-current assets, current and non-current liabilities, equity) to match ground truth at 0.01 tolerance. \bsrecon{} runs the model's entries through our ledger, computes the implied balance sheet, and applies the same equality check. These balance-sheet and entry metrics are reported over standard records only. On forced-inconsistency records, the expected behavior is \texttt{has\_inconsistency=True}, the correct code, empty entries, and an empty balance sheet; we therefore score them with \incCode{} and \texttt{inconsistency\_empty\_answer} instead of \bsexact{} or entry match.
+\bsexact{} requires the model's reported \texttt{assets}, \texttt{liabilities}, and \texttt{equity} account maps and their totals to match ground truth at 0.01 tolerance. \bsrecon{} runs the model's entries through our ledger, computes the implied balance sheet, and applies the same equality check. It is an outcome-level metric and can succeed without an exact match to the expected posting set. These balance-sheet and entry metrics are reported over standard records only. On forced-inconsistency records, the expected behavior is \texttt{has\_inconsistency=True}, the correct code, empty entries, and an empty balance sheet; we therefore score them with \incCode{} and \texttt{inconsistency\_empty\_answer} instead of \bsexact{} or entry match.
 
 \paragraph{Entry matching.}
 Journal entries are scored at the posting level. A strict posting match requires the same debit account, credit account, amount rounded to cents, and sorted \texttt{doc\_refs}. The lenient entry match uses the same account-and-amount criteria but ignores \texttt{doc\_refs}. The matcher proceeds greedily over unmatched predictions in four passes: exact match; same debit/credit/amount but wrong \texttt{doc\_refs}; same debit/credit/\texttt{doc\_refs} but wrong amount; and same \texttt{doc\_refs}/amount but wrong account. Remaining expected postings are missing; remaining predicted postings are extra. Duplicate identical postings are matched first-in-first-out. The evaluator does not use account synonyms: the allowed account list is closed. Posting dates are parsed and retained for diagnostics, but they are not part of the headline entry-match key. Split transactions receive credit only when the predicted posting decomposition matches the generator's expected postings.
@@ -371,7 +382,7 @@ Figure~\ref{fig:cost-pareto} reports API cost per evaluated core-evaluation reco
 \section{Ablation Matrix}
 \label{appx:ablation-grid}
 
-Table~\ref{tab:ablation-grid} enumerates every \texttt{AblationSpec} triple (prompt, visibility, tool) evaluated on the anchor model. Each cell is a single evaluation run on the core evaluation split. We omit the cross-product cells with neither additional prompt nor visibility variation but include all unary axis variants and the forced ledger-feedback variants.
+Table~\ref{tab:ablation-grid} summarizes the \texttt{AblationSpec} triples (prompt, visibility, tool) evaluated on the anchor model. Conditions use the compact ablation split or a labeled targeted subset, so $n$ varies by condition. We include broad unary axis variants and targeted multi-axis diagnostics rather than the full cross-product.
 
 \begin{table*}[t]
 \centering
@@ -404,28 +415,144 @@ The main text reports the measured effects of these ablations rather than only l
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig_ablation_deltas.pdf}
-\caption{Full anchor-model ablation deltas. Dots are paired-bootstrap mean deltas vs.\ baseline; visibility stresses dominate the negative tail.}
+\caption{Gemini~3 Flash ablation deltas on the compact split ($n{=}143$ unless a condition uses the labeled targeted subset). Dots are paired-bootstrap mean deltas vs.\ the matched baseline; visibility stresses dominate the negative tail.}
 \label{fig:ablation-deltas}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig_gap_repair_comparison.pdf}
-\caption{Best-of-3 selection recovers part of the aggregation gap; one ledger-feedback revision recovers substantially more on the same target records.}
+\caption{Gemini~3 Flash on the targeted aggregation-gap subset ($n{=}45$ standard records): best-of-3 selection recovers part of the gap, while one ledger-feedback revision recovers substantially more on the same records.}
 \label{fig:gap-repair}
 \end{figure}
+
+\section{Additional Diagnostics}
+\label{appx:response-controls}
+
+These controls address specific confounds. They use the frozen compact split ($143$ records: $120$ standard + $23$ forced-inconsistency) unless explicitly labeled otherwise. They are diagnostic additions rather than replacements for the six-model, $710$-record headline panel.
+
+\subsection{Reasoning controls}
+\label{appx:reasoning-controls}
+
+GPT-5 and Grok-4.3 both used reasoning in the headline runs. Table~\ref{tab:reasoning-controls} varies reasoning within a model family; reasoning effort and the output budget available to reasoning change together, so these are configuration controls rather than a pure causal intervention.
+
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Control configuration & $n$ & \bsexact{} & \bsrecon{} & gap & \incCode{} & parse \\
+\midrule
+DeepSeek Reasoner, 32k & 143 & 54.2\% & 55.8\% & 1.7\,pp & 56.5\% & 100.0\% \\
+Haiku~4.5 reasoning-low, 32k & 143 & 38.3\% & 46.7\% & 8.4\,pp & 91.3\% & 100.0\% \\
+Qwen3 thinking, 32k & 143 & 31.7\% & 40.0\% & 8.3\,pp & 52.2\% & 98.6\% \\
+Grok-4.3 reasoning disabled, 16k & 143 & 3.3\% & 30.8\% & 27.5\,pp & 95.7\% & 98.6\% \\
+GPT-5 minimal effort, 16k & 143 & 0.0\% & 24.2\% & 24.2\,pp & 73.9\% & 77.6\% \\
+\bottomrule
+\end{tabular}
+\caption{Reasoning controls on the compact split. \incCode{} is reported per configuration because reasoning changed contradiction detection in different directions. Strict end-to-end accuracy remains between $0$ and $4.2\%$ across these controls. The GPT-5 minimal run has $22.4\%$ unparseable outputs, which are scored as failures.}
+\label{tab:reasoning-controls}
+\end{table*}
+
+Relative to matched non-reasoning configurations, DeepSeek moves from $8.3\%$ to $54.2\%$ \bsexact{} and from a $42.0$ to $1.7$\,pp gap; Haiku moves from $4.2\%$ to $38.3\%$ and from $29.1$ to $8.4$\,pp; Qwen moves from $1.7\%$ to $31.7\%$ and to an $8.3$\,pp gap. The reverse Grok and GPT-5 controls create large gaps. On the full $710$-record split, DeepSeek Reasoner reaches $44.0\%$ \bsexact{} with a $4.8$\,pp gap, but raises false inconsistency alarms on standard records to $29.0\%$ from near zero. Higher-reasoning configurations therefore improve aggregation consistency without uniformly improving document grounding or contradiction detection.
+
+\subsection{Text versus native tool protocols}
+\label{appx:native-tools}
+
+In the text protocol, the prompt described each tool and required a JSON tool request; Gemini and the two additional text-protocol runs made zero calls over $572$ record-runs. We then exposed the same calculator, document search, and ledger functions through each provider's native function-calling interface with an eight-call budget.
+
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Model & Text-tool \bsexact{} & Native \bsexact{} & Native \bsrecon{} & used tools & strict & parse \\
+\midrule
+Gemini~3 Flash & 20.0\% & 52.5\% & 59.2\% & 141/143 & 5.8\% & 98.6\% \\
+DeepSeek Chat & 8.3\% & 45.8\% & 54.2\% & 134/143 & 5.0\% & 81.1\% \\
+GPT-5 & --- & 52.5\% & 54.2\% & 56/143 & 4.2\% & 99.3\% \\
+Haiku~4.5 & 20.0\% & 23.3\% & 37.5\% & 140/143 & 3.3\% & 98.6\% \\
+\bottomrule
+\end{tabular}
+\caption{Dual-protocol tool study on the compact split. ``Used tools'' counts records with at least one native call. Strict requires the reported balance sheet, entries, and citations to match. Native tools improve aggregation when invoked, but residual gaps and low strict accuracy remain. DeepSeek's lower parse rate reflects tool-loop outputs that exhausted the final-answer budget; these are retained as failures.}
+\label{tab:native-tools}
+\end{table*}
+
+The text protocol's Haiku score rises from its $4.2\%$ baseline to $20.0\%$ without a call, showing a prompt-format effect. DeepSeek isolates the execution effect most clearly: its text-tool score remains near baseline, while native calls add $37.5$\,pp. We therefore replace the submitted phrase ``passive tools are rarely used'' with the narrower finding that text-emitted calls were not used; provider-native interfaces are used frequently and recover part of the aggregation deficit.
+
+\subsection{Character corruption}
+\label{appx:ocr-noise}
+
+The headline input is clean templated text. A seeded corruption control adds confusion-table substitutions, deletions, token splits, and token merges, without line deletion. Table~\ref{tab:ocr-noise} labels conditions by achieved character-edit rate measured against the clean input.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Char-edit rate & Gemini \bsrecon{} & DeepSeek \bsrecon{} \\
+\midrule
+0\% (clean) & 61.7\% & 50.0\% \\
+0.94\% & 54.2\% & 46.7\% \\
+2.20\% & 53.3\% & 44.2\% \\
+4.45\% & 49.2\% & 36.7\% \\
+\bottomrule
+\end{tabular}
+\caption{Character-noise control on the compact split ($n{=}143$ per cell; \bsrecon{} over $n{=}120$ standard records). Parse success is $99$--$100\%$ throughout. This is not a raw-OCR or rendered-layout evaluation.}
+\label{tab:ocr-noise}
+\end{table}
+
+The monotone declines show that character corruption is a measurable second source of error. The clean-text shortfall remains roughly three times larger than the penalty at the harshest tested corruption rate, so normalization does not explain away the benchmark's difficulty.
+
+\subsection{Run and split stability}
+
+Three temperature-zero compact-split runs give the following \bsexact{} ranges: Gemini $24.2$--$25.0\%$, DeepSeek $7.5$--$9.2\%$, GPT-5 $51.7$--$55.0\%$, Haiku $4.2$--$4.2\%$, Grok $33.3$--$36.7\%$, and Qwen $0.8$--$2.5\%$. No range exceeds $3.3$\,pp. \bsrecon{} varies by at most $3.3$\,pp except for GPT-5 ($7.5$\,pp). These repeats are a stability check, not a complete error-bar analysis; the paired bootstrap intervals in the main paper quantify record-level sampling uncertainty for fixed saved runs.
+
+We also generated a second $710$-record split from unused seed 20260712 with the same coverage design and evaluated DeepSeek Chat under its headline configuration. \bsexact{} changes from $6.67\%$ to $7.71\%$, \bsrecon{} is $47.29\%$ on both, strict accuracy changes from $2.50\%$ to $2.92\%$, \incCode{} from $60.00\%$ to $60.87\%$, and parse success from $100.00\%$ to $99.86\%$. This is a single-model fresh-seed replication, not a full ranking replication.
+
+\subsection{Citation-score sensitivity}
+\label{appx:citation-sensitivity}
+
+Exact \texttt{doc\_refs} scoring distinguishes the generator's expected evidence set from supersets. Table~\ref{tab:citation-sensitivity} accepts either the exact set or a strict superset while keeping extra predicted entries and all other strict requirements unchanged.
+
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Model & \shortstack{Gold+extras\\among mismatches} & exact strict & tolerant strict \\
+\midrule
+Gemini~3 Flash & 42.0\% & 5.8\% & 8.8\% \\
+GPT-5 & 58.8\% & 4.6\% & 15.8\% \\
+DeepSeek Chat & 3.6\% & 2.5\% & 3.3\% \\
+\bottomrule
+\end{tabular}
+\caption{Citation sensitivity on the $480$ standard core records. For Gemini and GPT-5, $96.2\%$ and $94.0\%$ of extra cited documents in superset/partial-overlap cases are support documents. The strict end-to-end conclusion remains low under the tolerant score.}
+\label{tab:citation-sensitivity}
+\end{table*}
+
+\subsection{Structural audit and validation scope}
+\label{appx:structural-audit}
+
+An independent JSON-level audit re-implements double-entry replay without importing the generator's ledger class. It checks nine invariants: unique visible IDs; dates within the record period; resolvable citations; account-taxonomy membership; positive, non-self postings; section sums; the balance identity; replay of gold entries (or the forced-inconsistency empty-answer convention); and label conventions. The released $710$ records and fresh samples of $1{,}200$ and $4{,}800$ records all pass every invariant ($6{,}710/6{,}710$). Per-cell CSVs and the audit script are released.
+
+This audit establishes structural consistency across sampled values and combinations; it does not establish semantic realism, contradiction-code fit, or the uniquely correct accounting interpretation. Those are the properties addressed by the human-reviewed structural covers: the $143$-record accountant review covers every industry--period--difficulty cell and every code, while the separate $75$-record set spans all industries and levels.
 
 \section{Human Verification Protocol}
 \label{appx:human-protocol}
 
 \paragraph{Reviewer recruitment.}
-The release subset was reviewed by two practising finance professionals working at major U.S.\ investment banks. Both reviewers had prior accounting and reconciliation responsibilities in their day-to-day work and were given a one-paragraph briefing on the benchmark's scope (analogy of reconciliation paperwork; not OCR fidelity). A third reviewer, a certified accountant, independently reviewed the full compact coverage split under the same instrument and briefing; this reviewer worked separately and did not see the other reviewers' responses.
+The release subset was reviewed by two practising finance professionals working at major U.S.\ investment banks. Both reviewers had prior accounting and reconciliation responsibilities in their day-to-day work and were given a one-paragraph briefing on the benchmark's scope (accounting plausibility and reconciliation evidence, not OCR fidelity). They were not asked to recompute every arithmetic invariant; those checks are deterministic. A third reviewer, a certified accountant, independently reviewed the full compact coverage split under the same instrument and briefing; this reviewer worked separately and did not see the other reviewers' responses. All three reviewers participated as unpaid volunteers and consented to the anonymized use and public release of their review responses. No formal institutional ethics review was sought for this activity.
 
 \paragraph{Instrument.}
 Each of 75 release records was rendered as a self-contained Markdown file with seven sections: (1) record context (industry, period, currency, tax regime, difficulty, inconsistency flag), (2) the allowed-account-name list, (3) opening trial balance, (4) every document with its OCR text and role tag, (5) ground-truth journal entries, (6) ground-truth balance sheet, and (7) the verification form. The form contains six checks: document analogy, entry correctness, entry completeness, \texttt{doc\_refs} support, difficulty calibration, and overall verdict. Each check offers three options (positive, mixed, negative) plus a free-text notes field.
 
 \paragraph{Protocol.}
-The release subset contains 75 expert-reviewed records: 60 standard records and 15 forced-inconsistency records. The intended assignment used in the paper is Reviewer~1 on records 1--50 and Reviewer~2 on records 1--25 plus 51--75. This gives every record one expert review and creates a 25-record independent overlap on records 1--25. Reviewers worked independently and did not see each other's responses. The third reviewer (certified accountant) instead covered the entire compact coverage split of 143 records (120 standard + 23 forced-inconsistency). This split contains one record per industry--period--difficulty cell plus one per inconsistency code, so every compact scenario is reviewed at least once.
+The release subset contains 75 expert-reviewed records: 60 standard records and 15 forced-inconsistency records. The intended assignment used in the paper is Reviewer~1 on records 1--50 and Reviewer~2 on records 1--25 plus 51--75. This gives every record one expert review and creates a 25-record independent overlap on records 1--25. Reviewers worked independently and did not see each other's responses. The third reviewer (certified accountant) instead covered the entire compact coverage split of 143 records (120 standard + 23 forced-inconsistency). This split contains one record per industry--period--difficulty cell plus one per inconsistency code, so the review covers every such cell and code.
 
 \paragraph{Results.}
 Table~\ref{tab:iaa} reports strict three-option agreement, collapsed acceptable agreement, and per-reviewer first-option rates on the 25-record double-reviewed overlap. The collapsed column treats ``Yes/Mostly'' or ``Accept/Accept with minor fixes'' as the same acceptability judgment; difficulty remains first option versus not-first option. We report these descriptive rates rather than Cohen's $\kappa$ because the sample is small and marginals are highly skewed toward positive judgments. Q6 is omitted because the overlap contains standard records only; inconsistency validity was reviewed in the single-reviewed negative-control records.
@@ -455,6 +582,9 @@ The third reviewer's pass over all 143 compact-coverage records rejected nothing
 \section{Reproducibility}
 \label{appx:reproducibility}
 
+\paragraph{Prompt availability.}
+All evaluations use ordinary text prompts without structured-output mode or a response-schema constraint. The exact executable baseline prompt, record-dependent suffix, output examples, inconsistent-packet example, and citation-pressure condition are released in \path{finbalance/benchmark/prompt.py} at \url{https://github.com/Devansh1105/finbalance}. Document role tags are not inserted into the model-visible prompt.
+
 \paragraph{Seeds.}
 Dataset generation uses seed 42. Headline LLM evaluations use temperature 0.0 with no explicit seed (closed APIs do not expose a deterministic seed knob); the best-of-3 condition uses temperature 0.7 with three independent samples.
 
@@ -463,36 +593,29 @@ The main evaluation split, stored under \texttt{data/main/}, uses four standard 
 
 \begin{table*}[t]
 \centering
-\scriptsize
+\footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.85in}>{\raggedright\arraybackslash}p{1.05in}@{}}
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.75in}>{\raggedright\arraybackslash}p{1.25in}@{}}
 \toprule
 Paper name & Request slug & Returned model & Provider & Settings \\
 \midrule
-Gemini 3 Flash & \path{google/gemini-3-flash-preview} & \path{google/gemini-3-flash-preview-20251217} & Google & temp 0; max 12k; 300s; no reasoning \\
-GPT-5 & \path{openai/gpt-5} & \path{openai/gpt-5-2025-08-07} & OpenAI & temp 0; max 32k; 420s; effort low \\
-Claude Haiku 4.5 & \path{anthropic/claude-haiku-4.5} & \path{anthropic/claude-4.5-haiku-20251001} & Amazon Bedrock & temp 0; max 16k; 180s; no reasoning \\
-Grok-4.3 & \path{x-ai/grok-4.3} & \path{x-ai/grok-4.3-20260430} & xAI & temp 0; max 16k; 180s; no reasoning \\
-Qwen 3 235B & \path{qwen/qwen3-235b-a22b-2507} & \path{qwen/qwen3-235b-a22b-07-25} & DeepInfra & temp 0; max 12k; 180s; no reasoning \\
-DeepSeek Chat & \path{deepseek-chat} & \path{deepseek-chat} & DeepSeek Platform & temp 0; max 8k; 1800s; no reasoning \\
+Gemini 3 Flash & \path{google/gemini-3-flash-preview} & \texttt{google/}\newline\texttt{gemini-3-flash-}\newline\texttt{preview-20251217} & Google & temp 0; max 12k; no reasoning \\
+GPT-5 & \path{openai/gpt-5} & \texttt{openai/}\newline\texttt{gpt-5-2025-08-07} & OpenAI & temp 0; max 32k; reasoning effort low \\
+Claude Haiku 4.5 & \path{anthropic/claude-haiku-4.5} & \texttt{anthropic/}\newline\texttt{claude-4.5-haiku-}\newline\texttt{20251001} & Bedrock & temp 0; max 16k; no reasoning \\
+Grok-4.3 & \path{x-ai/grok-4.3} & \texttt{x-ai/}\newline\texttt{grok-4.3-20260430} & xAI & temp 0; max 16k; reasoning \\
+Qwen 3 235B & \path{qwen/qwen3-235b-a22b-2507} & \texttt{qwen/}\newline\texttt{qwen3-235b-a22b-}\newline\texttt{07-25} & DeepInfra & temp 0; max 12k; no reasoning \\
+DeepSeek Chat & \path{deepseek-chat} & \path{deepseek-chat} & DeepSeek & temp 0; max 8k; non-reasoning endpoint \\
 \bottomrule
 \end{tabularx}
-\caption{API-model settings for the six completed headline baseline runs. Providers and returned model identifiers are taken from the stored response payloads where available. The best-of-3 condition keeps the same model family and prompt but uses temperature $0.7$ and three independent samples on the aggregation-gap subset.}
+\caption{API-model settings for the six completed headline baseline runs. GPT-5 and Grok-4.3 used reasoning. Providers and returned identifiers come from stored payloads where available. The best-of-3 condition uses temperature $0.7$ and three samples on the aggregation-gap subset.}
 \label{tab:api-settings}
 \end{table*}
 
 \paragraph{API reproducibility.}
-OpenRouter runs and DeepSeek Platform runs use chat-completions endpoints with ordinary text prompts and no structured JSON mode or response-schema constraint; strict JSON is enforced only by the prompt and parser. Each run directory stores \texttt{evaluation.json}, \texttt{summary.json}, \texttt{per\_record\_results.jsonl}, and slice tables. The evaluation files include run start/end timestamps, requested model slug, returned model identifier, selected provider where available, service tier where available, raw response text, raw response metadata where provider terms permit, token counts, cost where available, latency, parse status, tool/verifier metadata, and per-record metrics. Prompts are exactly reconstructable from the released prompt templates, ablation specification, and record JSON; we also release the raw model outputs used for the reported tables. Transient gateway errors use at most three client retries with exponential backoff for 429/5xx responses; parse failures are scored as failures and logged rather than silently repaired.
+OpenRouter runs and DeepSeek Platform runs use chat-completions endpoints with ordinary text prompts and no structured JSON mode or response-schema constraint; strict JSON is enforced only by the prompt and parser. Each run directory stores \texttt{evaluation.json}, \texttt{summary.json}, \texttt{per\_record\_results.jsonl}, and slice tables. The evaluation files include run start/end timestamps, requested model slug, returned model identifier, selected provider where available, service tier where available, raw response text, raw response metadata where provider terms permit, token counts, cost where available, latency, parse status, tool/verifier metadata, and per-record metrics. Prompts are exactly reconstructable from the released prompt templates, ablation specification, and record JSON; we also release the raw model outputs used for the reported tables. Transient gateway errors use at most three client retries with exponential backoff for 429/5xx responses; parse failures are scored as failures and logged rather than silently repaired. Saved outputs make every reported score exactly recomputable offline, but no release can guarantee that a commercial API will serve the same model in the future. Request slugs, returned snapshots, provider metadata, and decoding settings identify what was measured; repeated-run ranges are reported in Appendix~\ref{appx:response-controls}.
 
 \paragraph{Bootstrap.}
 All confidence intervals are paired bootstrap with $n{=}5000$ resamples drawn over a shared record-id set, so baseline and treatment are compared on matched records. CIs are reported as percentile $95\%$. These intervals quantify record-level sampling uncertainty for a fixed saved run; they do not capture API nondeterminism, provider routing changes, silent model updates, or future prompt-run variance.
 
 \paragraph{Release and licenses.}
-The benchmark generator, evaluation harness, ablation runner, bootstrap analyzer, scripts, and tests are released under Apache-2.0. The release includes a user-facing generation API and CLI scripts for custom datasets: users can request an exact record count or a balanced number of records per selected industry, period type, and difficulty cell. Generated benchmark records, OCR text, PDF-style document artifacts, labels, sample manifests, and expert-validation records are released under CC BY 4.0, which permits commercial use with attribution. Synthetic company names, counterparties, and document templates are author-created and not derived from real customer records or third-party proprietary templates. Raw model outputs and non-secret response metadata from paper runs are released as reproducibility artifacts where provider terms permit, separate from the dataset license. API keys, billing logs, and restricted provider fields are excluded or redacted; users who rerun evaluations must comply with their model/API provider terms. The paper uses no hidden evaluation split; future public hidden-leaderboard artifacts, if any, will use the same data license unless otherwise stated.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.98\textwidth]{figures/fig_failure_slices.pdf}
-\caption{Failure slices across the six-model panel. Industry and ledger-family panels show \bsrecon{} accuracy (higher is better); the error-taxonomy panel shows affected standard records (lower is better).}
-\label{fig:failure-slices}
-\end{figure*}
+The benchmark generator, evaluation harness, ablation runner, bootstrap analyzer, scripts, and tests are released under Apache-2.0. The release includes a user-facing generation API and CLI scripts for custom datasets: users can request an exact record count or a balanced number of records per selected industry, period type, and difficulty cell. The repository README documents extension points for industries, policies, document schemas, contradiction types, and versioned scoring. Generated benchmark records, OCR text, PDF-style document artifacts, labels, sample manifests, and expert-validation records are released under CC BY 4.0, which permits commercial use with attribution. Synthetic company names, counterparties, and document templates are author-created and not derived from real customer records or third-party proprietary templates. Raw model outputs and non-secret response metadata from paper runs are released as reproducibility artifacts where provider terms permit, separate from the dataset license. API keys, billing logs, and restricted provider fields are excluded or redacted; users who rerun evaluations must comply with their model/API provider terms. The paper uses no hidden evaluation split; future public hidden-leaderboard artifacts, if any, will use the same data license unless otherwise stated.

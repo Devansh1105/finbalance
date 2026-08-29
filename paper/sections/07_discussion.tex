@@ -1,4 +1,7 @@
 \section{Discussion}
 \label{sec:discussion}
 
-Source-document accounting is not solved by long-context retrieval. Distractors hurt, but controlled-evidence records still degrade as cross-document accounting dependencies grow: models must select evidence, form balanced entries, and aggregate them. Repair ablations target the second stage. Ledger feedback helps more than best-of-3, so the issue is not just insufficient sampling; however, strict document-grounded accuracy stays low, and ledger-consistency feedback can reduce inconsistency detection by pushing models to reconcile contradictory documents.
+Source-document accounting is not solved by long-context retrieval. Distractors hurt, but controlled-evidence records still degrade as cross-document accounting dependencies grow: models must select evidence, form balanced entries, and aggregate them. Repair ablations target the second stage. Ledger feedback helps more than best-of-3, so the issue is not just insufficient sampling; however, strict document-grounded accuracy stays low. The observed reduction in inconsistency detection is consistent with feedback focusing revisions on reconciling a contradictory bundle, but this mechanism remains conjectural.
+
+\paragraph{Intended utility.}
+Beyond fixed evaluation, the released generator can create stratified practice data and organization-specific stress tests, while the deterministic ledger can provide machine-checkable feedback for training or candidate selection. Possible uses include supervised examples, verifier/reward signals, and distillation of tool-assisted workflows.

@@ -36,13 +36,13 @@ loop in `tools.py`), both to be included in the revision artifact.
 | E15 | deepseek-reasoner @ full 710 (sharded) | DONE: 44.0% BS_exact, gap 4.8pp, false alarms 29.0% | [REPLY] R2 |
 | E16 | Gemini 3.1 Pro frontier | 37.5/62.5; strict 6.7%; parse 100% | [RESERVE] |
 | E17 | Qwen3-thinking-2507 @32k | DONE: BS_exact 1.7% → 31.7%, gap ~31 → 8.3pp, strict 0.0% — fifth family; promoted into R2 reply (completes reviewer-named list) | [REPLY] R2 |
-| E18 | Gemini 3 Flash thinking-high @64k | running (32k budget insufficient: thinking exhausts it) | [RESERVE] |
+| E18 | Gemini 3 Flash thinking-high @64k | NOT COMPLETED — the 32k attempt exhausted its reasoning budget; excluded from the paper rather than reporting an incomplete run | [RESERVE] |
 | E19 | Multimodal rendered-document condition | NOT BUILT — scoped as future work in replies | [REVISION] |
 
 ## 2. Corrections to the submitted paper
 
 ### Disclosed in the replies (because a reviewer would otherwise find the conflict)
-| C1 | Table 8: Grok "no reasoning" → provider-default reasoning ON; add requested-vs-observed columns for all models | R2 opener |
+| C1 | Table 8: Grok "no reasoning" → reasoning; correct the headline configuration description | R2 opener |
 | C2 | Context-stress deltas 16.7/15.8/18.3pp used full-bundle baseline; correct = 5.8-8.3pp vs evidence-only | R1 parenthetical |
 | C3 | Doc-ref mismatch metric text: it is incidence per expected entry (52.4% anchor), not share of otherwise-correct entries (61.8%) | R2 sensitivity para |
 
@@ -64,7 +64,6 @@ loop in `tools.py`), both to be included in the revision artifact.
 | C18 | Record COV_WHO_M5_0049: metadata `sales_tax` vs GST documents D015/D016/D019 — generator consistency fix |
 | C19 | Abstract "validate the labels" → qualify with 3/23 loose-fit codes (also disclosed in R3 reply) |
 | C20 | Human-review scope: reviewers briefed not to recheck arithmetic — state review scope in paper |
-| C21 | Related work: add/discuss industry evaluations found post-submission — AccountingBench (Penrose "Can LLMs Do Accounting?": agents close real company books from Ramp/Stripe/Mercury data, judged on statements) and DualEntry's accounting AI benchmark — differentiate on deterministic regenerable labels, citation grounding, inconsistency taxonomy, public generator vs single-company closed data; keep novelty claim scoped exactly as in the rebuttal (pending Codex research verdict) |
 
 ## 3. Frozen until revision (and why)
 
@@ -74,21 +73,28 @@ loop in `tools.py`), both to be included in the revision artifact.
   public preprint makes the anonymity point moot under current ARR policy.
 - The paper PDF — no uploads during discussion.
 
-## 4. Revision assembly checklist (camera-ready or resubmission)
+## 4. Revision assembly checklist (camera-ready)
 
-1. Apply C1-C20. 2. Add response-period experiments as appendix/results updates:
-six-family reasoning matrix (E2-E5, E17, E18), dual-protocol tool study (E6, E7, E13),
-OCR-corruption appendix (E8), stability checks (E9, E14), fresh-seed replication (E10,
-extend to full panel if budget allows), structural audit + script + CSVs (E11), citation
-decomposition + dual scoring (E12), frontier row (E16). 3. Prompts appendix; N
-annotations; anchor-only scope labels; §7 utility paragraph; "Extending FinBalance"
-appendix. 4. Regenerate records for C17/C18;
-rerun structural audit; note as erratum. 5. Clean `_archive/` build logs from mirror;
-update mirror to revision state. 6. Multimodal condition (E19) if resources allow. 7. Rotate all API keys used during the response period.
-8. §7 future-work sentence only (no measurement commitment): ledger-as-verifier for
-training (SFT data, verifier-reward RL, efficiency distillation) — deliberately scoped
-as intended use; the actual training-utility measurement is the follow-up paper, not a
-revision item.
+- **Complete:** C1--C20 are reflected in the manuscript, generator, tests, or the
+  deliberately low-key frozen-v1 metadata note.
+- **Complete:** the paper reports every completed, rebuttal-relevant diagnostic:
+  reasoning controls (E2--E5, E17), dual-protocol tools (E6, E7, E13), OCR character
+  corruption (E8), repeat stability (E9, E14), fresh-seed replication (E10), the
+  6,710-record structural audit (E11), and citation-score sensitivity (E12).
+- **Complete:** exact prompt availability, per-cell/sample-size labels, anchor/split scope,
+  intended utility, and API-drift caveats are documented. Full prompt listings remain in
+  the public executable source rather than duplicating several pages in the paper.
+- **Complete:** frozen v1 evaluation files and scores are unchanged. C17/C18 affect only
+  future samples; README records both metadata issues and the saved-output sensitivity
+  check (maximum headline-metric change 0.97 percentage points when all 39 affected
+  records are excluded).
+- **Deliberately excluded:** E16 was an unpromised reserve frontier row; E18 did not
+  complete; E19 (rendered-layout multimodal evaluation) was explicitly scoped as future
+  work. None is needed to support the accepted paper, and no additional paid run is
+  justified for camera-ready.
+- **Still operational, not scientific manuscript work:** prepare clean public/upload
+  archives, remove stale build logs from any mirror, verify promised raw artifacts,
+  rotate response-period API keys, and complete the OpenReview/copyright forms.
 
 ## 5. Repo hygiene
 
@@ -100,3 +106,75 @@ prepay billing rejected it; superseded by `08_vertex_anchor.sh`). Kept deliberat
 result dirs `reasoning_parity/deepseek_reasoner_main710/` and `qwen3_thinking_32k/`
 (partial rows merge into shard results; excluded from health watchdog). `.codex-out/`
 gitignored. Scratchpad shard files are session-temporary outside the repo.
+
+## 6. Exact author review map — 29 August 2026 final-review build
+
+The rebuilt ACL-final PDF has 22 A4 pages. Counted main-paper content ends on page 9;
+the required unnumbered Limitations section begins after the conclusion on page 9 and
+continues onto page 10. References occupy page 11, and the lettered appendices begin on
+page 12. All fonts are embedded, and the
+final build has no overfull boxes, unresolved citations, or unresolved cross-references.
+Every manually reduced table font is at least 9 pt; the appendix is outside the main-text
+page limit.
+
+### Review these PDF pages
+
+| PDF page(s) | What changed | Source location |
+|---|---|---|
+| 1 | Final author block, equal-contribution marker, correspondence; prior-work framing corrected | `paper/main.tex:9,20,45-50`; `paper/sections/01_introduction.tex:4-17` |
+| 2--3 | Prior-work table/claims corrected; no extra AccountingBench or DualEntry citations; clean-templated-OCR scope and hidden role tags clarified | `paper/tables/prior_work_comparison.tex`; `paper/sections/02_related_work.tex:5-11`; `paper/sections/03_benchmark_design.tex:7-18` |
+| 4--5 | Canonical accounting-treatment scope, metric semantics, model/split labels, tool protocols, and human-review scope corrected | `paper/sections/03_benchmark_design.tex:12-28`; `paper/sections/04_experimental_setup.tex:5-12` |
+| 6--8 | Added reasoning controls, native-tool results, citation sensitivity, OCR character-noise control; corrected ledger-feedback baseline/tool description, context-stress deltas, metric wording, and sample-size captions | `paper/sections/05_results.tex:13-80`; `paper/sections/06_analysis.tex:5-11` |
+| 9--10 | Intended-use paragraph; causal language weakened to conjecture; OCR/layout, acceptable-treatment, API-drift, evaluation-scope, and real-deployment-risk limitations added | `paper/sections/07_discussion.tex:4-7`; `paper/sections/08_limitations.tex` |
+| 11 | All 21 citations manually verified; published archival versions replace arXiv where available; unused entries removed | `paper/references.bib` |
+| 12--16 | Opening-balance role clarified; difficulty rubric/calibration and denominators added; detailed metrics and ablation labels corrected | `paper/sections/appendix.tex:223-426` |
+| 16--20 | New response-period diagnostics: reasoning, native tools, OCR character corruption, repeated runs, fresh seed, citation scoring, and 6,710-record structural audit | `paper/sections/appendix.tex:429-543` |
+| 20--21 | Human-review recruitment, assignment, instrument, exact agreement rates, and full-coverage accountant review clarified | `paper/sections/appendix.tex:545-580` |
+| 21 | Compact prompt-availability note points to the exact public executable source | `paper/sections/appendix.tex:582-586` |
+| 21--22 | Seeds, split construction, concise model settings, closed-API reproducibility, and release/licenses | `paper/sections/appendix.tex:588-624` |
+
+### Final PDF-format compliance pass
+
+- The source uses `\documentclass[11pt]{article}` and the current official ACL style in
+  final mode. The local `paper/acl.sty` is byte-identical to the current file from
+  `acl-org/acl-style-files`.
+- The PDF is exactly A4 (`595.276 x 841.89 pt`), two-column, with no page numbers or
+  review ruler. Ghostscript bounding-box inspection and a 22-page rendered review found
+  no clipping or margin-crossing object.
+- The title, all author names, and full affiliations use the ACL title block. All names
+  are bold as the style requires; only Sasank Tumpati and Devansh Agarwal carry the equal-
+  contribution marker.
+- The abstract is 191 words. The paper has the required exact `Limitations` heading after
+  the conclusion and before the references; it contains no new experiments or figures.
+- All manually set table and record-example text is now at least 9 pt. Captions
+  remain 10 pt and document text 11 pt through the ACL style.
+- All 22 pages were inspected in color and grayscale. Every figure remains legible without
+  relying solely on color, every caption is present, and every font (including fonts inside
+  imported PDF figures) is embedded.
+- The final LaTeX log has no overfull boxes, unresolved citations, unresolved references,
+  or rerun warning. The only remaining log messages are harmless underfull-box and caption
+  anchor warnings.
+- This confirms the **PDF draft**. Submission-package compliance still requires making the
+  OpenReview title/abstract/TL;DR/author order identical to the PDF, attaching the signed
+  copyright PDF, and truthfully completing the Responsible NLP and attendance fields.
+
+### Low-key metadata corrections outside the paper
+
+- `README.md:193-200` records the two frozen-v1 metadata issues without presenting them
+  as a headline limitation or rerunning the models.
+- `finbalance/generation/helpers.py:377-378` fixes April-fiscal-year labels for future
+  samples; `finbalance/generation/scenario_factories.py:1362-1369` prevents generic
+  sales-tax metadata from selecting India-GST documents.
+- `finbalance/tests/test_generation.py:60-62,482-497` adds regression coverage for both
+  fixes. The complete suite passes: 87 tests.
+- `README.md:294-314` explains how future extensions must be versioned and structurally
+  audited; this repository-oriented guidance is intentionally omitted from the paper.
+
+### Explicitly unchanged
+
+- No frozen v1 record, saved model output, headline score, central contribution, or author
+  order was changed.
+- Sasank Tumpati and Devansh Agarwal remain the first two authors and are the only equal
+  contributors. Both author rows are now uniformly bold, as required by the ACL title
+  style; boldface does not distinguish author rank.
+- No incomplete or additional paid experiment was added.

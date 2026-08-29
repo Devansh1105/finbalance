@@ -374,4 +374,5 @@ def _add_months(value: date, months: int) -> date:
 def _fiscal_year_label(start: date, fiscal_start_month: int) -> str:
     if fiscal_start_month == 1:
         return f"FY {start.year}"
-    return f"FY {start.year}-{str((start.year + 1) % 100).zfill(2)}"
+    fiscal_year_start = start.year if start.month >= fiscal_start_month else start.year - 1
+    return f"FY {fiscal_year_start}-{str((fiscal_year_start + 1) % 100).zfill(2)}"

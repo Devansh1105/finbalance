@@ -1,8 +1,8 @@
 % =============================================================================
 % FinBalance references.bib
-% Every entry below has been individually verified against ACL Anthology, the
-% NeurIPS / ICLR proceedings site, or the arXiv abs page on 2026-05-24.
-% Do NOT add an entry without verifying its existence at the listed URL.
+% Every cited entry was manually verified against its original proceedings,
+% publisher, or current preprint record on 29 August 2026. ArXiv is used only
+% where no published archival version exists. Do not add an unverified entry.
 % =============================================================================
 
 % ----- Financial NLP benchmarks ----------------------------------------------
@@ -116,7 +116,9 @@
   booktitle = {Advances in Neural Information Processing Systems 37 (Datasets and
                Benchmarks Track)},
   year      = {2024},
-  url       = {https://openreview.net/forum?id=loDHZstVP6}
+  pages     = {95716--95743},
+  url       = {https://proceedings.nips.cc/paper_files/paper/2024/hash/adb1d9fa8be4576d28703b396b82ba1b-Abstract-Datasets_and_Benchmarks_Track.html},
+  doi       = {10.52202/079017-3033}
 }
 
 @inproceedings{liu-etal-2025-findabench,
@@ -133,25 +135,29 @@
   url       = {https://aclanthology.org/2025.coling-main.48/}
 }
 
-@misc{jiang2025finmaster,
-  title         = {{F}in{M}aster: A Holistic Benchmark for Mastering Full-Pipeline
-                   Financial Workflows with {LLM}s},
-  author        = {Jiang, Junzhe and Yang, Chang and Cui, Aixin and Jin, Sihan
-                   and Wang, Ruiyu and Li, Bo and Huang, Xiao and Sun, Dongning
-                   and Wang, Xinrun},
-  year          = {2025},
-  eprint        = {2505.13533},
-  archiveprefix = {arXiv},
-  primaryclass  = {cs.AI},
-  url           = {https://arxiv.org/abs/2505.13533}
+@inproceedings{jiang2025finmaster,
+  title     = {{F}in{M}aster: A Holistic Benchmark for Full-Pipeline Financial
+               Management with Large Language Models},
+  author    = {Jiang, Junzhe and Yang, Chang and Cui, Aixin and Jin, Sihan
+               and Zhang, Yujing and Xiao, Yilin and Wang, Ruiyu and Li, Bo
+               and Huang, Xiao and Sun, Danny Dongning and Wang, Xinrun},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL 2026},
+  year      = {2026},
+  pages     = {7787--7844},
+  publisher = {Association for Computational Linguistics},
+  url       = {https://aclanthology.org/2026.findings-acl.385/},
+  doi       = {10.18653/v1/2026.findings-acl.385}
 }
 
 @misc{wang2025fintagging,
-  title         = {{F}in{T}agging: An {LLM}-ready Benchmark for Extracting and
+  title         = {{F}in{T}agging: Benchmarking {LLM}s for Extracting and
                    Structuring Financial Information},
-  author        = {Wang, Yan and Ren, Yang and Qian, Lingfei and Peng, Xueqing
-                   and Wang, Keyi and Han, Yi and Feng, Dongji and Liu,
-                   Xiao-Yang and Huang, Jimin and Xie, Qianqian},
+  author        = {Wang, Yan and Qian, Lingfei and Peng, Xueqing and Ren, Yang
+                   and Wang, Keyi and Han, Yi and Feng, Dongji and Mo, Fengran
+                   and Lin, Shengyuan and Zhang, Qinchuan and He, Kaiwen and
+                   Luo, Chenri and Chen, Jianxing and Wu, Junwei and Xu, Chen
+                   and Xu, Ziyang and Huang, Jimin and Xiong, Guojun and Liu,
+                   Xiao-Yang and Xie, Qianqian and Nie, Jian-Yun},
   year          = {2025},
   eprint        = {2505.20650},
   archiveprefix = {arXiv},
@@ -172,20 +178,21 @@
   url           = {https://arxiv.org/abs/2603.11339}
 }
 
-@misc{wang2026finauditing,
+@inproceedings{wang2026finauditing,
   title         = {{F}in{A}uditing: A Financial Taxonomy-Structured Multi-Document
                    Benchmark for Evaluating LLMs},
   author        = {Wang, Yan and Wang, Keyi and Yang, Shanshan and Patel, Jaisal
                    and Zhao, Jeff and Mo, Fengran and Peng, Xueqing and Qian, Lingfei
                    and Chen, Yankai and Guti{\'e}rrez-Basulto, V{\'i}ctor
                    and Huang, Jimin and Xiong, Guojun and Liu, Xiao-Yang
-                   and Liu, Xue and Nie, Jian-Yun},
+                   and Nie, Jian-Yun},
+  booktitle     = {Proceedings of the 49th International ACM SIGIR Conference on
+                   Research and Development in Information Retrieval},
   year          = {2026},
-  note          = {To appear, SIGIR 2026 Resource Track},
-  eprint        = {2510.08886},
-  archiveprefix = {arXiv},
-  primaryclass  = {cs.CL},
-  url           = {https://arxiv.org/abs/2510.08886}
+  pages         = {3456--3463},
+  publisher     = {Association for Computing Machinery},
+  doi           = {10.1145/3805712.3808578},
+  url           = {https://doi.org/10.1145/3805712.3808578}
 }
 
 % ----- Self-consistency, verifiers, and reasoning interventions ---------------
@@ -216,13 +223,13 @@
 
 @inproceedings{lightman2024verify,
   title     = {Let's Verify Step by Step},
-  author    = {Lightman, Hunter and Kosaraju, Vineet and Burda, Yura and
-               Edwards, Harri and Baker, Bowen and Lee, Teddy and Leike, Jan
+  author    = {Lightman, Hunter and Kosaraju, Vineet and Burda, Yuri and
+               Edwards, Harrison and Baker, Bowen and Lee, Teddy and Leike, Jan
                and Schulman, John and Sutskever, Ilya and Cobbe, Karl},
   booktitle = {The Twelfth International Conference on Learning Representations
                (ICLR)},
   year      = {2024},
-  url       = {https://openreview.net/forum?id=v8L0pN6EOi}
+  url       = {https://proceedings.iclr.cc/paper_files/paper/2024/hash/aca97732e30bcf1303bc22ac3924fd16-Abstract-Conference.html}
 }
 
 @inproceedings{madaan2023selfrefine,
@@ -232,29 +239,24 @@
                and Prabhumoye, Shrimai and Yang, Yiming and Gupta, Shashank
                and Majumder, Bodhisattwa Prasad and Hermann, Katherine and
                Welleck, Sean and Yazdanbakhsh, Amir and Clark, Peter},
-  booktitle = {Advances in Neural Information Processing Systems 36 (NeurIPS)},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {36},
+  pages     = {46534--46594},
   year      = {2023},
+  doi       = {10.52202/075280-2019},
   url       = {https://proceedings.neurips.cc/paper_files/paper/2023/hash/91edff07232fb1b55a505a9e9f6c0ff3-Abstract-Conference.html}
 }
 
 @inproceedings{shinn2023reflexion,
   title     = {Reflexion: Language Agents with Verbal Reinforcement Learning},
-  author    = {Shinn, Noah and Cassano, Federico and Berman, Edward and Gopinath,
-               Ashwin and Narasimhan, Karthik and Yao, Shunyu},
-  booktitle = {Advances in Neural Information Processing Systems 36 (NeurIPS)},
+  author    = {Shinn, Noah and Cassano, Federico and Gopinath, Ashwin and
+               Narasimhan, Karthik and Yao, Shunyu},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {36},
+  pages     = {8634--8652},
   year      = {2023},
-  url       = {https://openreview.net/forum?id=vAElhFcKW6}
-}
-
-@inproceedings{wei2022cot,
-  title     = {Chain-of-Thought Prompting Elicits Reasoning in Large Language Models},
-  author    = {Wei, Jason and Wang, Xuezhi and Schuurmans, Dale and Bosma, Maarten
-               and Ichter, Brian and Xia, Fei and Chi, Ed H. and Le, Quoc V.
-               and Zhou, Denny},
-  booktitle = {Advances in Neural Information Processing Systems 35 (NeurIPS)},
-  year      = {2022},
-  pages     = {24824--24837},
-  url       = {https://proceedings.neurips.cc/paper_files/paper/2022/hash/9d5609613524ecf4f15af0f7b31abca4-Abstract-Conference.html}
+  doi       = {10.52202/075280-0377},
+  url       = {https://proceedings.neurips.cc/paper_files/paper/2023/hash/1b44b878bb782e6954cd888628510e90-Abstract-Conference.html}
 }
 
 % ----- Long-context, multi-doc, and retrieval ---------------------------------
@@ -277,7 +279,9 @@
                and Karpukhin, Vladimir and Goyal, Naman and K{\"u}ttler, Heinrich
                and Lewis, Mike and Yih, Wen-tau and Rockt{\"a}schel, Tim and Riedel,
                Sebastian and Kiela, Douwe},
-  booktitle = {Advances in Neural Information Processing Systems 33 (NeurIPS)},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {33},
+  pages     = {9459--9474},
   year      = {2020},
   url       = {https://proceedings.neurips.cc/paper/2020/hash/6b493230205f780e1bc26945df7481e5-Abstract.html}
 }
@@ -292,18 +296,4 @@
                (ICLR)},
   year      = {2023},
   url       = {https://openreview.net/forum?id=WE_vluYUL-X}
-}
-
-% ----- Domain background ------------------------------------------------------
-
-@misc{wu2023bloomberggpt,
-  title         = {{B}loomberg{GPT}: A Large Language Model for Finance},
-  author        = {Wu, Shijie and Irsoy, Ozan and Lu, Steven and Dabravolski, Vadim
-                   and Dredze, Mark and Gehrmann, Sebastian and Kambadur, Prabhanjan
-                   and Rosenberg, David and Mann, Gideon},
-  year          = {2023},
-  eprint        = {2303.17564},
-  archiveprefix = {arXiv},
-  primaryclass  = {cs.LG},
-  url           = {https://arxiv.org/abs/2303.17564}
 }

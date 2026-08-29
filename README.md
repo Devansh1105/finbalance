@@ -1,5 +1,8 @@
 # FinBalance
 
+**Paper:** [arXiv:2606.15949](https://arxiv.org/abs/2606.15949) · Accepted to
+EMNLP 2026 Findings.
+
 **FinBalance** is a benchmark for document-grounded accounting reconciliation.
 Each record is a source-document bundle with OCR text, and the model must
 produce:
@@ -31,12 +34,12 @@ inconsistency templates. The generator then samples dates and values, renders
 OCR-style documents, and replays a deterministic double-entry ledger to compute
 the ground truth. This makes every label auditable and reproducible.
 
-Headline findings from the EMNLP 2026 submission:
+Headline findings from the accepted EMNLP 2026 Findings paper:
 
 - The benchmark was expert-validated through a 75-record review with an
   independently double-reviewed subset, plus a certified-accountant review of
-  all 143 compact coverage records so every compact scenario is checked at
-  least once.
+  all 143 compact coverage records covering every industry-period-difficulty
+  cell and every inconsistency code.
 - Across the six contemporary LLMs in our evaluation panel, the
   highest model reaches **46%** exact final balance-sheet accuracy on standard
   records.
@@ -187,6 +190,14 @@ result directories. The paper treats `main/` as the core evaluation split;
 `coverage/` remains useful for fast ablations because it covers every
 industry-period-difficulty cell and every inconsistency code at least once.
 
+Metadata note for the frozen v1 splits: 35 of 710 main-split quarter records
+display an off-by-one April-fiscal-year label, and 4 of 710 records use generic
+sales-tax metadata with India-GST-style jurisdiction documents. The generator
+fixes apply to future samples; the reported evaluations remain tied to the
+frozen v1 split. Excluding all 39 affected records from the saved baseline
+outputs changes the headline metrics by at most 0.97 percentage points and does
+not change the paper's conclusions.
+
 ## Evaluate Models
 
 Run a small OpenRouter ablation pilot:
@@ -235,7 +246,7 @@ python scripts/generate_paper_figures.py \
 The paper reports:
 
 - six-model baseline evaluation on the 710-record core split
-- full ablation matrix on Gemini 3 Flash
+- broad unary and targeted ablation suite on Gemini 3 Flash
 - targeted ablations on DeepSeek, Claude Haiku 4.5, and Qwen 3 235B
 - paired bootstrap CIs with 5,000 resamples
 
@@ -253,7 +264,10 @@ The headline OpenRouter request slugs were:
 Saved evaluation outputs include timestamps, selected provider, returned model
 ID, raw response text, response metadata where provider terms permit, token
 counts, cost, latency, parse status, tool/diagnostic metadata, and per-record
-metrics.
+metrics. The exact outputs used for the paper are distributed as versioned
+reproducibility archives on the repository's
+[Releases page](https://github.com/Devansh1105/finbalance/releases). The
+allowlist and archive-building procedure are documented in [`release/`](release/).
 
 ## Repository Layout
 
@@ -262,11 +276,10 @@ metrics.
 | `finbalance/` | Generator, ledger, schema definitions, evaluator, ablation runner, metrics, bootstrap |
 | `scripts/` | User-facing generation, figure, and utility scripts |
 | `data/` | Generated dataset splits and data release notes |
-| `results/` | Model outputs from evaluation and ablation runs, gitignored by default |
+| `results/` | Local model-output directory; paper outputs are distributed through GitHub Releases |
 | `human_verification/` | Expert validation records and protocol |
 | `paper/` | EMNLP 2026 paper source, tables, bibliography, and figures |
-| `POINTS.md` | Paper-ready result notes and analysis |
-| `_archive/` | Legacy FinBalance v1 material |
+| `release/` | Reproducibility-archive allowlist and build documentation |
 
 ## Package Map
 
@@ -280,6 +293,27 @@ metrics.
 | `finbalance/benchmark/` | Prompting, parsing, scoring, model runs, ablations, bootstrap |
 | `finbalance/figures/` | Paper figure data extraction and plotting |
 
+## Extending FinBalance
+
+Keep extensions at the specification layer and preserve deterministic scoring:
+
+1. Add the industry plan, scenario/policy rule, or OCR-visible document schema in
+   `finbalance/industry_schemas/`, `finbalance/generation/`, or
+   `finbalance/doc_schemas/`.
+2. Declare each document's hidden role and evidence dependencies. If new accounts
+   are required, version the taxonomy instead of silently changing the v1 account
+   list.
+3. Let `finbalance/ledger.py` compute entries and balances. A new inconsistency
+   template should generate a valid record first, then perturb one relation and
+   test the expected “flag, do not reconcile” answer.
+4. Run the generation tests and `scripts/audit_structural_invariants.py`, sample
+   every new structural cell, and obtain domain review for semantic realism and
+   policy interpretation.
+
+Version extended splits separately from the frozen v1 evaluation files. If a
+policy permits several acceptable treatments, enumerate the acceptable answer
+sets and version the scorer rather than weakening the current exact labels.
+
 ## Citation
 
 A preprint is available on arXiv. If you use FinBalance, please cite:
@@ -290,9 +324,9 @@ A preprint is available on arXiv. If you use FinBalance, please cite:
   author  = {Tumpati, Sasank and Agarwal, Devansh and Kedia, Ayush and
              Neekhra, Arjun and Mandal, Murari and Garg, Krishna and
              Sinha, Yash and Gupta, Suman and Kumar, Dhruv},
-  journal = {arXiv preprint arXiv:TODO},
+  journal = {arXiv preprint arXiv:2606.15949},
   year    = {2026},
-  url     = {https://arxiv.org/abs/TODO}
+  url     = {https://arxiv.org/abs/2606.15949}
 }
 ```
 

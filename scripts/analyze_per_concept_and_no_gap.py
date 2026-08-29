@@ -8,7 +8,7 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-ROOT = Path('/home/devanshagarwal/projects/finbalance')
+ROOT = Path(__file__).resolve().parents[1]
 
 MODEL_BASELINES = {
     'gemini-3-flash':    'results/gemini3flash_promoted_coverage_full_fixed/prompt_baseline/per_record_results.jsonl',
