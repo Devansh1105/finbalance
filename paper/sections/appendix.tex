@@ -289,6 +289,8 @@ Expected code & Meaning & Detected \\
 
 The levels are cumulative by construction: each level retains the sources of complexity below it and adds document volume, dependencies, jurisdictions, temporal lookback, or advanced concepts. The certified-accountant review judged $139/143$ compact-split assignments calibrated as written (three ``too easy,'' one ``too hard''). The independently double-reviewed overlap showed $96\%$ agreement on difficulty calibration. These judgments support practitioner-perceived ordering for the sampled benchmark records and cover the benchmark's authored complexity factors.
 
+\figref{fig:dataset-composition} summarizes the released core split across industries, difficulty levels, period types, and document roles.
+
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_dataset_composition.pdf}
@@ -458,7 +460,7 @@ Relative to matched non-reasoning configurations, switching from DeepSeek Chat t
 \subsection{Text versus native tool protocols}
 \label{appx:native-tools}
 
-In the prompt-described protocol, the prompt described each tool and required a JSON tool request. Gemini and the two additional prompt-described runs made zero calls over $572$ model-record evaluations. We then exposed the same calculator, document search, and ledger functions through each provider's native function-calling interface with an eight-call budget.
+In the prompt-described protocol, the prompt described each tool and required a JSON tool request. Gemini and the two additional prompt-described runs made zero calls over $572$ model-record evaluations. We then exposed the same calculator, document search, and ledger functions through each provider's native function-calling interface with an eight-call budget. \tabref{tab:native-tools} reports the resulting invocation rates, parsing rates, and accuracies.
 
 \begin{table*}[t]
 \centering
@@ -589,6 +591,8 @@ Dataset generation uses seed 42. Headline LLM evaluations use temperature 0.0 wi
 
 \paragraph{Sampling.}
 The main evaluation split, stored under \texttt{data/main/}, uses four standard records per (industry, period type, difficulty level) cell and ten forced-inconsistency records per code, drawn from a stratified deterministic sampler. The compact ablation split, stored under \texttt{data/coverage/}, contains one record per cell plus one forced-inconsistency record per code.
+
+\tabref{tab:api-settings} records the requested and returned model identifiers, providers, and headline decoding settings.
 
 \begin{table*}[t]
 \centering

@@ -31,12 +31,12 @@ def diagram_dataset_packet(output_dir: Path) -> list[Path]:
     ax.axis("off")
 
     _title(ax, 0.5, 0.96, "One FinBalance Record")
-    _box(ax, 0.04, 0.76, 0.24, 0.125, "Posting documents", "Invoice, receipt,\npayment advice,\nopening trial balance", BLUE, body_size=6.9)
-    _box(ax, 0.04, 0.58, 0.24, 0.125, "Support documents", "Bank statement,\nrate card, rollforward,\ntax profile", TEAL, body_size=6.9)
+    _box(ax, 0.04, 0.76, 0.24, 0.125, "Posting documents", "Invoice, receipt,\npayment advice,\nbank statement", BLUE, body_size=6.9)
+    _box(ax, 0.04, 0.58, 0.24, 0.125, "Support + adjustment", "Contracts, rate sheets,\nrollforwards,\nperiod-end entries", TEAL, body_size=6.9)
     _box(ax, 0.04, 0.40, 0.24, 0.125, "Distractor documents", "Duplicate copies,\nmemos, void/cancel\nnotices", ORANGE, body_size=6.9)
-    _box(ax, 0.04, 0.18, 0.24, 0.125, "Allowed accounts", "Benchmark account\ntaxonomy visible\nin prompt", PURPLE, body_size=6.9)
+    _box(ax, 0.04, 0.18, 0.24, 0.125, "Balances + accounts", "Opening trial balance\nand allowed account\ntaxonomy", PURPLE, body_size=6.9)
 
-    _box(ax, 0.38, 0.60, 0.24, 0.16, "Visible documents", "Doc IDs + OCR text\n+ types/titles depending\non visibility ablation", GREEN)
+    _box(ax, 0.38, 0.60, 0.24, 0.16, "Model-visible inputs", "Documents + opening balance\n+ allowed accounts\nwith visibility ablations", GREEN)
     _box(ax, 0.38, 0.27, 0.24, 0.16, "Hidden accounting truth", "Journal entries\nReplayed ledger\nFinal balance sheet", GRAY)
 
     _box(ax, 0.72, 0.66, 0.23, 0.13, "Model answer", "Strict JSON:\nentries + doc_refs + BS", BLUE)
@@ -44,7 +44,7 @@ def diagram_dataset_packet(output_dir: Path) -> list[Path]:
     _box(ax, 0.72, 0.18, 0.23, 0.13, "Inconsistency mode", "Mutated visible doc ->\nclaim code, no entries", ORANGE)
 
     for y in (0.82, 0.64, 0.46, 0.24):
-        _arrow(ax, (0.29, y), (0.38, 0.68 if y > 0.35 else 0.35))
+        _arrow(ax, (0.29, y), (0.38, 0.68))
     _arrow(ax, (0.62, 0.68), (0.72, 0.72))
     _arrow(ax, (0.84, 0.66), (0.84, 0.56))
     _arrow(ax, (0.62, 0.35), (0.72, 0.49))
@@ -54,7 +54,7 @@ def diagram_dataset_packet(output_dir: Path) -> list[Path]:
         ax,
         0.5,
         0.06,
-        "The model sees the document bundle and account list. Entries, final balances, and injected contradictions remain hidden.",
+        "The model sees the document bundle, opening balance, and account list. Entries, final balances, and injected contradictions remain hidden.",
     )
     return save_figure(fig, output_dir, "diag_dataset_packet")
 
@@ -74,9 +74,9 @@ def diagram_generation_inference(output_dir: Path) -> list[Path]:
     _box(ax, 0.02, 0.30, 0.34, 0.13, "Scenario builders", "documents + postings + bank rows", ORANGE, body_size=7.1, header_h=0.048)
     _box(ax, 0.02, 0.09, 0.34, 0.13, "Ledger replay", "hidden entries + final balance sheet", GREEN, body_size=7.1, header_h=0.048)
 
-    _box(ax, 0.395, 0.39, 0.21, 0.19, "Released record", "visible docs\nOCR text\naccount list", GRAY, body_size=6.9, header_h=0.048)
+    _box(ax, 0.395, 0.39, 0.21, 0.19, "Released record", "visible docs + OCR\nopening balance\naccount list", GRAY, body_size=6.9, header_h=0.048)
 
-    _box(ax, 0.64, 0.66, 0.34, 0.14, "Model evidence", "posting + support + distractors", BLUE, body_size=7.1, header_h=0.048)
+    _box(ax, 0.64, 0.66, 0.34, 0.14, "Model evidence", "posting + support + adjustment\n+ distractors + opening balance", BLUE, body_size=6.7, header_h=0.048)
     _box(ax, 0.64, 0.40, 0.34, 0.14, "Inverse task", "entries + doc refs + balances", RED, body_size=7.1, header_h=0.048)
     _box(ax, 0.64, 0.14, 0.34, 0.14, "Scoring", "parse + match + ledger replay", PURPLE, body_size=7.1, header_h=0.048)
 
