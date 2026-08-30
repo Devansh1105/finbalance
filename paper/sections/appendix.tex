@@ -3,7 +3,7 @@
 \section{Dataset Examples}
 \label{appx:dataset-examples}
 
-Figures~\ref{fig:dataset-samples} and~\ref{fig:dataset-fx-clean} expand two core-evaluation records into the pieces a model receives and the hidden labels the scorer expects. The first record is a forced-inconsistency example: the opening trial balance and documents are visible, but the correct answer is not a reconciled balance sheet; it is an inconsistency flag and code. The second is a clean foreign-exchange document bundle where the model must use an invoice, an exchange-rate notice, a payment advice, and a bank row to book both the payable settlement and FX loss. The full release includes every document's OCR text, asset path, expected entries, expected balance sheet, and inconsistency labels.
+Figures~\ref{fig:dataset-samples} and~\ref{fig:dataset-fx-clean} expand two core-evaluation records into the pieces a model receives and the hidden labels the scorer expects. The first record is a forced-inconsistency example: the opening trial balance and documents are visible, and the correct output is an inconsistency flag and code rather than a reconciled balance sheet. The second is a clean foreign-exchange document bundle where the model must use an invoice, an exchange-rate notice, a payment advice, and a bank row to book both the payable settlement and FX loss. The full release includes every document's OCR text, asset path, expected entries, expected balance sheet, and inconsistency labels.
 
 \begin{figure*}[t]
 \centering
@@ -237,9 +237,9 @@ Professional services, field services, retail, wholesale distribution, healthcar
 Each record carries boolean flags marking the presence of: ASC~606 revenue recognition (the U.S.\ standard for recognizing revenue from customer contracts), including bundled SaaS contracts with SSP, or standalone selling price, allocation; fixed-asset disposals with NBV, or net book value, and gain-or-loss computation; deferred tax from book/tax depreciation differences; lease accounting with ROU, or right-of-use, asset/liability schedules and modifications; FX, or foreign-exchange, invoice, settlement, and remeasurement scenarios; multi-jurisdictional sales tax (US sales tax, India GST, with exemption certificates); tax exemptions; multi-invoice payments; interbank transfers; reclassifications; and period-end rollforwards.
 
 \paragraph{Inconsistency codes.}
-The released negative-control taxonomy contains 23 machine-readable codes, grouped here for readability: banking and transfers (closing balance, statement balance, transfer); invoicing and payments (invoice total, payment allocation, duplicate reference); tax and jurisdiction (tax rate, tax total, input tax, exemption conflict, jurisdictional tax); assets, inventory, leases, and deferred tax (disposal, rollforward, remeasurement, schedule, and deferred-tax conflicts); and contract/revenue support (SSP allocation, performance-obligation release, reclassification support, schedule rollforward, and FX settlement or exchange-rate conflicts).
+The released forced-inconsistency taxonomy contains 23 machine-readable codes, grouped here for readability: banking and transfers (closing balance, statement balance, transfer); invoicing and payments (invoice total, payment allocation, duplicate reference); tax and jurisdiction (tax rate, tax total, input tax, exemption conflict, jurisdictional tax); assets, inventory, leases, and deferred tax (disposal, rollforward, remeasurement, schedule, and deferred-tax conflicts); and contract/revenue support (SSP allocation, performance-obligation release, reclassification support, schedule rollforward, and FX settlement or exchange-rate conflicts).
 
-Table~\ref{tab:inconsistency-code-diagnostics} summarizes the 23 negative-control codes on the six-model baseline panel. The core split contains ten generated records per code, so each row aggregates 60 model attempts. Models usually recognize that a contradiction exists (1110/1380 attempts), while exact code selection is harder (994/1380). Banking, lease, and simple transfer contradictions are easiest; input-tax, jurisdictional-tax, and performance-obligation-release contradictions remain hardest.
+Table~\ref{tab:inconsistency-code-diagnostics} summarizes the 23 forced-inconsistency codes on the six-model baseline panel. The core split contains ten generated records per code, so each row aggregates 60 model attempts. Models usually recognize that a contradiction exists (1110/1380 attempts), while exact code selection is harder (994/1380). Banking, lease, and simple transfer contradictions are easiest; input-tax, jurisdictional-tax, and performance-obligation-release contradictions remain hardest.
 
 \begin{table*}[t]
 \centering
@@ -310,7 +310,7 @@ Table~\ref{tab:per-concept} reports baseline \bsrecon{} by concept flag across a
 \renewcommand{\arraystretch}{1.02}
 \begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-Concept flag & Gemini & GPT-5 & Haiku & Grok & DeepSeek & Qwen \\
+Concept flag & Gemini & GPT-5 & Haiku & Grok & \shortstack{DeepSeek\\Chat} & Qwen \\
 \midrule
 Revenue recognition ($n{=}24$) & 17\% & 25\% & 4\%  & 4\%  & 8\%  & 12\% \\
 Asset disposal ($n{=}24$)      & 21\% & 17\% & 0\%  & 0\%  & 8\%  & 0\%  \\
@@ -351,7 +351,7 @@ DeepSeek Chat     & 0.067 & 0.473 & $+0.406$ & 0.98 \\
 Qwen~3 235B       & 0.013 & 0.302 & $+0.290$ & 0.94 \\
 \bottomrule
 \end{tabular}
-\caption{Three regimes on the 480 standard records in the core split. \emph{Entry ratio} is predicted-entry count divided by expected-entry count. GPT-5 is comparatively self-consistent while submitting most expected entries; Grok-4.3 has a smaller gap partly because it submits only $40\%$ of expected entries.}
+\caption{Three regimes on the 480 standard records in the core split. \emph{Entry ratio} is predicted-entry count divided by expected-entry count. GPT-5 is comparatively internally consistent while submitting most expected entries; Grok-4.3 has a smaller gap partly because it submits only $40\%$ of expected entries.}
 \label{tab:no-gap-mechanism}
 \end{table}
 
@@ -362,7 +362,7 @@ Qwen~3 235B       & 0.013 & 0.302 & $+0.290$ & 0.94 \\
 Journal entries are scored at the posting level. A strict posting match requires the same debit account, credit account, amount rounded to cents, and sorted \texttt{doc\_refs}. The lenient entry match uses the same account-and-amount criteria but ignores \texttt{doc\_refs}. The matcher proceeds greedily over unmatched predictions in four passes: exact match; same debit/credit/amount but wrong \texttt{doc\_refs}; same debit/credit/\texttt{doc\_refs} but wrong amount; and same \texttt{doc\_refs}/amount but wrong account. Remaining expected postings are missing; remaining predicted postings are extra. Duplicate identical postings are matched first-in-first-out. The evaluator does not use account synonyms: the allowed account list is closed. Posting dates are parsed and retained for diagnostics, but they are not part of the headline entry-match key. Split transactions receive credit only when the predicted posting decomposition matches the generator's expected postings.
 
 \paragraph{Parse rate.}
-Across the six completed headline baselines at $n{=}710$, parse-success rates are at least $97\%$ and five models parse at $\geq 99.8\%$. We also attempted a DeepSeek reasoning-model run on the same split; because its completed artifacts had low parse success under the available provider conditions, we use DeepSeek Chat for the DeepSeek-family baseline.
+Across the six completed headline baselines at $n{=}710$, parse-success rates are at least $97\%$ and five models parse at $\geq 99.8\%$. We also attempted a DeepSeek Reasoner run on the same split; because its completed artifacts had low parse success under the available provider conditions, we use DeepSeek Chat for the DeepSeek-family baseline.
 
 \paragraph{Two-pass ledger-feedback diagnostic.}
 For Gemini~3 Flash, the 2-pass ledger-feedback variant changes \bsexact{} by $+35.8$\,pp (CI $[+26.9, +44.9]$) compared with $+32.5$\,pp at 1-pass, and degrades \incCode{} by $-21.7$\,pp (CI $[-40.0, -5.3]$) compared with $-13.0$\,pp at 1-pass. The main text reports the simpler 1-pass diagnostic.
@@ -382,7 +382,7 @@ Figure~\ref{fig:cost-pareto} reports API cost per evaluated core-evaluation reco
 \section{Ablation Matrix}
 \label{appx:ablation-grid}
 
-Table~\ref{tab:ablation-grid} summarizes the \texttt{AblationSpec} triples (prompt, visibility, tool) evaluated on the anchor model. Conditions use the compact ablation split or a labeled targeted subset, so $n$ varies by condition. We include broad unary axis variants and targeted multi-axis diagnostics rather than the full cross-product.
+Table~\ref{tab:ablation-grid} summarizes the \texttt{AblationSpec} triples (prompt, visibility, tool) evaluated on the primary ablation model, Gemini~3 Flash. Conditions use the compact ablation split or a labeled targeted subset, so $n$ varies by condition. We include broad unary axis variants and targeted multi-axis diagnostics rather than the full cross-product.
 
 \begin{table*}[t]
 \centering
@@ -403,14 +403,14 @@ Visibility
 \addlinespace[2pt]
 Tool / diagnostic
 & no tools; calculator; document search; ledger check; full tool agent; best-of-3 self-consistency; forced ledger-feedback tool; two-pass ledger-feedback tool
-& Tests passive tool availability, ledger-aware candidate selection, and forced exposure to the deterministic ledger as a consistency-checking tool. \\
+& Tests text-emitted tool access, ledger-aware candidate selection, and forced exposure to the deterministic ledger as a consistency-checking tool. \\
 \bottomrule
 \end{tabularx}
 \caption{Ablation matrix. We run unary axis variants and targeted multi-axis diagnostics rather than the full prompt $\times$ visibility $\times$ tool cross-product. This keeps the diagnostic surface broad while preserving paired comparisons.}
 \label{tab:ablation-grid}
 \end{table*}
 
-The main text reports the measured effects of these ablations rather than only listing the design: Table~\ref{tab:ablation-summary} summarizes the diagnostic takeaways, Figure~\ref{fig:context-stress} isolates distractor count and evidence position, Figure~\ref{fig:doc-refs-persistence} tests whether citation pressure fixes document-linking, and Figure~\ref{fig:gap-repair} compares best-of-3 selection against ledger-feedback revision. The resulting pattern is consistent across these views: passive tool availability and prompt-only variants are weak, removing support evidence or the account taxonomy is strongly damaging, and forced ledger feedback is the only diagnostic that substantially improves the reported balance sheet. Figure~\ref{fig:ablation-deltas} gives the full anchor-model delta plot.
+Table~\ref{tab:ablation-summary} summarizes the measured effects, Figure~\ref{fig:context-stress} isolates distractor count and evidence position, Figure~\ref{fig:doc-refs-persistence} tests whether citation pressure fixes document-linking, and Figure~\ref{fig:gap-repair} compares best-of-3 selection against ledger-feedback revision. Across these analyses, text-emitted tool access and prompt-only variants are weak, removing support evidence or the account taxonomy is strongly damaging, and forced ledger feedback is the only diagnostic that substantially improves the reported balance sheet. Figure~\ref{fig:ablation-deltas} gives the full primary-model delta plot.
 
 \begin{figure}[t]
 \centering
@@ -455,7 +455,7 @@ GPT-5 minimal effort, 16k & 143 & 0.0\% & 24.2\% & 24.2\,pp & 73.9\% & 77.6\% \\
 \label{tab:reasoning-controls}
 \end{table*}
 
-Relative to matched non-reasoning configurations, DeepSeek moves from $8.3\%$ to $54.2\%$ \bsexact{} and from a $42.0$ to $1.7$\,pp gap; Haiku moves from $4.2\%$ to $38.3\%$ and from $29.1$ to $8.4$\,pp; Qwen moves from $1.7\%$ to $31.7\%$ and to an $8.3$\,pp gap. The reverse Grok and GPT-5 controls create large gaps. On the full $710$-record split, DeepSeek Reasoner reaches $44.0\%$ \bsexact{} with a $4.8$\,pp gap, but raises false inconsistency alarms on standard records to $29.0\%$ from near zero. Higher-reasoning configurations therefore improve aggregation consistency without uniformly improving document grounding or contradiction detection.
+Relative to matched non-reasoning configurations, switching from DeepSeek Chat to DeepSeek Reasoner moves \bsexact{} from $8.3\%$ to $54.2\%$ and reduces the gap from $42.0$ to $1.7$\,pp; Haiku moves from $4.2\%$ to $38.3\%$ and from $29.1$ to $8.4$\,pp; Qwen moves from $1.7\%$ to $31.7\%$ and to an $8.3$\,pp gap. The reverse Grok and GPT-5 controls create large gaps. On the full $710$-record split, DeepSeek Reasoner reaches $44.0\%$ \bsexact{} with a $4.8$\,pp gap, but raises false inconsistency alarms on standard records to $29.0\%$ from near zero. Higher-reasoning configurations therefore improve aggregation consistency without uniformly improving document grounding or contradiction detection.
 
 \subsection{Text versus native tool protocols}
 \label{appx:native-tools}
@@ -476,11 +476,11 @@ GPT-5 & --- & 52.5\% & 54.2\% & 56/143 & 4.2\% & 99.3\% \\
 Haiku~4.5 & 20.0\% & 23.3\% & 37.5\% & 140/143 & 3.3\% & 98.6\% \\
 \bottomrule
 \end{tabular}
-\caption{Dual-protocol tool study on the compact split. ``Used tools'' counts records with at least one native call. Strict requires the reported balance sheet, entries, and citations to match. Native tools improve aggregation when invoked, but residual gaps and low strict accuracy remain. DeepSeek's lower parse rate reflects tool-loop outputs that exhausted the final-answer budget; these are retained as failures.}
+\caption{Dual-protocol tool study on the compact split. ``Used tools'' counts records with at least one native call. Strict requires the reported balance sheet, entries, and citations to match. Native tools improve aggregation when invoked, but residual gaps and low strict accuracy remain. DeepSeek Chat's lower parse rate reflects tool-loop outputs that exhausted the final-answer budget; these are retained as failures.}
 \label{tab:native-tools}
 \end{table*}
 
-The text protocol's Haiku score rises from its $4.2\%$ baseline to $20.0\%$ without a call, showing a prompt-format effect. DeepSeek isolates the execution effect most clearly: its text-tool score remains near baseline, while native calls add $37.5$\,pp. We therefore replace the submitted phrase ``passive tools are rarely used'' with the narrower finding that text-emitted calls were not used; provider-native interfaces are used frequently and recover part of the aggregation deficit.
+Claude Haiku~4.5 rises from its $4.2\%$ baseline to $20.0\%$ under the text-emission protocol without producing a call, indicating a prompt-format effect. DeepSeek Chat provides the clearest execution contrast: its text-emission score remains near baseline, whereas provider-native function calling improves \bsexact{} by $37.5$\,pp. Across models, no executable calls were produced under the text-emission protocol, while provider-native interfaces were used frequently and recovered part of the aggregation deficit.
 
 \subsection{Character corruption}
 \label{appx:ocr-noise}
@@ -493,7 +493,7 @@ The headline input is clean templated text. A seeded corruption control adds con
 \setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}lrr@{}}
 \toprule
-Char-edit rate & Gemini \bsrecon{} & DeepSeek \bsrecon{} \\
+Char-edit rate & Gemini \bsrecon{} & \shortstack{DeepSeek Chat\\\bsrecon{}} \\
 \midrule
 0\% (clean) & 61.7\% & 50.0\% \\
 0.94\% & 54.2\% & 46.7\% \\
@@ -508,8 +508,9 @@ Char-edit rate & Gemini \bsrecon{} & DeepSeek \bsrecon{} \\
 The monotone declines show that character corruption is a measurable second source of error. The clean-text shortfall remains roughly three times larger than the penalty at the harshest tested corruption rate, so normalization does not explain away the benchmark's difficulty.
 
 \subsection{Run and split stability}
+\label{appx:stability-controls}
 
-Three temperature-zero compact-split runs give the following \bsexact{} ranges: Gemini $24.2$--$25.0\%$, DeepSeek $7.5$--$9.2\%$, GPT-5 $51.7$--$55.0\%$, Haiku $4.2$--$4.2\%$, Grok $33.3$--$36.7\%$, and Qwen $0.8$--$2.5\%$. No range exceeds $3.3$\,pp. \bsrecon{} varies by at most $3.3$\,pp except for GPT-5 ($7.5$\,pp). These repeats are a stability check, not a complete error-bar analysis; the paired bootstrap intervals in the main paper quantify record-level sampling uncertainty for fixed saved runs.
+Three temperature-zero compact-split runs give the following \bsexact{} ranges: Gemini~3 Flash $24.2$--$25.0\%$, DeepSeek Chat $7.5$--$9.2\%$, GPT-5 $51.7$--$55.0\%$, Claude Haiku~4.5 $4.2$--$4.2\%$, Grok-4.3 $33.3$--$36.7\%$, and Qwen~3 235B $0.8$--$2.5\%$. No range exceeds $3.3$\,pp. \bsrecon{} varies by at most $3.3$\,pp except for GPT-5 ($7.5$\,pp). These repeats are a stability check, not a complete error-bar analysis; the paired bootstrap intervals in the main paper quantify record-level sampling uncertainty for fixed saved runs.
 
 We also generated a second $710$-record split from unused seed 20260712 with the same coverage design and evaluated DeepSeek Chat under its headline configuration. \bsexact{} changes from $6.67\%$ to $7.71\%$, \bsrecon{} is $47.29\%$ on both, strict accuracy changes from $2.50\%$ to $2.92\%$, \incCode{} from $60.00\%$ to $60.87\%$, and parse success from $100.00\%$ to $99.86\%$. This is a single-model fresh-seed replication, not a full ranking replication.
 
@@ -540,7 +541,7 @@ DeepSeek Chat & 3.6\% & 2.5\% & 3.3\% \\
 
 An independent JSON-level audit re-implements double-entry replay without importing the generator's ledger class. It checks nine invariants: unique visible IDs; dates within the record period; resolvable citations; account-taxonomy membership; positive, non-self postings; section sums; the balance identity; replay of gold entries (or the forced-inconsistency empty-answer convention); and label conventions. The released $710$ records and fresh samples of $1{,}200$ and $4{,}800$ records all pass every invariant ($6{,}710/6{,}710$). Per-cell CSVs and the audit script are released.
 
-This audit establishes structural consistency across sampled values and combinations; it does not establish semantic realism, contradiction-code fit, or the uniquely correct accounting interpretation. Those are the properties addressed by the human-reviewed structural covers: the $143$-record accountant review covers every industry--period--difficulty cell and every code, while the separate $75$-record set spans all industries and levels.
+This audit verifies structural consistency across sampled values and combinations. Semantic realism, contradiction-code fit, and accounting interpretation are evaluated through human review: the $143$-record accountant review covers every industry--period--difficulty cell and every code, while the separate $75$-record set spans all industries and levels.
 
 \section{Human Verification Protocol}
 \label{appx:human-protocol}
@@ -555,7 +556,7 @@ Each of 75 release records was rendered as a self-contained Markdown file with s
 The release subset contains 75 expert-reviewed records: 60 standard records and 15 forced-inconsistency records. The intended assignment used in the paper is Reviewer~1 on records 1--50 and Reviewer~2 on records 1--25 plus 51--75. This gives every record one expert review and creates a 25-record independent overlap on records 1--25. Reviewers worked independently and did not see each other's responses. The third reviewer (certified accountant) instead covered the entire compact coverage split of 143 records (120 standard + 23 forced-inconsistency). This split contains one record per industry--period--difficulty cell plus one per inconsistency code, so the review covers every such cell and code.
 
 \paragraph{Results.}
-Table~\ref{tab:iaa} reports strict three-option agreement, collapsed acceptable agreement, and per-reviewer first-option rates on the 25-record double-reviewed overlap. The collapsed column treats ``Yes/Mostly'' or ``Accept/Accept with minor fixes'' as the same acceptability judgment; difficulty remains first option versus not-first option. We report these descriptive rates rather than Cohen's $\kappa$ because the sample is small and marginals are highly skewed toward positive judgments. Q6 is omitted because the overlap contains standard records only; inconsistency validity was reviewed in the single-reviewed negative-control records.
+Table~\ref{tab:iaa} reports strict three-option agreement, collapsed acceptable agreement, and per-reviewer first-option rates on the 25-record double-reviewed overlap. The collapsed column treats ``Yes/Mostly'' or ``Accept/Accept with minor fixes'' as the same acceptability judgment; difficulty remains first option versus not-first option. We report these descriptive rates rather than Cohen's $\kappa$ because the sample is small and marginals are highly skewed toward positive judgments. Q6 is omitted because the overlap contains standard records only; inconsistency validity was reviewed in the single-reviewed forced-inconsistency records.
 
 \begin{center}
 \small

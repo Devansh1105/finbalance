@@ -69,6 +69,9 @@ finbalance_arxiv.tar.gz
 /camera_ready_tracker.html
 /output/
 /tmp/
+/revision.md
+/paper/formatting.md
+/paper/figures/_rejected/
 
 # LaTeX build artifacts
 paper/*.aux

@@ -247,7 +247,7 @@ The paper reports:
 
 - six-model baseline evaluation on the 710-record core split
 - broad unary and targeted ablation suite on Gemini 3 Flash
-- targeted ablations on DeepSeek, Claude Haiku 4.5, and Qwen 3 235B
+- targeted ablations on DeepSeek Chat/Reasoner, Claude Haiku 4.5, and Qwen 3 235B
 - paired bootstrap CIs with 5,000 resamples
 
 The headline OpenRouter request slugs were:
