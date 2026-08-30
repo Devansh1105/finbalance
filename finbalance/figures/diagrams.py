@@ -54,7 +54,7 @@ def diagram_dataset_packet(output_dir: Path) -> list[Path]:
         ax,
         0.5,
         0.06,
-        "The model sees the document bundle and account list; entries, final balances, and injected contradictions remain hidden.",
+        "The model sees the document bundle and account list. Entries, final balances, and injected contradictions remain hidden.",
     )
     return save_figure(fig, output_dir, "diag_dataset_packet")
 
@@ -151,7 +151,7 @@ def flow_record_generation_detail(output_dir: Path) -> list[Path]:
         if idx < len(steps) - 1:
             _arrow(ax, (0.50, y - 0.004), (0.50, y - (step_gap - box_h) + 0.004))
         y -= step_gap
-    _caption(ax, 0.5, 0.025, "This figure is intended for the appendix; it mirrors finbalance/FLOW.md.")
+    _caption(ax, 0.5, 0.025, "This figure is intended for the appendix and mirrors finbalance/FLOW.md.")
     return save_figure(fig, output_dir, "flow_record_generation_detail")
 
 
